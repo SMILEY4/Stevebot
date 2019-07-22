@@ -8,20 +8,18 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import stevebot.pathfinding.Node;
-import stevebot.pathfinding.actions.ActionGenerator;
-import stevebot.pathfinding.actions.Action;
+import stevebot.Stevebot;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandActions extends CommandBase {
+public class CommandPlanPath extends CommandBase {
 
 
 	@Override
 	public String getName() {
-		return "actions";
+		return "path";
 	}
 
 
@@ -29,7 +27,7 @@ public class CommandActions extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return "/actions <x> <y> <z> ";
+		return "/path <x> <y> <z> <x> <y> <z> ";
 	}
 
 
@@ -37,12 +35,13 @@ public class CommandActions extends CommandBase {
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		if (args.length < 3) {
+		if (args.length < 6) {
 			throw new WrongUsageException(getUsage(sender), new Object[0]);
 
 		} else {
-			BlockPos pos = parseBlockPos(sender, args, 0, false);
-			process(pos);
+			BlockPos posStart = parseBlockPos(sender, args, 0, false);
+			BlockPos posDest = parseBlockPos(sender, args, 3, false);
+			process(posStart, posDest);
 		}
 	}
 
@@ -57,10 +56,9 @@ public class CommandActions extends CommandBase {
 
 
 
-	private void process(BlockPos pos) {
-		Minecraft.getMinecraft().player.sendMessage(new TextComponentString("Display available actions from " + pos));
-		List<Action> actions = ActionGenerator.getActions(Node.get(pos));
-//		Renderer.add(actions);
+	private void process(BlockPos posStart, BlockPos posDest) {
+		Minecraft.getMinecraft().player.sendMessage(new TextComponentString("Going from " + posStart + " to " + posDest));
+		Stevebot.PATH_HANDLER.onPlanPath(posStart, posDest);
 	}
 
 }

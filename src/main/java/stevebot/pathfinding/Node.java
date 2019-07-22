@@ -1,6 +1,7 @@
 package stevebot.pathfinding;
 
 import net.minecraft.util.math.BlockPos;
+import stevebot.pathfinding.actions.Action;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +42,7 @@ public class Node {
 			node.gcost = cost;
 			node.open = true;
 			nodeCache.put(pos, node);
+//			Stevebot.RENDERER.nodes.add(node.pos);
 		}
 		return node;
 	}
@@ -51,6 +53,7 @@ public class Node {
 	public boolean open;
 	public BlockPos pos;
 	public Node prev;
+	public Action action; // action required to reach this node
 
 	public double gcost; // dist to starting nodes
 	public double hcost; // dist to destination nodes

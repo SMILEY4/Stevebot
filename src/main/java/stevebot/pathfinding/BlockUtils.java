@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 
-public class Utils {
+public class BlockUtils {
 
 
 	public static Block getBlock(BlockPos pos) {
@@ -37,8 +37,26 @@ public class Utils {
 
 
 
+	public static boolean isFlowingLiquid(Block block) {
+		return WATER_FLOWING.equals(block) || LAVAL_FLOWING.equals(block);
+	}
+
+
+
+
 	public static boolean isLiquid(Block block) {
 		return isLava(block) || isWater(block);
+	}
+
+
+
+	public static boolean isDangerous(BlockPos pos) {
+		return isDangerous(getBlock(pos));
+	}
+
+
+	public static boolean isDangerous(Block block) {
+		return isLava(block) || block == Blocks.FIRE || block == Blocks.CACTUS || block == Blocks.WEB;
 	}
 
 
@@ -46,7 +64,8 @@ public class Utils {
 
 	public static boolean canWalkThrough(BlockPos pos) {
 		final Block block = getBlock(pos);
-		if(isLiquid(block) || Blocks.WATERLILY.equals(block) || Blocks.FIRE.equals(block)) {
+		if (isLiquid(block) || Blocks.WATERLILY.equals(block) || isDangerous(block)
+				|| Blocks.ICE.equals(block) || Blocks.FROSTED_ICE.equals(block) || Blocks.PACKED_ICE.equals(block)) {
 			return false;
 		} else {
 			return block.isPassable(Minecraft.getMinecraft().world, pos);
@@ -58,7 +77,7 @@ public class Utils {
 
 	public static boolean canWalkOn(BlockPos pos) {
 		final Block block = getBlock(pos);
-		if(isLiquid(block)) {
+		if (isLiquid(block) || isDangerous(block)) {
 			return false;
 		} else {
 			return block.isNormalCube(Minecraft.getMinecraft().world.getBlockState(pos), Minecraft.getMinecraft().world, pos);

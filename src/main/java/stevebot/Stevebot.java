@@ -1,17 +1,17 @@
 package stevebot;
 
 
-import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import stevebot.commands.CommandActions;
-import stevebot.commands.CommandGoto;
+import stevebot.commands.CommandHandler;
+import stevebot.pathfinding.PathHandler;
+import stevebot.player.PlayerController;
 import stevebot.rendering.Renderer;
+import stevebot.utils.GameEventHandler;
 
 @Mod (
 		modid = Stevebot.MODID,
@@ -29,13 +29,19 @@ public class Stevebot {
 
 	public static final Logger LOGGER = LogManager.getLogger(Stevebot.MODID);
 
+	public static final GameEventHandler EVENT_HANDLER = new GameEventHandler();
+	public static final CommandHandler COMMAND_HANDLER = new CommandHandler();
+	public static final Renderer RENDERER = new Renderer();
+	public static final PlayerController PLAYER_CONTROLLER = new PlayerController();
+	public static final PathHandler PATH_HANDLER = new PathHandler();
+
+//	public static final MovementTest test = new MovementTest();
 
 
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		ClientCommandHandler.instance.registerCommand(new CommandGoto());
-		ClientCommandHandler.instance.registerCommand(new CommandActions());
+		EVENT_HANDLER.onPreInit(event);
 	}
 
 
@@ -43,6 +49,7 @@ public class Stevebot {
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
+		EVENT_HANDLER.onInit(event);
 	}
 
 
@@ -50,7 +57,7 @@ public class Stevebot {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(new Renderer());
+		EVENT_HANDLER.onPostInit(event);
 	}
 
 

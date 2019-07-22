@@ -1,112 +1,176 @@
 package stevebot.rendering;
 
-import com.sun.javafx.geom.Vec3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
+import stevebot.Stevebot;
+import stevebot.pathfinding.Node;
 import stevebot.pathfinding.Path;
-import stevebot.pathfinding.actions.ActionMove;
-import stevebot.pathfinding.actions.IAction;
+import stevebot.pathfinding.actions.*;
+import stevebot.utils.GameEventListener;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
-public class Renderer {
-
-
-	private static final List<Path> PATH_LIST = new ArrayList<>();
-	private static List<IAction> ACTIONS_LIST = new ArrayList<>();
-
-
-
-
-	public static void add(Path path) {
-		PATH_LIST.add(path);
-	}
-
-
-
-
-	public static void clearPathList() {
-		PATH_LIST.clear();
-	}
-
-
-
-
-	public static void add(List<IAction> actions) {
-		ACTIONS_LIST = actions;
-	}
-
-
-
-
-	public static void clearActionList() {
-		ACTIONS_LIST = Collections.emptyList();
-	}
-
-
+public class Renderer implements GameEventListener {
 
 
 	private final Tessellator TESSELLATOR = Tessellator.getInstance();
 	private final BufferBuilder BUFFER = TESSELLATOR.getBuffer();
 
-	public static Vec3d targetPos = new Vec3d(0, 0, 0);
+	private List<Object> objectList = new ArrayList<>();
+
+	public List<BlockPos> nodes = Collections.synchronizedList(new ArrayList<>());
+
+	public Path path = null;
+
+
+
+	public Renderer() {
+		Stevebot.EVENT_HANDLER.addListener(this);
+	}
 
 
 
 
-	@SubscribeEvent
-	public void onWorldRender(RenderWorldLastEvent event) {
+	public void addObject(Object object) {
+		if (object != null) {
+			objectList.add(object);
+		}
+	}
+
+
+
+
+	public void addObjects(Collection objects) {
+		if (objects != null) {
+			objectList.addAll(objects);
+		}
+	}
+
+
+
+
+	public void removeObject(Object object) {
+		if (object != null) {
+			objectList.remove(object);
+		}
+	}
+
+
+
+
+	public void removeAll() {
+		objectList.clear();
+	}
+
+
+
+
+	@Override
+	public void onRenderWorld(RenderWorldLastEvent event) {
 		if (Minecraft.getMinecraft().player == null) {
 			return;
+		}
+
+		int i = 0;
+		while (!nodes.isEmpty() && i < 20) {
+			objectList.add(nodes.remove(0));
+			i++;
 		}
 
 		// setup
 		Vec3d playerPos = Minecraft.getMinecraft().player.getPositionVector();
 		setup(playerPos);
 
-		// draw paths
-		Vec3f colorStart = new Vec3f(0f, 0f, 1f);
-		Vec3f colorPath = new Vec3f(0f, 1f, 0f);
-		Vec3f colorEnd = new Vec3f(1f, 0f, 0f);
+		// draw
+		render();
 
-		for (Path path : Renderer.PATH_LIST) {
-			if (!path.nodes.isEmpty()) {
-				for (int i = 0; i < path.nodes.size(); i++) {
-					Vec3f color = colorPath;
-					if (i == 0) {
-						color = colorStart;
-					}
-					if (i == path.nodes.size() - 1) {
-						color = colorEnd;
-					}
-					drawBox(new Vec3d(path.nodes.get(i).pos), 3, color);
+		// reset
+		reset();
+	}
+
+
+
+
+	private void render() {
+		for (Object obj : objectList) {
+			renderObject(obj);
+		}
+		if(path != null) {
+			renderObject(path);
+		}
+	}
+
+
+
+
+	private void renderObject(Object obj) {
+
+		if (obj instanceof BlockPos) {
+			BlockPos blockPos = (BlockPos) obj;
+			drawBox(blockPos, 3, Color.GRAY);
+		}
+
+		if (obj instanceof Path) {
+			Path path = (Path) obj;
+			for (Node node : path.nodes) {
+				if (node.action != null) {
+					renderObject(node.action);
 				}
 			}
 		}
 
-		// draw actions
-		Vec3f colorOrigin = new Vec3f(1f, 1f, 1f);
-		Vec3f colorMove = new Vec3f(1f, 0f, 0f);
+		if (obj instanceof Vec3d) {
+			Vec3d v = (Vec3d) obj;
+			drawLine(v, v.addVector(0, 0.5, 0), 5, Color.BLUE);
+		}
 
-		for(IAction action : ACTIONS_LIST) {
-			drawBox(new Vec3d(action.getFrom().pos), 3, colorOrigin);
-			if(action instanceof ActionMove) {
-				drawLine(new Vec3d(action.getFrom().pos), new Vec3d(action.getTo().pos), 3, colorMove);
+
+		if (obj instanceof Marker) {
+			Marker marker = (Marker) obj;
+			Vec3d pos = marker.pos;
+			if(marker.color != null) {
+				drawLine(pos, pos.addVector(0, 0.5, 0), 5, marker.color);
+			} else {
+				drawLine(pos, pos.addVector(0, 0.5, 0), 5, Color.random(marker.action.hashCode()));
 			}
 		}
 
-		// reset
-		reset();
+		if (obj instanceof Action) {
+
+			if (obj instanceof ActionWalk) {
+				ActionWalk action = (ActionWalk) obj;
+				drawLine(action.getFrom().pos, action.getTo().pos, 3f, Color.random(action.hashCode()));
+//				drawLine(action.getFrom().pos, action.getTo().pos, 3f, Color.BLUE);
+			}
+			if (obj instanceof ActionStepUp) {
+				ActionStepUp action = (ActionStepUp) obj;
+				drawLine(action.getFrom().pos, action.getTo().pos, 3f, Color.random(action.hashCode()));
+//				drawLine(action.getFrom().pos, action.getTo().pos, 3f, Color.RED);
+			}
+			if (obj instanceof ActionStepDown) {
+				ActionStepDown action = (ActionStepDown) obj;
+				drawLine(action.getFrom().pos, action.getTo().pos, 3f, Color.random(action.hashCode()));
+//				drawLine(action.getFrom().pos, action.getTo().pos, 3f, Color.YELLOW);
+			}
+
+			if (obj instanceof ActionDropDownN) {
+				ActionDropDownN action = (ActionDropDownN) obj;
+				BlockPos p = new BlockPos(action.getTo().pos.getX(), action.getFrom().pos.getY(), action.getTo().pos.getZ());
+				drawLine(action.getFrom().pos, p, 3f, Color.random(action.hashCode()));
+				drawLine(p, action.getTo().pos, 3f, Color.random(action.hashCode()));
+//				drawLine(action.getFrom().pos, action.getTo().pos, 3f, Color.YELLOW);
+			}
+
+		}
+
 	}
 
 
@@ -137,7 +201,16 @@ public class Renderer {
 
 
 
-	private void drawLine(Vec3d start, Vec3d end, float width, Vec3f color) {
+	private void drawLine(BlockPos start, BlockPos end, float width, Color color) {
+		drawLine(new Vec3d(start.getX() + 0.5, start.getY() + 0.5, start.getZ() + 0.5),
+				new Vec3d(end.getX() + 0.5, end.getY() + 0.5, end.getZ() + 0.5),
+				width, color);
+	}
+
+
+
+
+	private void drawLine(Vec3d start, Vec3d end, float width, Color color) {
 		BUFFER.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 		drawLineOpen(start, end, width, color);
 		TESSELLATOR.draw();
@@ -146,16 +219,23 @@ public class Renderer {
 
 
 
-	private void drawLineOpen(Vec3d start, Vec3d end, float width, Vec3f color) {
+	private void drawLineOpen(Vec3d start, Vec3d end, float width, Color color) {
 		GlStateManager.glLineWidth(width);
-		BUFFER.pos(start.x + 0.49, start.y + 0.49, start.z + 0.49).color(color.x, color.y, color.z, 1f).endVertex();
-		BUFFER.pos(end.x + 0.49, end.y + 0.49, end.z + 0.49).color(color.x, color.y, color.z, 1f).endVertex();
+		BUFFER.pos(start.x, start.y, start.z).color(color.x, color.y, color.z, 1f).endVertex();
+		BUFFER.pos(end.x, end.y, end.z).color(color.x, color.y, color.z, 1f).endVertex();
 	}
 
 
 
 
-	private void drawBox(Vec3d pos, float width, Vec3f color) {
+	private void drawBox(BlockPos pos, float width, Color color) {
+		drawBox(new Vec3d(pos.getX(), pos.getY(), pos.getZ()), width, color);
+	}
+
+
+
+
+	private void drawBox(Vec3d pos, float width, Color color) {
 
 		final double minX = pos.x;
 		final double maxX = pos.x + 1;
@@ -191,5 +271,11 @@ public class Renderer {
 		TESSELLATOR.draw();
 
 	}
+
+
+
+
+	Random random = new Random();
+
 
 }

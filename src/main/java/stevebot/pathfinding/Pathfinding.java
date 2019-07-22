@@ -5,11 +5,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import stevebot.Stevebot;
+import stevebot.pathfinding.actions.ActionGenerator;
+import stevebot.pathfinding.actions.Action;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Pathfinding {
 
@@ -48,14 +47,24 @@ public class Pathfinding {
 			current.close();
 			if (current.pos.equals(posDest)) {
 				Path p = buildPath(nodeStart, current);
-				if (path == null || p.cost <path.cost) {
+				if (path == null || p.cost < path.cost) {
+					Stevebot.RENDERER.path = p;
 					path = p;
 				}
 				Stevebot.LOGGER.info("Possible path found cost=" + path.cost);
 			}
 
-			for (Node next : getNeightbors(current)) {
-				double newCost = current.gcost + MOVE_COST;
+
+			if(path != null && path.cost < current.gcost) {
+				continue;
+			}
+
+			List<Action> actions = ActionGenerator.getActions(current);
+			for (int i = 0, n = actions.size(); i < n; i++) {
+				final Action action = actions.get(i);
+				final Node next = action.getTo();
+
+				final double newCost = current.gcost + action.getCost();
 				if (!next.open && newCost >= next.gcost) {
 					continue;
 				}
@@ -65,14 +74,17 @@ public class Pathfinding {
 					next.gcost = newCost;
 					next.hcost = next.pos.distanceSq(posDest);
 					next.prev = current;
+					next.action = action;
 					next.open = true;
 					openSet.add(next);
 				}
+
 			}
 
 		}
 
 		Stevebot.LOGGER.info("Resulting Path with " + (path == null ? "null" : path.nodes.size()) + " nodes.");
+		Stevebot.RENDERER.path = null;
 		return path == null ? new Path() : path;
 	}
 
@@ -88,6 +100,7 @@ public class Pathfinding {
 			current = current.prev;
 		}
 		path.nodes.add(start);
+		Collections.reverse(path.nodes);
 		return path;
 	}
 
