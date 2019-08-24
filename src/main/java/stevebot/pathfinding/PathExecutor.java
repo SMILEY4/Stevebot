@@ -7,7 +7,7 @@ public class PathExecutor {
 
 
 	public enum State {
-		EXEC, DONE
+		EXEC, DONE, FAILED;
 	}
 
 
@@ -72,6 +72,9 @@ public class PathExecutor {
 		State actionState = action.tick(fistTick);
 		fistTick = false;
 
+		if (actionState == State.FAILED) {
+			return State.FAILED;
+		}
 		if (actionState == State.DONE) {
 			fistTick = true;
 			boolean hasNext = step();

@@ -33,7 +33,7 @@ public class PlayerMovement {
 
 
 	public boolean moveTowards(double x, double y, double z) {
-		if (!isAtLocation(x, y, z)) {
+		if (!controller.utils.isAtLocation(x, y, z)) {
 			final BlockPos targetBlockPos = new BlockPos(x, (int) controller.getPlayerPosition().y, z);
 			controller.setLookAt(targetBlockPos);
 			controller.setMoveForward();
@@ -47,7 +47,7 @@ public class PlayerMovement {
 
 
 	public boolean moveTowards(double x, double z) {
-		if (!isAtLocation(x, z)) {
+		if (!controller.utils.isAtLocation(x, z)) {
 			final BlockPos targetBlockPos = new BlockPos(x, (int) controller.getPlayerPosition().y, z);
 			controller.setLookAt(targetBlockPos);
 			controller.setMoveForward();
@@ -75,7 +75,7 @@ public class PlayerMovement {
 
 
 	public boolean moveTowardsFreeLook(double x, double y, double z) {
-		if (!isAtLocation(x, y, z)) {
+		if (!controller.utils.isAtLocation(x, y, z)) {
 			moveTowardsFreeLook(x, z);
 			return false;
 		} else {
@@ -87,7 +87,7 @@ public class PlayerMovement {
 
 
 	public boolean moveTowardsFreeLook(double x, double z) {
-		if (!isAtLocation(x, z)) {
+		if (!controller.utils.isAtLocation(x, z)) {
 			Vec3d current = controller.getPlayerPosition();
 			final Vec3d targetPos = new Vec3d(x, current.y, z);
 			final Vec3d view2d = new Vec3d(controller.getLookDir().x, controller.getLookDir().z, 0).normalize();
@@ -159,51 +159,6 @@ public class PlayerMovement {
 
 	private boolean inRange(double x, double a, double b) {
 		return a <= x && x < b;
-	}
-
-
-
-
-	private double DIST_ERROR = 0.05;
-
-
-
-
-	public boolean isAtLocation(BlockPos pos, boolean ignoreY) {
-		final double x = pos.getX() + 0.5;
-		final double y = pos.getY();
-		final double z = pos.getZ() + 0.5;
-		if (ignoreY) {
-			return isAtLocation(x, z);
-		} else {
-			return isAtLocation(x, y, z);
-		}
-	}
-
-
-
-
-	public boolean isAtLocation(double x, double z) {
-		final Vec3d current = controller.getPlayerPosition();
-		final double dist = (current.x - x) * (current.x - x) + (current.z - z) * (current.z - z);
-		if (dist > DIST_ERROR) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-
-
-
-	public boolean isAtLocation(double x, double y, double z) {
-		final Vec3d current = controller.getPlayerPosition();
-		final double dist = (current.x - x) * (current.x - x) + (current.y - y) * (current.y - y) + (current.z - z) * (current.z - z);
-		if (dist > DIST_ERROR) {
-			return false;
-		} else {
-			return true;
-		}
 	}
 
 

@@ -5,6 +5,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import stevebot.Stevebot;
 import stevebot.utils.GameEventListener;
@@ -15,6 +16,7 @@ public class PlayerController implements GameEventListener {
 	private PlayerInputConfig inputConfig = null;
 
 	public final PlayerMovement movement;
+	public final PlayerUtils utils;
 
 
 
@@ -22,9 +24,18 @@ public class PlayerController implements GameEventListener {
 	public PlayerController() {
 		Stevebot.EVENT_HANDLER.addListener(this);
 		movement = new PlayerMovement(this);
+		utils = new PlayerUtils(this);
 		reloadConfig();
 	}
 
+
+
+
+	public void sendMessage(String msg) {
+		if(getPlayer() != null) {
+			getPlayer().sendMessage(new TextComponentString(msg));
+		}
+	}
 
 
 
@@ -147,7 +158,6 @@ public class PlayerController implements GameEventListener {
 
 	public void setMoveForward(boolean move) {
 		setInput(PlayerInputConfig.InputType.WALK_FORWARD, move);
-
 	}
 
 

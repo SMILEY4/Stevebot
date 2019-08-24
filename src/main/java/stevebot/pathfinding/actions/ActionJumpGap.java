@@ -6,8 +6,6 @@ import stevebot.pathfinding.BlockUtils;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
 import stevebot.player.PlayerController;
-import stevebot.rendering.Color;
-import stevebot.rendering.Marker;
 
 
 public class ActionJumpGap extends Action {
@@ -107,20 +105,22 @@ public class ActionJumpGap extends Action {
 	public PathExecutor.State tick(boolean firstTick) {
 		final PlayerController controller = Stevebot.PLAYER_CONTROLLER;
 
-		if (controller.getPlayer().onGround && controller.getPlayerBlockPos().equals(from.pos)) {
-			controller.setJump();
-			Stevebot.RENDERER.addObject(new Marker(controller.getPlayerPosition(), this, Color.BLACK));
-		} else {
-			Stevebot.RENDERER.addObject(new Marker(controller.getPlayerPosition(), this, Color.WHITE));
+//		if (controller.getPlayer().onGround && controller.getPlayerBlockPos().equals(from.pos)) {
+//			controller.setJump();
+//			Stevebot.RENDERER.addObject(new Marker(controller.getPlayerPosition(), this, Color.BLACK));
+//		} else {
+//			Stevebot.RENDERER.addObject(new Marker(controller.getPlayerPosition(), this, Color.WHITE));
+//
+//		}
+//
+//		controller.setLookAt(to.pos.add(0, 1, 0));
+//		if (controller.movement.moveTowardsFreeLook(to.pos, true)) {
+//			return PathExecutor.State.DONE;
+//		} else {
+//			return PathExecutor.State.EXEC;
+//		}
 
-		}
-
-		controller.setLookAt(to.pos.add(0, 1, 0));
-		if (controller.movement.moveTowardsFreeLook(to.pos, true)) {
-			return PathExecutor.State.DONE;
-		} else {
-			return PathExecutor.State.EXEC;
-		}
+		return PathExecutor.State.FAILED;
 
 	}
 

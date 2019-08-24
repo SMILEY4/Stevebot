@@ -23,7 +23,11 @@ public class PathHandler implements GameEventListener {
 
 
 
+
 	private ExecutorService service = Executors.newSingleThreadExecutor();
+
+
+
 
 	public void onPlanPath(BlockPos from, BlockPos to) {
 		if (executor != null) {
@@ -35,6 +39,7 @@ public class PathHandler implements GameEventListener {
 			if (path != null && path.nodes.size() >= 2) {
 				executor = new PathExecutor(path);
 				Stevebot.RENDERER.addObject(path);
+				Stevebot.PLAYER_CONTROLLER.sendMessage("Found path: cost=" + path.cost + "  nodes=" + path.nodes.size());
 			}
 		});
 
@@ -72,9 +77,15 @@ public class PathHandler implements GameEventListener {
 
 			final PathExecutor.State state = executor.tick();
 
+			if (state == PathExecutor.State.FAILED) {
+				stopFollowingLastPath();
+				executor = null;
+				Stevebot.PLAYER_CONTROLLER.sendMessage("Failed to follow path.");
+			}
 			if (state == PathExecutor.State.DONE) {
 				stopFollowingLastPath();
 				executor = null;
+				Stevebot.PLAYER_CONTROLLER.sendMessage("Reached destination.");
 			}
 
 		}

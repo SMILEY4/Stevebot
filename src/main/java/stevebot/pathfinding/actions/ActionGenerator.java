@@ -13,9 +13,11 @@ public class ActionGenerator {
 	 *
 	 * OPTIMIZE
 	 * --------
+	 * combine all loops into one
 	 * - some valid actions make others impossible
 	 *     e.g -> walk to (x,y) -> cant step up / drop down 1 / drop down n at (x,y)
 	 * 			...
+	 *
 	 *
 	 * ACTIONS:
 	 * ----------
@@ -39,7 +41,7 @@ public class ActionGenerator {
 	 *
 	 * JUMP N
 	 * - jump to a block n blocks away
-	 * - status: TODO wip
+	 * - status: TODO
 	 *
 	 * DIG DOWN
 	 * - destroy block below player + fall n blocks if air below block
@@ -52,6 +54,11 @@ public class ActionGenerator {
 	 * BRIDGE
 	 * - place block next to current block and step on placed block
 	 * - status: TODO
+	 *
+	 * CLIMB LADDER, VINE
+	 *
+	 * OPEN DOORS
+	 *
 	 *
 	 */
 

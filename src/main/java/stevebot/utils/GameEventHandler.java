@@ -62,6 +62,16 @@ public class GameEventHandler {
 		listeners.forEach(listener -> listener.onRenderWorld(event));
 	}
 
+	@SubscribeEvent
+	public void onRenderTick(TickEvent.RenderTickEvent event) {
+
+//		Minecraft mc = Minecraft.getMinecraft();
+//		if(mc.player != null) {
+//			mc.player.cameraYaw = mc.player.rotationYaw - 40;
+//		}
+
+	}
+
 
 
 
@@ -85,5 +95,6 @@ public class GameEventHandler {
 	public void onConfigChanged(ConfigChangedEvent.PostConfigChangedEvent event) {
 		listeners.forEach(listener -> listener.onConfigChanged(event));
 	}
+
 
 }
