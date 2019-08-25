@@ -142,8 +142,8 @@ public class Camera implements GameTickListener {
 		} else {
 			player.rotationYaw = playerSP.rotationYaw - cameraYaw + playerYaw;
 			player.prevRotationYaw = playerSP.prevRotationYaw - cameraYaw + playerYaw;
-			player.rotationPitch = playerPitch;
-			player.prevRotationPitch = playerPitch;
+			player.rotationPitch = playerSP.rotationPitch - cameraPitch + playerPitch;
+			player.prevRotationPitch = playerSP.prevRotationPitch - cameraPitch + playerPitch;
 		}
 
 	}
