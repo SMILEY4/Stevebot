@@ -1,6 +1,6 @@
 Minecraft Forge: Credits/Thank You
 
-Forge is a set of tools and modifications to the Minecraft base game code to assist 
+Forge is a set of modtools and modifications to the Minecraft base game code to assist
 mod developers in creating new and exciting content. It has been in development for 
 several years now, but I would like to take this time thank a few people who have 
 helped it along it's way.
@@ -18,7 +18,7 @@ Mezz, who has stepped up as the issue and pull request manager. Helping to keep 
 sane as well as guiding the community into creating better additions to Forge.
 
 Searge, Bspks, Fesh0r, ProfMobious, and all the rest over on the MCP team {of which 
-I am a part}. For creating some of the core tools needed to make Minecraft modding 
+I am a part}. For creating some of the core modtools needed to make Minecraft modding
 both possible, and as stable as can be.
   On that note, here is some specific information of the MCP data we use:
     * Minecraft Coder Pack (MCP) *

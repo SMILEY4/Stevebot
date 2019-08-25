@@ -1,4 +1,4 @@
-package stevebot.player;
+package modtools.player;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;

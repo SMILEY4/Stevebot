@@ -1,4 +1,4 @@
-package stevebot.player;
+package modtools.player;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -6,12 +6,12 @@ import net.minecraft.util.math.Vec3d;
 public class PlayerUtils {
 
 
-	private final PlayerController controller;
+	private final MTPlayerController controller;
 
 
 
 
-	PlayerUtils(PlayerController controller) {
+	PlayerUtils(MTPlayerController controller) {
 		this.controller = controller;
 	}
 
