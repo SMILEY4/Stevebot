@@ -1,24 +1,23 @@
 package modtools.player;
 
+import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import modtools.ModBase;
+import modtools.ModModule;
+import modtools.events.GameTickListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import modtools.ModModule;
-import modtools.events.GameTickListener;
 
 public class MTPlayerController extends ModModule {
 
 
 	private final Camera camera;
 	private final PlayerUtils utils;
-
 	private PlayerInputConfig inputConfig = null;
 	private boolean muteUserInput = false;
 
@@ -74,7 +73,7 @@ public class MTPlayerController extends ModModule {
 	public BlockPos getPlayerBlockPos() {
 		EntityPlayerSP player = getPlayer();
 		if (player != null) {
-			return new BlockPos((int) (getPlayerPosition().x), (int) (getPlayerPosition().y), (int) (getPlayerPosition().z));
+			return new BlockPos((int) player.posX, (int) player.posY, (int) player.posZ);
 		} else {
 			return null;
 		}
@@ -83,10 +82,10 @@ public class MTPlayerController extends ModModule {
 
 
 
-	public Vec3d getPlayerPosition() {
+	public Vector3d getPlayerPosition() {
 		EntityPlayerSP player = getPlayer();
 		if (player != null) {
-			return player.getPositionVector();
+			return new Vector3d(player.posX, player.posY, player.posZ);
 		} else {
 			return null;
 		}
@@ -95,10 +94,10 @@ public class MTPlayerController extends ModModule {
 
 
 
-	public Vec3d getMotionVector() {
+	public Vector3d getMotionVector() {
 		EntityPlayerSP player = getPlayer();
 		if (player != null) {
-			return new Vec3d(player.motionX, player.motionY, player.motionZ);
+			return new Vector3d(player.motionX, player.motionY, player.motionZ);
 		} else {
 			return null;
 		}

@@ -3,6 +3,7 @@ package modtools;
 import modtools.commands.MTCommandHandler;
 import modtools.events.MTEventHandler;
 import modtools.player.MTPlayerController;
+import modtools.rendering.MTRenderer;
 
 public abstract class ModBase {
 
@@ -22,15 +23,19 @@ public abstract class ModBase {
 	private MTEventHandler eventHandler;
 	private MTPlayerController playerController;
 	private MTCommandHandler commandHandler;
+	private MTRenderer renderer;
 
 
 
 
 	public void onPreInit() {
 		ModBase.instance = this;
+
 		eventHandler = new MTEventHandler(this);
 		playerController = new MTPlayerController(this);
 		commandHandler = new MTCommandHandler(this);
+		renderer = new MTRenderer(this);
+
 		createMod();
 		eventHandler.onPreInit();
 	}
@@ -68,6 +73,13 @@ public abstract class ModBase {
 
 	public MTCommandHandler getCommandHandler() {
 		return commandHandler;
+	}
+
+
+
+
+	public MTRenderer getRenderer() {
+		return renderer;
 	}
 
 

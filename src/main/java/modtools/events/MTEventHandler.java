@@ -1,10 +1,11 @@
 package modtools.events;
 
 import modtools.ModBase;
+import modtools.ModModule;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import modtools.ModModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class MTEventHandler extends ModModule {
 
 	private List<GameInitListener> initListeners = new ArrayList<>();
 	private List<GameTickListener> tickListeners = new ArrayList<>();
+	private List<GameRenderListener> renderListeners = new ArrayList<>();
 
 
 
@@ -29,7 +31,9 @@ public class MTEventHandler extends ModModule {
 		initListeners.add(listener);
 	}
 
-
+	public void addListener(GameRenderListener listener) {
+		renderListeners.add(listener);
+	}
 
 
 	public void removeListener(GameInitListener listener) {
@@ -57,7 +61,6 @@ public class MTEventHandler extends ModModule {
 
 
 	public void onPreInit() {
-		System.out.println("PRE INIT");
 		initListeners.forEach(GameInitListener::onPreInit);
 	}
 
@@ -65,7 +68,6 @@ public class MTEventHandler extends ModModule {
 
 
 	public void onInit() {
-		System.out.println("INIT");
 		initListeners.forEach(GameInitListener::onInit);
 	}
 
@@ -73,7 +75,6 @@ public class MTEventHandler extends ModModule {
 
 
 	public void onPostInit() {
-		System.out.println("POST INIT");
 		MinecraftForge.EVENT_BUS.register(this);
 		initListeners.forEach(GameInitListener::onPostInit);
 	}
@@ -110,7 +111,19 @@ public class MTEventHandler extends ModModule {
 
 	@SubscribeEvent
 	public void onRenderTickEvent(TickEvent.RenderTickEvent event) {
+		renderListeners.forEach(listener -> listener.onRenderTickEvent(event));
 		tickListeners.forEach(listener -> listener.onRenderTickEvent(event));
+	}
+
+
+	//==== RENDERING
+
+
+
+
+	@SubscribeEvent
+	public void onRenderWorldLast(RenderWorldLastEvent event) {
+		renderListeners.forEach(listener -> listener.onRenderWorldLast(event));
 	}
 
 

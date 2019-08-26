@@ -1,7 +1,7 @@
 package modtools.player;
 
+import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 
 public class PlayerUtils {
 
@@ -14,10 +14,6 @@ public class PlayerUtils {
 	PlayerUtils(MTPlayerController controller) {
 		this.controller = controller;
 	}
-
-
-
-
 
 
 
@@ -42,9 +38,8 @@ public class PlayerUtils {
 
 
 	public boolean isAtLocation(double x, double z) {
-		final Vec3d current = controller.getPlayerPosition();
-		final double dist = (current.x - x) * (current.x - x) + (current.z - z) * (current.z - z);
-		if (dist > AT_LOC_DIST_ERROR) {
+		final Vector3d current = controller.getPlayerPosition();
+		if (current.dist2(x, current.y, z) > AT_LOC_DIST_ERROR) {
 			return false;
 		} else {
 			return true;
@@ -55,9 +50,8 @@ public class PlayerUtils {
 
 
 	public boolean isAtLocation(double x, double y, double z) {
-		final Vec3d current = controller.getPlayerPosition();
-		final double dist = (current.x - x) * (current.x - x) + (current.y - y) * (current.y - y) + (current.z - z) * (current.z - z);
-		if (dist > AT_LOC_DIST_ERROR) {
+		final Vector3d current = controller.getPlayerPosition();
+		if (current.dist2(x, y, z) > AT_LOC_DIST_ERROR) {
 			return false;
 		} else {
 			return true;

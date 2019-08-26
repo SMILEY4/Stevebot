@@ -1,5 +1,6 @@
 package modtools.player;
 
+import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -162,7 +163,19 @@ public class Camera implements GameTickListener {
 
 
 
-	public Vec3d getLookDir() {
+	public Vector3d getLookDir() {
+		Vec3d v = getLookDirMC();
+		if (v != null) {
+			return new Vector3d(v.x, v.y, v.z);
+		} else {
+			return null;
+		}
+	}
+
+
+
+
+	public Vec3d getLookDirMC() {
 		EntityPlayerSP player = PLAYER_CONTROLLER.getPlayer();
 		if (player != null) {
 			return player.getLook(0f);
@@ -177,9 +190,9 @@ public class Camera implements GameTickListener {
 	public void setLookAt(BlockPos pos) {
 		EntityPlayerSP player = PLAYER_CONTROLLER.getPlayer();
 		if (player != null && pos != null) {
-			final Vec3d posBlock = new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
-			final Vec3d posHead = new Vec3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
-			final Vec3d dir = posBlock.subtract(posHead).normalize().scale(-1);
+			final Vector3d posBlock = new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+			final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
+			final Vector3d dir = posBlock.copy().sub(posHead).normalize().scale(-1);
 			setLook(dir);
 		}
 	}
@@ -187,7 +200,7 @@ public class Camera implements GameTickListener {
 
 
 
-	public void setLook(Vec3d dir) {
+	public void setLook(Vector3d dir) {
 		double pitch = Math.asin(dir.y);
 		double yaw = Math.atan2(dir.z, dir.x);
 		pitch = pitch * 180.0 / Math.PI;
