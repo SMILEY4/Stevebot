@@ -15,6 +15,8 @@ public class PathHandler {
 	private Path path;
 	private Renderable pathRenderable;
 
+	private PathExecutor excecutor = null;
+
 
 
 
@@ -35,9 +37,28 @@ public class PathHandler {
 				Stevebot.get().getPlayerController().sendMessage("Done:" + ((System.currentTimeMillis() - ts) / 1000.0) + "s, no path found!, explored:" + Node.nodeCache.size());
 			}
 
-
 		});
 	}
 
+
+
+
+	public void startFollowLastPath() {
+		stopFollowing();
+		if (path != null) {
+			excecutor = new PathExecutor(path);
+			excecutor.start();
+		}
+	}
+
+
+
+
+	public void stopFollowing() {
+		if (excecutor != null) {
+			excecutor.stop();
+			Stevebot.get().getEventHandler().removeListener(excecutor);
+		}
+	}
 
 }

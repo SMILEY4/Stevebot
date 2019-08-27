@@ -6,13 +6,13 @@ import net.minecraft.util.math.BlockPos;
 public class PlayerUtils {
 
 
-	private final MTPlayerController controller;
+	private final MTPlayerController PLAYER_CONTROLLER;
 
 
 
 
 	PlayerUtils(MTPlayerController controller) {
-		this.controller = controller;
+		this.PLAYER_CONTROLLER = controller;
 	}
 
 
@@ -38,7 +38,7 @@ public class PlayerUtils {
 
 
 	public boolean isAtLocation(double x, double z) {
-		final Vector3d current = controller.getPlayerPosition();
+		final Vector3d current = PLAYER_CONTROLLER.getPlayerPosition();
 		if (current.dist2(x, current.y, z) > AT_LOC_DIST_ERROR) {
 			return false;
 		} else {
@@ -50,7 +50,7 @@ public class PlayerUtils {
 
 
 	public boolean isAtLocation(double x, double y, double z) {
-		final Vector3d current = controller.getPlayerPosition();
+		final Vector3d current = PLAYER_CONTROLLER.getPlayerPosition();
 		if (current.dist2(x, y, z) > AT_LOC_DIST_ERROR) {
 			return false;
 		} else {

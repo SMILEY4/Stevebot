@@ -17,7 +17,9 @@ public class MTPlayerController extends ModModule {
 
 
 	private final Camera camera;
+	private final Movement movement;
 	private final PlayerUtils utils;
+
 	private PlayerInputConfig inputConfig = null;
 	private boolean muteUserInput = false;
 
@@ -29,6 +31,7 @@ public class MTPlayerController extends ModModule {
 
 		utils = new PlayerUtils(this);
 		camera = new Camera(this);
+		movement = new Movement(this);
 
 		GameTickListener tickListener = new GameTickListener() {
 			@Override
@@ -47,6 +50,27 @@ public class MTPlayerController extends ModModule {
 
 
 
+	public Camera getCamera() {
+		return camera;
+	}
+
+
+
+
+	public Movement getMovement() {
+		return movement;
+	}
+
+
+
+
+	public PlayerUtils getUtils() {
+		return utils;
+	}
+
+
+
+
 	public void sendMessage(String msg) {
 		if (getPlayer() != null) {
 			getPlayer().sendMessage(new TextComponentString(msg));
@@ -58,13 +82,6 @@ public class MTPlayerController extends ModModule {
 
 	public EntityPlayerSP getPlayer() {
 		return Minecraft.getMinecraft().player;
-	}
-
-
-
-
-	public Camera getCamera() {
-		return camera;
 	}
 
 

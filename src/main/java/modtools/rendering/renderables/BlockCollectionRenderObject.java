@@ -31,14 +31,14 @@ public class BlockCollectionRenderObject implements Renderable {
 
 
 	public BlockCollectionRenderObject(BlockPos[] positions, float width, Color color) {
-		this(Renderable.toVecArray(positions), width, Renderable.fillColorArray(color, positions.length));
+		this(Renderable.toVecArray(positions, 0, 0, 0), width, Renderable.fillColorArray(color, positions.length));
 	}
 
 
 
 
 	public BlockCollectionRenderObject(BlockPos[] positions, float width, Color[] colors) {
-		this(Renderable.toVecArray(positions), width, colors);
+		this(Renderable.toVecArray(positions, 0, 0, 0), width, colors);
 	}
 
 

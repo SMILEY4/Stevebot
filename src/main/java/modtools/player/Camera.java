@@ -188,11 +188,21 @@ public class Camera implements GameTickListener {
 
 
 	public void setLookAt(BlockPos pos) {
+		setLookAt(pos, false);
+	}
+
+
+
+
+	public void setLookAt(BlockPos pos, boolean keepPitch) {
 		EntityPlayerSP player = PLAYER_CONTROLLER.getPlayer();
 		if (player != null && pos != null) {
 			final Vector3d posBlock = new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
 			final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
 			final Vector3d dir = posBlock.copy().sub(posHead).normalize().scale(-1);
+			if (keepPitch) {
+				dir.y = 0;
+			}
 			setLook(dir);
 		}
 	}

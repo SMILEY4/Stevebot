@@ -2,8 +2,10 @@ package stevebot.pathfinding.actions;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
+import stevebot.Stevebot;
 import stevebot.pathfinding.BlockUtils;
 import stevebot.pathfinding.Node;
+import stevebot.pathfinding.PathExecutor;
 
 public class ActionWalk extends Action {
 
@@ -73,6 +75,18 @@ public class ActionWalk extends Action {
 	@Override
 	public Node getTo() {
 		return this.to;
+	}
+
+
+
+
+	@Override
+	public PathExecutor.State tick(boolean fistTick) {
+		if (Stevebot.get().getPlayerController().getMovement().moveTowards(to.pos, true)) {
+			return PathExecutor.State.DONE;
+		} else {
+			return PathExecutor.State.EXEC;
+		}
 	}
 
 

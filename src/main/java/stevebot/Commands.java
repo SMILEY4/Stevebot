@@ -31,10 +31,11 @@ public class Commands {
 						.build()
 		);
 
-		// /follor
+		// /follow
 		Stevebot.get().getCommandHandler().registerCommand(
-				new CommandBuilder("follor")
-						.setListener(Commands::onPathTo)
+				new CommandBuilder("follow")
+						.addToken(new ValueToken.TextToken("state"))
+						.setListener(Commands::onFollow)
 						.build()
 		);
 
@@ -50,6 +51,22 @@ public class Commands {
 		final int timeoutSec = args.containsKey("timeout") ? (Integer) args.get("timeout").getValue() : 30;
 		if (Stevebot.get().getPlayerController().getPlayer() != null) {
 			Stevebot.PATH_HANDLER.calculatePath(from, to, timeoutSec * 1000);
+		}
+	}
+
+
+
+
+	private static void onFollow(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
+		final String state = (String) args.get("state").getValue();
+		if (Stevebot.get().getPlayerController().getPlayer() != null) {
+			if ("start".equalsIgnoreCase(state)) {
+				Stevebot.PATH_HANDLER.startFollowLastPath();
+			} else if ("stop".equalsIgnoreCase(state)) {
+				Stevebot.PATH_HANDLER.stopFollowing();
+			} else {
+				Stevebot.get().getPlayerController().sendMessage("Unknown state: " + state + ". Must be 'start' or 'stop'.");
+			}
 		}
 	}
 

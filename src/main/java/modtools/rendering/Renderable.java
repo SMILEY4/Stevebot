@@ -22,10 +22,14 @@ public interface Renderable {
 
 
 	static Vector3d[] toVecArray(BlockPos[] bpArray) {
+		return toVecArray(bpArray, 0.5, 0.5, 0.5);
+	}
+
+	static Vector3d[] toVecArray(BlockPos[] bpArray, double offX, double offY, double offZ) {
 		Vector3d[] vecArray = new Vector3d[bpArray.length];
 		for (int i = 0, n = bpArray.length; i < n; i++) {
 			final BlockPos pos = bpArray[i];
-			vecArray[i] = new Vector3d(pos.getX(), pos.getY(), pos.getZ());
+			vecArray[i] = new Vector3d(pos.getX() + offX, pos.getY() + offY, pos.getZ() + offZ);
 		}
 		return vecArray;
 	}
