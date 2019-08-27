@@ -25,7 +25,7 @@ public interface Renderable {
 		Vector3d[] vecArray = new Vector3d[bpArray.length];
 		for (int i = 0, n = bpArray.length; i < n; i++) {
 			final BlockPos pos = bpArray[i];
-			vecArray[i] = new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+			vecArray[i] = new Vector3d(pos.getX(), pos.getY(), pos.getZ());
 		}
 		return vecArray;
 	}

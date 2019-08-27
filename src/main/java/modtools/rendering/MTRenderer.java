@@ -94,7 +94,7 @@ public class MTRenderer extends ModModule {
 
 
 
-	protected void beginLines(float width) {
+	public void beginLines(float width) {
 		GlStateManager.glLineWidth(width);
 		BUFFER.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
 	}
@@ -102,7 +102,7 @@ public class MTRenderer extends ModModule {
 
 
 
-	protected void beginLineStrip(float width) {
+	public void beginLineStrip(float width) {
 		GlStateManager.glLineWidth(width);
 		BUFFER.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
 	}
@@ -110,7 +110,7 @@ public class MTRenderer extends ModModule {
 
 
 
-	protected void beginBoxes(float width) {
+	public void beginBoxes(float width) {
 		GlStateManager.glLineWidth(width);
 		BUFFER.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
 	}
@@ -118,7 +118,7 @@ public class MTRenderer extends ModModule {
 
 
 
-	protected void beginPoints(float size) {
+	public void beginPoints(float size) {
 		GL11.glPointSize(size);
 		BUFFER.begin(GL11.GL_POINTS, DefaultVertexFormats.POSITION_COLOR);
 	}
@@ -126,14 +126,14 @@ public class MTRenderer extends ModModule {
 
 
 
-	protected void end() {
+	public void end() {
 		TESSELLATOR.draw();
 	}
 
 
 
 
-	protected void drawLine(BlockPos start, BlockPos end, float width, Color color) {
+	public void drawLine(BlockPos start, BlockPos end, float width, Color color) {
 		drawLine(
 				new Vector3d(start.getX() + 0.5, start.getY() + 0.5, start.getZ() + 0.5),
 				new Vector3d(end.getX() + 0.5, end.getY() + 0.5, end.getZ() + 0.5),
@@ -144,7 +144,7 @@ public class MTRenderer extends ModModule {
 
 
 
-	protected void drawLine(Vector3d start, Vector3d end, float width, Color color) {
+	public void drawLine(Vector3d start, Vector3d end, float width, Color color) {
 		beginLines(width);
 		drawLineOpen(start, end, color);
 		end();
@@ -153,7 +153,7 @@ public class MTRenderer extends ModModule {
 
 
 
-	protected void drawLineOpen(Vector3d start, Vector3d end, Color color) {
+	public void drawLineOpen(Vector3d start, Vector3d end, Color color) {
 		BUFFER.pos(start.x, start.y, start.z).color(color.x, color.y, color.z, 1f).endVertex();
 		BUFFER.pos(end.x, end.y, end.z).color(color.x, color.y, color.z, 1f).endVertex();
 	}
@@ -161,21 +161,21 @@ public class MTRenderer extends ModModule {
 
 
 
-	protected void drawBox(BlockPos pos, float width, Color color) {
+	public void drawBox(BlockPos pos, float width, Color color) {
 		drawBox(new Vector3d(pos.getX(), pos.getY(), pos.getZ()), width, color);
 	}
 
 
 
 
-	protected void drawBoxOpen(BlockPos pos, Color color) {
+	public void drawBoxOpen(BlockPos pos, Color color) {
 		drawBoxOpen(new Vector3d(pos.getX(), pos.getY(), pos.getZ()), color);
 	}
 
 
 
 
-	protected void drawBox(Vector3d pos, float width, Color color) {
+	public void drawBox(Vector3d pos, float width, Color color) {
 		beginLineStrip(width);
 		drawBoxOpen(pos, color);
 		end();
@@ -185,7 +185,7 @@ public class MTRenderer extends ModModule {
 
 
 	@SuppressWarnings ("Duplicates")
-	protected void drawBoxOpen(Vector3d pos, Color color) {
+	public void drawBoxOpen(Vector3d pos, Color color) {
 
 		final double minX = pos.x;
 		final double maxX = pos.x + 1;
@@ -227,14 +227,14 @@ public class MTRenderer extends ModModule {
 
 
 
-	protected void drawPoint(BlockPos pos, float size, Color color) {
+	public void drawPoint(BlockPos pos, float size, Color color) {
 		drawPoint(new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), size, color);
 	}
 
 
 
 
-	protected void drawPoint(Vector3d pos, float size, Color color) {
+	public void drawPoint(Vector3d pos, float size, Color color) {
 		beginPoints(size);
 		BUFFER.pos(pos.x, pos.y, pos.z).color(color.x, color.y, color.z, 1f).endVertex();
 		end();
@@ -243,14 +243,14 @@ public class MTRenderer extends ModModule {
 
 
 
-	protected void drawPointOpen(BlockPos pos, Color color) {
+	public void drawPointOpen(BlockPos pos, Color color) {
 		drawPointOpen(new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), color);
 	}
 
 
 
 
-	protected void drawPointOpen(Vector3d pos, Color color) {
+	public void drawPointOpen(Vector3d pos, Color color) {
 		BUFFER.pos(pos.x, pos.y, pos.z).color(color.x, color.y, color.z, 1f).endVertex();
 	}
 
