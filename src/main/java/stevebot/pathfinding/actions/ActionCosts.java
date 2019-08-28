@@ -2,6 +2,13 @@ package stevebot.pathfinding.actions;
 
 public class ActionCosts {
 
+
+	public static void main(String[] args) {
+		for (int i = 1; i < 10; i++) {
+			System.out.println(i + "  " + COST_FALL_N(i));
+		}
+	}
+
 	// https://minecraft.gamepedia.com/Transportation
 
 
@@ -10,15 +17,15 @@ public class ActionCosts {
 
 	private static final double[] VALUES_COST_FALL_N = calcCostFallN();
 
-	public static final double COST_SPRINTING = 20.0 / 5.612;
-	public static final double COST_WALKING = 20.0 / 4.317;
-	public static final double COST_STEP_DOWN = COST_WALKING;
-	public static final double COST_STEP_UP = 20.0 / 4.474; // WALK 1 Block + JUMP 1 Block = sqrt(4.317^2 + 1.176^2)
-	public static final double COST_LADDER_UP = 20.0 / 2.35;
-	public static final double COST_LADDER_DOWN = 20.0 / 3.0;
-	public static final double COST_SNEAKING = 20.0 / 1.3;
+	public static final double COST_SPRINTING = 20.0 / 5.612; // 3.563
+	public static final double COST_WALKING = 20.0 / 4.317; // 4.632
+	public static final double COST_STEP_DOWN = COST_WALKING; // 4.632
+	public static final double COST_LADDER_DOWN = 20.0 / 3.0; // 6.666
+	public static final double COST_STEP_UP = COST_WALKING * 0.5 + COST_FALL_N(1); // 7.556
+	public static final double COST_LADDER_UP = 20.0 / 2.35; // 8.510
+	public static final double COST_SNEAKING = 20.0 / 1.3; // 15.384
 
-	public static final double COST_MULT_TOUCHING = 1.4; // COST_WALK * DIAGONAL * MULT_TOUCHING < STEP_UP * 2, otherwise player steps over block he would be touching, which is slower
+	public static final double COST_MULT_TOUCHING = 1.6;
 	public static final double COST_MULT_DIAGONAL = 1.414;
 
 
@@ -50,7 +57,9 @@ public class ActionCosts {
 			distTravelled += v;
 			ticks++;
 		}
-		return ticks;
+		// travelled_dist >= distance -> overshot target -> get percentage of real ticks travelled
+		double p = distance / distTravelled;
+		return ticks * p;
 	}
 
 

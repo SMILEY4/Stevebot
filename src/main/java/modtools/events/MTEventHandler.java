@@ -31,9 +31,14 @@ public class MTEventHandler extends ModModule {
 		initListeners.add(listener);
 	}
 
+
+
+
 	public void addListener(GameRenderListener listener) {
 		renderListeners.add(listener);
 	}
+
+
 
 
 	public void removeListener(GameInitListener listener) {

@@ -1,6 +1,8 @@
 package stevebot.pathfinding;
 
 import modtools.events.GameTickListener;
+import modtools.rendering.Color;
+import modtools.rendering.renderables.DynPointCollectionRenderObject;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.Stevebot;
 import stevebot.pathfinding.actions.Action;
@@ -23,14 +25,19 @@ public class PathExecutor implements GameTickListener {
 	private Node to;
 	private Action action;
 
+	private long timeStart = 0;
+
 	private boolean fistTick = true;
 	private boolean isFollowing = false;
+
+	private DynPointCollectionRenderObject points = new DynPointCollectionRenderObject();
 
 
 
 
 	public PathExecutor(Path path) {
 		Stevebot.get().getEventHandler().addListener(this);
+		Stevebot.get().getRenderer().addRenderable(points);
 		this.path = path;
 	}
 
@@ -43,6 +50,9 @@ public class PathExecutor implements GameTickListener {
 		to = path.nodes.get(indexFrom + 1);
 		action = to.action;
 		isFollowing = true;
+		points.getPositions().clear();
+		points.getColors().clear();
+		timeStart = System.currentTimeMillis();
 	}
 
 
@@ -60,6 +70,7 @@ public class PathExecutor implements GameTickListener {
 		if (isFollowing && Stevebot.get().getPlayerController().getPlayer() != null) {
 
 			Stevebot.get().getPlayerController().stopAll();
+			points.addPoint(Stevebot.get().getPlayerController().getPlayerPosition(), Color.MAGENTA);
 
 			final State state = tick();
 
@@ -69,7 +80,7 @@ public class PathExecutor implements GameTickListener {
 			}
 			if (state == State.DONE) {
 				stop();
-				Stevebot.get().getPlayerController().sendMessage("Reached destination.");
+				Stevebot.get().getPlayerController().sendMessage("Reached destination. (" + ((System.currentTimeMillis()-timeStart)/1000.0) + "s");
 			}
 
 		}
