@@ -13,6 +13,7 @@ public class ActionGenerator {
 		getActionsWalk(actions, node);
 		getActionsStepUp(actions, node);
 		getActionsStepDown(actions, node);
+		getActionsDropDown(actions, node);
 		return actions;
 	}
 
@@ -61,6 +62,23 @@ public class ActionGenerator {
 					continue;
 				}
 				ActionStepDown action = ActionStepDown.createValid(node, x, z);
+				if (action != null) {
+					actions.add(action);
+				}
+			}
+		}
+	}
+
+
+
+
+	public static void getActionsDropDown(List<Action> actions, Node node) {
+		for (int x = -1; x <= 1; x++) {
+			for (int z = -1; z <= 1; z++) {
+				if (x == 0 && z == 0) {
+					continue;
+				}
+				ActionDropDownN action = ActionDropDownN.createValid(node, x, z);
 				if (action != null) {
 					actions.add(action);
 				}
