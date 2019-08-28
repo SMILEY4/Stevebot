@@ -42,7 +42,9 @@ public class ActionWalk extends Action {
 	public ActionWalk(Node from, BlockPos to, BlockPos[] touching) {
 		this.from = from;
 		this.to = Node.get(to);
-		this.cost = ActionCosts.COST_WALKING * (Action.isDiagonal(from.pos, to) ? 1.414 : 1) * (touching == null ? 1 : 1.8);
+		this.cost = ActionCosts.COST_WALKING
+				* (Action.isDiagonal(from.pos, to) ? ActionCosts.COST_MULT_DIAGONAL : 1)
+				* (touching == null ? 1 : ActionCosts.COST_MULT_TOUCHING);
 		this.touching = touching;
 	}
 

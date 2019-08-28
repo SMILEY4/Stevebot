@@ -4,16 +4,22 @@ public class ActionCosts {
 
 	// https://minecraft.gamepedia.com/Transportation
 
-	public static final double COST_SNEAKING = 1.3;  // m/s
-	public static final double COST_WALKING = 4.317;  // m/s
-	public static final double COST_SPRINTING = 5.612;  // m/s
 
-	public static final double COST_STEP_UP = 4.474; // m/s -> = WALK 1 Block + JUMP 1 Block = sqrt(4.317^2 + 1.176^2)
-
-	public static final double COST_LADDER_UP = 2.35;  // m/s
-	public static final double COST_LADDER_DOWN = 3.0;  // m/s
+	// ALL COSTS IN TICKS
+	//    speed in m/s -> tick = (1/20)s -> cost = 20 / speed
 
 	private static final double[] VALUES_COST_FALL_N = calcCostFallN();
+
+	public static final double COST_SPRINTING = 20.0 / 5.612;
+	public static final double COST_WALKING = 20.0 / 4.317;
+	public static final double COST_STEP_DOWN = COST_WALKING;
+	public static final double COST_STEP_UP = 20.0 / 4.474; // WALK 1 Block + JUMP 1 Block = sqrt(4.317^2 + 1.176^2)
+	public static final double COST_LADDER_UP = 20.0 / 2.35;
+	public static final double COST_LADDER_DOWN = 20.0 / 3.0;
+	public static final double COST_SNEAKING = 20.0 / 1.3;
+
+	public static final double COST_MULT_TOUCHING = 1.4; // COST_WALK * DIAGONAL * MULT_TOUCHING < STEP_UP * 2, otherwise player steps over block he would be touching, which is slower
+	public static final double COST_MULT_DIAGONAL = 1.414;
 
 
 
@@ -28,16 +34,9 @@ public class ActionCosts {
 	private static double[] calcCostFallN() {
 		double[] costs = new double[255];
 		for (int i = 0; i < costs.length; i++) {
-			costs[i] = ticksToSeconds(distanceToTicks(i + 1));
+			costs[i] = distanceToTicks(i + 1);
 		}
 		return costs;
-	}
-
-
-
-
-	private static double ticksToSeconds(double ticks) {
-		return ticks / 20.0;
 	}
 
 

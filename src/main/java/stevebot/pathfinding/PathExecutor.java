@@ -24,7 +24,6 @@ public class PathExecutor implements GameTickListener {
 	private Action action;
 
 	private boolean fistTick = true;
-
 	private boolean isFollowing = false;
 
 
