@@ -4,6 +4,7 @@ import modtools.commands.MTCommandHandler;
 import modtools.events.MTEventHandler;
 import modtools.player.MTPlayerController;
 import modtools.rendering.MTRenderer;
+import modtools.smartcli.SmartCLI;
 
 public abstract class ModBase {
 
@@ -24,6 +25,7 @@ public abstract class ModBase {
 	private MTPlayerController playerController;
 	private MTCommandHandler commandHandler;
 	private MTRenderer renderer;
+	private SmartCLI smartCLI;
 
 
 
@@ -35,6 +37,7 @@ public abstract class ModBase {
 		playerController = new MTPlayerController(this);
 		commandHandler = new MTCommandHandler(this);
 		renderer = new MTRenderer(this);
+		smartCLI = new SmartCLI(this);
 
 		createMod();
 		eventHandler.onPreInit();

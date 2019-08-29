@@ -58,7 +58,7 @@ public abstract class ValueToken implements ICommandToken {
 
 
 		@Override
-		public int requiredArguments() {
+		public int requiredArguments(int nRemaining) {
 			return 1;
 		}
 
@@ -101,7 +101,7 @@ public abstract class ValueToken implements ICommandToken {
 
 
 		@Override
-		public int requiredArguments() {
+		public int requiredArguments(int nRemaining) {
 			return 1;
 		}
 
@@ -144,7 +144,7 @@ public abstract class ValueToken implements ICommandToken {
 
 
 		@Override
-		public int requiredArguments() {
+		public int requiredArguments(int nRemaining) {
 			return 1;
 		}
 
@@ -171,8 +171,21 @@ public abstract class ValueToken implements ICommandToken {
 	public static class TextToken extends ValueToken {
 
 
+		public final boolean joinAll;
+
+
+
+
 		public TextToken(String valueID) {
+			this(valueID, false);
+		}
+
+
+
+
+		public TextToken(String valueID, boolean joinAll) {
 			super(valueID, String.class);
+			this.joinAll = joinAll;
 		}
 
 
@@ -187,8 +200,8 @@ public abstract class ValueToken implements ICommandToken {
 
 
 		@Override
-		public int requiredArguments() {
-			return 1;
+		public int requiredArguments(int nRemaining) {
+			return joinAll ? nRemaining : 1;
 		}
 
 
@@ -196,7 +209,7 @@ public abstract class ValueToken implements ICommandToken {
 
 		@Override
 		public TokenParseResult parse(ICommandSender sender, String[] args) {
-			return new TokenParseResult(new CommandArgument<String>(args[0]));
+			return new TokenParseResult(new CommandArgument<String>(String.join(" ", args)));
 		}
 
 	}
@@ -233,7 +246,7 @@ public abstract class ValueToken implements ICommandToken {
 
 
 		@Override
-		public int requiredArguments() {
+		public int requiredArguments(int nRemaining) {
 			return 3;
 		}
 

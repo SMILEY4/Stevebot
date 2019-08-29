@@ -34,7 +34,7 @@ public class TerminalToken implements ICommandToken {
 
 
 	@Override
-	public int requiredArguments() {
+	public int requiredArguments(int nReminaing) {
 		return 1;
 	}
 

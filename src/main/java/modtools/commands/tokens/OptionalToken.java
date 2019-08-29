@@ -37,8 +37,8 @@ public class OptionalToken implements ICommandToken {
 
 
 	@Override
-	public int requiredArguments() {
-		return token.requiredArguments();
+	public int requiredArguments(int nRemaining) {
+		return token.requiredArguments(nRemaining);
 	}
 
 

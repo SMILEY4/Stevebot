@@ -4,6 +4,7 @@ import modtools.ModBase;
 import modtools.ModModule;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -16,6 +17,7 @@ public class MTEventHandler extends ModModule {
 	private List<GameInitListener> initListeners = new ArrayList<>();
 	private List<GameTickListener> tickListeners = new ArrayList<>();
 	private List<GameRenderListener> renderListeners = new ArrayList<>();
+	private List<GameCommandListener> commandListeners = new ArrayList<>();
 
 
 
@@ -41,6 +43,13 @@ public class MTEventHandler extends ModModule {
 
 
 
+	public void addListener(GameCommandListener listener) {
+		commandListeners.add(listener);
+	}
+
+
+
+
 	public void removeListener(GameInitListener listener) {
 		initListeners.remove(listener);
 	}
@@ -59,6 +68,12 @@ public class MTEventHandler extends ModModule {
 		tickListeners.remove(listener);
 	}
 
+
+
+
+	public void removeListener(GameCommandListener listener) {
+		commandListeners.remove(listener);
+	}
 
 	//=====  INITIALISATION
 
@@ -131,5 +146,15 @@ public class MTEventHandler extends ModModule {
 		renderListeners.forEach(listener -> listener.onRenderWorldLast(event));
 	}
 
+
+	//==== COMMANDS
+
+
+
+
+	@SubscribeEvent
+	public void onCommand(CommandEvent event) {
+		commandListeners.forEach(listener -> listener.onCommand(event));
+	}
 
 }

@@ -9,7 +9,7 @@ public interface ICommandToken {
 
 	String getUsage();
 
-	int requiredArguments();
+	int requiredArguments(int nRemaining);
 
 	TokenParseResult parse(ICommandSender sender, String[] args);
 

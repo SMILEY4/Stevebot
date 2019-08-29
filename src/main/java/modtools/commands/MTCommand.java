@@ -59,7 +59,6 @@ public class MTCommand {
 
 		List<String> argsList = new ArrayList<>(Arrays.asList(args));
 
-
 		for (int i = 0; i < tokens.size(); i++) {
 
 			// get command
@@ -68,7 +67,7 @@ public class MTCommand {
 			isOptional = token instanceof OptionalToken;
 
 			// get next args
-			String[] currentArgs = nextArgs(argsList, token.requiredArguments());
+			String[] currentArgs = nextArgs(argsList, token.requiredArguments(argsList.size()));
 			if (currentArgs == null && !isOptional) {
 				return "failed";
 			}
@@ -88,7 +87,7 @@ public class MTCommand {
 			}
 
 			// consume tokens
-			consume(argsList, token.requiredArguments());
+			consume(argsList, token.requiredArguments(argsList.size()));
 
 		}
 
