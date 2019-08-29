@@ -24,7 +24,7 @@ public class BlockRenderObject implements Renderable {
 
 
 	public BlockRenderObject(BlockPos pos, float width, Color color) {
-		this(new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), width, color);
+		this(new Vector3d(pos.getX(), pos.getY(), pos.getZ()), width, color);
 	}
 
 

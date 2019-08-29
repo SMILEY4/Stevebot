@@ -3,12 +3,6 @@ package stevebot.pathfinding.actions;
 public class ActionCosts {
 
 
-	public static void main(String[] args) {
-		for (int i = 1; i < 10; i++) {
-			System.out.println(i + "  " + COST_FALL_N(i));
-		}
-	}
-
 	// https://minecraft.gamepedia.com/Transportation
 
 
@@ -22,6 +16,7 @@ public class ActionCosts {
 	public static final double COST_STEP_DOWN = COST_WALKING; // 4.632
 	public static final double COST_LADDER_DOWN = 20.0 / 3.0; // 6.666
 	public static final double COST_STEP_UP = COST_WALKING * 0.5 + COST_FALL_N(1); // 7.556
+	public static final double COST_JUMP_GAP_1 = COST_WALKING * 2 + 3;
 	public static final double COST_LADDER_UP = 20.0 / 2.35; // 8.510
 	public static final double COST_SNEAKING = 20.0 / 1.3; // 15.384
 

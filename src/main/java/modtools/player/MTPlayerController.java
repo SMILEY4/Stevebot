@@ -90,7 +90,13 @@ public class MTPlayerController extends ModModule {
 	public BlockPos getPlayerBlockPos() {
 		EntityPlayerSP player = getPlayer();
 		if (player != null) {
-			return new BlockPos((int) player.posX, (int) player.posY, (int) player.posZ);
+			final boolean isNegativeX = player.posX < 0;
+			final boolean isNegativeY = player.posY < 0;
+			final boolean isNegativeZ = player.posZ < 0;
+			int x = ((int) player.posX) - (isNegativeX ? 1 : 0);
+			int y = ((int) player.posY) - (isNegativeY ? 1 : 0);
+			int z = ((int) player.posZ) - (isNegativeZ ? 1 : 0);
+			return new BlockPos(x, y, z);
 		} else {
 			return null;
 		}

@@ -14,6 +14,8 @@ public class ActionDropDownN extends Action {
 	private final Node to;
 	private final double cost;
 
+	private int state = 0;
+
 
 
 
@@ -50,17 +52,12 @@ public class ActionDropDownN extends Action {
 
 
 
-	private int state = 0;
-
-
-
-
 	@Override
 	public PathExecutor.State tick(boolean firstTick) {
 		final MTPlayerController controller = Stevebot.get().getPlayerController();
 
 
-		if (state == 0) { // prepare fall
+		if (state == 0) { // 0 = prepare fall
 			final double distToDrop = controller.getPlayerPosition().dist(getTo().pos.getX() + 0.5, controller.getPlayerPosition().y, getTo().pos.getZ() + 0.5);
 			final double threshold = isDiagonal(from.pos, to.pos) ? Math.sqrt(0.38) : (0.38);
 			if (distToDrop <= threshold) {
@@ -71,7 +68,7 @@ public class ActionDropDownN extends Action {
 			return PathExecutor.State.EXEC;
 
 
-		} else if (state == 1) { // slide/decelerate towards fall
+		} else if (state == 1) { // 1 = slide/decelerate towards fall
 			if (controller.getPlayer().onGround && controller.isPlayerMoving()) {
 				controller.getMovement().moveTowards(to.pos, true);
 			}
@@ -81,14 +78,14 @@ public class ActionDropDownN extends Action {
 			return PathExecutor.State.EXEC;
 
 
-		} else if (state == 2) { // falling
+		} else if (state == 2) { // 2 = falling
 			if (controller.getPlayer().onGround) {
 				state = 3;
 			}
 			return PathExecutor.State.EXEC;
 
 
-		} else if (state == 3) { // landed, walk to center
+		} else if (state == 3) { // 3 = landed, walk to center
 			if (controller.getMovement().moveTowards(to.pos, false)) {
 				return PathExecutor.State.DONE;
 			} else {

@@ -1,6 +1,7 @@
 package modtools.player;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
+import modtools.events.GameTickListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -10,7 +11,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
-import modtools.events.GameTickListener;
 
 public class Camera implements GameTickListener {
 
@@ -152,6 +152,35 @@ public class Camera implements GameTickListener {
 
 
 
+	public boolean isLookingAt(BlockPos pos, boolean ignorePitch, double rangeAngleDeg) {
+
+		EntityPlayerSP player = PLAYER_CONTROLLER.getPlayer();
+		if (player != null) {
+			final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
+			final Vector3d posBlock = new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+			final Vector3d dirBlock = posBlock.copy().sub(posHead).normalize();
+			final Vector3d lookDir = getLookDir();
+
+			if(ignorePitch) {
+				lookDir.y = dirBlock.y;
+			}
+
+			final double angle = lookDir.angleDeg(dirBlock);
+
+			return Math.abs(angle) <= rangeAngleDeg;
+
+		} else {
+			return false;
+		}
+	}
+
+
+
+
+
+
+
+
 	private void stopFreelook() {
 		cameraYaw = originalYaw;
 		cameraPitch = originalPitch;
@@ -175,7 +204,7 @@ public class Camera implements GameTickListener {
 
 
 
-	public Vec3d getLookDirMC() {
+	private Vec3d getLookDirMC() {
 		EntityPlayerSP player = PLAYER_CONTROLLER.getPlayer();
 		if (player != null) {
 			return player.getLook(0f);
