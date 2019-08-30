@@ -30,8 +30,22 @@ public class BlockUtils {
 
 
 
+	public static boolean isWater(BlockPos pos) {
+		return isWater(getBlock(pos));
+	}
+
+
+
+
 	public static boolean isLava(Block block) {
 		return LAVAL_FLOWING.equals(block) || LAVA_STILL.equals(block);
+	}
+
+
+
+
+	public static boolean isLava(BlockPos pos) {
+		return isLava(getBlock(pos));
 	}
 
 
@@ -44,19 +58,36 @@ public class BlockUtils {
 
 
 
+	public static boolean isFlowingLiquid(BlockPos pos) {
+		return isFlowingLiquid(getBlock(pos));
+	}
+
+
+
+
 	public static boolean isLiquid(Block block) {
 		return isLava(block) || isWater(block);
 	}
 
 
 
-	public static boolean isDangerous(BlockPos pos) {
-		return isDangerous(getBlock(pos));
+
+	public static boolean isLiquid(BlockPos pos) {
+		return isLiquid(getBlock(pos));
 	}
+
+
 
 
 	public static boolean isDangerous(Block block) {
 		return isLava(block) || block == Blocks.FIRE || block == Blocks.CACTUS || block == Blocks.WEB;
+	}
+
+
+
+
+	public static boolean isDangerous(BlockPos pos) {
+		return isDangerous(getBlock(pos));
 	}
 
 
@@ -82,8 +113,21 @@ public class BlockUtils {
 		} else {
 			return block.isNormalCube(Minecraft.getMinecraft().world.getBlockState(pos), Minecraft.getMinecraft().world, pos);
 		}
-
 	}
 
+
+
+
+	public static boolean avoidTouching(Block block) {
+		return BlockUtils.isDangerous(block) || BlockUtils.isFlowingLiquid(block);
+	}
+
+
+
+
+	public static boolean avoidTouching(BlockPos pos) {
+		return avoidTouching(getBlock(pos));
+
+	}
 
 }

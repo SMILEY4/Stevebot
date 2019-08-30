@@ -13,7 +13,6 @@ public class ActionWalk extends Action {
 	private final Node from;
 	private final Node to;
 	private final double cost;
-	private final BlockPos[] touching;
 
 
 
@@ -25,34 +24,19 @@ public class ActionWalk extends Action {
 
 
 
-	public ActionWalk(Node from, int dx, int dz, BlockPos[] touching) {
-		this(from, from.pos.add(dx, 0, dz), touching);
-	}
-
-
-
-
 	public ActionWalk(Node from, BlockPos to) {
-		this(from, to, null);
+		this(from, to, false);
 	}
 
 
 
 
-	public ActionWalk(Node from, BlockPos to, BlockPos[] touching) {
+	public ActionWalk(Node from, BlockPos to, boolean touchesBlocks) {
 		this.from = from;
 		this.to = Node.get(to);
 		this.cost = ActionCosts.COST_WALKING
 				* (Action.isDiagonal(from.pos, to) ? ActionCosts.COST_MULT_DIAGONAL : 1)
-				* (touching == null ? 1 : ActionCosts.COST_MULT_TOUCHING);
-		this.touching = touching;
-	}
-
-
-
-
-	public BlockPos[] getBlocksTouching() {
-		return touching;
+				* (touchesBlocks ? ActionCosts.COST_MULT_TOUCHING : 1);
 	}
 
 
@@ -105,18 +89,12 @@ public class ActionWalk extends Action {
 		}
 
 		// check destination pos
-		final BlockPos d0 = to.add(0, -1, 0);
-		final BlockPos d1 = to;
-		final BlockPos d2 = to.add(0, 1, 0);
-		if (!BlockUtils.canWalkOn(d0)) { // can not stand on dest block
-			return null;
-		}
-		if (!BlockUtils.canWalkThrough(d1) || !BlockUtils.canWalkThrough(d2)) { // can not move into dest blocks
+		if (!ActionUtils.canStandAt(to)) {
 			return null;
 		}
 
 		// additional checks if diagonal movement
-		BlockPos[] blocksTouching = null;
+		boolean touchesBlocks = false;
 		if (ActionWalk.isDiagonal(from, to)) {
 
 			final BlockPos a1 = from.add(to.getX() - from.getX(), 0, 0);
@@ -135,38 +113,32 @@ public class ActionWalk extends Action {
 			if (aBlocked) { // check a for additional dangers / blocks to avoid when touching these blocks
 				Block a1Block = BlockUtils.getBlock(a1);
 				Block a2Block = BlockUtils.getBlock(a2);
-				if (BlockUtils.isDangerous(a1Block) || BlockUtils.isFlowingLiquid(a1Block) || BlockUtils.isDangerous(a2Block) || BlockUtils.isFlowingLiquid(a2Block)) {
-					return null;
-				}
-				if (!BlockUtils.canWalkThrough(a1) && !BlockUtils.canWalkThrough(a2)) { // touches both blocks
-					blocksTouching = new BlockPos[]{a1, a2};
-				} else if (BlockUtils.canWalkThrough(a1) && !BlockUtils.canWalkThrough(a2)) { // touches top block
-					blocksTouching = new BlockPos[]{a2};
-				} else if (!BlockUtils.canWalkThrough(a1) && BlockUtils.canWalkThrough(a2)) { // touches bottom block
-					blocksTouching = new BlockPos[]{a1};
+				if (!BlockUtils.canWalkThrough(a1) || !BlockUtils.canWalkThrough(a2)) {
+					touchesBlocks = true;
+					if (BlockUtils.avoidTouching(a1Block) || BlockUtils.avoidTouching(a2Block)) {
+						return null;
+					}
 				}
 			}
 
 			if (bBlocked) { // check b for additional dangers / blocks to avoid when touching these blocks
 				Block b1Block = BlockUtils.getBlock(b1);
 				Block b2Block = BlockUtils.getBlock(b2);
-				if (BlockUtils.isDangerous(b1Block) || BlockUtils.isFlowingLiquid(b1Block) || BlockUtils.isDangerous(b2Block) || BlockUtils.isFlowingLiquid(b2Block)) {
-					return null;
-				}
-				if (!BlockUtils.canWalkThrough(b1) && !BlockUtils.canWalkThrough(b2)) { // touches both blocks
-					blocksTouching = new BlockPos[]{b1, b2};
-				} else if (BlockUtils.canWalkThrough(b1) && !BlockUtils.canWalkThrough(b2)) { // touches top block
-					blocksTouching = new BlockPos[]{b2};
-				} else if (!BlockUtils.canWalkThrough(b1) && BlockUtils.canWalkThrough(b2)) { // touches bottom block
-					blocksTouching = new BlockPos[]{b1};
+				if (!BlockUtils.canWalkThrough(b1) || !BlockUtils.canWalkThrough(b2)) {
+					touchesBlocks = true;
+					if (BlockUtils.avoidTouching(b1Block) || BlockUtils.avoidTouching(b2Block)) {
+						return null;
+					}
 				}
 			}
 
 		}
 
 		// valid movement -> create action
-		return new ActionWalk(node, to, blocksTouching);
+		return new ActionWalk(node, to, touchesBlocks);
 	}
 
 
 }
+
+

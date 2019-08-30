@@ -11,10 +11,10 @@ public class ActionGenerator {
 	public static List<Action> getActions(Node node) {
 		List<Action> actions = new ArrayList<>();
 		getActionsWalk(actions, node);
-		getActionsStepUp(actions, node);
-		getActionsStepDown(actions, node);
-		getActionsDropDownN(actions, node);
-		getActionsJump1Gap(actions, node);
+//		getActionsStepUp(actions, node);
+//		getActionsStepDown(actions, node);
+//		getActionsDropDownN(actions, node);
+//		getActionsJump1Gap(actions, node);
 		return actions;
 	}
 
