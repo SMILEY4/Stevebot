@@ -1,13 +1,73 @@
 package stevebot.pathfinding.actions;
 
-import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
+import stevebot.Direction;
 import stevebot.Stevebot;
 import stevebot.pathfinding.BlockUtils;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
 
 public class ActionWalk extends Action {
+
+
+	public static ActionWalk createValid(Node node, Direction direction) {
+		final BlockPos from = node.pos;
+
+		final BlockPos s0 = from.add(0, -1, 0);
+		if (!BlockUtils.canWalkOn(s0)) {
+			return null;
+		}
+
+		if (direction.diagonal) {
+			return createValidDiagonal(node, direction);
+		} else {
+			return createValidStraight(node, direction);
+		}
+
+	}
+
+
+
+
+	private static ActionWalk createValidStraight(Node node, Direction direction) {
+		final BlockPos to = node.pos.add(direction.dx, 0, direction.dz);
+
+		if (ActionUtils.canStandAt(to)) {
+			return new ActionWalk(node, to);
+
+		} else {
+			return null;
+		}
+
+	}
+
+
+
+
+	private static ActionWalk createValidDiagonal(Node node, Direction direction) {
+		final BlockPos to = node.pos.add(direction.dx, 0, direction.dz);
+
+		Direction[] splitDirection = direction.split();
+		final BlockPos p0 = node.pos.add(splitDirection[0].dx, 0, splitDirection[0].dz);
+		final BlockPos p1 = node.pos.add(splitDirection[1].dx, 0, splitDirection[1].dz);
+
+		boolean traversable0 = ActionUtils.canStandAt(p0);
+		boolean traversable1 = ActionUtils.canStandAt(p1);
+
+		boolean avoid0 = BlockUtils.avoidTouching(p0) || BlockUtils.avoidTouching(p0.add(0, 1, 0));
+		boolean avoid1 = BlockUtils.avoidTouching(p1) || BlockUtils.avoidTouching(p1.add(0, 1, 0));
+
+		if (ActionUtils.canStandAt(to) && (traversable0 || traversable1)) {
+			if ((traversable0 && avoid1) || (traversable1 && avoid0)) {
+				return null;
+			}
+			return new ActionWalk(node, to, !traversable0 || !traversable1);
+		} else {
+			return null;
+		}
+	}
+
+
 
 
 	private final Node from;
@@ -73,69 +133,6 @@ public class ActionWalk extends Action {
 		} else {
 			return PathExecutor.State.EXEC;
 		}
-	}
-
-
-
-
-	public static ActionWalk createValid(Node node, int x, int z) {
-		final BlockPos from = node.pos;
-		final BlockPos to = node.pos.add(x, 0, z);
-
-		// check if standing on a block
-		final BlockPos s0 = from.add(0, -1, 0);
-		if (!BlockUtils.canWalkOn(s0)) {
-			return null;
-		}
-
-		// check destination pos
-		if (!ActionUtils.canStandAt(to)) {
-			return null;
-		}
-
-		// additional checks if diagonal movement
-		boolean touchesBlocks = false;
-		if (ActionWalk.isDiagonal(from, to)) {
-
-			final BlockPos a1 = from.add(to.getX() - from.getX(), 0, 0);
-			final BlockPos a2 = from.add(to.getX() - from.getX(), 1, 0);
-
-			final BlockPos b1 = from.add(0, 0, to.getZ() - from.getZ());
-			final BlockPos b2 = from.add(0, 1, to.getZ() - from.getZ());
-
-			final boolean aBlocked = !(BlockUtils.canWalkThrough(a1) && BlockUtils.canWalkThrough(a2));
-			final boolean bBlocked = !(BlockUtils.canWalkThrough(b1) && BlockUtils.canWalkThrough(b2));
-
-			if (aBlocked && bBlocked) { // can not reach destination block
-				return null;
-			}
-
-			if (aBlocked) { // check a for additional dangers / blocks to avoid when touching these blocks
-				Block a1Block = BlockUtils.getBlock(a1);
-				Block a2Block = BlockUtils.getBlock(a2);
-				if (!BlockUtils.canWalkThrough(a1) || !BlockUtils.canWalkThrough(a2)) {
-					touchesBlocks = true;
-					if (BlockUtils.avoidTouching(a1Block) || BlockUtils.avoidTouching(a2Block)) {
-						return null;
-					}
-				}
-			}
-
-			if (bBlocked) { // check b for additional dangers / blocks to avoid when touching these blocks
-				Block b1Block = BlockUtils.getBlock(b1);
-				Block b2Block = BlockUtils.getBlock(b2);
-				if (!BlockUtils.canWalkThrough(b1) || !BlockUtils.canWalkThrough(b2)) {
-					touchesBlocks = true;
-					if (BlockUtils.avoidTouching(b1Block) || BlockUtils.avoidTouching(b2Block)) {
-						return null;
-					}
-				}
-			}
-
-		}
-
-		// valid movement -> create action
-		return new ActionWalk(node, to, touchesBlocks);
 	}
 
 

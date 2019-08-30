@@ -1,5 +1,6 @@
 package stevebot.pathfinding.actions;
 
+import stevebot.Direction;
 import stevebot.pathfinding.Node;
 
 import java.util.ArrayList;
@@ -22,15 +23,10 @@ public class ActionGenerator {
 
 
 	private static void getActionsWalk(List<Action> actions, Node node) {
-		for (int x = -1; x <= 1; x++) {
-			for (int z = -1; z <= 1; z++) {
-				if (x == 0 && z == 0) {
-					continue;
-				}
-				ActionWalk action = ActionWalk.createValid(node, x, z);
-				if (action != null) {
-					actions.add(action);
-				}
+		for (Direction direction : Direction.CARDINALS) {
+			ActionWalk action = ActionWalk.createValid(node, direction);
+			if (action != null) {
+				actions.add(action);
 			}
 		}
 	}

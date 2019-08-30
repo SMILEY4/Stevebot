@@ -11,15 +11,15 @@ import org.apache.logging.log4j.Logger;
 import stevebot.pathfinding.PathHandler;
 
 @Mod (
-		modid = ModInfo.MODID,
-		name = ModInfo.NAME,
-		version = ModInfo.VERSION,
-		acceptedMinecraftVersions = ModInfo.MC_VERSION
+		modid = Settings.MODID,
+		name = Settings.NAME,
+		version = Settings.VERSION,
+		acceptedMinecraftVersions = Settings.MC_VERSION
 )
 public class Stevebot extends ModBase {
 
 
-	public static final Logger LOGGER = LogManager.getLogger(ModInfo.MODID);
+	public static final Logger LOGGER = LogManager.getLogger(Settings.MODID);
 
 	public static final PathHandler PATH_HANDLER = new PathHandler();
 
