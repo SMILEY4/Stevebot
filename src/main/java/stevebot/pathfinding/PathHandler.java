@@ -3,6 +3,7 @@ package stevebot.pathfinding;
 import modtools.rendering.Renderable;
 import net.minecraft.util.math.BlockPos;
 import stevebot.Stevebot;
+import stevebot.pathfinding.goal.Goal;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,13 +21,13 @@ public class PathHandler {
 
 
 
-	public void calculatePath(BlockPos from, BlockPos to, long timeout) {
+	public void calculatePath(BlockPos from, Goal goal, long timeout) {
 		service.submit(() -> {
-			Stevebot.get().getPlayerController().sendMessage("Calculating Path from " + from + " to " + to + "  (timeout@" + (timeout / 1000.0) + ")");
+			Stevebot.get().getPlayerController().sendMessage("Calculating Path from " + from + " to " + goal.goalString() + "  (timeout@" + (timeout / 1000.0) + ")");
 			Stevebot.get().getRenderer().removeRenderable(pathRenderable);
 
 			long ts = System.currentTimeMillis();
-			path = Pathfinding.calculatePath(from, to, timeout);
+			path = Pathfinding.calculatePath(from, goal, timeout);
 
 			if (path != null) {
 				pathRenderable = path.toRenderable();

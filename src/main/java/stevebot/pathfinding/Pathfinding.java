@@ -4,6 +4,7 @@ import net.minecraft.util.math.BlockPos;
 import stevebot.Stevebot;
 import stevebot.pathfinding.actions.Action;
 import stevebot.pathfinding.actions.ActionGenerator;
+import stevebot.pathfinding.goal.Goal;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -13,7 +14,7 @@ import java.util.Set;
 public class Pathfinding {
 
 
-	public static Path calculatePath(BlockPos posStart, BlockPos posDest, long timeout) {
+	public static Path calculatePath(BlockPos posStart, Goal goal, long timeout) {
 		Node.nodeCache.clear();
 		Node nodeStart = Node.get(posStart);
 		nodeStart.gcost = 0;
@@ -33,7 +34,7 @@ public class Pathfinding {
 
 			Node current = removeLowest(openSet);
 			current.close();
-			if (current.pos.equals(posDest)) {
+			if (goal.reached(current.pos)) {
 				Path p = buildPath(nodeStart, current);
 				if (path == null || p.cost < path.cost) {
 					path = p;
@@ -57,7 +58,7 @@ public class Pathfinding {
 				}
 				if (newCost < next.gcost || !openSet.contains(next)) {
 					next.gcost = newCost;
-					next.hcost = calcHCost(next.pos, posDest);
+					next.hcost = goal.calcHCost(next.pos);
 					next.prev = current;
 					next.action = action;
 					next.open = true;
@@ -69,13 +70,6 @@ public class Pathfinding {
 		}
 
 		return path == null ? new Path() : path;
-	}
-
-
-
-
-	private static double calcHCost(BlockPos from, BlockPos to) {
-		return Math.sqrt(from.distanceSq(to));
 	}
 
 
