@@ -8,14 +8,6 @@ import stevebot.pathfinding.PathExecutor;
 public abstract class Action {
 
 
-	static boolean isDiagonal(BlockPos from, BlockPos to) {
-		final Vec3i dir = to.subtract(from);
-		return Math.abs(dir.getX()) + Math.abs(dir.getZ()) == 2;
-	}
-
-
-
-
 	public abstract double getCost();
 
 	public abstract Node getFrom();
@@ -23,5 +15,20 @@ public abstract class Action {
 	public abstract Node getTo();
 
 	public abstract PathExecutor.State tick(boolean fistTick);
+
+
+
+
+	public void resetAction() {
+	}
+
+
+
+
+	static boolean isDiagonal(BlockPos from, BlockPos to) {
+		final Vec3i dir = to.subtract(from);
+		return Math.abs(dir.getX()) + Math.abs(dir.getZ()) == 2;
+	}
+
 
 }

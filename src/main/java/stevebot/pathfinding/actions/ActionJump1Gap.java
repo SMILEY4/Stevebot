@@ -84,7 +84,7 @@ public class ActionJump1Gap extends Action {
 		} else if (state == 2) {
 			if (!controller.getMovement().moveTowards(to.pos, true)) {
 				if (controller.getPlayerBlockPos().equals(from.pos)) {
-					controller.setJump();
+					controller.setJump(false);
 				}
 				return PathExecutor.State.EXEC;
 

@@ -218,22 +218,44 @@ public class MTPlayerController extends ModModule {
 
 
 
-	public void setJump() {
-		setJump(true);
+	public void setJump(boolean allowInAir) {
+		setJump(true, allowInAir);
 	}
 
 
 
 
-	public void setJump(boolean jump) {
-		setInput(PlayerInputConfig.InputType.JUMP, jump);
+	public void setJump(boolean jump, boolean allowInAir) {
+		if (jump) {
+			if (getPlayer() == null) {
+				return;
+			}
+			if (getPlayer().onGround) {
+				setInput(PlayerInputConfig.InputType.JUMP, true);
+			} else {
+				if (allowInAir) {
+					setInput(PlayerInputConfig.InputType.JUMP, true);
+				}
+			}
+		} else {
+			setInput(PlayerInputConfig.InputType.JUMP, false);
+		}
 	}
 
 
 
 
-	public void setSneak(boolean sneak) {
-		setInput(PlayerInputConfig.InputType.SNEAK, sneak);
+	public void setSprint() {
+		getPlayer().setSprinting(true);
+	}
+
+
+
+
+	public void setSprint(boolean sprint) {
+		if(getPlayer() != null) {
+			getPlayer().setSprinting(sprint);
+		}
 	}
 
 
@@ -241,6 +263,13 @@ public class MTPlayerController extends ModModule {
 
 	public void setSneak() {
 		setSneak(true);
+	}
+
+
+
+
+	public void setSneak(boolean sneak) {
+		setInput(PlayerInputConfig.InputType.SNEAK, sneak);
 	}
 
 
@@ -302,7 +331,8 @@ public class MTPlayerController extends ModModule {
 		setMoveBackward(false);
 		setMoveLeft(false);
 		setMoveRight(false);
-		setJump(false);
+		setJump(false, true);
+		setSprint(false);
 		setSneak(false);
 //		setPlaceBlock(false);
 //		setBreakBlock(false);

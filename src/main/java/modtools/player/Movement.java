@@ -1,5 +1,7 @@
 package modtools.player;
 
+import com.ruegnerlukas.simplemath.MathUtils;
+import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.util.math.BlockPos;
 
 public class Movement {
@@ -54,6 +56,78 @@ public class Movement {
 		} else {
 			return true;
 		}
+	}
+
+
+
+
+	public boolean slowDown(double prefSpeed) {
+		Vector3d motion = PLAYER_CONTROLLER.getMotionVector().mul(1, 0, 1);
+		final double speed = motion.length();
+
+		PLAYER_CONTROLLER.sendMessage("slow down " + speed);
+
+		if (speed > prefSpeed) {
+//			final double angle = Math.toDegrees(angleRad(view.x, view.y, -motion.x, -motion.y));
+//			moveAngle(angle);
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+
+
+
+	private void moveAngle(double angle) {
+
+		if (MathUtils.inRange(angle, -22.5, 22.5)) {
+			// f
+			PLAYER_CONTROLLER.setMoveForward();
+
+		} else if (MathUtils.inRange(angle, 22.5, 67.5)) {
+			// f,r
+			PLAYER_CONTROLLER.setMoveForward();
+			PLAYER_CONTROLLER.setMoveRight();
+
+		} else if (MathUtils.inRange(angle, -67.5, -22.5)) {
+			// f,l
+			PLAYER_CONTROLLER.setMoveForward();
+			PLAYER_CONTROLLER.setMoveLeft();
+
+		} else if (MathUtils.inRange(angle, 67, 112.5)) {
+			// r
+			PLAYER_CONTROLLER.setMoveRight();
+
+		} else if (MathUtils.inRange(angle, -112.5, -67)) {
+			// l
+			PLAYER_CONTROLLER.setMoveLeft();
+
+
+		} else if (MathUtils.inRange(angle, 112.5, 157.5)) {
+			// b,r
+			PLAYER_CONTROLLER.setMoveRight();
+			PLAYER_CONTROLLER.setMoveBackward();
+
+		} else if (MathUtils.inRange(angle, -157.5, -112.5)) {
+			// b,l
+			PLAYER_CONTROLLER.setMoveLeft();
+			PLAYER_CONTROLLER.setMoveBackward();
+
+		} else {
+			// b
+			PLAYER_CONTROLLER.setMoveBackward();
+		}
+
+	}
+
+
+
+
+	private float angleRad(double x0, double y0, double x1, double y1) {
+		final double cross = (x0 * y1) - (y0 * x1);
+		final double dot = (x0 * x1) + (y0 * y1);
+		return (float) Math.atan2(cross, dot);
 	}
 
 

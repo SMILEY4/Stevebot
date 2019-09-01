@@ -1,5 +1,6 @@
 package modtools.player;
 
+import com.ruegnerlukas.simplemath.vectors.vec2.Vector2d;
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import modtools.events.GameTickListener;
 import net.minecraft.client.Minecraft;
@@ -156,27 +157,28 @@ public class Camera implements GameTickListener {
 
 		EntityPlayerSP player = PLAYER_CONTROLLER.getPlayer();
 		if (player != null) {
-			final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
-			final Vector3d posBlock = new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
-			final Vector3d dirBlock = posBlock.copy().sub(posHead).normalize();
-			final Vector3d lookDir = getLookDir();
 
-			if(ignorePitch) {
-				lookDir.y = dirBlock.y;
+			if (ignorePitch) {
+				final Vector2d posHead = new Vector2d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).z);
+				final Vector2d posBlock = new Vector2d(pos.getX() + 0.5, pos.getZ() + 0.5);
+				final Vector2d dirBlock = posBlock.copy().sub(posHead).normalize();
+				final Vector2d lookDir = new Vector2d(getLookDir().x, getLookDir().z).normalize();
+				final double angle = lookDir.angleDeg(dirBlock);
+				return Math.abs(angle) <= rangeAngleDeg;
+
+			} else {
+				final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
+				final Vector3d posBlock = new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+				final Vector3d dirBlock = posBlock.copy().sub(posHead).normalize();
+				final Vector3d lookDir = getLookDir().normalize();
+				final double angle = lookDir.angleDeg(dirBlock);
+				return Math.abs(angle) <= rangeAngleDeg;
 			}
-
-			final double angle = lookDir.angleDeg(dirBlock);
-
-			return Math.abs(angle) <= rangeAngleDeg;
 
 		} else {
 			return false;
 		}
 	}
-
-
-
-
 
 
 

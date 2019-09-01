@@ -12,8 +12,8 @@ public class ActionGenerator {
 	public static List<Action> getActions(Node node) {
 		List<Action> actions = new ArrayList<>();
 		getActionsWalk(actions, node);
-//		getActionsStepUp(actions, node);
-//		getActionsStepDown(actions, node);
+		getActionsStepDown(actions, node);
+		getActionsStepUp(actions, node);
 //		getActionsDropDownN(actions, node);
 //		getActionsJump1Gap(actions, node);
 		return actions;
@@ -24,24 +24,13 @@ public class ActionGenerator {
 
 	private static void getActionsWalk(List<Action> actions, Node node) {
 		for (Direction direction : Direction.CARDINALS) {
-			ActionWalk action = ActionWalk.createValid(node, direction);
-			if (action != null) {
-				actions.add(action);
-			}
-		}
-	}
-
-
-
-
-	private static void getActionsStepUp(List<Action> actions, Node node) {
-
-		for (int x = -1; x <= 1; x++) {
-			for (int z = -1; z <= 1; z++) {
-				if (x == 0 && z == 0) {
-					continue;
+			if (direction.diagonal) {
+				ActionWalkDiagonal action = ActionWalkDiagonal.createValid(node, direction);
+				if (action != null) {
+					actions.add(action);
 				}
-				ActionStepUp action = ActionStepUp.createValid(node, x, z);
+			} else {
+				ActionWalkStraight action = ActionWalkStraight.createValid(node, direction);
 				if (action != null) {
 					actions.add(action);
 				}
@@ -53,12 +42,33 @@ public class ActionGenerator {
 
 
 	private static void getActionsStepDown(List<Action> actions, Node node) {
-		for (int x = -1; x <= 1; x++) {
-			for (int z = -1; z <= 1; z++) {
-				if (x == 0 && z == 0) {
-					continue;
+		for (Direction direction : Direction.CARDINALS) {
+			if (direction.diagonal) {
+				ActionStepDownDiagonal action = ActionStepDownDiagonal.createValid(node, direction);
+				if (action != null) {
+					actions.add(action);
 				}
-				ActionStepDown action = ActionStepDown.createValid(node, x, z);
+			} else {
+				ActionStepDownStraight action = ActionStepDownStraight.createValid(node, direction);
+				if (action != null) {
+					actions.add(action);
+				}
+			}
+		}
+	}
+
+
+
+
+	private static void getActionsStepUp(List<Action> actions, Node node) {
+		for (Direction direction : Direction.CARDINALS) {
+			if (direction.diagonal) {
+				ActionStepUpDiagonal action = ActionStepUpDiagonal.createValid(node, direction);
+				if (action != null) {
+					actions.add(action);
+				}
+			} else {
+				ActionStepUpStraight action = ActionStepUpStraight.createValid(node, direction);
 				if (action != null) {
 					actions.add(action);
 				}

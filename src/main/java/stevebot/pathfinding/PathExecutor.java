@@ -115,7 +115,7 @@ public class PathExecutor implements GameTickListener {
 
 	private boolean nextAction() {
 		indexFrom++;
-		if (indexFrom == path.nodes.size() - 1) { // next from is last node
+		if (indexFrom == path.nodes.size() - 1) { // next is last node
 			from = path.nodes.get(indexFrom);
 			to = null;
 			action = null;
@@ -124,6 +124,7 @@ public class PathExecutor implements GameTickListener {
 			from = path.nodes.get(indexFrom);
 			to = path.nodes.get(indexFrom + 1);
 			action = to.action;
+			action.resetAction();
 			return true;
 		}
 	}

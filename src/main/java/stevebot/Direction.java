@@ -130,4 +130,34 @@ public enum Direction {
 		return get(a.dx + b.dx, a.dy + b.dy, a.dz + b.dz);
 	}
 
+
+
+
+	public Direction opposite(Direction direction) {
+		switch (direction) {
+			case NORTH:
+				return SOUTH;
+			case EAST:
+				return WEST;
+			case SOUTH:
+				return NORTH;
+			case WEST:
+				return EAST;
+			case NORTH_EAST:
+				return SOUTH_WEST;
+			case NORTH_WEST:
+				return SOUTH_EAST;
+			case SOUTH_EAST:
+				return NORTH_WEST;
+			case SOUTH_WEST:
+				return NORTH_EAST;
+			case UP:
+				return DOWN;
+			case DOWN:
+				return UP;
+			default:
+				return NONE;
+		}
+	}
+
 }

@@ -1,9 +1,15 @@
 package stevebot.pathfinding;
 
+import com.ruegnerlukas.simplemath.vectors.vec2.Vector2d;
+import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import stevebot.Direction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockUtils {
 
@@ -127,6 +133,49 @@ public class BlockUtils {
 
 	public static boolean avoidTouching(BlockPos pos) {
 		return avoidTouching(getBlock(pos));
+	}
+
+
+
+
+	private static final List<Vector2d> intersections = new ArrayList<>();
+
+
+
+
+	public static double distToEdge(Vector3d pos, Direction direction) {
+
+		final double edgeNorth = Math.floor(pos.z);
+		final double edgeSouth = Math.ceil(pos.z);
+		final double edgeEast = Math.ceil(pos.x);
+		final double edgeWest = Math.floor(pos.x);
+
+		final double distEdgeNorth = Math.abs(pos.z - edgeNorth);
+		final double distEdgeEast = Math.abs(pos.x - edgeEast);
+		final double distEdgeSouth = Math.abs(pos.z - edgeSouth);
+		final double distEdgeWest = Math.abs(pos.x - edgeWest);
+
+		switch (direction) {
+			case NORTH:
+				return distEdgeNorth;
+			case EAST:
+				return distEdgeEast;
+			case SOUTH:
+				return distEdgeSouth;
+			case WEST:
+				return distEdgeWest;
+			case NORTH_EAST:
+				return Math.sqrt(distEdgeNorth * distEdgeNorth + distEdgeEast * distEdgeEast);
+			case NORTH_WEST:
+				return Math.sqrt(distEdgeNorth * distEdgeNorth + distEdgeWest * distEdgeWest);
+			case SOUTH_EAST:
+				return Math.sqrt(distEdgeSouth * distEdgeSouth + distEdgeEast * distEdgeEast);
+			case SOUTH_WEST:
+				return Math.sqrt(distEdgeSouth * distEdgeSouth + distEdgeWest * distEdgeWest);
+			default: {
+				return -1;
+			}
+		}
 
 	}
 
