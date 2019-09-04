@@ -19,7 +19,7 @@ public class ActionWalkStraight extends Action {
 
 		final BlockPos to = node.pos.add(direction.dx, 0, direction.dz);
 		if (ActionUtils.canStandAt(to)) {
-			return new ActionWalkStraight(node, to);
+			return new ActionWalkStraight(node, to, true);
 		} else {
 			return null;
 		}
@@ -32,14 +32,16 @@ public class ActionWalkStraight extends Action {
 	private final Node from;
 	private final Node to;
 	private final double cost;
+	private final boolean sprint;
 
 
 
 
-	public ActionWalkStraight(Node from, BlockPos to) {
+	public ActionWalkStraight(Node from, BlockPos to, boolean sprint) {
 		this.from = from;
 		this.to = Node.get(to);
-		this.cost = ActionCosts.COST_SPRINTING;
+		this.cost = sprint ? ActionCosts.COST_SPRINTING : ActionCosts.COST_WALKING;
+		this.sprint = sprint;
 	}
 
 
@@ -74,7 +76,9 @@ public class ActionWalkStraight extends Action {
 		if (Stevebot.get().getPlayerController().getMovement().moveTowards(to.pos, true)) {
 			return PathExecutor.State.DONE;
 		} else {
-			Stevebot.get().getPlayerController().setSprint();
+			if (sprint) {
+				Stevebot.get().getPlayerController().setSprint();
+			}
 			return PathExecutor.State.EXEC;
 		}
 	}

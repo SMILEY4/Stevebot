@@ -1,5 +1,6 @@
 package stevebot.pathfinding;
 
+import modtools.rendering.Renderable;
 import net.minecraft.util.math.BlockPos;
 import stevebot.Stevebot;
 import stevebot.pathfinding.actions.Action;
@@ -12,6 +13,11 @@ import java.util.List;
 import java.util.Set;
 
 public class Pathfinding {
+
+
+	private static Renderable tempPathRenderable;
+
+
 
 
 	public static Path calculatePath(BlockPos posStart, Goal goal, long timeout) {
@@ -39,6 +45,7 @@ public class Pathfinding {
 				if (path == null || p.cost < path.cost) {
 					path = p;
 				}
+
 				Stevebot.LOGGER.info("Possible path found cost=" + path.cost);
 			}
 

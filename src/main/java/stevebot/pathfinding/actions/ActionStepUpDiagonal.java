@@ -88,7 +88,14 @@ public class ActionStepUpDiagonal extends Action {
 
 
 
-	@SuppressWarnings ("Duplicates")
+	@Override
+	public void resetAction() {
+		currentState = 0;
+	}
+
+
+
+
 	@Override
 	public PathExecutor.State tick(boolean firstTick) {
 
@@ -127,12 +134,5 @@ public class ActionStepUpDiagonal extends Action {
 		return PathExecutor.State.EXEC;
 	}
 
-
-
-
-	@Override
-	public void resetAction() {
-		currentState = 0;
-	}
 
 }

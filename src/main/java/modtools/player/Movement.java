@@ -65,8 +65,6 @@ public class Movement {
 		Vector3d motion = PLAYER_CONTROLLER.getMotionVector().mul(1, 0, 1);
 		final double speed = motion.length();
 
-		PLAYER_CONTROLLER.sendMessage("slow down " + speed);
-
 		if (speed > prefSpeed) {
 //			final double angle = Math.toDegrees(angleRad(view.x, view.y, -motion.x, -motion.y));
 //			moveAngle(angle);

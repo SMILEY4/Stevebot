@@ -31,7 +31,6 @@ public class PathHandler {
 
 			if (path != null) {
 				pathRenderable = path.toRenderable();
-
 				Stevebot.get().getRenderer().addRenderable(pathRenderable);
 				Stevebot.get().getPlayerController().sendMessage("Done:" + ((System.currentTimeMillis() - ts) / 1000.0) + "s, nodes=" + path.nodes.size() + ", cost=" + path.cost + ", explored:" + Node.nodeCache.size());
 			} else {

@@ -33,7 +33,7 @@ public class ActionWalkDiagonal extends Action {
 			if ((traversable0 && avoid1) || (traversable1 && avoid0)) {
 				return null;
 			}
-			return new ActionWalkDiagonal(node, to, !traversable0 || !traversable1);
+			return new ActionWalkDiagonal(node, to, true, !traversable0 || !traversable1);
 		} else {
 			return null;
 		}
@@ -46,14 +46,16 @@ public class ActionWalkDiagonal extends Action {
 	private final Node from;
 	private final Node to;
 	private final double cost;
+	private final boolean sprint;
 
 
 
 
-	public ActionWalkDiagonal(Node from, BlockPos to, boolean touchesBlocks) {
+	public ActionWalkDiagonal(Node from, BlockPos to, boolean sprint, boolean touchesBlocks) {
 		this.from = from;
 		this.to = Node.get(to);
-		this.cost = ActionCosts.COST_SPRINTING * ActionCosts.COST_MULT_DIAGONAL * (touchesBlocks ? ActionCosts.COST_MULT_TOUCHING : 1);
+		this.cost = (sprint ? ActionCosts.COST_SPRINTING : ActionCosts.COST_WALKING) * ActionCosts.COST_MULT_DIAGONAL * (touchesBlocks ? ActionCosts.COST_MULT_TOUCHING : 1);
+		this.sprint = sprint;
 	}
 
 
@@ -88,7 +90,9 @@ public class ActionWalkDiagonal extends Action {
 		if (Stevebot.get().getPlayerController().getMovement().moveTowards(to.pos, true)) {
 			return PathExecutor.State.DONE;
 		} else {
-			Stevebot.get().getPlayerController().setSprint();
+			if(sprint) {
+				Stevebot.get().getPlayerController().setSprint();
+			}
 			return PathExecutor.State.EXEC;
 		}
 	}
