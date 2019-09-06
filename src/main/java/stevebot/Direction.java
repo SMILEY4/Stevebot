@@ -1,5 +1,7 @@
 package stevebot;
 
+import net.minecraft.util.math.BlockPos;
+
 public enum Direction {
 
 
@@ -80,7 +82,21 @@ public enum Direction {
 
 
 
-	public Direction get(int dx, int dy, int dz) {
+	public Direction merge(Direction other) {
+		return Direction.merge(this, other);
+	}
+
+
+
+
+	public static Direction merge(Direction a, Direction b) {
+		return get(a.dx + b.dx, a.dy + b.dy, a.dz + b.dz);
+	}
+
+
+
+
+	public static Direction get(int dx, int dy, int dz) {
 		if (dy < 0) {
 			return DOWN;
 		}
@@ -126,13 +142,6 @@ public enum Direction {
 
 
 
-	public Direction merge(Direction a, Direction b) {
-		return get(a.dx + b.dx, a.dy + b.dy, a.dz + b.dz);
-	}
-
-
-
-
 	public Direction opposite(Direction direction) {
 		switch (direction) {
 			case NORTH:
@@ -158,6 +167,23 @@ public enum Direction {
 			default:
 				return NONE;
 		}
+	}
+
+
+
+
+	public static Direction get(BlockPos from, BlockPos to) {
+		return Direction.get(from, to, false);
+	}
+
+
+
+
+	public static Direction get(BlockPos from, BlockPos to, boolean ignoreY) {
+		final int dx = to.getX() - from.getX();
+		final int dy = ignoreY ? 0 : to.getY() - from.getY();
+		final int dz = to.getZ() - from.getZ();
+		return Direction.get(dx, dy, dz);
 	}
 
 }

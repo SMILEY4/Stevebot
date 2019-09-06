@@ -12,6 +12,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import stevebot.pathfinding.BlockUtils;
 
 public class MTPlayerController extends ModModule {
 
@@ -90,13 +91,7 @@ public class MTPlayerController extends ModModule {
 	public BlockPos getPlayerBlockPos() {
 		EntityPlayerSP player = getPlayer();
 		if (player != null) {
-			final boolean isNegativeX = player.posX < 0;
-			final boolean isNegativeY = player.posY < 0;
-			final boolean isNegativeZ = player.posZ < 0;
-			int x = ((int) player.posX) - (isNegativeX ? 1 : 0);
-			int y = ((int) player.posY) - (isNegativeY ? 1 : 0);
-			int z = ((int) player.posZ) - (isNegativeZ ? 1 : 0);
-			return new BlockPos(x, y, z);
+			return BlockUtils.toBlockPos(player.posX, player.posY, player.posZ);
 		} else {
 			return null;
 		}

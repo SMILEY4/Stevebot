@@ -1,15 +1,11 @@
 package stevebot.pathfinding;
 
-import com.ruegnerlukas.simplemath.vectors.vec2.Vector2d;
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import stevebot.Direction;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BlockUtils {
 
@@ -138,7 +134,12 @@ public class BlockUtils {
 
 
 
-	private static final List<Vector2d> intersections = new ArrayList<>();
+	public static double distToCenter(Vector3d pos) {
+		final BlockPos blockPos = toBlockPos(pos);
+		final double dx = Math.abs((blockPos.getX() + 0.5) - pos.x);
+		final double dy = Math.abs((blockPos.getZ() + 0.5) - pos.z);
+		return Math.max(dx, dy);
+	}
 
 
 
@@ -177,6 +178,26 @@ public class BlockUtils {
 			}
 		}
 
+	}
+
+
+
+
+	public static BlockPos toBlockPos(Vector3d pos) {
+		return toBlockPos(pos.x, pos.y, pos.z);
+	}
+
+
+
+
+	public static BlockPos toBlockPos(double x, double y, double z) {
+		final boolean isNegativeX = x < 0;
+		final boolean isNegativeY = y < 0;
+		final boolean isNegativeZ = z < 0;
+		int bpx = ((int) x) - (isNegativeX ? 1 : 0);
+		int bpy = ((int) y) - (isNegativeY ? 1 : 0);
+		int bpz = ((int) z) - (isNegativeZ ? 1 : 0);
+		return new BlockPos(bpx, bpy, bpz);
 	}
 
 }
