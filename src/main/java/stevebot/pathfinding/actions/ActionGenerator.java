@@ -16,7 +16,8 @@ public class ActionGenerator {
 		getActionsStepUp(actions, node);
 		getActionsDropDownN(actions, node);
 		getActionsFall(actions, node);
-		getActionsJump1Gap(actions, node);
+		getActionsWalkJump(actions, node);
+		getActionsSprintJump(actions, node);
 		return actions;
 	}
 
@@ -109,12 +110,26 @@ public class ActionGenerator {
 
 
 
-	private static void getActionsJump1Gap(List<Action> actions, Node node) {
+	private static void getActionsWalkJump(List<Action> actions, Node node) {
 		for (Direction direction : Direction.CARDINALS) {
-			ActionJump1Diagonal action = ActionJump1Diagonal.createValid(node, direction.dx * 2, direction.dz * 2, direction);
-			if (action != null) actions.add(action);
+			if (direction.diagonal) {
+				ActionWalkJumpDiagonal action = ActionWalkJumpDiagonal.createValid(node, direction.dx * 2, direction.dz * 2, direction);
+				if (action != null) actions.add(action);
+			} else {
+				ActionWalkJumpStraight action = ActionWalkJumpStraight.createValid(node, direction.dx * 2, direction.dz * 2, direction);
+				if (action != null) actions.add(action);
+			}
 		}
 	}
 
+
+
+
+	private static void getActionsSprintJump(List<Action> actions, Node node) {
+		for (Direction direction : Direction.CARDINALS_SIMPLE) {
+			ActionSprintJumpStraight action = ActionSprintJumpStraight.createValid(node, direction.dx * 4, direction.dz * 4, direction);
+			if (action != null) actions.add(action);
+		}
+	}
 
 }

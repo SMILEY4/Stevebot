@@ -8,10 +8,10 @@ import stevebot.pathfinding.BlockUtils;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
 
-public class ActionJump1Straight extends Action {
+public class ActionWalkJumpStraight extends Action {
 
 
-	public static ActionJump1Straight createValid(Node node, int x, int z, Direction direction) {
+	public static ActionWalkJumpStraight createValid(Node node, int x, int z, Direction direction) {
 		final BlockPos from = node.pos;
 		final BlockPos to = node.pos.add(x, 0, z);
 
@@ -47,7 +47,7 @@ public class ActionJump1Straight extends Action {
 
 
 		// valid movement -> create action
-		return new ActionJump1Straight(node, to);
+		return new ActionWalkJumpStraight(node, to);
 	}
 
 
@@ -60,10 +60,10 @@ public class ActionJump1Straight extends Action {
 
 
 
-	public ActionJump1Straight(Node from, BlockPos to) {
+	public ActionWalkJumpStraight(Node from, BlockPos to) {
 		this.from = from;
 		this.to = Node.get(to);
-		this.cost = ActionCosts.COST_JUMP_GAP_1;
+		this.cost = ActionCosts.COST_WALK_JUMP;
 	}
 
 
