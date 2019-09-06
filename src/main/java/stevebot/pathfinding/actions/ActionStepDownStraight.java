@@ -28,41 +28,8 @@ public class ActionStepDownStraight extends Action {
 
 
 
-	private final Node from;
-	private final Node to;
-	private final double cost;
-
-
-
-
-	public ActionStepDownStraight(Node from, BlockPos to) {
-		this.from = from;
-		this.to = Node.get(to);
-		this.cost = ActionCosts.COST_STEP_DOWN;
-	}
-
-
-
-
-	@Override
-	public double getCost() {
-		return this.cost;
-	}
-
-
-
-
-	@Override
-	public Node getFrom() {
-		return this.from;
-	}
-
-
-
-
-	@Override
-	public Node getTo() {
-		return this.to;
+	private ActionStepDownStraight(Node from, BlockPos to) {
+		super(from, Node.get(to), ActionCosts.COST_STEP_DOWN);
 	}
 
 
@@ -70,7 +37,7 @@ public class ActionStepDownStraight extends Action {
 
 	@Override
 	public PathExecutor.State tick(boolean firstTick) {
-		if (Stevebot.get().getPlayerController().getMovement().moveTowards(to.pos, true)) {
+		if (Stevebot.get().getPlayerController().getMovement().moveTowards(getTo().pos, true)) {
 			return PathExecutor.State.DONE;
 		} else {
 			return PathExecutor.State.EXEC;

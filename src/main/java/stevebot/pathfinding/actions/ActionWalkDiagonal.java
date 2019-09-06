@@ -43,18 +43,13 @@ public class ActionWalkDiagonal extends Action {
 
 
 
-	private final Node from;
-	private final Node to;
-	private final double cost;
 	private final boolean sprint;
 
 
 
 
-	public ActionWalkDiagonal(Node from, BlockPos to, boolean sprint, boolean touchesBlocks) {
-		this.from = from;
-		this.to = Node.get(to);
-		this.cost = (sprint ? ActionCosts.COST_SPRINTING : ActionCosts.COST_WALKING) * ActionCosts.COST_MULT_DIAGONAL * (touchesBlocks ? ActionCosts.COST_MULT_TOUCHING : 1);
+	private ActionWalkDiagonal(Node from, BlockPos to, boolean sprint, boolean touchesBlocks) {
+		super(from, Node.get(to), (sprint ? ActionCosts.COST_SPRINTING : ActionCosts.COST_WALKING) * ActionCosts.COST_MULT_DIAGONAL * (touchesBlocks ? ActionCosts.COST_MULT_TOUCHING : 1));
 		this.sprint = sprint;
 	}
 
@@ -62,35 +57,11 @@ public class ActionWalkDiagonal extends Action {
 
 
 	@Override
-	public double getCost() {
-		return this.cost;
-	}
-
-
-
-
-	@Override
-	public Node getFrom() {
-		return this.from;
-	}
-
-
-
-
-	@Override
-	public Node getTo() {
-		return this.to;
-	}
-
-
-
-
-	@Override
 	public PathExecutor.State tick(boolean fistTick) {
-		if (Stevebot.get().getPlayerController().getMovement().moveTowards(to.pos, true)) {
+		if (Stevebot.get().getPlayerController().getMovement().moveTowards(getTo().pos, true)) {
 			return PathExecutor.State.DONE;
 		} else {
-			if(sprint) {
+			if (sprint) {
 				Stevebot.get().getPlayerController().setSprint();
 			}
 			return PathExecutor.State.EXEC;

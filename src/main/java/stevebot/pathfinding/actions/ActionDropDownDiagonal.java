@@ -8,10 +8,9 @@ import stevebot.pathfinding.BlockUtils;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
 
-public class ActionDropDownDiagonal extends Action {
+public class ActionDropDownDiagonal extends StatefulAction {
 
 
-	@SuppressWarnings ("Duplicates")
 	public static ActionDropDownDiagonal createValid(Node node, Direction direction) {
 
 		final BlockPos from = node.pos;
@@ -47,55 +46,22 @@ public class ActionDropDownDiagonal extends Action {
 
 
 
-	private final Node from;
-	private final Node to;
-	private final double cost;
+	private static final String STATE_PREPARE_1 = "PREPARE 1";
+	private static final String STATE_PREPARE_2 = "PREPARE 2";
+	private static final String STATE_FALL = "FALL";
+	private static final String STATE_FINISH = "FINISH";
+
 	private final ActionFall fall;
 	private final Direction direction;
 
 
 
 
-	public ActionDropDownDiagonal(Node from, ActionFall fall, Direction direction) {
-		this.from = from;
+	private ActionDropDownDiagonal(Node from, ActionFall fall, Direction direction) {
+		super(from, fall.getTo(), ActionCosts.COST_WALKING * ActionCosts.COST_MULT_DIAGONAL + fall.getCost(), STATE_PREPARE_1, STATE_PREPARE_2, STATE_FALL, STATE_FINISH);
 		this.fall = fall;
 		this.direction = direction;
-		this.to = fall.getTo();
-		this.cost = ActionCosts.COST_WALKING * ActionCosts.COST_MULT_DIAGONAL + fall.getCost();
 	}
-
-
-
-
-	@Override
-	public double getCost() {
-		return this.cost;
-	}
-
-
-
-
-	@Override
-	public Node getFrom() {
-		return this.from;
-	}
-
-
-
-
-	@Override
-	public Node getTo() {
-		return this.to;
-	}
-
-
-
-
-	private int currentState = 0;
-	private final int PREPARE_1 = 0;
-	private final int PREPARE_2 = 1;
-	private final int FALL = 2;
-	private final int FINISH = 3;
 
 
 
@@ -103,7 +69,7 @@ public class ActionDropDownDiagonal extends Action {
 	@Override
 	public void resetAction() {
 		fall.resetAction();
-		currentState = PREPARE_1;
+		super.resetAction();
 	}
 
 
@@ -114,43 +80,46 @@ public class ActionDropDownDiagonal extends Action {
 		final MTPlayerController controller = Stevebot.get().getPlayerController();
 
 
-		if (currentState == PREPARE_1) { // prepare fall
-			final double distToEdge = BlockUtils.distToEdge(controller.getPlayerPosition(), direction);
-			if (distToEdge <= 0.4) {
-				currentState = PREPARE_2;
-			} else {
-				controller.getMovement().moveTowards(to.pos, true);
-			}
-			return PathExecutor.State.EXEC;
+		switch (getCurrentState()) {
 
-
-		} else if (currentState == PREPARE_2) { // slide/decelerate towards fall
-			if (controller.getPlayer().onGround && !controller.isPlayerMoving(0.0001, false)) {
-				controller.getMovement().moveTowards(to.pos, true);
-			}
-			if (!controller.getPlayer().onGround) {
-				currentState = FALL;
-			}
-			return PathExecutor.State.EXEC;
-
-
-		} else if (currentState == FALL) { // falling
-			if (controller.getPlayer().onGround) {
-				currentState = FINISH;
-			}
-			return PathExecutor.State.EXEC;
-
-
-		} else if (currentState == FINISH) { // landed, walk to center
-			if (controller.getMovement().moveTowards(to.pos, true)) {
-				return PathExecutor.State.DONE;
-			} else {
+			case STATE_PREPARE_1: {
+				final double distToEdge = BlockUtils.distToEdge(controller.getPlayerPosition(), direction);
+				if (distToEdge <= 0.4) {
+					nextState();
+				} else {
+					controller.getMovement().moveTowards(getTo().pos, true);
+				}
 				return PathExecutor.State.EXEC;
 			}
 
+			case STATE_PREPARE_2: {
+				if (controller.getPlayer().onGround && !controller.isPlayerMoving(0.0001, false)) {
+					controller.getMovement().moveTowards(getTo().pos, true);
+				}
+				if (!controller.getPlayer().onGround) {
+					nextState();
+				}
+				return PathExecutor.State.EXEC;
+			}
 
-		} else {
-			return PathExecutor.State.EXEC;
+			case STATE_FALL: {
+				if (controller.getPlayer().onGround) {
+					nextState();
+				}
+				return PathExecutor.State.EXEC;
+			}
+
+			case STATE_FINISH: {
+				if (controller.getMovement().moveTowards(getTo().pos, true)) {
+					return PathExecutor.State.DONE;
+				} else {
+					return PathExecutor.State.EXEC;
+				}
+			}
+
+			default: {
+				return PathExecutor.State.FAILED;
+			}
 		}
 
 	}

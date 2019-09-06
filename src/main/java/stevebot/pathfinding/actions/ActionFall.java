@@ -33,42 +33,8 @@ public class ActionFall extends Action {
 
 
 
-	private final Node from;
-	private final Node to;
-	private final double cost;
-
-
-
-
-	public ActionFall(Node from, BlockPos to) {
-		this.from = from;
-		this.to = Node.get(to);
-		this.cost = ActionCosts.COST_FALL_N(from.pos.getY() - to.getY());
-
-	}
-
-
-
-
-	@Override
-	public double getCost() {
-		return cost;
-	}
-
-
-
-
-	@Override
-	public Node getFrom() {
-		return from;
-	}
-
-
-
-
-	@Override
-	public Node getTo() {
-		return to;
+	private ActionFall(Node from, BlockPos to) {
+		super(from, Node.get(to), ActionCosts.COST_FALL_N(from.pos.getY() - to.getY()));
 	}
 
 
@@ -78,7 +44,7 @@ public class ActionFall extends Action {
 	public PathExecutor.State tick(boolean fistTick) {
 		final MTPlayerController controller = Stevebot.get().getPlayerController();
 		if (controller.getPlayer().onGround) {
-			if (controller.getMovement().moveTowards(to.pos, false)) {
+			if (controller.getMovement().moveTowards(getTo().pos, false)) {
 				return PathExecutor.State.DONE;
 			} else {
 				return PathExecutor.State.EXEC;

@@ -1,20 +1,44 @@
 package stevebot.pathfinding.actions;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
 
 public abstract class Action {
 
 
-	public abstract double getCost();
+	private Node from;
+	private Node to;
+	private double cost;
 
-	public abstract Node getFrom();
 
-	public abstract Node getTo();
 
-	public abstract PathExecutor.State tick(boolean fistTick);
+
+	protected Action(Node from, Node to, double cost) {
+		this.from = from;
+		this.to = to;
+		this.cost = cost;
+	}
+
+
+
+
+	public double getCost() {
+		return cost;
+	}
+
+
+
+
+	public Node getFrom() {
+		return from;
+	}
+
+
+
+
+	public Node getTo() {
+		return to;
+	}
 
 
 
@@ -25,10 +49,7 @@ public abstract class Action {
 
 
 
-	static boolean isDiagonal(BlockPos from, BlockPos to) {
-		final Vec3i dir = to.subtract(from);
-		return Math.abs(dir.getX()) + Math.abs(dir.getZ()) == 2;
-	}
+	public abstract PathExecutor.State tick(boolean fistTick);
 
 
 }

@@ -8,7 +8,7 @@ import stevebot.pathfinding.BlockUtils;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
 
-public class ActionSprintJumpStraight extends Action {
+public class ActionSprintJumpStraight extends StatefulAction {
 
 
 	public static ActionSprintJumpStraight createValid(Node node, int x, int z, Direction direction) {
@@ -31,8 +31,8 @@ public class ActionSprintJumpStraight extends Action {
 			final BlockPos g2 = from.add(direction.dx * (i + 1), +1, direction.dz * (i + 1)); // head = walk through
 			final BlockPos g3 = from.add(direction.dx * (i + 1), +2, direction.dz * (i + 1)); // above = walk through
 
-			if(i != 2) {
-				if(BlockUtils.canWalkOn(g0)) {
+			if (i != 2) {
+				if (BlockUtils.canWalkOn(g0)) {
 					return null;
 				}
 			}
@@ -61,57 +61,15 @@ public class ActionSprintJumpStraight extends Action {
 
 
 
-	private final Node from;
-	private final Node to;
-	private final double cost;
+	private static final String STATE_PREPARE = "PREPARE";
+	private static final String STATE_JUMP = "JUMP";
+	private static final String STATE_LAND = "LAND";
 
 
 
 
-	public ActionSprintJumpStraight(Node from, BlockPos to) {
-		this.from = from;
-		this.to = Node.get(to);
-		this.cost = ActionCosts.COST_SPRINT_JUMP;
-	}
-
-
-
-
-	@Override
-	public double getCost() {
-		return this.cost;
-	}
-
-
-
-
-	@Override
-	public Node getFrom() {
-		return this.from;
-	}
-
-
-
-
-	@Override
-	public Node getTo() {
-		return this.to;
-	}
-
-
-
-
-	int currentState = 0;
-	private final int PREPARE = 0;
-	private final int JUMP = 1;
-	private final int LAND = 2;
-
-
-
-
-	@Override
-	public void resetAction() {
-		currentState = PREPARE;
+	private ActionSprintJumpStraight(Node from, BlockPos to) {
+		super(from, Node.get(to), ActionCosts.COST_SPRINT_JUMP, STATE_PREPARE, STATE_JUMP, STATE_LAND);
 	}
 
 
@@ -122,42 +80,44 @@ public class ActionSprintJumpStraight extends Action {
 
 		MTPlayerController controller = Stevebot.get().getPlayerController();
 
-		switch (currentState) {
-			case PREPARE: {
-				controller.getCamera().setLookAt(to.pos, true);
+		switch (getCurrentState()) {
+			case STATE_PREPARE: {
+				controller.getCamera().setLookAt(getTo().pos, true);
 				boolean slowEnough = controller.getMovement().slowDown(0.055);
 				if (slowEnough) {
-					currentState = JUMP;
+					nextState();
 				}
 				return PathExecutor.State.EXEC;
 			}
 
-
-			case JUMP: {
-				controller.getMovement().moveTowards(to.pos, true);
+			case STATE_JUMP: {
+				controller.getMovement().moveTowards(getTo().pos, true);
 				controller.setSprint();
 				final double distToEdge = BlockUtils.distToCenter(controller.getPlayerPosition());
 				if (distToEdge > 0.4) {
 					controller.setJump(false);
 				}
-				if (controller.getPlayer().onGround && controller.getPlayerBlockPos().equals(to.pos)) {
-					currentState = LAND;
+				if (controller.getPlayer().onGround && controller.getPlayerBlockPos().equals(getTo().pos)) {
+					nextState();
 				}
 				return PathExecutor.State.EXEC;
 			}
 
 
-			case LAND: {
-				if (controller.getMovement().moveTowards(to.pos, true)) {
+			case STATE_LAND: {
+				if (controller.getMovement().moveTowards(getTo().pos, true)) {
 					return PathExecutor.State.DONE;
 				} else {
 					return PathExecutor.State.EXEC;
 				}
 			}
 
+			default: {
+				return PathExecutor.State.FAILED;
+			}
+
 		}
 
-		return PathExecutor.State.EXEC;
 	}
 
 
