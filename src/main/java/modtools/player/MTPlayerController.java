@@ -130,16 +130,34 @@ public class MTPlayerController extends ModModule {
 
 
 	public boolean isPlayerMoving() {
-		return isPlayerMoving(0.0001);
+		return isPlayerMoving(false);
 	}
 
 
 
 
-	public boolean isPlayerMoving(double threshhold) {
+	public boolean isPlayerMoving(boolean includeY) {
+		return isPlayerMoving(0.0001, includeY);
+	}
+
+
+
+
+	public boolean isPlayerMoving(double threshold) {
+		return isPlayerMoving(threshold, false);
+	}
+
+
+
+
+	public boolean isPlayerMoving(double threshold, boolean includeY) {
 		EntityPlayerSP player = getPlayer();
 		if (player != null) {
-			return player.motionX < threshhold && player.motionY < threshhold && player.motionZ < threshhold;
+			if (includeY) {
+				return player.motionX > threshold || player.motionY > threshold || player.motionZ > threshold;
+			} else {
+				return player.motionX > threshold || player.motionZ > threshold;
+			}
 		} else {
 			return false;
 		}
@@ -253,7 +271,7 @@ public class MTPlayerController extends ModModule {
 
 
 	public void setSprint(boolean sprint) {
-		if(getPlayer() != null) {
+		if (getPlayer() != null) {
 			getPlayer().setSprinting(sprint);
 		}
 	}

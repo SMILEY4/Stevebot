@@ -29,7 +29,7 @@ public class ActionDropDownStraight extends Action {
 		if (fall == null) {
 			return null;
 		} else {
-			return new ActionDropDownStraight(node, fall);
+			return new ActionDropDownStraight(node, fall, direction);
 		}
 
 	}
@@ -41,15 +41,15 @@ public class ActionDropDownStraight extends Action {
 	private final Node to;
 	private final double cost;
 	private final ActionFall fall;
-
-	private int state = 0;
-
+	private final Direction direction;
 
 
 
-	public ActionDropDownStraight(Node from, ActionFall fall) {
+
+	public ActionDropDownStraight(Node from, ActionFall fall, Direction direction) {
 		this.from = from;
 		this.fall = fall;
+		this.direction = direction;
 		this.to = fall.getTo();
 		this.cost = ActionCosts.COST_WALKING + fall.getCost();
 	}
@@ -81,10 +81,19 @@ public class ActionDropDownStraight extends Action {
 
 
 
+	private int currentState = 0;
+	private final int PREPARE_1 = 0;
+	private final int PREPARE_2 = 1;
+	private final int FALL = 2;
+	private final int FINISH = 3;
+
+
+
+
 	@Override
 	public void resetAction() {
 		fall.resetAction();
-		state = 0;
+		currentState = PREPARE_1;
 	}
 
 
@@ -94,33 +103,45 @@ public class ActionDropDownStraight extends Action {
 	public PathExecutor.State tick(boolean firstTick) {
 		final MTPlayerController controller = Stevebot.get().getPlayerController();
 
-
-		if (state == 0) { // 0 = prepare fall
-			final double distToDrop = controller.getPlayerPosition().dist(getTo().pos.getX() + 0.5, controller.getPlayerPosition().y, getTo().pos.getZ() + 0.5);
-			final double threshold = isDiagonal(from.pos, to.pos) ? Math.sqrt(0.38) : (0.38);
-			if (distToDrop <= threshold) {
-				state = 1;
+		if (currentState == PREPARE_1) { // prepare fall
+			final double distToEdge = BlockUtils.distToEdge(controller.getPlayerPosition(), direction);
+			if (distToEdge <= 0.4) {
+				currentState = PREPARE_2;
 			} else {
-				controller.getMovement().moveTowards(to.pos, false);
+				controller.getMovement().moveTowards(to.pos, true);
 			}
 			return PathExecutor.State.EXEC;
 
 
-		} else if (state == 1) { // 1 = slide/decelerate towards fall
-			if (controller.getPlayer().onGround && controller.isPlayerMoving()) {
+		} else if (currentState == PREPARE_2) { // slide/decelerate towards fall
+			if (controller.getPlayer().onGround && !controller.isPlayerMoving(0.0001, false)) {
 				controller.getMovement().moveTowards(to.pos, true);
 			}
 			if (!controller.getPlayer().onGround) {
-				state = 2;
+				currentState = FALL;
 			}
 			return PathExecutor.State.EXEC;
 
 
-		} else if (state == 2) { // 2 = falling
-			return fall.tick(false);
+		} else if (currentState == FALL) { // falling
+			if (controller.getPlayer().onGround) {
+				currentState = FINISH;
+			}
+			return PathExecutor.State.EXEC;
+
+
+		} else if (currentState == FINISH) { // landed, walk to center
+			if (controller.getMovement().moveTowards(to.pos, true)) {
+				return PathExecutor.State.DONE;
+			} else {
+				return PathExecutor.State.EXEC;
+			}
+
+
+		} else {
+			return PathExecutor.State.EXEC;
 		}
 
-		return PathExecutor.State.EXEC; // should never reach this
 	}
 
 
