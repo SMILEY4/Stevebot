@@ -1,4 +1,4 @@
-package stevebot.pathfinding.actions;
+package stevebot.pathfinding.actions.playeractions;
 
 import net.minecraft.util.math.BlockPos;
 import stevebot.Direction;
@@ -6,25 +6,34 @@ import stevebot.Stevebot;
 import stevebot.pathfinding.BlockUtils;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
+import stevebot.pathfinding.actions.Action;
+import stevebot.pathfinding.actions.ActionCosts;
+import stevebot.pathfinding.actions.ActionUtils;
 
-public class ActionWalkDiagonal extends Action {
+public class ActionStepDownDiagonal extends Action {
 
 
-	public static ActionWalkDiagonal createValid(Node node, Direction direction) {
+	public static ActionStepDownDiagonal createValid(Node node, Direction direction) {
 
+		// check from-position
 		final BlockPos from = node.pos;
-		if (!BlockUtils.canWalkOn(from.add(0, -1, 0))) {
+		if (!ActionUtils.canStandAt(from)) {
 			return null;
 		}
 
-		final BlockPos to = node.pos.add(direction.dx, 0, direction.dz);
+		// check to-position
+		final BlockPos to = node.pos.add(direction.dx, -1, direction.dz);
+		if (!ActionUtils.canStandAt(to, 3)) {
+			return null;
+		}
 
+		// check diagonal
 		Direction[] splitDirection = direction.split();
 		final BlockPos p0 = node.pos.add(splitDirection[0].dx, 0, splitDirection[0].dz);
 		final BlockPos p1 = node.pos.add(splitDirection[1].dx, 0, splitDirection[1].dz);
 
-		boolean traversable0 = BlockUtils.canWalkThrough(p0) && BlockUtils.canWalkThrough(p0.add(0, 1, 0));
-		boolean traversable1 = BlockUtils.canWalkThrough(p1) && BlockUtils.canWalkThrough(p1.add(0, 1, 0));
+		boolean traversable0 = ActionUtils.canMoveThrough(p0);
+		boolean traversable1 = ActionUtils.canMoveThrough(p0);
 
 		boolean avoid0 = BlockUtils.avoidTouching(p0) || BlockUtils.avoidTouching(p0.add(0, 1, 0));
 		boolean avoid1 = BlockUtils.avoidTouching(p1) || BlockUtils.avoidTouching(p1.add(0, 1, 0));
@@ -33,7 +42,7 @@ public class ActionWalkDiagonal extends Action {
 			if ((traversable0 && avoid1) || (traversable1 && avoid0)) {
 				return null;
 			}
-			return new ActionWalkDiagonal(node, to, true, !traversable0 || !traversable1);
+			return new ActionStepDownDiagonal(node, to, !traversable0 || !traversable1);
 		} else {
 			return null;
 		}
@@ -43,32 +52,21 @@ public class ActionWalkDiagonal extends Action {
 
 
 
-	private final boolean sprint;
-
-
-
-
-	private ActionWalkDiagonal(Node from, BlockPos to, boolean sprint, boolean touchesBlocks) {
-		super(from, Node.get(to), (sprint ? ActionCosts.COST_SPRINTING : ActionCosts.COST_WALKING) * ActionCosts.COST_MULT_DIAGONAL * (touchesBlocks ? ActionCosts.COST_MULT_TOUCHING : 1));
-		this.sprint = sprint;
+	private ActionStepDownDiagonal(Node from, BlockPos to, boolean touchesBlocks) {
+		super(from, Node.get(to), ActionCosts.COST_STEP_DOWN * ActionCosts.COST_MULT_DIAGONAL * (touchesBlocks ? ActionCosts.COST_MULT_TOUCHING : 1));
 	}
 
 
 
 
 	@Override
-	public PathExecutor.State tick(boolean fistTick) {
+	public PathExecutor.State tick(boolean firstTick) {
 		if (Stevebot.get().getPlayerController().getMovement().moveTowards(getTo().pos, true)) {
 			return PathExecutor.State.DONE;
 		} else {
-			if (sprint) {
-				Stevebot.get().getPlayerController().setSprint();
-			}
 			return PathExecutor.State.EXEC;
 		}
 	}
 
 
 }
-
-

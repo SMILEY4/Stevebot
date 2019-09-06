@@ -1,4 +1,4 @@
-package stevebot.pathfinding.actions;
+package stevebot.pathfinding.actions.playeractions;
 
 import modtools.player.MTPlayerController;
 import net.minecraft.util.math.BlockPos;
@@ -6,6 +6,8 @@ import stevebot.Stevebot;
 import stevebot.pathfinding.BlockUtils;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
+import stevebot.pathfinding.actions.Action;
+import stevebot.pathfinding.actions.ActionCosts;
 
 public class ActionFall extends Action {
 

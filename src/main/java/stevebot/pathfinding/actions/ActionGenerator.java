@@ -2,6 +2,7 @@ package stevebot.pathfinding.actions;
 
 import stevebot.Direction;
 import stevebot.pathfinding.Node;
+import stevebot.pathfinding.actions.playeractions.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,10 +114,10 @@ public class ActionGenerator {
 	private static void getActionsWalkJump(List<Action> actions, Node node) {
 		for (Direction direction : Direction.CARDINALS) {
 			if (direction.diagonal) {
-				ActionWalkJumpDiagonal action = ActionWalkJumpDiagonal.createValid(node, direction.dx * 2, direction.dz * 2, direction);
+				ActionWalkJumpDiagonal action = ActionWalkJumpDiagonal.createValid(node, direction);
 				if (action != null) actions.add(action);
 			} else {
-				ActionWalkJumpStraight action = ActionWalkJumpStraight.createValid(node, direction.dx * 2, direction.dz * 2, direction);
+				ActionWalkJumpStraight action = ActionWalkJumpStraight.createValid(node, direction);
 				if (action != null) actions.add(action);
 			}
 		}
@@ -127,7 +128,7 @@ public class ActionGenerator {
 
 	private static void getActionsSprintJump(List<Action> actions, Node node) {
 		for (Direction direction : Direction.CARDINALS_SIMPLE) {
-			ActionSprintJumpStraight action = ActionSprintJumpStraight.createValid(node, direction.dx * 4, direction.dz * 4, direction);
+			ActionSprintJumpStraight action = ActionSprintJumpStraight.createValid(node, direction);
 			if (action != null) actions.add(action);
 		}
 	}

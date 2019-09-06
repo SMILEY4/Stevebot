@@ -1,4 +1,4 @@
-package stevebot.pathfinding.actions;
+package stevebot.pathfinding.actions.playeractions;
 
 import modtools.player.MTPlayerController;
 import net.minecraft.util.math.BlockPos;
@@ -6,24 +6,28 @@ import stevebot.Direction;
 import stevebot.Stevebot;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
+import stevebot.pathfinding.actions.ActionCosts;
+import stevebot.pathfinding.actions.ActionUtils;
+import stevebot.pathfinding.actions.StatefulAction;
 
 public class ActionStepUpStraight extends StatefulAction {
 
 
 	public static ActionStepUpStraight createValid(Node node, Direction direction) {
 
+		// check from-position
 		final BlockPos from = node.pos;
 		if (!ActionUtils.canStandAt(from, 3)) {
 			return null;
 		}
 
+		// check to-position
 		final BlockPos to = node.pos.add(direction.dx, 1, direction.dz);
-		if (ActionUtils.canStandAt(to)) {
-			return new ActionStepUpStraight(node, to);
-		} else {
+		if (!ActionUtils.canStandAt(to)) {
 			return null;
 		}
 
+		return new ActionStepUpStraight(node, to);
 	}
 
 

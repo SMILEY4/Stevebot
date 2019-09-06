@@ -1,28 +1,31 @@
-package stevebot.pathfinding.actions;
+package stevebot.pathfinding.actions.playeractions;
 
 import net.minecraft.util.math.BlockPos;
 import stevebot.Direction;
 import stevebot.Stevebot;
-import stevebot.pathfinding.BlockUtils;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
+import stevebot.pathfinding.actions.Action;
+import stevebot.pathfinding.actions.ActionCosts;
+import stevebot.pathfinding.actions.ActionUtils;
 
 public class ActionWalkStraight extends Action {
 
 
 	public static ActionWalkStraight createValid(Node node, Direction direction) {
 
+		// check from-position
 		final BlockPos from = node.pos;
-		if (!BlockUtils.canWalkOn(from.add(0, -1, 0))) {
+		if (!ActionUtils.canStandAt(from)) {
 			return null;
 		}
 
+		// check to-position
 		final BlockPos to = node.pos.add(direction.dx, 0, direction.dz);
-		if (ActionUtils.canStandAt(to)) {
-			return new ActionWalkStraight(node, to, true);
-		} else {
+		if (!ActionUtils.canStandAt(to)) {
 			return null;
 		}
+		return new ActionWalkStraight(node, to, true);
 
 	}
 

@@ -1,4 +1,4 @@
-package stevebot.pathfinding.actions;
+package stevebot.pathfinding.actions.playeractions;
 
 import modtools.player.MTPlayerController;
 import net.minecraft.util.math.BlockPos;
@@ -7,54 +7,41 @@ import stevebot.Stevebot;
 import stevebot.pathfinding.BlockUtils;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
+import stevebot.pathfinding.actions.ActionCosts;
+import stevebot.pathfinding.actions.ActionUtils;
+import stevebot.pathfinding.actions.StatefulAction;
 
 public class ActionSprintJumpStraight extends StatefulAction {
 
 
-	public static ActionSprintJumpStraight createValid(Node node, int x, int z, Direction direction) {
+	public static ActionSprintJumpStraight createValid(Node node, Direction direction) {
+
+		// check from-position
 		final BlockPos from = node.pos;
-		final BlockPos to = node.pos.add(x, 0, z);
-
-		// check start position
-		final BlockPos s0 = from.add(0, -1, 0); // standing on = walk on
-		final BlockPos s3 = from.add(0, +2, 0); // above = walk through
-
-		if (!BlockUtils.canWalkOn(s0) || !BlockUtils.canWalkThrough(s3)) {
+		if (ActionUtils.canJumpAt(from)) {
 			return null;
 		}
 
+		// check to-position
+		final BlockPos to = from.add(direction.dx*4, 0, direction.dz*4);
+		if (!ActionUtils.canJumpAt(to)) {
+			return null;
+		}
 
 		// check gap
 		for (int i = 0; i < 3; i++) {
-			final BlockPos g0 = from.add(direction.dx * (i + 1), -1, direction.dz * (i + 1)); // gap ground = !walk on
-			final BlockPos g1 = from.add(direction.dx * (i + 1), +0, direction.dz * (i + 1)); // feet = walk through
-			final BlockPos g2 = from.add(direction.dx * (i + 1), +1, direction.dz * (i + 1)); // head = walk through
-			final BlockPos g3 = from.add(direction.dx * (i + 1), +2, direction.dz * (i + 1)); // above = walk through
-
-			if (i != 2) {
-				if (BlockUtils.canWalkOn(g0)) {
+			final BlockPos gap = from.add(direction.dx * (i + 1), +0, direction.dz * (i + 1));
+			if (i == 2) {
+				if (ActionUtils.canJump(gap)) {
+					return null;
+				}
+			} else {
+				if (ActionUtils.canJumpThrough(gap)) {
 					return null;
 				}
 			}
-
-			if (!BlockUtils.canWalkThrough(g1) || !BlockUtils.canWalkThrough(g2) || !BlockUtils.canWalkThrough(g3)) {
-				return null;
-			}
 		}
 
-
-		// check destination
-		final BlockPos d0 = from.add(x, -1, z); // landing on = walk on
-		final BlockPos d1 = from.add(x, 0, z); // feet = walk through
-		final BlockPos d2 = from.add(x, +1, z); // head = walk through
-		final BlockPos d3 = from.add(x, +2, z); // above = walk through
-
-		if (!BlockUtils.canWalkOn(d0) || !BlockUtils.canWalkThrough(d1) || !BlockUtils.canWalkThrough(d2) || !BlockUtils.canWalkThrough(d3)) {
-			return null;
-		}
-
-
-		// valid movement -> create action
 		return new ActionSprintJumpStraight(node, to);
 	}
 

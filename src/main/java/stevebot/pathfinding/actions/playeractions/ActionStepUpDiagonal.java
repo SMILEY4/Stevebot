@@ -1,34 +1,39 @@
-package stevebot.pathfinding.actions;
+package stevebot.pathfinding.actions.playeractions;
 
 import modtools.player.MTPlayerController;
 import net.minecraft.util.math.BlockPos;
 import stevebot.Direction;
 import stevebot.Stevebot;
-import stevebot.pathfinding.BlockUtils;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
+import stevebot.pathfinding.actions.ActionCosts;
+import stevebot.pathfinding.actions.ActionUtils;
+import stevebot.pathfinding.actions.StatefulAction;
 
 public class ActionStepUpDiagonal extends StatefulAction {
 
 
 	public static ActionStepUpDiagonal createValid(Node node, Direction direction) {
 
+		// check from-position
 		final BlockPos from = node.pos;
 		if (!ActionUtils.canStandAt(from, 3)) {
 			return null;
 		}
 
+		// check to-position
 		final BlockPos to = node.pos.add(direction.dx, 1, direction.dz);
 		if (!ActionUtils.canStandAt(to)) {
 			return null;
 		}
 
+		// check diagonal
 		Direction[] splitDirection = direction.split();
 		final BlockPos p0 = node.pos.add(splitDirection[0].dx, 1, splitDirection[0].dz);
 		final BlockPos p1 = node.pos.add(splitDirection[1].dx, 1, splitDirection[1].dz);
 
-		boolean traversable0 = BlockUtils.canWalkThrough(p0) && BlockUtils.canWalkThrough(p0.add(0, 1, 0));
-		boolean traversable1 = BlockUtils.canWalkThrough(p1) && BlockUtils.canWalkThrough(p1.add(0, 1, 0));
+		boolean traversable0 = ActionUtils.canMoveThrough(p0, 3);
+		boolean traversable1 = ActionUtils.canMoveThrough(p1, 3);
 
 		if (ActionUtils.canStandAt(to) && traversable0 && traversable1) {
 			return new ActionStepUpDiagonal(node, to);

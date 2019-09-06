@@ -1,4 +1,4 @@
-package stevebot.pathfinding.actions;
+package stevebot.pathfinding.actions.playeractions;
 
 import modtools.player.MTPlayerController;
 import net.minecraft.util.math.BlockPos;
@@ -7,31 +7,42 @@ import stevebot.Stevebot;
 import stevebot.pathfinding.BlockUtils;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
+import stevebot.pathfinding.actions.ActionCosts;
+import stevebot.pathfinding.actions.ActionUtils;
+import stevebot.pathfinding.actions.StatefulAction;
 
-public class ActionDropDownStraight extends StatefulAction {
+public class ActionDropDownDiagonal extends StatefulAction {
 
 
-	@SuppressWarnings ("Duplicates")
-	public static ActionDropDownStraight createValid(Node node, Direction direction) {
+	public static ActionDropDownDiagonal createValid(Node node, Direction direction) {
 
+		// check from-position
 		final BlockPos from = node.pos;
-		if (!BlockUtils.canWalkOn(from.add(0, -1, 0))) {
+		if (!ActionUtils.canStandAt(from)) {
 			return null;
 		}
 
-		final BlockPos to = node.pos.add(direction.dx, 0, direction.dz);
-		final BlockPos toUp = to.add(0, 1, 0);
-		if (!BlockUtils.canWalkThrough(to) || !BlockUtils.canWalkThrough(toUp)) {
+		// check to-position horizontal
+		final BlockPos to = node.pos.add(direction.dx, -1, direction.dz);
+		if(!ActionUtils.canMoveThrough(to)) {
 			return null;
 		}
 
+		// check diagonal blocks
+		Direction[] splitDirection = direction.split();
+		final BlockPos p0 = node.pos.add(splitDirection[0].dx, 0, splitDirection[0].dz);
+		final BlockPos p1 = node.pos.add(splitDirection[1].dx, 0, splitDirection[1].dz);
+		if(!ActionUtils.canMoveThroughAll(p0, p1)) {
+			return null;
+		}
+
+		// check+create fall
 		final ActionFall fall = ActionFall.createValid(Node.get(to));
 		if (fall == null) {
 			return null;
-		} else {
-			return new ActionDropDownStraight(node, fall, direction);
 		}
 
+		return new ActionDropDownDiagonal(node, fall, direction);
 	}
 
 
@@ -48,8 +59,8 @@ public class ActionDropDownStraight extends StatefulAction {
 
 
 
-	private ActionDropDownStraight(Node from, ActionFall fall, Direction direction) {
-		super(from, fall.getTo(), ActionCosts.COST_WALKING + fall.getCost(), STATE_PREPARE_1, STATE_PREPARE_2, STATE_FALL, STATE_FINISH);
+	private ActionDropDownDiagonal(Node from, ActionFall fall, Direction direction) {
+		super(from, fall.getTo(), ActionCosts.COST_WALKING * ActionCosts.COST_MULT_DIAGONAL + fall.getCost(), STATE_PREPARE_1, STATE_PREPARE_2, STATE_FALL, STATE_FINISH);
 		this.fall = fall;
 		this.direction = direction;
 	}
