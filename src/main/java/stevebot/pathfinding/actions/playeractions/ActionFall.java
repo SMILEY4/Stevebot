@@ -21,6 +21,9 @@ public class ActionFall extends Action {
 		while (BlockUtils.canWalkThrough(fallTo)) {
 			fallTo = fallTo.add(0, -1, 0);
 			height++;
+			if(height > 300) {
+				return null;
+			}
 		}
 		fallTo = fallTo.add(0, 1, 0);
 
