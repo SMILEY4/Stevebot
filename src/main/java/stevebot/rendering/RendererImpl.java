@@ -241,13 +241,21 @@ public class RendererImpl implements Renderer {
 
 	@Override
 	public void drawBoxOpen(Vector3d pos, Color color) {
+		drawBoxOpen(pos, new Vector3d(pos).add(1), color);
+	}
 
-		final double minX = pos.x;
-		final double maxX = pos.x + 1;
-		final double minY = pos.y;
-		final double maxY = pos.y + 1;
-		final double minZ = pos.z;
-		final double maxZ = pos.z + 1;
+
+
+
+	@Override
+	public void drawBoxOpen(Vector3d posMin, Vector3d posMax, Color color) {
+
+		final double minX = posMin.x;
+		final double maxX = posMax.x;
+		final double minY = posMin.y;
+		final double maxY = posMax.y;
+		final double minZ = posMin.z;
+		final double maxZ = posMax.z;
 
 		addVertex(maxX, minY, maxZ, color, 0f);
 

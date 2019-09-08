@@ -34,6 +34,8 @@ public interface Renderer {
 
 	void drawBoxOpen(Vector3d pos, Color color);
 
+	void drawBoxOpen(Vector3d posMin, Vector3d posMax, Color color);
+
 	void drawPoint(BlockPos pos, float size, Color color);
 
 	void drawPoint(Vector3d pos, float size, Color color);

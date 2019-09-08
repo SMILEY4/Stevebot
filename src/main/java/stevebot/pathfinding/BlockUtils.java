@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import stevebot.Direction;
+import stevebot.Stevebot;
 
 public class BlockUtils {
 
@@ -26,7 +27,7 @@ public class BlockUtils {
 
 
 	public static boolean isWater(BlockPos pos) {
-		return isWater(World.getBlock(pos));
+		return isWater(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
 
 
@@ -40,7 +41,7 @@ public class BlockUtils {
 
 
 	public static boolean isLava(BlockPos pos) {
-		return isLava(World.getBlock(pos));
+		return isLava(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
 
 
@@ -54,7 +55,7 @@ public class BlockUtils {
 
 
 	public static boolean isFlowingLiquid(BlockPos pos) {
-		return isFlowingLiquid(World.getBlock(pos));
+		return isFlowingLiquid(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
 
 
@@ -68,7 +69,7 @@ public class BlockUtils {
 
 
 	public static boolean isLiquid(BlockPos pos) {
-		return isLiquid(World.getBlock(pos));
+		return isLiquid(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
 
 
@@ -82,14 +83,14 @@ public class BlockUtils {
 
 
 	public static boolean isDangerous(BlockPos pos) {
-		return isDangerous(World.getBlock(pos));
+		return isDangerous(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
 
 
 
 
 	public static boolean canWalkThrough(BlockPos pos) {
-		final Block block = World.getBlock(pos);
+		final Block block = Stevebot.get().getBlockProvider().getBlockAt(pos);
 		if (isLiquid(block) || Blocks.WATERLILY.equals(block) || isDangerous(block)
 				|| Blocks.ICE.equals(block) || Blocks.FROSTED_ICE.equals(block) || Blocks.PACKED_ICE.equals(block)) {
 			return false;
@@ -102,7 +103,7 @@ public class BlockUtils {
 
 
 	public static boolean canWalkOn(BlockPos pos) {
-		final Block block = World.getBlock(pos);
+		final Block block = Stevebot.get().getBlockProvider().getBlockAt(pos);
 		if (isLiquid(block) || isDangerous(block)) {
 			return false;
 		} else {
@@ -121,7 +122,7 @@ public class BlockUtils {
 
 
 	public static boolean avoidTouching(BlockPos pos) {
-		return avoidTouching(World.getBlock(pos));
+		return avoidTouching(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
 
 
