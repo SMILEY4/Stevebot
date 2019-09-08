@@ -30,12 +30,19 @@ public class Pathfinding {
 
 		Path path = null;
 
-		long timeEnd = System.currentTimeMillis() + timeout;
+		long timeStart = System.currentTimeMillis();
+		long timeLastMessage = System.currentTimeMillis();
+
 		while (!openSet.isEmpty()) {
 
-			if (System.currentTimeMillis() > timeEnd) {
-				Stevebot.LOGGER.info("Timeout");
+			if (System.currentTimeMillis() > timeStart + timeout) {
+				Stevebot.get().getPlayerController().sendMessage("Timeout");
 				break;
+			}
+
+			if (System.currentTimeMillis() - timeLastMessage > 2000) {
+				Stevebot.get().getPlayerController().sendMessage(" ... " + ((System.currentTimeMillis() - timeStart) / 1000) + "s,  visited " + Node.nodeCache.size() + " Nodes");
+				timeLastMessage = System.currentTimeMillis();
 			}
 
 			Node current = removeLowest(openSet);
@@ -45,8 +52,7 @@ public class Pathfinding {
 				if (path == null || p.cost < path.cost) {
 					path = p;
 				}
-
-				Stevebot.LOGGER.info("Possible path found cost=" + path.cost);
+				Stevebot.get().getPlayerController().sendMessage("Possible path found cost=" + path.cost);
 			}
 
 
