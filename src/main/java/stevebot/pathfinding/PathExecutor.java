@@ -69,18 +69,18 @@ public class PathExecutor implements GameTickListener {
 	public void onClientTick(TickEvent.ClientTickEvent event) {
 		if (isFollowing && Stevebot.get().getPlayerController().getPlayer() != null) {
 
-			Stevebot.get().getPlayerController().stopAll();
-			points.addPoint(Stevebot.get().getPlayerController().getPlayerPosition(), Color.MAGENTA);
+			Stevebot.get().getPlayerController().input().stopAll();
+			points.addPoint(Stevebot.get().getPlayerController().utils().getPlayerPosition(), Color.MAGENTA);
 
 			final State state = tick();
 
 			if (state == State.FAILED) {
 				stop();
-				Stevebot.get().getPlayerController().sendMessage("Failed to follow path.");
+				Stevebot.get().getPlayerController().utils().sendMessage("Failed to follow path.");
 			}
 			if (state == State.DONE) {
 				stop();
-				Stevebot.get().getPlayerController().sendMessage("Reached destination. (" + ((System.currentTimeMillis()-timeStart)/1000.0) + "s");
+				Stevebot.get().getPlayerController().utils().sendMessage("Reached destination. (" + ((System.currentTimeMillis()-timeStart)/1000.0) + "s");
 			}
 
 		}

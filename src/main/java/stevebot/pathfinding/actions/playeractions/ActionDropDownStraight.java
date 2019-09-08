@@ -1,6 +1,6 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import stevebot.player.MTPlayerController;
+import stevebot.player.PlayerController;
 import net.minecraft.util.math.BlockPos;
 import stevebot.Direction;
 import stevebot.Stevebot;
@@ -71,24 +71,24 @@ public class ActionDropDownStraight extends StatefulAction {
 
 	@Override
 	public PathExecutor.State tick(boolean firstTick) {
-		final MTPlayerController controller = Stevebot.get().getPlayerController();
+		final PlayerController controller = Stevebot.get().getPlayerController();
 
 
 		switch (getCurrentState()) {
 
 			case STATE_PREPARE_1: {
-				final double distToEdge = BlockUtils.distToEdge(controller.getPlayerPosition(), direction);
+				final double distToEdge = BlockUtils.distToEdge(controller.utils().getPlayerPosition(), direction);
 				if (distToEdge <= 0.4) {
 					nextState();
 				} else {
-					controller.getMovement().moveTowards(getTo().pos, true);
+					controller.movement().moveTowards(getTo().pos, true);
 				}
 				return PathExecutor.State.EXEC;
 			}
 
 			case STATE_PREPARE_2: {
-				if (controller.getPlayer().onGround && !controller.isPlayerMoving(0.0001, false)) {
-					controller.getMovement().moveTowards(getTo().pos, true);
+				if (controller.getPlayer().onGround && !controller.utils().isPlayerMoving(0.0001, false)) {
+					controller.movement().moveTowards(getTo().pos, true);
 				}
 				if (!controller.getPlayer().onGround) {
 					nextState();
@@ -104,7 +104,7 @@ public class ActionDropDownStraight extends StatefulAction {
 			}
 
 			case STATE_FINISH: {
-				if (controller.getMovement().moveTowards(getTo().pos, true)) {
+				if (controller.movement().moveTowards(getTo().pos, true)) {
 					return PathExecutor.State.DONE;
 				} else {
 					return PathExecutor.State.EXEC;

@@ -1,6 +1,6 @@
 package stevebot.events;
 
-public interface GameInitListener {
+public interface GameInitListener extends EventListener {
 
 
 	default void onPreInit() {

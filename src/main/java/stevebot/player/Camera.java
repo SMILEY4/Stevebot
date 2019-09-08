@@ -12,6 +12,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
+import stevebot.events.ModEventHandler;
 
 public class Camera implements GameTickListener {
 
@@ -27,7 +28,7 @@ public class Camera implements GameTickListener {
 
 
 
-	private final MTPlayerController PLAYER_CONTROLLER;
+	private final PlayerController controller;
 
 	private CameraState state = CameraState.DEFAULT;
 	private boolean isFreelook = false;
@@ -35,9 +36,9 @@ public class Camera implements GameTickListener {
 
 
 
-	public Camera(MTPlayerController PLAYER_CONTROLLER) {
-		this.PLAYER_CONTROLLER = PLAYER_CONTROLLER;
-		PLAYER_CONTROLLER.getModHandler().getEventHandler().addListener(this);
+	Camera(PlayerController controller, ModEventHandler eventHandler) {
+		this.controller = controller;
+		eventHandler.addListener(this);
 		setupLock();
 	}
 
@@ -75,7 +76,7 @@ public class Camera implements GameTickListener {
 	@Override
 	public void onRenderTickEvent(TickEvent.RenderTickEvent event) {
 
-		EntityPlayerSP player = PLAYER_CONTROLLER.getPlayer();
+		EntityPlayerSP player = controller.getPlayer();
 		if (player == null) {
 			return;
 		}
@@ -106,7 +107,7 @@ public class Camera implements GameTickListener {
 
 
 	private void startFreelook() {
-		final EntityPlayerSP player = PLAYER_CONTROLLER.getPlayer();
+		final EntityPlayerSP player = controller.getPlayer();
 		playerYaw = player.rotationYaw;
 		playerPitch = player.rotationPitch;
 		originalYaw = playerYaw;
@@ -122,7 +123,7 @@ public class Camera implements GameTickListener {
 	private void updateFreelook(TickEvent.Phase phase) {
 
 		final Entity player = Minecraft.getMinecraft().getRenderViewEntity();
-		final EntityPlayerSP playerSP = PLAYER_CONTROLLER.getPlayer();
+		final EntityPlayerSP playerSP = controller.getPlayer();
 
 
 		final float f = Minecraft.getMinecraft().gameSettings.mouseSensitivity * 0.6f + 0.2f;
@@ -155,7 +156,7 @@ public class Camera implements GameTickListener {
 
 	public boolean isLookingAt(BlockPos pos, boolean ignorePitch, double rangeAngleDeg) {
 
-		EntityPlayerSP player = PLAYER_CONTROLLER.getPlayer();
+		EntityPlayerSP player = controller.getPlayer();
 		if (player != null) {
 
 			if (ignorePitch) {
@@ -207,7 +208,7 @@ public class Camera implements GameTickListener {
 
 
 	private Vec3d getLookDirMC() {
-		EntityPlayerSP player = PLAYER_CONTROLLER.getPlayer();
+		EntityPlayerSP player = controller.getPlayer();
 		if (player != null) {
 			return player.getLook(0f);
 		} else {
@@ -226,7 +227,7 @@ public class Camera implements GameTickListener {
 
 
 	public void setLookAt(BlockPos pos, boolean keepPitch) {
-		EntityPlayerSP player = PLAYER_CONTROLLER.getPlayer();
+		EntityPlayerSP player = controller.getPlayer();
 		if (player != null && pos != null) {
 			final Vector3d posBlock = new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
 			final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
@@ -254,7 +255,7 @@ public class Camera implements GameTickListener {
 
 
 	public void setLook(double pitch, double yaw) {
-		EntityPlayerSP player = PLAYER_CONTROLLER.getPlayer();
+		EntityPlayerSP player = controller.getPlayer();
 		if (player != null) {
 			player.rotationPitch = (float) pitch;
 			player.rotationYaw = (float) yaw;

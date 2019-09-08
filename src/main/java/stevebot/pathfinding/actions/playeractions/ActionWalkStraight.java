@@ -47,11 +47,11 @@ public class ActionWalkStraight extends Action {
 
 	@Override
 	public PathExecutor.State tick(boolean fistTick) {
-		if (Stevebot.get().getPlayerController().getMovement().moveTowards(getTo().pos, true)) {
+		if (Stevebot.get().getPlayerController().movement().moveTowards(getTo().pos, true)) {
 			return PathExecutor.State.DONE;
 		} else {
 			if (sprint) {
-				Stevebot.get().getPlayerController().setSprint();
+				Stevebot.get().getPlayerController().input().setSprint();
 			}
 			return PathExecutor.State.EXEC;
 		}

@@ -41,7 +41,7 @@ public class ActionStepDownStraight extends Action {
 
 	@Override
 	public PathExecutor.State tick(boolean firstTick) {
-		if (Stevebot.get().getPlayerController().getMovement().moveTowards(getTo().pos, true)) {
+		if (Stevebot.get().getPlayerController().movement().moveTowards(getTo().pos, true)) {
 			return PathExecutor.State.DONE;
 		} else {
 			return PathExecutor.State.EXEC;

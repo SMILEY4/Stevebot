@@ -23,7 +23,7 @@ public class PathHandler {
 
 	public void calculatePath(BlockPos from, Goal goal, long timeout) {
 		service.submit(() -> {
-			Stevebot.get().getPlayerController().sendMessage("Calculating Path from " + from + " to " + goal.goalString() + "  (timeout@" + (timeout / 1000.0) + ")");
+			Stevebot.get().getPlayerController().utils().sendMessage("Calculating Path from " + from + " to " + goal.goalString() + "  (timeout@" + (timeout / 1000.0) + ")");
 			Stevebot.get().getRenderer().removeRenderable(pathRenderable);
 
 			long ts = System.currentTimeMillis();
@@ -32,9 +32,9 @@ public class PathHandler {
 			if (path != null) {
 				pathRenderable = path.toRenderable();
 				Stevebot.get().getRenderer().addRenderable(pathRenderable);
-				Stevebot.get().getPlayerController().sendMessage("Done:" + ((System.currentTimeMillis() - ts) / 1000.0) + "s, nodes=" + path.nodes.size() + ", cost=" + path.cost + ", explored:" + Node.nodeCache.size());
+				Stevebot.get().getPlayerController().utils().sendMessage("Done:" + ((System.currentTimeMillis() - ts) / 1000.0) + "s, nodes=" + path.nodes.size() + ", cost=" + path.cost + ", explored:" + Node.nodeCache.size());
 			} else {
-				Stevebot.get().getPlayerController().sendMessage("Done:" + ((System.currentTimeMillis() - ts) / 1000.0) + "s, no path found!, explored:" + Node.nodeCache.size());
+				Stevebot.get().getPlayerController().utils().sendMessage("Done:" + ((System.currentTimeMillis() - ts) / 1000.0) + "s, no path found!, explored:" + Node.nodeCache.size());
 			}
 
 		});

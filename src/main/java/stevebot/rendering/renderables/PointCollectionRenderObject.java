@@ -2,7 +2,7 @@ package stevebot.rendering.renderables;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import stevebot.rendering.Color;
-import stevebot.rendering.MTRenderer;
+import stevebot.rendering.RendererImpl;
 import stevebot.rendering.Renderable;
 import net.minecraft.util.math.BlockPos;
 
@@ -75,7 +75,7 @@ public class PointCollectionRenderObject implements Renderable {
 
 
 	@Override
-	public void render(MTRenderer renderer) {
+	public void render(RendererImpl renderer) {
 		renderer.beginPoints(size);
 		for (int i = 0, n = positions.length; i < n; i++) {
 			final Vector3d pos = positions[i];

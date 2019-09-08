@@ -1,6 +1,6 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import stevebot.player.MTPlayerController;
+import stevebot.player.PlayerController;
 import net.minecraft.util.math.BlockPos;
 import stevebot.Stevebot;
 import stevebot.pathfinding.BlockUtils;
@@ -47,9 +47,9 @@ public class ActionFall extends Action {
 
 	@Override
 	public PathExecutor.State tick(boolean fistTick) {
-		final MTPlayerController controller = Stevebot.get().getPlayerController();
+		final PlayerController controller = Stevebot.get().getPlayerController();
 		if (controller.getPlayer().onGround) {
-			if (controller.getMovement().moveTowards(getTo().pos, false)) {
+			if (controller.movement().moveTowards(getTo().pos, false)) {
 				return PathExecutor.State.DONE;
 			} else {
 				return PathExecutor.State.EXEC;

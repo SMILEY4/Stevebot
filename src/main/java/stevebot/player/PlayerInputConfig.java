@@ -7,7 +7,7 @@ import net.minecraft.client.settings.KeyBinding;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerInputConfig {
+class PlayerInputConfig {
 
 
 	public enum InputType {
@@ -33,7 +33,7 @@ public class PlayerInputConfig {
 
 
 
-	public PlayerInputConfig() {
+	PlayerInputConfig() {
 
 		GameSettings settings = Minecraft.getMinecraft().gameSettings;
 
@@ -54,7 +54,7 @@ public class PlayerInputConfig {
 
 
 
-	public KeyBinding getBinding(InputType type) {
+	KeyBinding getBinding(InputType type) {
 		return bindingMap.get(type);
 	}
 

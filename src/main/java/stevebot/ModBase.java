@@ -1,9 +1,10 @@
 package stevebot;
 
-import stevebot.commands.MTCommandHandler;
-import stevebot.events.MTEventHandler;
-import stevebot.player.MTPlayerController;
-import stevebot.rendering.MTRenderer;
+import stevebot.commands.ModCommandHandler;
+import stevebot.events.ModEventHandler;
+import stevebot.pathfinding.PathHandler;
+import stevebot.player.PlayerController;
+import stevebot.rendering.RendererImpl;
 
 public class ModBase {
 
@@ -20,69 +21,73 @@ public class ModBase {
 
 
 
-	private MTEventHandler eventHandler;
-	private MTPlayerController playerController;
-	private MTCommandHandler commandHandler;
-	private MTRenderer renderer;
+	private ModEventHandler eventHandler;
+	private PlayerController playerController;
+	private ModCommandHandler commandHandler;
+	private RendererImpl renderer;
+	private PathHandler pathHandler;
 
 
 
 
-	public void onPreInit() {
+	void onPreInit() {
 		ModBase.instance = this;
-
-		eventHandler = new MTEventHandler(this);
-		playerController = new MTPlayerController(this);
-		commandHandler = new MTCommandHandler(this);
-		renderer = new MTRenderer(this);
-
-		Commands.create();
-
+		eventHandler = new ModEventHandler();
+		commandHandler = new ModCommandHandler(eventHandler);
+		renderer = new RendererImpl(eventHandler);
+		playerController = new PlayerController(eventHandler);
+		pathHandler = new PathHandler();
 		eventHandler.onPreInit();
 	}
 
 
 
 
-	public void onInit() {
+	void onInit() {
 		eventHandler.onInit();
 	}
 
 
 
 
-	public void onPostInit() {
+	void onPostInit() {
 		eventHandler.onPostInit();
 	}
 
 
 
 
-	public MTEventHandler getEventHandler() {
+	public ModEventHandler getEventHandler() {
 		return eventHandler;
 	}
 
 
 
 
-	public MTPlayerController getPlayerController() {
+	public PlayerController getPlayerController() {
 		return playerController;
 	}
 
 
 
 
-	public MTCommandHandler getCommandHandler() {
+	public ModCommandHandler getCommandHandler() {
 		return commandHandler;
 	}
 
 
 
 
-	public MTRenderer getRenderer() {
+	public RendererImpl getRenderer() {
 		return renderer;
 	}
 
+
+
+
+	public PathHandler getPathHandler() {
+		return pathHandler;
+	}
 
 
 }

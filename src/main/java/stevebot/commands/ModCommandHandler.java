@@ -1,14 +1,13 @@
 package stevebot.commands;
 
-import stevebot.ModBase;
-import stevebot.ModModule;
-import stevebot.events.GameInitListener;
 import net.minecraftforge.client.ClientCommandHandler;
+import stevebot.events.GameInitListener;
+import stevebot.events.ModEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MTCommandHandler extends ModModule implements GameInitListener {
+public class ModCommandHandler implements GameInitListener {
 
 
 	private List<MTCommand> commandList = new ArrayList<>();
@@ -16,9 +15,9 @@ public class MTCommandHandler extends ModModule implements GameInitListener {
 
 
 
-	public MTCommandHandler(ModBase modHandler) {
-		super(modHandler);
-		modHandler.getEventHandler().addListener(this);
+	public ModCommandHandler(ModEventHandler eventHandler) {
+		eventHandler.addListener(this);
+		Commands.create(this);
 	}
 
 
@@ -34,7 +33,7 @@ public class MTCommandHandler extends ModModule implements GameInitListener {
 
 
 
-	public void registerCommand(MTCommand command) {
+	void registerCommand(MTCommand command) {
 		commandList.add(command);
 	}
 

@@ -1,25 +1,16 @@
 package stevebot.player;
 
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import stevebot.ModBase;
-import stevebot.ModModule;
-import stevebot.events.GameTickListener;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import stevebot.pathfinding.BlockUtils;
+import stevebot.events.GameTickListener;
+import stevebot.events.ModEventHandler;
 
-public class MTPlayerController extends ModModule {
+public class PlayerInput {
 
 
-	private final Camera camera;
-	private final Movement movement;
-	private final PlayerUtils utils;
+	private PlayerController controller;
 
 	private PlayerInputConfig inputConfig = null;
 	private boolean muteUserInput = false;
@@ -27,135 +18,20 @@ public class MTPlayerController extends ModModule {
 
 
 
-	public MTPlayerController(ModBase modHandler) {
-		super(modHandler);
-
-		utils = new PlayerUtils(this);
-		camera = new Camera(this);
-		movement = new Movement(this);
-
+	PlayerInput(PlayerController controller, ModEventHandler eventHandler) {
+		this.controller = controller;
 		GameTickListener tickListener = new GameTickListener() {
 			@Override
 			public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
 				if (event.phase == TickEvent.Phase.START) {
 					if (muteUserInput) {
-						MTPlayerController.this.stopAll();
+						stopAll();
 					}
 				}
 			}
 		};
-		getModHandler().getEventHandler().addListener(tickListener);
+		eventHandler.addListener(tickListener);
 		reloadConfig();
-	}
-
-
-
-
-	public Camera getCamera() {
-		return camera;
-	}
-
-
-
-
-	public Movement getMovement() {
-		return movement;
-	}
-
-
-
-
-	public PlayerUtils getUtils() {
-		return utils;
-	}
-
-
-
-
-	public void sendMessage(String msg) {
-		if (getPlayer() != null) {
-			getPlayer().sendMessage(new TextComponentString(msg));
-		}
-	}
-
-
-
-
-	public EntityPlayerSP getPlayer() {
-		return Minecraft.getMinecraft().player;
-	}
-
-
-
-
-	public BlockPos getPlayerBlockPos() {
-		EntityPlayerSP player = getPlayer();
-		if (player != null) {
-			return BlockUtils.toBlockPos(player.posX, player.posY, player.posZ);
-		} else {
-			return null;
-		}
-	}
-
-
-
-
-	public Vector3d getPlayerPosition() {
-		EntityPlayerSP player = getPlayer();
-		if (player != null) {
-			return new Vector3d(player.posX, player.posY, player.posZ);
-		} else {
-			return null;
-		}
-	}
-
-
-
-
-	public Vector3d getMotionVector() {
-		EntityPlayerSP player = getPlayer();
-		if (player != null) {
-			return new Vector3d(player.motionX, player.motionY, player.motionZ);
-		} else {
-			return null;
-		}
-	}
-
-
-
-
-	public boolean isPlayerMoving() {
-		return isPlayerMoving(false);
-	}
-
-
-
-
-	public boolean isPlayerMoving(boolean includeY) {
-		return isPlayerMoving(0.0001, includeY);
-	}
-
-
-
-
-	public boolean isPlayerMoving(double threshold) {
-		return isPlayerMoving(threshold, false);
-	}
-
-
-
-
-	public boolean isPlayerMoving(double threshold, boolean includeY) {
-		EntityPlayerSP player = getPlayer();
-		if (player != null) {
-			if (includeY) {
-				return player.motionX > threshold || player.motionY > threshold || player.motionZ > threshold;
-			} else {
-				return player.motionX > threshold || player.motionZ > threshold;
-			}
-		} else {
-			return false;
-		}
 	}
 
 
@@ -240,10 +116,10 @@ public class MTPlayerController extends ModModule {
 
 	public void setJump(boolean jump, boolean allowInAir) {
 		if (jump) {
-			if (getPlayer() == null) {
+			if (controller.getPlayer() == null) {
 				return;
 			}
-			if (getPlayer().onGround) {
+			if (controller.getPlayer().onGround) {
 				setInput(PlayerInputConfig.InputType.JUMP, true);
 			} else {
 				if (allowInAir) {
@@ -259,15 +135,15 @@ public class MTPlayerController extends ModModule {
 
 
 	public void setSprint() {
-		getPlayer().setSprinting(true);
+		controller.getPlayer().setSprinting(true);
 	}
 
 
 
 
 	public void setSprint(boolean sprint) {
-		if (getPlayer() != null) {
-			getPlayer().setSprinting(sprint);
+		if (controller.getPlayer() != null) {
+			controller.getPlayer().setSprinting(sprint);
 		}
 	}
 

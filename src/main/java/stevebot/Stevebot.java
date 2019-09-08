@@ -37,6 +37,4 @@ public class Stevebot extends ModBase {
 	}
 
 
-
-
 }

@@ -1,7 +1,5 @@
 package stevebot.events;
 
-import stevebot.ModBase;
-import stevebot.ModModule;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
@@ -11,7 +9,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MTEventHandler extends ModModule {
+public class ModEventHandler {
 
 
 	private List<GameInitListener> initListeners = new ArrayList<>();
@@ -22,60 +20,38 @@ public class MTEventHandler extends ModModule {
 
 
 
-	public MTEventHandler(ModBase modHandler) {
-		super(modHandler);
+	public void addListener(EventListener listener) {
+		if (listener instanceof GameInitListener) {
+			initListeners.add((GameInitListener) listener);
+		}
+		if (listener instanceof GameTickListener) {
+			tickListeners.add((GameTickListener) listener);
+		}
+		if (listener instanceof GameRenderListener) {
+			renderListeners.add((GameRenderListener) listener);
+		}
+		if (listener instanceof GameCommandListener) {
+			commandListeners.add((GameCommandListener) listener);
+		}
 	}
 
 
 
 
-	public void addListener(GameInitListener listener) {
-		initListeners.add(listener);
+	public void removeListener(EventListener listener) {
+		if (listener instanceof GameInitListener) {
+			initListeners.remove(listener);
+		}
+		if (listener instanceof GameTickListener) {
+			tickListeners.remove(listener);
+		}
+		if (listener instanceof GameRenderListener) {
+			renderListeners.remove(listener);
+		}
+		if (listener instanceof GameCommandListener) {
+			commandListeners.remove(listener);
+		}
 	}
-
-
-
-
-	public void addListener(GameRenderListener listener) {
-		renderListeners.add(listener);
-	}
-
-
-
-
-	public void addListener(GameCommandListener listener) {
-		commandListeners.add(listener);
-	}
-
-
-
-
-	public void removeListener(GameInitListener listener) {
-		initListeners.remove(listener);
-	}
-
-
-
-
-	public void addListener(GameTickListener listener) {
-		tickListeners.add(listener);
-	}
-
-
-
-
-	public void removeListener(GameTickListener listener) {
-		tickListeners.remove(listener);
-	}
-
-
-
-
-	public void removeListener(GameCommandListener listener) {
-		commandListeners.remove(listener);
-	}
-
-	//=====  INITIALISATION
 
 
 
@@ -98,9 +74,6 @@ public class MTEventHandler extends ModModule {
 		MinecraftForge.EVENT_BUS.register(this);
 		initListeners.forEach(GameInitListener::onPostInit);
 	}
-
-
-	//=====  TICKS
 
 
 
@@ -136,18 +109,12 @@ public class MTEventHandler extends ModModule {
 	}
 
 
-	//==== RENDERING
-
-
 
 
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event) {
 		renderListeners.forEach(listener -> listener.onRenderWorldLast(event));
 	}
-
-
-	//==== COMMANDS
 
 
 

@@ -2,7 +2,7 @@ package stevebot.events;
 
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-public interface GameTickListener {
+public interface GameTickListener extends EventListener {
 
 
 	default void onClientTick(TickEvent.ClientTickEvent event) {

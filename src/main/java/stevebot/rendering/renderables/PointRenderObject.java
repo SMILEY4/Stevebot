@@ -2,7 +2,7 @@ package stevebot.rendering.renderables;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import stevebot.rendering.Color;
-import stevebot.rendering.MTRenderer;
+import stevebot.rendering.RendererImpl;
 import stevebot.rendering.Renderable;
 import net.minecraft.util.math.BlockPos;
 
@@ -47,7 +47,7 @@ public class PointRenderObject implements Renderable {
 
 
 	@Override
-	public void render(MTRenderer renderer) {
+	public void render(RendererImpl renderer) {
 		renderer.drawPoint(pos, size, color);
 	}
 

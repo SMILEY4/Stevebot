@@ -1,6 +1,6 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import stevebot.player.MTPlayerController;
+import stevebot.player.PlayerController;
 import net.minecraft.util.math.BlockPos;
 import stevebot.Direction;
 import stevebot.Stevebot;
@@ -62,30 +62,30 @@ public class ActionStepUpDiagonal extends StatefulAction {
 	@Override
 	public PathExecutor.State tick(boolean firstTick) {
 
-		final MTPlayerController controller = Stevebot.get().getPlayerController();
+		final PlayerController controller = Stevebot.get().getPlayerController();
 
-		if (controller.getMotionVector().mul(1, 0, 1).length() < 0.075) {
+		if (controller.utils().getMotionVector().mul(1, 0, 1).length() < 0.075) {
 			setState(STATE_JUMP);
 		}
 
 		switch (getCurrentState()) {
 
 			case STATE_SLOW_DOWN: {
-				boolean slowEnough = controller.getMovement().slowDown(0.075);
+				boolean slowEnough = controller.movement().slowDown(0.075);
 				if (slowEnough) {
 					setState(STATE_JUMP);
 				} else {
-					controller.getCamera().setLookAt(getTo().pos, true);
+					controller.camera().setLookAt(getTo().pos, true);
 				}
 				return PathExecutor.State.EXEC;
 
 			}
 
 			case STATE_JUMP: {
-				if (controller.getPlayerBlockPos().equals(getFrom().pos)) {
-					controller.setJump(false);
+				if (controller.utils().getPlayerBlockPos().equals(getFrom().pos)) {
+					controller.input().setJump(false);
 				}
-				if (controller.getMovement().moveTowards(getTo().pos, true)) {
+				if (controller.movement().moveTowards(getTo().pos, true)) {
 					return PathExecutor.State.DONE;
 				} else {
 					return PathExecutor.State.EXEC;
