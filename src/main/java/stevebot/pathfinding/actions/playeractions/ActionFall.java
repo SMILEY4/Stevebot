@@ -1,6 +1,6 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import modtools.player.MTPlayerController;
+import stevebot.player.MTPlayerController;
 import net.minecraft.util.math.BlockPos;
 import stevebot.Stevebot;
 import stevebot.pathfinding.BlockUtils;

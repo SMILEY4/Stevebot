@@ -1,8 +1,8 @@
 package stevebot.pathfinding;
 
-import modtools.rendering.Color;
-import modtools.rendering.Renderable;
-import modtools.rendering.renderables.PathRenderObject;
+import stevebot.rendering.Color;
+import stevebot.rendering.Renderable;
+import stevebot.rendering.renderables.PathRenderObject;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;

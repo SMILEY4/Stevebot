@@ -1,10 +1,10 @@
 package stevebot;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import modtools.commands.CommandArgument;
-import modtools.commands.CommandBuilder;
-import modtools.commands.tokens.ValueToken;
-import modtools.player.Camera;
+import stevebot.commands.CommandArgument;
+import stevebot.commands.CommandBuilder;
+import stevebot.commands.tokens.ValueToken;
+import stevebot.player.Camera;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.math.BlockPos;
 import stevebot.pathfinding.goal.ExactGoal;

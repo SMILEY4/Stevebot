@@ -1,8 +1,8 @@
 package stevebot.pathfinding;
 
-import modtools.events.GameTickListener;
-import modtools.rendering.Color;
-import modtools.rendering.renderables.DynPointCollectionRenderObject;
+import stevebot.events.GameTickListener;
+import stevebot.rendering.Color;
+import stevebot.rendering.renderables.DynPointCollectionRenderObject;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.Stevebot;
 import stevebot.pathfinding.actions.Action;

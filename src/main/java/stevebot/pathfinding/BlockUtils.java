@@ -10,13 +10,6 @@ import stevebot.Direction;
 public class BlockUtils {
 
 
-	public static Block getBlock(BlockPos pos) {
-		return Minecraft.getMinecraft().world.getBlockState(pos).getBlock();
-	}
-
-
-
-
 	static final Block WATER_FLOWING = Block.getBlockById(8);
 	static final Block WATER_STILL = Block.getBlockById(9);
 	static final Block LAVAL_FLOWING = Block.getBlockById(10);
@@ -33,7 +26,7 @@ public class BlockUtils {
 
 
 	public static boolean isWater(BlockPos pos) {
-		return isWater(getBlock(pos));
+		return isWater(World.getBlock(pos));
 	}
 
 
@@ -47,7 +40,7 @@ public class BlockUtils {
 
 
 	public static boolean isLava(BlockPos pos) {
-		return isLava(getBlock(pos));
+		return isLava(World.getBlock(pos));
 	}
 
 
@@ -61,7 +54,7 @@ public class BlockUtils {
 
 
 	public static boolean isFlowingLiquid(BlockPos pos) {
-		return isFlowingLiquid(getBlock(pos));
+		return isFlowingLiquid(World.getBlock(pos));
 	}
 
 
@@ -75,7 +68,7 @@ public class BlockUtils {
 
 
 	public static boolean isLiquid(BlockPos pos) {
-		return isLiquid(getBlock(pos));
+		return isLiquid(World.getBlock(pos));
 	}
 
 
@@ -89,14 +82,14 @@ public class BlockUtils {
 
 
 	public static boolean isDangerous(BlockPos pos) {
-		return isDangerous(getBlock(pos));
+		return isDangerous(World.getBlock(pos));
 	}
 
 
 
 
 	public static boolean canWalkThrough(BlockPos pos) {
-		final Block block = getBlock(pos);
+		final Block block = World.getBlock(pos);
 		if (isLiquid(block) || Blocks.WATERLILY.equals(block) || isDangerous(block)
 				|| Blocks.ICE.equals(block) || Blocks.FROSTED_ICE.equals(block) || Blocks.PACKED_ICE.equals(block)) {
 			return false;
@@ -109,7 +102,7 @@ public class BlockUtils {
 
 
 	public static boolean canWalkOn(BlockPos pos) {
-		final Block block = getBlock(pos);
+		final Block block = World.getBlock(pos);
 		if (isLiquid(block) || isDangerous(block)) {
 			return false;
 		} else {
@@ -128,7 +121,7 @@ public class BlockUtils {
 
 
 	public static boolean avoidTouching(BlockPos pos) {
-		return avoidTouching(getBlock(pos));
+		return avoidTouching(World.getBlock(pos));
 	}
 
 
