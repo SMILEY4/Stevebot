@@ -19,6 +19,13 @@ public class BlockUtils {
 
 
 
+	public static boolean isLoaded(BlockPos pos) {
+		return Stevebot.get().getBlockProvider().isLoaded(pos);
+	}
+
+
+
+
 	public static boolean isWater(Block block) {
 		return WATER_FLOWING.equals(block) || WATER_STILL.equals(block);
 	}

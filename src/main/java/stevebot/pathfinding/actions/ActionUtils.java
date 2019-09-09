@@ -37,8 +37,7 @@ public class ActionUtils {
 	 * Block below can not be walkable and there must be a 3-block high space.
 	 */
 	public static boolean canJumpThrough(BlockPos pos) {
-		final BlockPos d0 = pos.add(0, -1, 0);
-		if (BlockUtils.canWalkOn(d0)) {
+		if (BlockUtils.canWalkOn(pos.add(0, -1, 0))) {
 			return false;
 		}
 		return canJump(pos);
@@ -51,8 +50,7 @@ public class ActionUtils {
 	 * Block below must be walkable and there must be a 3-block high space.
 	 */
 	public static boolean canJumpAt(BlockPos pos) {
-		final BlockPos d0 = pos.add(0, -1, 0);
-		if (!BlockUtils.canWalkOn(d0)) {
+		if (!BlockUtils.canWalkOn(pos.add(0, -1, 0))) {
 			return false;
 		}
 		return canJump(pos);
@@ -80,9 +78,7 @@ public class ActionUtils {
 	 * There must be a 2-block high space. The block below does not matter.
 	 */
 	public static boolean canMoveThrough(BlockPos pos) {
-		BlockPos d1 = pos;
-		BlockPos d2 = pos.add(0, 1, 0);
-		return BlockUtils.canWalkThrough(d1) && BlockUtils.canWalkThrough(d2);
+		return BlockUtils.canWalkThrough(pos) && BlockUtils.canWalkThrough(pos.add(0, 1, 0));
 	}
 
 
@@ -107,11 +103,7 @@ public class ActionUtils {
 	 * Block below must be walkable and there must be a 2-block high space.
 	 */
 	public static boolean canStandAt(BlockPos pos) {
-		final BlockPos d0 = pos.add(0, -1, 0);
-		if (!BlockUtils.canWalkOn(d0)) {
-			return false;
-		}
-		return canMoveThrough(pos);
+		return canStandAt(pos, 2);
 	}
 
 
@@ -121,8 +113,7 @@ public class ActionUtils {
 	 * Block below must be walkable and there must be a space with the given height.
 	 */
 	public static boolean canStandAt(BlockPos pos, int height) {
-		final BlockPos d0 = pos.add(0, -1, 0);
-		if (!BlockUtils.canWalkOn(d0)) {
+		if (!BlockUtils.canWalkOn(pos.add(0, -1, 0))) {
 			return false;
 		}
 		return canMoveThrough(pos, height);

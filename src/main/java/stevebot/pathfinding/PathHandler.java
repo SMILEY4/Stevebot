@@ -27,14 +27,16 @@ public class PathHandler {
 			Stevebot.get().getRenderer().removeRenderable(pathRenderable);
 
 			long ts = System.currentTimeMillis();
-			path = Pathfinding.calculatePath(from, goal, timeout);
 
-			if (path != null) {
+			Pathfinding pathfinder = new Pathfinding();
+			path = pathfinder.calculatePath(from, goal, timeout);
+
+			if (path == null) {
+				Stevebot.get().getPlayerController().utils().sendMessage("No Path found! " + ((System.currentTimeMillis() - ts) / 1000.0) + "s, nodes:" + Node.nodeCache.size());
+			} else {
 				pathRenderable = path.toRenderable();
 				Stevebot.get().getRenderer().addRenderable(pathRenderable);
-				Stevebot.get().getPlayerController().utils().sendMessage("Done:" + ((System.currentTimeMillis() - ts) / 1000.0) + "s, nodes=" + path.nodes.size() + ", cost=" + path.cost + ", explored:" + Node.nodeCache.size());
-			} else {
-				Stevebot.get().getPlayerController().utils().sendMessage("Done:" + ((System.currentTimeMillis() - ts) / 1000.0) + "s, no path found!, explored:" + Node.nodeCache.size());
+				Stevebot.get().getPlayerController().utils().sendMessage("Path found! " + ((System.currentTimeMillis() - ts) / 1000.0) + "s, nodes=" + path.nodes.size() + ", cost=" + path.cost + ", explored:" + Node.nodeCache.size());
 			}
 
 		});

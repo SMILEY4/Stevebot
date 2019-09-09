@@ -1,8 +1,6 @@
 package stevebot.pathfinding;
 
-import stevebot.rendering.Renderable;
 import net.minecraft.util.math.BlockPos;
-import stevebot.Stevebot;
 import stevebot.pathfinding.actions.Action;
 import stevebot.pathfinding.actions.ActionGenerator;
 import stevebot.pathfinding.goal.Goal;
@@ -15,51 +13,53 @@ import java.util.Set;
 public class Pathfinding {
 
 
-	private static Renderable tempPathRenderable;
+	private long timeStart;
 
 
 
 
-	public static Path calculatePath(BlockPos posStart, Goal goal, long timeout) {
+	public Path calculatePath(BlockPos posStart, Goal goal, long timeoutInMs) {
+
+		// prepare node cache
 		Node.nodeCache.clear();
 		Node nodeStart = Node.get(posStart);
 		nodeStart.gcost = 0;
 
+		// prepare open set
 		final Set<Node> openSet = new HashSet<>();
 		openSet.add(nodeStart);
 
+		// prepare misc
 		Path path = null;
+		timeStart = System.currentTimeMillis();
 
-		long timeStart = System.currentTimeMillis();
-		long timeLastMessage = System.currentTimeMillis();
-
+		// calculate path
 		while (!openSet.isEmpty()) {
 
-			if (System.currentTimeMillis() > timeStart + timeout) {
-				Stevebot.get().getPlayerController().utils().sendMessage("Timeout");
+			// timeout
+			if (checkForTimeout(timeoutInMs)) {
 				break;
 			}
 
-			if (System.currentTimeMillis() - timeLastMessage > 2000) {
-				Stevebot.get().getPlayerController().utils().sendMessage(" ... " + ((System.currentTimeMillis() - timeStart) / 1000) + "s,  visited " + Node.nodeCache.size() + " Nodes");
-				timeLastMessage = System.currentTimeMillis();
-			}
-
+			// get next node
 			Node current = removeLowest(openSet);
 			current.close();
+
+			// check if reached goal
 			if (goal.reached(current.pos)) {
 				Path p = buildPath(nodeStart, current);
 				if (path == null || p.cost < path.cost) {
 					path = p;
 				}
-				Stevebot.get().getPlayerController().utils().sendMessage("Possible path found cost=" + path.cost);
 			}
 
 
+			// check if current path cost is already higher than prev. path cost
 			if (path != null && path.cost < current.gcost) {
 				continue;
 			}
 
+			// process actions
 			List<Action> actions = ActionGenerator.getActions(current);
 			for (int i = 0, n = actions.size(); i < n; i++) {
 				final Action action = actions.get(i);
@@ -82,13 +82,20 @@ public class Pathfinding {
 
 		}
 
-		return path == null ? new Path() : path;
+		return path;
 	}
 
 
 
 
-	private static Node removeLowest(Set<Node> set) {
+	private boolean checkForTimeout(long timeoutInMs) {
+		return System.currentTimeMillis() > timeStart + timeoutInMs;
+	}
+
+
+
+
+	private Node removeLowest(Set<Node> set) {
 		Node bestNode = null;
 		for (Node node : set) {
 			if (bestNode == null
@@ -104,7 +111,7 @@ public class Pathfinding {
 
 
 
-	private static Path buildPath(Node start, Node end) {
+	private Path buildPath(Node start, Node end) {
 		Path path = new Path();
 		path.cost = end.gcost;
 		Node current = end;

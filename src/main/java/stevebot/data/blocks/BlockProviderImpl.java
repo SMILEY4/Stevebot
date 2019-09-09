@@ -1,6 +1,7 @@
 package stevebot.data.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 
 public class BlockProviderImpl implements BlockProvider {
@@ -15,6 +16,14 @@ public class BlockProviderImpl implements BlockProvider {
 	public BlockProviderImpl(BlockLibrary library) {
 		this.library = library;
 		this.cache = new BlockCache(library);
+	}
+
+
+
+
+	@Override
+	public boolean isLoaded(BlockPos pos) {
+		return Minecraft.getMinecraft().world.isBlockLoaded(pos);
 	}
 
 
