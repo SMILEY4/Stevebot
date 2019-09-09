@@ -1,5 +1,6 @@
 package stevebot.pathfinding;
 
+import stevebot.pathfinding.path.Path;
 import stevebot.rendering.Renderable;
 import net.minecraft.util.math.BlockPos;
 import stevebot.Stevebot;
@@ -34,9 +35,9 @@ public class PathHandler {
 			if (path == null) {
 				Stevebot.get().getPlayerController().utils().sendMessage("No Path found! " + ((System.currentTimeMillis() - ts) / 1000.0) + "s, nodes:" + Node.nodeCache.size());
 			} else {
-				pathRenderable = path.toRenderable();
+				pathRenderable = Path.toRenderable(path);
 				Stevebot.get().getRenderer().addRenderable(pathRenderable);
-				Stevebot.get().getPlayerController().utils().sendMessage("Path found! " + ((System.currentTimeMillis() - ts) / 1000.0) + "s, nodes=" + path.nodes.size() + ", cost=" + path.cost + ", explored:" + Node.nodeCache.size());
+				Stevebot.get().getPlayerController().utils().sendMessage("Path found! " + ((System.currentTimeMillis() - ts) / 1000.0) + "s, nodes=" + path.getNodes().size() + ", cost=" + path.getCost() + ", explored:" + Node.nodeCache.size());
 			}
 
 		});

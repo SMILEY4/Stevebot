@@ -1,6 +1,7 @@
 package stevebot.pathfinding;
 
 import stevebot.events.GameTickListener;
+import stevebot.pathfinding.path.Path;
 import stevebot.rendering.Color;
 import stevebot.rendering.renderables.DynPointCollectionRenderObject;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -46,8 +47,8 @@ public class PathExecutor implements GameTickListener {
 
 	public void start() {
 		indexFrom = 0;
-		from = path.nodes.get(indexFrom);
-		to = path.nodes.get(indexFrom + 1);
+		from = path.getNodes().get(indexFrom);
+		to = path.getNodes().get(indexFrom + 1);
 		action = to.action;
 		isFollowing = true;
 		points.getPositions().clear();
@@ -115,14 +116,14 @@ public class PathExecutor implements GameTickListener {
 
 	private boolean nextAction() {
 		indexFrom++;
-		if (indexFrom == path.nodes.size() - 1) { // next is last node
-			from = path.nodes.get(indexFrom);
+		if (indexFrom == path.getNodes().size() - 1) { // next is last node
+			from = path.getNodes().get(indexFrom);
 			to = null;
 			action = null;
 			return false;
 		} else {
-			from = path.nodes.get(indexFrom);
-			to = path.nodes.get(indexFrom + 1);
+			from = path.getNodes().get(indexFrom);
+			to = path.getNodes().get(indexFrom + 1);
 			action = to.action;
 			action.resetAction();
 			return true;

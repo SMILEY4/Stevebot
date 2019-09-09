@@ -4,11 +4,12 @@ import net.minecraft.util.math.BlockPos;
 import stevebot.pathfinding.actions.Action;
 import stevebot.pathfinding.actions.ActionGenerator;
 import stevebot.pathfinding.goal.Goal;
+import stevebot.pathfinding.path.CompletedPath;
+import stevebot.pathfinding.path.EmptyPath;
+import stevebot.pathfinding.path.PartialPath;
+import stevebot.pathfinding.path.Path;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Pathfinding {
 
@@ -30,7 +31,7 @@ public class Pathfinding {
 		openSet.add(nodeStart);
 
 		// prepare misc
-		Path path = null;
+		Path bestPath = new EmptyPath();
 		timeStart = System.currentTimeMillis();
 
 		// calculate path
@@ -47,15 +48,15 @@ public class Pathfinding {
 
 			// check if reached goal
 			if (goal.reached(current.pos)) {
-				Path p = buildPath(nodeStart, current);
-				if (path == null || p.cost < path.cost) {
-					path = p;
+				Path currentPath = buildPath(nodeStart, current, true);
+				if (currentPath.getCost() < bestPath.getCost()) {
+					bestPath = currentPath;
 				}
+				continue;
 			}
 
-
 			// check if current path cost is already higher than prev. path cost
-			if (path != null && path.cost < current.gcost) {
+			if (bestPath.getCost() < current.gcost) {
 				continue;
 			}
 
@@ -82,7 +83,7 @@ public class Pathfinding {
 
 		}
 
-		return path;
+		return bestPath;
 	}
 
 
@@ -111,17 +112,22 @@ public class Pathfinding {
 
 
 
-	private Path buildPath(Node start, Node end) {
-		Path path = new Path();
-		path.cost = end.gcost;
+	private Path buildPath(Node start, Node end, boolean reachedGoal) {
+
+		List<Node> nodes = new ArrayList<>();
 		Node current = end;
 		while (current != start) {
-			path.nodes.add(current);
+			nodes.add(current);
 			current = current.prev;
 		}
-		path.nodes.add(start);
-		Collections.reverse(path.nodes);
-		return path;
+		Collections.reverse(nodes);
+
+		if (reachedGoal) {
+			return new CompletedPath(end.gcost, nodes);
+		} else {
+			return new PartialPath(end.gcost, nodes);
+		}
+
 	}
 
 
