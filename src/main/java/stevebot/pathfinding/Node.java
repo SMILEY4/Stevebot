@@ -1,7 +1,7 @@
 package stevebot.pathfinding;
 
 import net.minecraft.util.math.BlockPos;
-import stevebot.pathfinding.actions.Action;
+import stevebot.pathfinding.actions.playeractions.Action;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -25,6 +25,8 @@ public class ActionCosts {
 	public static final double COST_MULT_TOUCHING = 1.6;
 	public static final double COST_MULT_DIAGONAL = 1.414;
 
+	public static final double COST_INFINITE = 99999999;
+
 
 
 

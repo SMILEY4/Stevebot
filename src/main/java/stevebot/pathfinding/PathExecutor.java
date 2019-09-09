@@ -6,7 +6,7 @@ import stevebot.rendering.Color;
 import stevebot.rendering.renderables.DynPointCollectionRenderObject;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.Stevebot;
-import stevebot.pathfinding.actions.Action;
+import stevebot.pathfinding.actions.playeractions.Action;
 
 public class PathExecutor implements GameTickListener {
 

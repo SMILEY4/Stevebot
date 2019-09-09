@@ -1,8 +1,8 @@
 package stevebot.pathfinding;
 
 import net.minecraft.util.math.BlockPos;
-import stevebot.pathfinding.actions.Action;
-import stevebot.pathfinding.actions.ActionGenerator;
+import stevebot.pathfinding.actions.ActionFactory;
+import stevebot.pathfinding.actions.ActionFactoryProvider;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.path.CompletedPath;
 import stevebot.pathfinding.path.EmptyPath;
@@ -14,12 +14,12 @@ import java.util.*;
 public class Pathfinding {
 
 
-	private long timeStart;
+	private static final ActionFactoryProvider actionFactoryProvider = new ActionFactoryProvider();
 
 
 
 
-	public Path calculatePath(BlockPos posStart, Goal goal, long timeoutInMs) {
+	Path calculatePath(BlockPos posStart, Goal goal, long timeoutInMs) {
 
 		// prepare node cache
 		Node.nodeCache.clear();
@@ -32,13 +32,13 @@ public class Pathfinding {
 
 		// prepare misc
 		Path bestPath = new EmptyPath();
-		timeStart = System.currentTimeMillis();
+		long timeStart = System.currentTimeMillis();
 
 		// calculate path
 		while (!openSet.isEmpty()) {
 
 			// timeout
-			if (checkForTimeout(timeoutInMs)) {
+			if (checkForTimeout(timeStart, timeoutInMs)) {
 				break;
 			}
 
@@ -61,25 +61,36 @@ public class Pathfinding {
 			}
 
 			// process actions
-			List<Action> actions = ActionGenerator.getActions(current);
-			for (int i = 0, n = actions.size(); i < n; i++) {
-				final Action action = actions.get(i);
-				final Node next = action.getTo();
+			List<ActionFactory> factories = actionFactoryProvider.getAllFactories();
+			for (int i = 0, n = factories.size(); i < n; i++) {
+				ActionFactory factory = factories.get(i);
 
-				final double newCost = current.gcost + action.getCost();
-				if (!next.open && newCost >= next.gcost) {
+				ActionFactory.Result result = factory.check(current);
+				if (result.type == ActionFactory.ResultType.INVALID) {
 					continue;
 				}
-				if (newCost < next.gcost || !openSet.contains(next)) {
-					next.gcost = newCost;
-					next.hcost = goal.calcHCost(next.pos);
-					next.prev = current;
-					next.action = action;
-					next.open = true;
-					openSet.add(next);
+				if (result.type == ActionFactory.ResultType.UNLOADED) {
+					continue;
+				}
+				if (result.type == ActionFactory.ResultType.VALID) {
+					final Node next = result.to;
+
+					final double newCost = current.gcost + result.estimatedCost;
+					if (!next.open && newCost >= next.gcost) {
+						continue;
+					}
+					if (newCost < next.gcost || !openSet.contains(next)) {
+						next.gcost = newCost;
+						next.hcost = goal.calcHCost(next.pos);
+						next.prev = current;
+						next.action = factory.createAction(current);
+						next.open = true;
+						openSet.add(next);
+					}
 				}
 
 			}
+
 
 		}
 
@@ -89,7 +100,7 @@ public class Pathfinding {
 
 
 
-	private boolean checkForTimeout(long timeoutInMs) {
+	private boolean checkForTimeout(long timeStart, long timeoutInMs) {
 		return System.currentTimeMillis() > timeStart + timeoutInMs;
 	}
 

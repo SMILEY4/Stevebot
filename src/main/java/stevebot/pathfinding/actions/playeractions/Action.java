@@ -1,4 +1,4 @@
-package stevebot.pathfinding.actions;
+package stevebot.pathfinding.actions.playeractions;
 
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
