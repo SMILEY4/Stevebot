@@ -95,7 +95,7 @@ public class ActionSprintJump extends StatefulAction {
 
 			// check from-position
 			final BlockPos from = node.pos;
-			if (ActionUtils.canJumpAt(from)) {
+			if (!ActionUtils.canJumpAt(from)) {
 				return Result.invalid();
 			}
 
@@ -109,11 +109,11 @@ public class ActionSprintJump extends StatefulAction {
 			for (int i = 0; i < 3; i++) {
 				final BlockPos gap = from.add(direction.dx * (i + 1), +0, direction.dz * (i + 1));
 				if (i == 2) {
-					if (ActionUtils.canJump(gap)) {
+					if (!ActionUtils.canJump(gap)) {
 						return Result.invalid();
 					}
 				} else {
-					if (ActionUtils.canJumpThrough(gap)) {
+					if (!ActionUtils.canJumpThrough(gap)) {
 						return Result.invalid();
 					}
 				}
