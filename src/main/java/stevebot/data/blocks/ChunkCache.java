@@ -2,9 +2,12 @@ package stevebot.data.blocks;
 
 
 import com.ruegnerlukas.simplemath.MathUtils;
+import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
+import stevebot.rendering.Color;
+import stevebot.rendering.Renderable;
+import stevebot.rendering.Renderer;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ChunkCache {
 
@@ -51,6 +54,13 @@ public class ChunkCache {
 
 	public CachedChunk deleteCachedChunk(ChunkPos chunkPos) {
 		return chunks.remove(chunkPos);
+	}
+
+
+
+
+	public Renderable getChunkCacheRenderable() {
+		return new ChunkCacheRenderable(chunks);
 	}
 
 
@@ -187,7 +197,47 @@ public class ChunkCache {
 	}
 
 
+
+
+
+
+	static class ChunkCacheRenderable implements Renderable {
+
+
+		private Map<ChunkPos, CachedChunk> chunks;
+
+
+
+
+		public ChunkCacheRenderable(Map<ChunkPos, CachedChunk> chunks) {
+			this.chunks = chunks;
+		}
+
+
+
+
+		@Override
+		public void render(Renderer renderer) {
+			renderer.beginBoxes(3);
+			final Vector3d posMin = new Vector3d();
+			final Vector3d posMax = new Vector3d();
+			try {
+				for (CachedChunk chunk : chunks.values()) {
+					ChunkPos chunkPos = chunk.pos;
+					posMin.set(chunkPos.x * 16, chunkPos.y * 16, chunkPos.z * 16);
+					posMax.set(chunkPos.x * 16 + 16, chunkPos.y * 16 + 16, chunkPos.z * 16 + 16);
+					renderer.drawBoxOpen(posMin, posMax, Color.BLUE);
+				}
+			} catch (ConcurrentModificationException e) {
+				// ignore
+			}
+			renderer.end();
+		}
+
+	}
+
 }
+
 
 
 

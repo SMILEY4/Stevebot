@@ -78,4 +78,11 @@ public class BlockCache {
 	}
 
 
+
+
+	public ChunkCache getChunkCache() {
+		return this.chunkCache;
+	}
+
+
 }

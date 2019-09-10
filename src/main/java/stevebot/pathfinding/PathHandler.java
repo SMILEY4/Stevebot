@@ -5,6 +5,7 @@ import stevebot.Stevebot;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.path.Path;
 import stevebot.pathfinding.path.PathRenderable;
+import stevebot.rendering.Renderable;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,11 +14,11 @@ public class PathHandler {
 
 
 	private ExecutorService service = Executors.newSingleThreadExecutor();
-
 	private Path path;
-	private PathRenderable pathRenderable;
-
 	private PathExecutor excecutor = null;
+
+	private PathRenderable pathRenderable;
+	private Renderable cachedChunkRenderable = null;
 
 
 
@@ -70,6 +71,23 @@ public class PathHandler {
 	public void setPathRenderableStyle(PathRenderable.Style style) {
 		if (pathRenderable != null) {
 			pathRenderable.setStyle(style);
+		}
+	}
+
+
+
+
+	public void showCachedChunks(boolean show) {
+		if (show) {
+			if (cachedChunkRenderable == null) {
+				cachedChunkRenderable = Stevebot.get().getBlockProvider().getBlockCache().getChunkCache().getChunkCacheRenderable();
+				Stevebot.get().getRenderer().addRenderable(cachedChunkRenderable);
+			}
+		} else {
+			if (cachedChunkRenderable != null) {
+				Stevebot.get().getRenderer().removeRenderable(cachedChunkRenderable);
+				cachedChunkRenderable = null;
+			}
 		}
 	}
 

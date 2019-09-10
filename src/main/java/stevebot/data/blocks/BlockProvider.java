@@ -15,4 +15,6 @@ public interface BlockProvider {
 
 	int getBlockIdAt(int x, int y, int z);
 
+	BlockCache getBlockCache();
+
 }

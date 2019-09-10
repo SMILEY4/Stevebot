@@ -44,7 +44,7 @@ public class Commands {
 						.build()
 		);
 
-		// /follow
+		// /follow <start|stop>
 		commandHandler.registerCommand(
 				new CommandBuilder("follow")
 						.addToken(new ValueToken.TextToken("state"))
@@ -52,11 +52,19 @@ public class Commands {
 						.build()
 		);
 
-		// /pathstyle
+		// /pathstyle <style>
 		commandHandler.registerCommand(
 				new CommandBuilder("pathstyle")
 						.addToken(new ValueToken.TextToken("style"))
 						.setListener(Commands::onPathStyle)
+						.build()
+		);
+
+		// /showCachedChunks <show>
+		commandHandler.registerCommand(
+				new CommandBuilder("showCachedChunks")
+						.addToken(new ValueToken.BooleanToken("show"))
+						.setListener(Commands::displayCachedChunks)
 						.build()
 		);
 
@@ -126,11 +134,18 @@ public class Commands {
 			final PathRenderable.Style style = PathRenderable.Style.valueOf(strStyle);
 			Stevebot.get().getPathHandler().setPathRenderableStyle(style);
 		} catch (IllegalArgumentException e) {
-			Stevebot.get().getPlayerController().utils().sendMessage("Unknow style: '" + strStyle + "'");
+			Stevebot.get().getPlayerController().utils().sendMessage("Unknown style: '" + strStyle + "'");
 			for (PathRenderable.Style s : PathRenderable.Style.values()) {
 				Stevebot.get().getPlayerController().utils().sendMessage("    - '" + s.toString() + "'");
 			}
 		}
+	}
+
+
+	private static void displayCachedChunks(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
+		final boolean enable = (Boolean)args.get("show").getValue();
+		Stevebot.get().getPathHandler().showCachedChunks(enable);
+		Stevebot.get().getPlayerController().utils().sendMessage("Display Cached Chunks: '" + enable + "'");
 	}
 
 }

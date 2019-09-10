@@ -59,4 +59,12 @@ public class BlockProviderImpl implements BlockProvider {
 		return cache.getBlockIdAt(x, y, z);
 	}
 
+
+
+
+	@Override
+	public BlockCache getBlockCache() {
+		return this.cache;
+	}
+
 }
