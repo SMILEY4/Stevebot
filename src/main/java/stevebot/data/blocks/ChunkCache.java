@@ -3,14 +3,19 @@ package stevebot.data.blocks;
 
 import com.ruegnerlukas.simplemath.MathUtils;
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
+import com.ruegnerlukas.simplemath.vectors.vec3.Vector3i;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
 import stevebot.rendering.Renderer;
 
-import java.util.*;
+import java.util.ConcurrentModificationException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChunkCache {
 
+
+	private final int MAX_CAPACITY = 9999;
 
 	private Map<ChunkPos, CachedChunk> chunks = new HashMap<>();
 
@@ -35,10 +40,47 @@ public class ChunkCache {
 	public CachedChunk getCachedChunk(ChunkPos chunkPos) {
 		CachedChunk chunk = chunks.get(chunkPos);
 		if (chunk == null) {
-			chunk = new CachedChunk(chunkPos);
-			chunks.put(chunkPos, chunk);
+			chunk = addChunk(chunkPos);
 		}
 		return chunk;
+	}
+
+
+
+
+	private CachedChunk addChunk(ChunkPos chunkPos) {
+		if (chunks.size() >= MAX_CAPACITY) {
+			removeFurthestChunk(chunkPos);
+		}
+		CachedChunk chunk = new CachedChunk(chunkPos);
+		chunks.put(chunkPos, chunk);
+		return chunk;
+	}
+
+
+
+
+	private final Vector3i vecHelper = new Vector3i();
+
+
+
+
+	private void removeFurthestChunk(ChunkPos lastRequestedPos) {
+		ChunkPos furthestChunkPos = null;
+		int maxDist = 0;
+
+		for (ChunkPos pos : chunks.keySet()) {
+			int dist2 = vecHelper.set(lastRequestedPos.x, lastRequestedPos.y, lastRequestedPos.z).dist2(pos.x, pos.y, pos.z);
+			if (maxDist < dist2) {
+				maxDist = dist2;
+				furthestChunkPos = pos;
+			}
+		}
+
+		if (furthestChunkPos != null) {
+			chunks.remove(furthestChunkPos);
+		}
+
 	}
 
 
