@@ -107,7 +107,7 @@ public class ActionSprintJump extends StatefulAction {
 
 			// check gap
 			for (int i = 0; i < 3; i++) {
-				final BlockPos gap = from.add(direction.dx * (i + 1), +0, direction.dz * (i + 1));
+				final BlockPos gap = from.add(direction.dx * (i + 1), 0, direction.dz * (i + 1));
 				if (i == 2) {
 					if (!ActionUtils.canJump(gap)) {
 						return Result.invalid();

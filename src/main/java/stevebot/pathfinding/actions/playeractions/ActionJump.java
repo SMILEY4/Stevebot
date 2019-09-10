@@ -143,8 +143,8 @@ public class ActionJump extends StatefulAction {
 
 			// check diagonal
 			Direction[] splitDirection = direction.split();
-			final BlockPos p0 = node.pos.add(splitDirection[0].dx, 1, splitDirection[0].dz);
-			final BlockPos p1 = node.pos.add(splitDirection[1].dx, 1, splitDirection[1].dz);
+			final BlockPos p0 = node.pos.add(splitDirection[0].dx, 0, splitDirection[0].dz);
+			final BlockPos p1 = node.pos.add(splitDirection[1].dx, 0, splitDirection[1].dz);
 			if (!ActionUtils.canJump(p0, p1)) {
 				return Result.invalid();
 			}
