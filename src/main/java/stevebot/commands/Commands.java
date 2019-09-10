@@ -3,6 +3,7 @@ package stevebot.commands;
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import stevebot.Stevebot;
 import stevebot.commands.tokens.ValueToken;
+import stevebot.pathfinding.path.PathRenderable;
 import stevebot.player.Camera;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.math.BlockPos;
@@ -51,6 +52,13 @@ public class Commands {
 						.build()
 		);
 
+		// /pathstyle
+		commandHandler.registerCommand(
+				new CommandBuilder("pathstyle")
+						.addToken(new ValueToken.TextToken("style"))
+						.setListener(Commands::onPathStyle)
+						.build()
+		);
 
 	}
 
@@ -109,5 +117,20 @@ public class Commands {
 		}
 	}
 
+
+
+
+	private static void onPathStyle(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
+		final String strStyle = ((String) args.get("style").getValue()).trim().toUpperCase();
+		try {
+			final PathRenderable.Style style = PathRenderable.Style.valueOf(strStyle);
+			Stevebot.get().getPathHandler().setPathRenderableStyle(style);
+		} catch (IllegalArgumentException e) {
+			Stevebot.get().getPlayerController().utils().sendMessage("Unknow style: '" + strStyle + "'");
+			for (PathRenderable.Style s : PathRenderable.Style.values()) {
+				Stevebot.get().getPlayerController().utils().sendMessage("    - '" + s.toString() + "'");
+			}
+		}
+	}
 
 }

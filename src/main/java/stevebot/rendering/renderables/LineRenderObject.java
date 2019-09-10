@@ -1,10 +1,10 @@
 package stevebot.rendering.renderables;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import stevebot.rendering.Color;
-import stevebot.rendering.RendererImpl;
-import stevebot.rendering.Renderable;
 import net.minecraft.util.math.BlockPos;
+import stevebot.rendering.Color;
+import stevebot.rendering.Renderable;
+import stevebot.rendering.Renderer;
 
 public class LineRenderObject implements Renderable {
 
@@ -53,7 +53,7 @@ public class LineRenderObject implements Renderable {
 
 
 	@Override
-	public void render(RendererImpl renderer) {
+	public void render(Renderer renderer) {
 		renderer.drawLine(getStart(), getEnd(), getWidth(), getColor());
 	}
 

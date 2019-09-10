@@ -52,6 +52,16 @@ public class Color extends Vector3f {
 
 
 
+	public static Color mix(Color colorA, Color colorB, float value) {
+		final float r = (colorA.x * (1f - value)) + (colorB.x * value);
+		final float g = (colorA.y * (1f - value)) + (colorB.y * value);
+		final float b = (colorA.z * (1f - value)) + (colorB.z * value);
+		return new Color(r, g, b);
+	}
+
+
+
+
 	public Color(float r, float g, float b) {
 		super(r, g, b);
 	}

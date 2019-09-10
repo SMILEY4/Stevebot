@@ -9,7 +9,7 @@ public interface Renderable {
 	float DEFAULT_LINE_WIDTH = 3;
 	float DEFAULT_POINT_SIZE = 4;
 
-	void render(RendererImpl renderer);
+	void render(Renderer renderer);
 
 
 	static Color[] fillColorArray(Color color, int n) {
