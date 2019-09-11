@@ -139,6 +139,14 @@ public class RendererImpl implements Renderer {
 
 
 	@Override
+	public void clearRenderables() {
+		this.renderables.clear();
+	}
+
+
+
+
+	@Override
 	public void beginLines(float width) {
 		GlStateManager.glLineWidth(width);
 		BUFFER.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);

@@ -10,6 +10,8 @@ public interface Renderer {
 
 	void removeRenderable(Renderable renderable);
 
+	void clearRenderables();
+
 	void beginLines(float width);
 
 	void beginLineStrip(float width);

@@ -3,6 +3,7 @@ package stevebot.pathfinding.actions.playeractions;
 import net.minecraft.util.math.BlockPos;
 import stevebot.Direction;
 import stevebot.Stevebot;
+import stevebot.pathfinding.BlockUtils;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.PathExecutor;
 import stevebot.pathfinding.actions.ActionCosts;
@@ -93,15 +94,18 @@ public class ActionStepUp extends StatefulAction {
 
 		Result checkStraight(Node node, Direction direction) {
 
-			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canStandAt(from, 3)) {
+			// check to-position
+			final BlockPos to = node.pos.add(direction.dx, 1, direction.dz);
+			if (!BlockUtils.isLoaded(to)) {
+				return Result.unloaded();
+			}
+			if (!ActionUtils.canStandAt(to)) {
 				return Result.invalid();
 			}
 
-			// check to-position
-			final BlockPos to = node.pos.add(direction.dx, 1, direction.dz);
-			if (!ActionUtils.canStandAt(to)) {
+			// check from-position
+			final BlockPos from = node.pos;
+			if (!ActionUtils.canStandAt(from, 3)) {
 				return Result.invalid();
 			}
 
@@ -113,15 +117,18 @@ public class ActionStepUp extends StatefulAction {
 
 		Result checkDiagonal(Node node, Direction direction) {
 
-			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canStandAt(from, 3)) {
+			// check to-position
+			final BlockPos to = node.pos.add(direction.dx, 1, direction.dz);
+			if (!BlockUtils.isLoaded(to)) {
+				return Result.unloaded();
+			}
+			if (!ActionUtils.canStandAt(to)) {
 				return Result.invalid();
 			}
 
-			// check to-position
-			final BlockPos to = node.pos.add(direction.dx, 1, direction.dz);
-			if (!ActionUtils.canStandAt(to)) {
+			// check from-position
+			final BlockPos from = node.pos;
+			if (!ActionUtils.canStandAt(from, 3)) {
 				return Result.invalid();
 			}
 
@@ -130,8 +137,8 @@ public class ActionStepUp extends StatefulAction {
 			final BlockPos p0 = node.pos.add(splitDirection[0].dx, 1, splitDirection[0].dz);
 			final BlockPos p1 = node.pos.add(splitDirection[1].dx, 1, splitDirection[1].dz);
 
-			boolean traversable0 = ActionUtils.canMoveThrough(p0, 3);
-			boolean traversable1 = ActionUtils.canMoveThrough(p1, 3);
+			boolean traversable0 = ActionUtils.canMoveThrough(p0, 3) && BlockUtils.isLoaded(p0);
+			boolean traversable1 = ActionUtils.canMoveThrough(p1, 3) && BlockUtils.isLoaded(p1);
 
 			if (ActionUtils.canStandAt(to) && traversable0 && traversable1) {
 				return Result.valid(Node.get(to), ActionCosts.COST_STEP_UP * ActionCosts.COST_MULT_DIAGONAL);

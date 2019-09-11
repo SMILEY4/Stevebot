@@ -93,15 +93,18 @@ public class ActionSprintJump extends StatefulAction {
 				return Result.invalid();
 			}
 
-			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canJumpAt(from)) {
+			// check to-position
+			final BlockPos to = node.pos.add(direction.dx * 4, 0, direction.dz * 4);
+			if (!BlockUtils.isLoaded(to)) {
+				return Result.unloaded();
+			}
+			if (!ActionUtils.canJumpAt(to)) {
 				return Result.invalid();
 			}
 
-			// check to-position
-			final BlockPos to = from.add(direction.dx * 4, 0, direction.dz * 4);
-			if (!ActionUtils.canJumpAt(to)) {
+			// check from-position
+			final BlockPos from = node.pos;
+			if (!ActionUtils.canJumpAt(from)) {
 				return Result.invalid();
 			}
 

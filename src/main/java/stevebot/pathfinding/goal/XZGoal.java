@@ -1,6 +1,7 @@
 package stevebot.pathfinding.goal;
 
 import net.minecraft.util.math.BlockPos;
+import stevebot.pathfinding.actions.ActionCosts;
 
 public class XZGoal extends Goal {
 
@@ -28,9 +29,12 @@ public class XZGoal extends Goal {
 
 	@Override
 	public double calcHCost(BlockPos pos) {
-		final int dx = pos.getX() - x;
-		final int dz = pos.getZ() - z;
-		return Math.sqrt(dx * dx + dz * dz);
+		// https://www.growingwiththeweb.com/2012/06/a-pathfinding-algorithm.html
+		final int px = pos.getX();
+		final int pz = pos.getZ();
+		int dMax = Math.max(Math.abs(px-x), Math.abs(pz-z));
+		int dMin = Math.min(Math.abs(px-x), Math.abs(pz-z));
+		return (dMin * ActionCosts.COST_MULT_DIAGONAL + (dMax-dMin)) * ActionCosts.COST_WALKING;
 	}
 
 

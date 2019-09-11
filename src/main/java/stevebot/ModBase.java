@@ -1,5 +1,7 @@
 package stevebot;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import stevebot.commands.ModCommandHandler;
 import stevebot.data.blocks.BlockLibrary;
 import stevebot.data.blocks.BlockLibraryImpl;
@@ -25,6 +27,7 @@ public class ModBase {
 
 
 
+	private Logger logger = LogManager.getLogger(Settings.MODID);
 	private ModEventHandler eventHandler;
 	private PlayerController playerController;
 	private ModCommandHandler commandHandler;
@@ -112,5 +115,11 @@ public class ModBase {
 		return blockProvider;
 	}
 
+
+
+
+	public Logger getLogger() {
+		return logger;
+	}
 
 }

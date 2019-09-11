@@ -1,6 +1,7 @@
 package stevebot.pathfinding;
 
 import net.minecraft.util.math.BlockPos;
+import stevebot.Stevebot;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionFactoryProvider;
 import stevebot.pathfinding.goal.Goal;
@@ -8,6 +9,7 @@ import stevebot.pathfinding.path.CompletedPath;
 import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.PartialPath;
 import stevebot.pathfinding.path.Path;
+import stevebot.rendering.Renderable;
 
 import java.util.*;
 
@@ -33,12 +35,16 @@ public class Pathfinding {
 		// prepare misc
 		Path bestPath = new EmptyPath();
 		long timeStart = System.currentTimeMillis();
+		int nUnloadedHits = 0;
+		BestNodesContainer bestNodes = new BestNodesContainer(20);
+		int nWorseThanBest = 0;
 
 		// calculate path
-		while (!openSet.isEmpty()) {
+		while (!openSet.isEmpty() && nUnloadedHits < 400) {
 
 			// timeout
 			if (checkForTimeout(timeStart, timeoutInMs)) {
+				Stevebot.get().getPlayerController().utils().sendMessage("Timeout");
 				break;
 			}
 
@@ -55,12 +61,22 @@ public class Pathfinding {
 				continue;
 			}
 
-			// check if current path cost is already higher than prev. path cost
+			// check if current path cost is already higher than prev. path cost / the best node
 			if (bestPath.getCost() < current.gcost) {
 				continue;
 			}
+			if (bestNodes.getBest() != null && bestNodes.getBest().gcost < current.gcost) {
+				nWorseThanBest++;
+			} else {
+				nWorseThanBest = 0;
+			}
+
+			if (!bestPath.reachedGoal() && nWorseThanBest > 1000) {
+				break;
+			}
 
 			// process actions
+			boolean hitUnloaded = false;
 			List<ActionFactory> factories = actionFactoryProvider.getAllFactories();
 			for (int i = 0, n = factories.size(); i < n; i++) {
 				ActionFactory factory = factories.get(i);
@@ -70,6 +86,7 @@ public class Pathfinding {
 					continue;
 				}
 				if (result.type == ActionFactory.ResultType.UNLOADED) {
+					hitUnloaded = true;
 					continue;
 				}
 				if (result.type == ActionFactory.ResultType.VALID) {
@@ -86,15 +103,29 @@ public class Pathfinding {
 						next.action = factory.createAction(current);
 						next.open = true;
 						openSet.add(next);
+						bestNodes.update(next, goal);
 					}
 				}
 
 			}
 
+			if (hitUnloaded) {
+				nUnloadedHits++;
+			}
 
 		}
 
-		return bestPath;
+		if (bestPath.reachedGoal()) {
+			return bestPath;
+		} else {
+			Node bestNode = bestNodes.getBest();
+			if (bestNode == null) {
+				return new EmptyPath();
+			} else {
+				return buildPath(nodeStart, bestNode, false);
+			}
+		}
+
 	}
 
 
@@ -123,6 +154,11 @@ public class Pathfinding {
 
 
 
+	private Renderable lastPathRenderable = null;
+
+
+
+
 	private Path buildPath(Node start, Node end, boolean reachedGoal) {
 
 		List<Node> nodes = new ArrayList<>();
@@ -133,12 +169,18 @@ public class Pathfinding {
 		}
 		Collections.reverse(nodes);
 
+		Path path;
 		if (reachedGoal) {
-			return new CompletedPath(end.gcost, nodes);
+			path = new CompletedPath(end.gcost, nodes);
 		} else {
-			return new PartialPath(end.gcost, nodes);
+			path = new PartialPath(end.gcost, nodes);
 		}
 
+		Stevebot.get().getRenderer().removeRenderable(lastPathRenderable);
+		lastPathRenderable = Path.toRenderable(path);
+		Stevebot.get().getRenderer().addRenderable(lastPathRenderable);
+
+		return path;
 	}
 
 

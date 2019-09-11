@@ -117,15 +117,18 @@ public class ActionDropDown extends StatefulAction {
 
 		Result checkStraight(Node node, Direction direction) {
 
-			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canStandAt(from)) {
+			// check to-position horizontal
+			final BlockPos to = node.pos.add(direction.dx, 0, direction.dz);
+			if (!BlockUtils.isLoaded(to)) {
+				return Result.unloaded();
+			}
+			if (!ActionUtils.canMoveThrough(to)) {
 				return Result.invalid();
 			}
 
-			// check to-position horizontal
-			final BlockPos to = node.pos.add(direction.dx, 0, direction.dz);
-			if (!ActionUtils.canMoveThrough(to)) {
+			// check from-position
+			final BlockPos from = node.pos;
+			if (!ActionUtils.canStandAt(from)) {
 				return Result.invalid();
 			}
 
@@ -143,15 +146,18 @@ public class ActionDropDown extends StatefulAction {
 
 		Result checkDiagonal(Node node, Direction direction) {
 
-			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canStandAt(from)) {
+			// check to-position horizontal
+			final BlockPos to = node.pos.add(direction.dx, -1, direction.dz);
+			if (!BlockUtils.isLoaded(to)) {
+				return Result.unloaded();
+			}
+			if (!ActionUtils.canMoveThrough(to)) {
 				return Result.invalid();
 			}
 
-			// check to-position horizontal
-			final BlockPos to = node.pos.add(direction.dx, -1, direction.dz);
-			if (!ActionUtils.canMoveThrough(to)) {
+			// check from-position
+			final BlockPos from = node.pos;
+			if (!ActionUtils.canStandAt(from)) {
 				return Result.invalid();
 			}
 

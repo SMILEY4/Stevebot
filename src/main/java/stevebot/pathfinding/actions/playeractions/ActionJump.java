@@ -98,15 +98,18 @@ public class ActionJump extends StatefulAction {
 
 		Result checkStraight(Node node, Direction direction) {
 
-			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canJumpAt(from)) {
+			// check to-position
+			final BlockPos to = node.pos.add(direction.dx * 2, 0, direction.dz * 2);
+			if (!BlockUtils.isLoaded(to)) {
+				return Result.unloaded();
+			}
+			if (!ActionUtils.canJumpAt(to)) {
 				return Result.invalid();
 			}
 
-			// check to-position
-			final BlockPos to = node.pos.add(direction.dx * 2, 0, direction.dz * 2);
-			if (!ActionUtils.canJumpAt(to)) {
+			// check from-position
+			final BlockPos from = node.pos;
+			if (!ActionUtils.canJumpAt(from)) {
 				return Result.invalid();
 			}
 
@@ -123,16 +126,18 @@ public class ActionJump extends StatefulAction {
 
 		Result checkDiagonal(Node node, Direction direction) {
 
+			// check to-position
+			final BlockPos to = node.pos.add(direction.dx * 2, 0, direction.dz * 2);
+			if (!BlockUtils.isLoaded(to)) {
+				return Result.unloaded();
+			}
+			if (!ActionUtils.canJumpAt(to)) {
+				return Result.invalid();
+			}
 
 			// check from-position
 			final BlockPos from = node.pos;
 			if (!ActionUtils.canJumpAt(from)) {
-				return Result.invalid();
-			}
-
-			// check to-position
-			final BlockPos to = node.pos.add(direction.dx * 2, 0, direction.dz * 2);
-			if (!ActionUtils.canJumpAt(to)) {
 				return Result.invalid();
 			}
 

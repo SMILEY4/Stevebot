@@ -23,7 +23,7 @@ public class BlockProviderImpl implements BlockProvider {
 
 	@Override
 	public boolean isLoaded(BlockPos pos) {
-		return Minecraft.getMinecraft().world.isBlockLoaded(pos);
+		return Minecraft.getMinecraft().world.getChunkFromBlockCoords(pos).isLoaded();
 	}
 
 

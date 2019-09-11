@@ -56,15 +56,18 @@ public class ActionStepDown extends Action {
 
 		Result checkStraight(Node node, Direction direction) {
 
-			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canStandAt(from)) {
+			// check to-position
+			final BlockPos to = node.pos.add(direction.dx, -1, direction.dz);
+			if (!BlockUtils.isLoaded(to)) {
+				return Result.unloaded();
+			}
+			if (!ActionUtils.canStandAt(to, 3)) {
 				return Result.invalid();
 			}
 
-			// check to-position
-			final BlockPos to = node.pos.add(direction.dx, -1, direction.dz);
-			if (!ActionUtils.canStandAt(to, 3)) {
+			// check from-position
+			final BlockPos from = node.pos;
+			if (!ActionUtils.canStandAt(from)) {
 				return Result.invalid();
 			}
 
@@ -76,15 +79,18 @@ public class ActionStepDown extends Action {
 
 		Result checkDiagonal(Node node, Direction direction) {
 
-			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canStandAt(from)) {
+			// check to-position
+			final BlockPos to = node.pos.add(direction.dx, -1, direction.dz);
+			if (!BlockUtils.isLoaded(to)) {
+				return Result.unloaded();
+			}
+			if (!ActionUtils.canStandAt(to, 3)) {
 				return Result.invalid();
 			}
 
-			// check to-position
-			final BlockPos to = node.pos.add(direction.dx, -1, direction.dz);
-			if (!ActionUtils.canStandAt(to, 3)) {
+			// check from-position
+			final BlockPos from = node.pos;
+			if (!ActionUtils.canStandAt(from)) {
 				return Result.invalid();
 			}
 
@@ -93,8 +99,8 @@ public class ActionStepDown extends Action {
 			final BlockPos p0 = node.pos.add(splitDirection[0].dx, 0, splitDirection[0].dz);
 			final BlockPos p1 = node.pos.add(splitDirection[1].dx, 0, splitDirection[1].dz);
 
-			boolean traversable0 = ActionUtils.canMoveThrough(p0);
-			boolean traversable1 = ActionUtils.canMoveThrough(p0);
+			boolean traversable0 = ActionUtils.canMoveThrough(p0) && BlockUtils.isLoaded(p0);;
+			boolean traversable1 = ActionUtils.canMoveThrough(p0) && BlockUtils.isLoaded(p1);;
 
 			boolean avoid0 = BlockUtils.avoidTouching(p0) || BlockUtils.avoidTouching(p0.add(0, 1, 0));
 			boolean avoid1 = BlockUtils.avoidTouching(p1) || BlockUtils.avoidTouching(p1.add(0, 1, 0));
