@@ -1,12 +1,11 @@
 package stevebot.pathfinding;
 
-import stevebot.events.GameTickListener;
-import stevebot.pathfinding.path.Path;
-import stevebot.rendering.Color;
-import stevebot.rendering.renderables.DynPointCollectionRenderObject;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.Stevebot;
-import stevebot.pathfinding.actions.playeractions.Action;
+import stevebot.events.GameTickListener;
+import stevebot.pathfinding.goal.Goal;
+import stevebot.pathfinding.path.PathFactory;
 
 public class PathExecutor implements GameTickListener {
 
@@ -20,46 +19,47 @@ public class PathExecutor implements GameTickListener {
 
 
 
-	public final Path path;
-	private int indexFrom = 0;
-	private Node from;
-	private Node to;
-	private Action action;
+	private PathFactory pathFactory;
+
+	private int currentIndexFrom = 0;
+	private Node currentNodeTo;
 
 	private long timeStart = 0;
-
 	private boolean fistTick = true;
 	private boolean isFollowing = false;
 
-	private DynPointCollectionRenderObject points = new DynPointCollectionRenderObject();
 
 
 
-
-	public PathExecutor(Path path) {
+	public PathExecutor(BlockPos posStart, Goal goal) {
+		this.pathFactory = new PathFactory(posStart, goal);
 		Stevebot.get().getEventHandler().addListener(this);
-		Stevebot.get().getRenderer().addRenderable(points);
-		this.path = path;
+		pathFactory.prepareNextPath();
 	}
 
 
 
 
-	public void start() {
-		indexFrom = 0;
-		from = path.getNodes().get(indexFrom);
-		to = path.getNodes().get(indexFrom + 1);
-		action = to.action;
-		isFollowing = true;
-		points.getPositions().clear();
-		points.getColors().clear();
-		timeStart = System.currentTimeMillis();
+	public void startFollowing() {
+		if (pathFactory.hasPath()) {
+			isFollowing = true;
+			timeStart = System.currentTimeMillis();
+			startPath();
+		}
 	}
 
 
 
 
-	public void stop() {
+	private void startPath() {
+		currentIndexFrom = 0;
+		currentNodeTo = pathFactory.getCurrentPath().getNodes().get(currentIndexFrom + 1);
+	}
+
+
+
+
+	public void stopFollowing() {
 		isFollowing = false;
 	}
 
@@ -70,18 +70,27 @@ public class PathExecutor implements GameTickListener {
 	public void onClientTick(TickEvent.ClientTickEvent event) {
 		if (isFollowing && Stevebot.get().getPlayerController().getPlayer() != null) {
 
+			if (pathFactory.getCurrentPath().getNodes().size() - currentIndexFrom < 20 && pathFactory.isCurrentLastSegment()) {
+				pathFactory.prepareNextPath();
+			}
+
 			Stevebot.get().getPlayerController().input().stopAll();
-			points.addPoint(Stevebot.get().getPlayerController().utils().getPlayerPosition(), Color.MAGENTA);
 
 			final State state = tick();
 
 			if (state == State.FAILED) {
-				stop();
+				stopFollowing();
 				Stevebot.get().getPlayerController().utils().sendMessage("Failed to follow path.");
 			}
 			if (state == State.DONE) {
-				stop();
-				Stevebot.get().getPlayerController().utils().sendMessage("Reached destination. (" + ((System.currentTimeMillis()-timeStart)/1000.0) + "s");
+				pathFactory.removeCurrentPath();
+				if (pathFactory.hasPath()) {
+					Stevebot.get().getPlayerController().utils().sendMessage("Reached waypoint. (" + ((System.currentTimeMillis() - timeStart) / 1000.0) + "s");
+					startPath();
+				} else {
+					stopFollowing();
+					Stevebot.get().getPlayerController().utils().sendMessage("Reached destination. (" + ((System.currentTimeMillis() - timeStart) / 1000.0) + "s");
+				}
 			}
 
 		}
@@ -92,7 +101,7 @@ public class PathExecutor implements GameTickListener {
 
 	private State tick() {
 
-		State actionState = action.tick(fistTick);
+		State actionState = currentNodeTo.action.tick(fistTick);
 		fistTick = false;
 
 		if (actionState == State.FAILED) {
@@ -115,17 +124,13 @@ public class PathExecutor implements GameTickListener {
 
 
 	private boolean nextAction() {
-		indexFrom++;
-		if (indexFrom == path.getNodes().size() - 1) { // next is last node
-			from = path.getNodes().get(indexFrom);
-			to = null;
-			action = null;
+		currentIndexFrom++;
+		if (currentIndexFrom == pathFactory.getCurrentPath().getNodes().size() - 1) { // next is last node
+			currentNodeTo = null;
 			return false;
 		} else {
-			from = path.getNodes().get(indexFrom);
-			to = path.getNodes().get(indexFrom + 1);
-			action = to.action;
-			action.resetAction();
+			currentNodeTo = pathFactory.getCurrentPath().getNodes().get(currentIndexFrom + 1);
+			currentNodeTo.action.resetAction();
 			return true;
 		}
 	}

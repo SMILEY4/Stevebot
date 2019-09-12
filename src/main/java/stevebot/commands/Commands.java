@@ -78,7 +78,7 @@ public class Commands {
 		final BlockPos to = (BlockPos) args.get("to").getValue();
 		final int timeoutSec = args.containsKey("timeout") ? (Integer) args.get("timeout").getValue() : 30;
 		if (Stevebot.get().getPlayerController().getPlayer() != null) {
-			Stevebot.get().getPathHandler().calculatePath(from, new ExactGoal(to), timeoutSec * 1000);
+			Stevebot.get().getPathHandler().createPath(from, new ExactGoal(to), timeoutSec * 1000);
 		}
 	}
 
@@ -92,7 +92,7 @@ public class Commands {
 			final BlockPos from = Stevebot.get().getPlayerController().utils().getPlayerBlockPos();
 			final Vector3d dir = Stevebot.get().getPlayerController().camera().getLookDir().setLength(distance);
 			Goal goal = new XZGoal(from.getX() + dir.getIntX(), from.getZ() + dir.getIntZ());
-			Stevebot.get().getPathHandler().calculatePath(from, goal, timeoutSec * 1000);
+			Stevebot.get().getPathHandler().createPath(from, goal, timeoutSec * 1000);
 		}
 	}
 
@@ -132,7 +132,7 @@ public class Commands {
 		final String strStyle = ((String) args.get("style").getValue()).trim().toUpperCase();
 		try {
 			final PathRenderable.Style style = PathRenderable.Style.valueOf(strStyle);
-			Stevebot.get().getPathHandler().setPathRenderableStyle(style);
+//			Stevebot.get().getPathHandler().setPathRenderableStyle(style);
 		} catch (IllegalArgumentException e) {
 			Stevebot.get().getPlayerController().utils().sendMessage("Unknown style: '" + strStyle + "'");
 			for (PathRenderable.Style s : PathRenderable.Style.values()) {
@@ -144,7 +144,7 @@ public class Commands {
 
 	private static void displayCachedChunks(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
 		final boolean enable = (Boolean)args.get("show").getValue();
-		Stevebot.get().getPathHandler().showCachedChunks(enable);
+//		Stevebot.get().getPathHandler().showCachedChunks(enable);
 		Stevebot.get().getPlayerController().utils().sendMessage("Display Cached Chunks: '" + enable + "'");
 	}
 

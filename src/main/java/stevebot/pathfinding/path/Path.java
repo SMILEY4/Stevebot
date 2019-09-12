@@ -21,11 +21,15 @@ public interface Path {
 	}
 
 
-
 	double getCost();
+
+	boolean reachedGoal();
 
 	List<Node> getNodes();
 
-	boolean reachedGoal();
+	Node getFirstNode();
+
+	Node getLastNode();
+
 
 }

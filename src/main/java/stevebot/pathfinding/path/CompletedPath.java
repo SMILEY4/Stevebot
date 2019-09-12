@@ -30,6 +30,14 @@ public class CompletedPath implements Path {
 
 
 	@Override
+	public boolean reachedGoal() {
+		return true;
+	}
+
+
+
+
+	@Override
 	public List<Node> getNodes() {
 		return this.nodes;
 	}
@@ -38,8 +46,17 @@ public class CompletedPath implements Path {
 
 
 	@Override
-	public boolean reachedGoal() {
-		return true;
+	public Node getFirstNode() {
+		return nodes.get(0);
 	}
+
+
+
+
+	@Override
+	public Node getLastNode() {
+		return nodes.get(nodes.size() - 1);
+	}
+
 
 }

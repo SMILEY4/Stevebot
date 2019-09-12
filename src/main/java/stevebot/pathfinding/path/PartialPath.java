@@ -30,6 +30,14 @@ public class PartialPath implements Path {
 
 
 	@Override
+	public boolean reachedGoal() {
+		return false;
+	}
+
+
+
+
+	@Override
 	public List<Node> getNodes() {
 		return this.nodes;
 	}
@@ -38,8 +46,16 @@ public class PartialPath implements Path {
 
 
 	@Override
-	public boolean reachedGoal() {
-		return false;
+	public Node getFirstNode() {
+		return nodes.get(0);
+	}
+
+
+
+
+	@Override
+	public Node getLastNode() {
+		return nodes.get(nodes.size() - 1);
 	}
 
 }

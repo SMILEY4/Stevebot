@@ -29,4 +29,21 @@ public class EmptyPath implements Path {
 		return false;
 	}
 
+
+
+
+	@Override
+	public Node getFirstNode() {
+		return null;
+	}
+
+
+
+
+	@Override
+	public Node getLastNode() {
+		return null;
+	}
+
+
 }

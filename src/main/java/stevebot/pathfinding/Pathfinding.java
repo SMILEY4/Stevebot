@@ -21,7 +21,7 @@ public class Pathfinding {
 
 
 
-	Path calculatePath(BlockPos posStart, Goal goal, long timeoutInMs) {
+	public Path calculatePath(BlockPos posStart, Goal goal, long timeoutInMs) {
 
 		// prepare node cache
 		Node.nodeCache.clear();
@@ -176,7 +176,7 @@ public class Pathfinding {
 			path = new PartialPath(end.gcost, nodes);
 		}
 
-		Stevebot.get().getRenderer().removeRenderable(lastPathRenderable);
+//		Stevebot.get().getRenderer().removeRenderable(lastPathRenderable);
 		lastPathRenderable = Path.toRenderable(path);
 		Stevebot.get().getRenderer().addRenderable(lastPathRenderable);
 
