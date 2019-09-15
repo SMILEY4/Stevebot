@@ -1,28 +1,27 @@
 package stevebot.commands;
 
-import stevebot.commands.tokens.ICommandToken;
-import stevebot.commands.tokens.OptionalToken;
-import stevebot.commands.tokens.TokenParseResult;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.server.MinecraftServer;
+import stevebot.commands.tokens.CommandToken;
+import stevebot.commands.tokens.OptionalToken;
+import stevebot.commands.tokens.TokenParseResult;
 
 import java.util.*;
 
-public class MTCommand {
+public class CustomCommand {
 
 
 	public final String name;
 	public final String usage;
-	public final List<ICommandToken> tokens;
-	public final MTCommandListener listener;
+	public final List<CommandToken> tokens;
+	public final CustomCommandListener listener;
 	private CommandBase commandBase;
 
 
 
 
-	public MTCommand(String name, String usage, List<ICommandToken> tokens, MTCommandListener listener) {
+	public CustomCommand(String name, String usage, List<CommandToken> tokens, CustomCommandListener listener) {
 		this.name = name;
 		this.usage = usage;
 		this.tokens = Collections.unmodifiableList(tokens);
@@ -32,10 +31,7 @@ public class MTCommand {
 
 
 
-	void execute(MinecraftServer server, ICommandSender sender, String[] args) throws WrongUsageException {
-		if (listener == null) {
-			return;
-		}
+	public void execute(ICommandSender sender, String[] args) throws WrongUsageException {
 
 		Map<String, CommandArgument<?>> argsMap = new HashMap<>();
 		String status = "success";
@@ -45,7 +41,9 @@ public class MTCommand {
 		}
 
 		if (status.equalsIgnoreCase("success")) {
-			listener.onCommand(sender, name, argsMap);
+			if (listener != null) {
+				listener.onCommand(sender, name, argsMap);
+			}
 		} else {
 			throw new WrongUsageException(usage);
 		}
@@ -55,7 +53,7 @@ public class MTCommand {
 
 
 
-	private String parse(ICommandSender sender, String[] args, Map<String, CommandArgument<?>> argsMap) {
+	public String parse(ICommandSender sender, String[] args, Map<String, CommandArgument<?>> argsMap) {
 
 		List<String> argsList = new ArrayList<>(Arrays.asList(args));
 
@@ -63,7 +61,7 @@ public class MTCommand {
 
 			// get command
 			boolean isOptional = false;
-			ICommandToken token = tokens.get(i);
+			CommandToken token = tokens.get(i);
 			isOptional = token instanceof OptionalToken;
 
 			// get next args
@@ -74,7 +72,7 @@ public class MTCommand {
 
 			// parse
 			TokenParseResult result = token.parse(sender, currentArgs);
-			if (result.success ) {
+			if (result.success) {
 				if (result.argument != null) {
 					argsMap.put(token.getID(), result.argument);
 				}

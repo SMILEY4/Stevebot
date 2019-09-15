@@ -2,7 +2,7 @@ package stevebot;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import stevebot.commands.ModCommandHandler;
+import stevebot.commands.CustomCommandHandler;
 import stevebot.data.blocks.BlockLibrary;
 import stevebot.data.blocks.BlockLibraryImpl;
 import stevebot.data.blocks.BlockProvider;
@@ -30,7 +30,7 @@ public class ModBase {
 	private Logger logger = LogManager.getLogger(Settings.MODID);
 	private ModEventHandler eventHandler;
 	private PlayerController playerController;
-	private ModCommandHandler commandHandler;
+	private CustomCommandHandler commandHandler;
 	private RendererImpl renderer;
 	private PathHandler pathHandler;
 	private BlockLibrary blockLibrary;
@@ -42,7 +42,7 @@ public class ModBase {
 	void onPreInit() {
 		ModBase.instance = this;
 		eventHandler = new ModEventHandler();
-		commandHandler = new ModCommandHandler(eventHandler);
+		commandHandler = new CustomCommandHandler(eventHandler);
 		renderer = new RendererImpl(eventHandler);
 		playerController = new PlayerController(eventHandler);
 		pathHandler = new PathHandler();
@@ -83,7 +83,7 @@ public class ModBase {
 
 
 
-	public ModCommandHandler getCommandHandler() {
+	public CustomCommandHandler getCommandHandler() {
 		return commandHandler;
 	}
 

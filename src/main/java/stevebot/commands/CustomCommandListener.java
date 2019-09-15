@@ -4,7 +4,7 @@ import net.minecraft.command.ICommandSender;
 
 import java.util.Map;
 
-public interface MTCommandListener {
+public interface CustomCommandListener {
 
 
 	void onCommand(ICommandSender sender, String name, Map<String, CommandArgument<?>> args);

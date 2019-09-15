@@ -7,15 +7,15 @@ import stevebot.events.ModEventHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModCommandHandler implements GameInitListener {
+public class CustomCommandHandler implements GameInitListener {
 
 
-	private List<MTCommand> commandList = new ArrayList<>();
+	private List<CustomCommand> commandList = new ArrayList<>();
 
 
 
 
-	public ModCommandHandler(ModEventHandler eventHandler) {
+	public CustomCommandHandler(ModEventHandler eventHandler) {
 		eventHandler.addListener(this);
 		Commands.create(this);
 	}
@@ -25,7 +25,7 @@ public class ModCommandHandler implements GameInitListener {
 
 	@Override
 	public void onPreInit() {
-		for (MTCommand command : commandList) {
+		for (CustomCommand command : commandList) {
 			ClientCommandHandler.instance.registerCommand(command.getCommandBase());
 		}
 	}
@@ -33,7 +33,7 @@ public class ModCommandHandler implements GameInitListener {
 
 
 
-	void registerCommand(MTCommand command) {
+	void registerCommand(CustomCommand command) {
 		commandList.add(command);
 	}
 

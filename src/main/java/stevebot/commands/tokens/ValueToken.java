@@ -7,7 +7,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
 import net.minecraft.util.math.BlockPos;
 
-public abstract class ValueToken implements ICommandToken {
+public abstract class ValueToken implements CommandToken {
 
 
 	private final Class<?> type;
@@ -257,7 +257,7 @@ public abstract class ValueToken implements ICommandToken {
 		public TokenParseResult parse(ICommandSender sender, String[] args) {
 			try {
 				BlockPos value = CommandBase.parseBlockPos(sender, args, 0, center);
-				return new TokenParseResult(new CommandArgument<BlockPos>(value));
+				return new TokenParseResult(new CommandArgument<>(value));
 			} catch (NumberInvalidException e) {
 				return TokenParseResult.FAILED;
 			}

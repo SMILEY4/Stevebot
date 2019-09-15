@@ -1,6 +1,6 @@
 package stevebot.commands;
 
-import stevebot.commands.tokens.ICommandToken;
+import stevebot.commands.tokens.CommandToken;
 import stevebot.commands.tokens.OptionalToken;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -14,8 +14,8 @@ public class CommandBuilder {
 
 
 	private final String commandName;
-	private final List<ICommandToken> tokens = new ArrayList<>();
-	private MTCommandListener listener;
+	private final List<CommandToken> tokens = new ArrayList<>();
+	private CustomCommandListener listener;
 
 
 
@@ -27,7 +27,7 @@ public class CommandBuilder {
 
 
 
-	public CommandBuilder addToken(ICommandToken token) {
+	public CommandBuilder addToken(CommandToken token) {
 		tokens.add(token);
 		return this;
 	}
@@ -35,7 +35,7 @@ public class CommandBuilder {
 
 
 
-	public CommandBuilder addOptional(ICommandToken token) {
+	public CommandBuilder addOptional(CommandToken token) {
 		tokens.add(new OptionalToken(token));
 		return this;
 	}
@@ -43,7 +43,7 @@ public class CommandBuilder {
 
 
 
-	public CommandBuilder setListener(MTCommandListener listener) {
+	public CommandBuilder setListener(CustomCommandListener listener) {
 		this.listener = listener;
 		return this;
 	}
@@ -51,8 +51,8 @@ public class CommandBuilder {
 
 
 
-	public MTCommand build() {
-		MTCommand command = new MTCommand(commandName, buildUsageString(), tokens, listener);
+	public CustomCommand build() {
+		CustomCommand command = new CustomCommand(commandName, buildUsageString(), tokens, listener);
 		command.setCommandBase(buildCommandBase(command.name, command.usage, command));
 		return command;
 	}
@@ -75,7 +75,7 @@ public class CommandBuilder {
 
 
 
-	private CommandBase buildCommandBase(String name, String usage, MTCommand command) {
+	private CommandBase buildCommandBase(String name, String usage, CustomCommand command) {
 
 		return new CommandBase() {
 			@Override
@@ -96,7 +96,7 @@ public class CommandBuilder {
 
 			@Override
 			public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-				command.execute(server, sender, args);
+				command.execute(sender, args);
 			}
 		};
 

@@ -2,7 +2,7 @@ package stevebot.commands.tokens;
 
 import net.minecraft.command.ICommandSender;
 
-public class TerminalToken implements ICommandToken {
+public class TerminalToken implements CommandToken {
 
 
 	private final String terminalID;

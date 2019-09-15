@@ -2,7 +2,7 @@ package stevebot.commands.tokens;
 
 import net.minecraft.command.ICommandSender;
 
-public interface ICommandToken {
+public interface CommandToken {
 
 
 	String getID();

@@ -2,15 +2,15 @@ package stevebot.commands.tokens;
 
 import net.minecraft.command.ICommandSender;
 
-public class OptionalToken implements ICommandToken {
+public class OptionalToken implements CommandToken {
 
 
-	private final ICommandToken token;
+	private final CommandToken token;
 
 
 
 
-	public OptionalToken(ICommandToken token) {
+	public OptionalToken(CommandToken token) {
 		if (token instanceof OptionalToken) {
 			throw new IllegalArgumentException("Token of an optional token can not be optional.");
 		}
@@ -56,7 +56,7 @@ public class OptionalToken implements ICommandToken {
 
 
 
-	public ICommandToken getToken() {
+	public CommandToken getToken() {
 		return token;
 	}
 
