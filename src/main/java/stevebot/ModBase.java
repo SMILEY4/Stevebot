@@ -27,7 +27,7 @@ public class ModBase {
 
 
 
-	private Logger logger = LogManager.getLogger(Settings.MODID);
+	private Logger logger = LogManager.getLogger(Config.MODID);
 	private ModEventHandler eventHandler;
 	private PlayerController playerController;
 	private CustomCommandHandler commandHandler;
@@ -64,6 +64,17 @@ public class ModBase {
 	void onPostInit() {
 		eventHandler.onPostInit();
 		blockLibrary.initialize();
+	}
+
+
+
+
+	public void log(String message) {
+		if (getPlayerController().getPlayer() == null) {
+			getLogger().info(message);
+		} else {
+			getPlayerController().utils().sendMessage(message);
+		}
 	}
 
 

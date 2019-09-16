@@ -209,7 +209,7 @@ public abstract class ValueToken implements CommandToken {
 
 		@Override
 		public TokenParseResult parse(ICommandSender sender, String[] args) {
-			return new TokenParseResult(new CommandArgument<String>(String.join(" ", args)));
+			return new TokenParseResult(new CommandArgument<>(String.join(" ", args)));
 		}
 
 	}

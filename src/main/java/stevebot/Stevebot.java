@@ -7,10 +7,10 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod (
-		modid = Settings.MODID,
-		name = Settings.NAME,
-		version = Settings.VERSION,
-		acceptedMinecraftVersions = Settings.MC_VERSION
+		modid = Config.MODID,
+		name = Config.NAME,
+		version = Config.VERSION,
+		acceptedMinecraftVersions = Config.MC_VERSION
 )
 public class Stevebot extends ModBase {
 

@@ -12,7 +12,7 @@ public class PathHandler {
 
 
 
-	public void createPath(BlockPos from, Goal goal, long timeout) {
+	public void createPath(BlockPos from, Goal goal, boolean startFollowing, boolean enableFreelook) {
 		excecutor = new PathExecutor(from, goal);
 	}
 

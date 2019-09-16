@@ -3,13 +3,13 @@ package stevebot.commands;
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.math.BlockPos;
+import stevebot.Config;
 import stevebot.Stevebot;
 import stevebot.commands.tokens.MultiCommandToken;
 import stevebot.commands.tokens.ValueToken;
 import stevebot.pathfinding.goal.ExactGoal;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.goal.XZGoal;
-import stevebot.pathfinding.path.PathRenderable;
 import stevebot.player.Camera;
 
 import java.util.Map;
@@ -66,21 +66,34 @@ public class Commands {
 		);
 
 
-		// /pathstyle <style>
-		commandHandler.registerCommand(
-				new CommandBuilder("pathstyle")
-						.addToken(new ValueToken.TextToken("style"))
-						.setListener(Commands::onPathStyle)
-						.build()
-		);
+		// /setvar...
+		commandHandler.registerCommand(new CommandBuilder("setvar")
+				.addToken(new MultiCommandToken("setvarMulti")
 
-		// /showCachedChunks <show>
-		commandHandler.registerCommand(
-				new CommandBuilder("showCachedChunks")
-						.addToken(new ValueToken.BooleanToken("show"))
-						.setListener(Commands::displayCachedChunks)
-						.build()
-		);
+						// /setvar <variablename> <integer>
+						.addCommand(new CommandBuilder("setvar")
+								.addToken(new ValueToken.TextToken("varname", false))
+								.addToken(new ValueToken.IntegerToken("value"))
+								.setListener(Commands::onSetVarInteger)
+								.build())
+
+						// /setvar <variablename> <boolean>
+						.addCommand(new CommandBuilder("setvar")
+								.addToken(new ValueToken.TextToken("varname", false))
+								.addToken(new ValueToken.BooleanToken("value"))
+								.setListener(Commands::onSetVarBoolean)
+								.build())
+
+						// /setvar <variablename> <string>
+						.addCommand(new CommandBuilder("setvar")
+								.addToken(new ValueToken.TextToken("varname", false))
+								.addToken(new ValueToken.TextToken("value", true))
+								.setListener(Commands::onSetVarString)
+								.build())
+
+				)
+				.build());
+
 
 	}
 
@@ -92,7 +105,7 @@ public class Commands {
 		final BlockPos to = (BlockPos) args.get("to").getValue();
 
 		if (Stevebot.get().getPlayerController().getPlayer() != null) {
-			Stevebot.get().getPathHandler().createPath(from, new ExactGoal(to), 20 * 1000);
+			Stevebot.get().getPathHandler().createPath(from, new ExactGoal(to), false, false);
 		}
 	}
 
@@ -106,7 +119,7 @@ public class Commands {
 		final boolean freelook = (Boolean) args.getOrDefault("freelook", new CommandArgument<>(false)).getValue();
 
 		if (Stevebot.get().getPlayerController().getPlayer() != null) {
-			Stevebot.get().getPathHandler().createPath(from, new ExactGoal(to), 20 * 1000);
+			Stevebot.get().getPathHandler().createPath(from, new ExactGoal(to), follow, freelook);
 		}
 	}
 
@@ -122,7 +135,7 @@ public class Commands {
 			final BlockPos from = Stevebot.get().getPlayerController().utils().getPlayerBlockPos();
 			final Vector3d dir = Stevebot.get().getPlayerController().camera().getLookDir().setLength(distance);
 			Goal goal = new XZGoal(from.getX() + dir.getIntX(), from.getZ() + dir.getIntZ());
-			Stevebot.get().getPathHandler().createPath(from, goal, 20 * 1000);
+			Stevebot.get().getPathHandler().createPath(from, goal, follow, freelook);
 		}
 	}
 
@@ -158,15 +171,18 @@ public class Commands {
 
 
 
-	private static void onPathStyle(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
-		final String strStyle = ((String) args.get("style").getValue()).trim().toUpperCase();
-		try {
-			final PathRenderable.Style style = PathRenderable.Style.valueOf(strStyle);
-//			Stevebot.get().getPathHandler().setPathRenderableStyle(style);
-		} catch (IllegalArgumentException e) {
-			Stevebot.get().getPlayerController().utils().sendMessage("Unknown style: '" + strStyle + "'");
-			for (PathRenderable.Style s : PathRenderable.Style.values()) {
-				Stevebot.get().getPlayerController().utils().sendMessage("    - '" + s.toString() + "'");
+	private static void onSetVarString(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
+		final String varname = (String) args.get("varname").getValue();
+		final String value = (String) args.get("value").getValue();
+
+		switch (varname.toLowerCase()) {
+			case "pathstyle": {
+				Config.setPathStyle(value);
+				break;
+			}
+			default: {
+				Stevebot.get().log("Invalid name '" + varname + "'.");
+				break;
 			}
 		}
 	}
@@ -174,10 +190,43 @@ public class Commands {
 
 
 
-	private static void displayCachedChunks(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
-		final boolean enable = (Boolean) args.get("show").getValue();
-//		Stevebot.get().getPathHandler().showCachedChunks(enable);
-		Stevebot.get().getPlayerController().utils().sendMessage("Display Cached Chunks: '" + enable + "'");
+	private static void onSetVarInteger(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
+		final String varname = (String) args.get("varname").getValue();
+		final int value = (Integer) args.get("value").getValue();
+
+		switch (varname.toLowerCase()) {
+			case "timeout": {
+				Config.setPathfindingTimeout(value);
+				break;
+			}
+			default: {
+				Stevebot.get().log("Invalid name '" + varname + "'.");
+				break;
+			}
+		}
+	}
+
+
+
+
+	private static void onSetVarBoolean(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
+		final String varname = (String) args.get("varname").getValue();
+		final boolean value = (Boolean) args.get("value").getValue();
+
+		switch (varname.toLowerCase()) {
+			case "verbose": {
+				Config.setVerboseMode(value);
+				break;
+			}
+			case "showchunkcache": {
+				Config.setShowChunkCache(value);
+				break;
+			}
+			default: {
+				Stevebot.get().log("Invalid name '" + varname + "'.");
+				break;
+			}
+		}
 	}
 
 }
