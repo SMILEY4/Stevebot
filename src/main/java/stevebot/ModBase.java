@@ -43,11 +43,11 @@ public class ModBase {
 		ModBase.instance = this;
 		eventHandler = new ModEventHandler();
 		commandHandler = new CustomCommandHandler(eventHandler);
-		renderer = new RendererImpl(eventHandler);
 		playerController = new PlayerController(eventHandler);
 		pathHandler = new PathHandler();
 		blockLibrary = new BlockLibraryImpl();
 		blockProvider = new BlockProviderImpl(blockLibrary);
+		renderer = new RendererImpl(eventHandler);
 		eventHandler.onPreInit();
 	}
 

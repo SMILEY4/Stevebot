@@ -11,6 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.opengl.GL11;
+import stevebot.Config;
+import stevebot.Stevebot;
+import stevebot.data.blocks.ChunkCache;
 import stevebot.events.GameRenderListener;
 import stevebot.events.ModEventHandler;
 
@@ -41,6 +44,9 @@ public class RendererImpl implements Renderer {
 					// draw
 					for (int i = 0, n = renderables.size(); i < n; i++) {
 						Renderable renderable = renderables.get(i);
+						if (renderable instanceof ChunkCache.ChunkCacheRenderable && !Config.isShowChunkCache()) {
+							continue;
+						}
 						renderable.render(RendererImpl.this);
 					}
 
@@ -49,6 +55,9 @@ public class RendererImpl implements Renderer {
 				}
 			}
 		});
+
+
+		addRenderable(Stevebot.get().getBlockProvider().getBlockCache().getChunkCache().getChunkCacheRenderable());
 	}
 
 

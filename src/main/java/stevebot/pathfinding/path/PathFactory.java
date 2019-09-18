@@ -1,6 +1,7 @@
 package stevebot.pathfinding.path;
 
 import net.minecraft.util.math.BlockPos;
+import stevebot.Config;
 import stevebot.Stevebot;
 import stevebot.pathfinding.Pathfinding;
 import stevebot.pathfinding.goal.Goal;
@@ -90,7 +91,7 @@ public class PathFactory {
 			} else {
 				final Path prevPath = getLastPath();
 				executorService.submit(() -> {
-					Path path = pathfinding.calculatePath(prevPath.getLastNode().pos, goal, 20 * 1000);
+					Path path = pathfinding.calculatePath(prevPath.getLastNode().pos, goal, Config.getPathfindingTimeout() * 1000);
 					synchronized (pathQueue) {
 						pathQueue.add(path);
 						preparingPath = false;
@@ -101,7 +102,7 @@ public class PathFactory {
 
 		} else {
 			executorService.submit(() -> {
-				Path path = pathfinding.calculatePath(posStart, goal, 20 * 1000);
+				Path path = pathfinding.calculatePath(posStart, goal, Config.getPathfindingTimeout() * 1000);
 				if (!(path instanceof EmptyPath)) {
 					synchronized (pathQueue) {
 						pathQueue.add(path);

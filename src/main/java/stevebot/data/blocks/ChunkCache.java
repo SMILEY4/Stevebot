@@ -243,7 +243,7 @@ public class ChunkCache {
 
 
 
-	static class ChunkCacheRenderable implements Renderable {
+	public static class ChunkCacheRenderable implements Renderable {
 
 
 		private Map<ChunkPos, CachedChunk> chunks;
