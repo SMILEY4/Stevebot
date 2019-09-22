@@ -6,6 +6,8 @@ import stevebot.Stevebot;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionFactoryProvider;
 import stevebot.pathfinding.goal.Goal;
+import stevebot.pathfinding.nodes.BestNodesContainer;
+import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.path.CompletedPath;
 import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.PartialPath;

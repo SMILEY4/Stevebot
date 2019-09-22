@@ -1,4 +1,4 @@
-package stevebot.pathfinding;
+package stevebot.pathfinding.nodes;
 
 import net.minecraft.util.math.BlockPos;
 import stevebot.pathfinding.actions.playeractions.Action;

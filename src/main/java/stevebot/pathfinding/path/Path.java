@@ -1,7 +1,7 @@
 package stevebot.pathfinding.path;
 
 import net.minecraft.util.math.BlockPos;
-import stevebot.pathfinding.Node;
+import stevebot.pathfinding.nodes.Node;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
 import stevebot.rendering.renderables.PathRenderObject;

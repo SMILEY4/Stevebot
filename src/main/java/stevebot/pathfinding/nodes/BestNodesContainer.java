@@ -1,4 +1,4 @@
-package stevebot.pathfinding;
+package stevebot.pathfinding.nodes;
 
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.goal.Goal;

@@ -1,6 +1,6 @@
 package stevebot.pathfinding.actions;
 
-import stevebot.pathfinding.Node;
+import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.actions.playeractions.Action;
 
 public interface ActionFactory {

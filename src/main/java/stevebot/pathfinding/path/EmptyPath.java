@@ -1,6 +1,6 @@
 package stevebot.pathfinding.path;
 
-import stevebot.pathfinding.Node;
+import stevebot.pathfinding.nodes.Node;
 
 import java.util.Collections;
 import java.util.List;

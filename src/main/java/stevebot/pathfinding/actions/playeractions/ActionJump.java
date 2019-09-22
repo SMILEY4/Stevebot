@@ -4,7 +4,7 @@ import net.minecraft.util.math.BlockPos;
 import stevebot.Direction;
 import stevebot.Stevebot;
 import stevebot.pathfinding.BlockUtils;
-import stevebot.pathfinding.Node;
+import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.PathExecutor;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;

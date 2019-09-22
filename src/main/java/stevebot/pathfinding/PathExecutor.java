@@ -5,6 +5,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.Stevebot;
 import stevebot.events.GameTickListener;
 import stevebot.pathfinding.goal.Goal;
+import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.path.PathFactory;
 
 public class PathExecutor implements GameTickListener {

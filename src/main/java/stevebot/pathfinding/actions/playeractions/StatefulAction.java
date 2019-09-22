@@ -1,6 +1,6 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import stevebot.pathfinding.Node;
+import stevebot.pathfinding.nodes.Node;
 
 public abstract class StatefulAction extends Action {
 

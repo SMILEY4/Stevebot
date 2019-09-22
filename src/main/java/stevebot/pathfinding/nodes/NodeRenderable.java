@@ -1,4 +1,4 @@
-package stevebot.pathfinding;
+package stevebot.pathfinding.nodes;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.util.math.BlockPos;

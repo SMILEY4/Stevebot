@@ -16,8 +16,8 @@ import stevebot.Stevebot;
 import stevebot.data.blocks.ChunkCache;
 import stevebot.events.GameRenderListener;
 import stevebot.events.ModEventHandler;
-import stevebot.pathfinding.Node;
-import stevebot.pathfinding.NodeRenderable;
+import stevebot.pathfinding.nodes.Node;
+import stevebot.pathfinding.nodes.NodeRenderable;
 
 import java.util.ArrayList;
 import java.util.List;
