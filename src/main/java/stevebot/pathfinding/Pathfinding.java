@@ -1,6 +1,7 @@
 package stevebot.pathfinding;
 
 import net.minecraft.util.math.BlockPos;
+import stevebot.Config;
 import stevebot.Stevebot;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionFactoryProvider;
@@ -46,6 +47,15 @@ public class Pathfinding {
 			if (checkForTimeout(timeStart, timeoutInMs)) {
 				Stevebot.get().getPlayerController().utils().sendMessage("Timeout");
 				break;
+			}
+
+			// slowdown
+			if (Config.getPathfindingSlowdown() > 0) {
+				try {
+					Thread.sleep(Config.getPathfindingSlowdown());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 
 			// get next node

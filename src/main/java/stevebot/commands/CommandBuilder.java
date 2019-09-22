@@ -1,11 +1,11 @@
 package stevebot.commands;
 
-import stevebot.commands.tokens.CommandToken;
-import stevebot.commands.tokens.OptionalToken;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import stevebot.commands.tokens.CommandToken;
+import stevebot.commands.tokens.OptionalToken;
 
 import java.util.ArrayList;
 import java.util.List;

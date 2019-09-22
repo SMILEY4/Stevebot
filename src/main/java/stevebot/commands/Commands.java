@@ -10,6 +10,7 @@ import stevebot.commands.tokens.ValueToken;
 import stevebot.pathfinding.goal.ExactGoal;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.goal.XZGoal;
+import stevebot.pathfinding.path.PathRenderable;
 import stevebot.player.Camera;
 
 import java.util.Map;
@@ -60,7 +61,7 @@ public class Commands {
 		// /follow <start|stop>
 		commandHandler.registerCommand(
 				new CommandBuilder("follow")
-						.addToken(new ValueToken.TextToken("state"))
+						.addToken(new ValueToken.EnumToken("state", "start", "stop"))
 						.setListener(Commands::onFollow)
 						.build()
 		);
@@ -72,23 +73,23 @@ public class Commands {
 
 						// /setvar <variablename> <integer>
 						.addCommand(new CommandBuilder("setvar")
-								.addToken(new ValueToken.TextToken("varname", false))
+								.addToken(new ValueToken.EnumToken("varname", "timeout", "pathfindingslowdown"))
 								.addToken(new ValueToken.IntegerToken("value"))
 								.setListener(Commands::onSetVarInteger)
 								.build())
 
 						// /setvar <variablename> <boolean>
 						.addCommand(new CommandBuilder("setvar")
-								.addToken(new ValueToken.TextToken("varname", false))
+								.addToken(new ValueToken.EnumToken("varname", "showchunkcache", "shownodecache", "verbose"))
 								.addToken(new ValueToken.BooleanToken("value"))
 								.setListener(Commands::onSetVarBoolean)
 								.build())
 
-						// /setvar <variablename> <string>
+						// /setvar <variablename> <enum>
 						.addCommand(new CommandBuilder("setvar")
-								.addToken(new ValueToken.TextToken("varname", false))
-								.addToken(new ValueToken.TextToken("value", true))
-								.setListener(Commands::onSetVarString)
+								.addToken(new ValueToken.EnumToken("varname", "pathstyle"))
+								.addToken(new ValueToken.EnumToken("value", "solid", "pathid", "actionid", "actioncost", "actiontype"))
+								.setListener(Commands::onSetVarEnum)
 								.build())
 
 				)
@@ -171,25 +172,6 @@ public class Commands {
 
 
 
-	private static void onSetVarString(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
-		final String varname = (String) args.get("varname").getValue();
-		final String value = (String) args.get("value").getValue();
-
-		switch (varname.toLowerCase()) {
-			case "pathstyle": {
-				Config.setPathStyle(value);
-				break;
-			}
-			default: {
-				Stevebot.get().log("Invalid name '" + varname + "'.");
-				break;
-			}
-		}
-	}
-
-
-
-
 	private static void onSetVarInteger(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
 		final String varname = (String) args.get("varname").getValue();
 		final int value = (Integer) args.get("value").getValue();
@@ -197,6 +179,10 @@ public class Commands {
 		switch (varname.toLowerCase()) {
 			case "timeout": {
 				Config.setPathfindingTimeout(value);
+				break;
+			}
+			case "pathfindingslowdown": {
+				Config.setPathfindingSlowdown(value);
 				break;
 			}
 			default: {
@@ -220,6 +206,34 @@ public class Commands {
 			}
 			case "showchunkcache": {
 				Config.setShowChunkCache(value);
+				break;
+			}
+			case "shownodecache": {
+				Config.setShowNodeCache(value);
+				break;
+			}
+			default: {
+				Stevebot.get().log("Invalid name '" + varname + "'.");
+				break;
+			}
+		}
+	}
+
+
+
+
+	private static void onSetVarEnum(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
+		final String varname = (String) args.get("varname").getValue();
+		final String value = (String) args.get("value").getValue();
+
+		switch (varname.toLowerCase()) {
+			case "pathstyle": {
+				PathRenderable.PathStyle style = PathRenderable.PathStyle.fromString(value);
+				if (style != null) {
+					Config.setPathStyle(style);
+				} else {
+					Stevebot.get().log("Invalid pathstyle: '" + value + "'.");
+				}
 				break;
 			}
 			default: {

@@ -51,5 +51,4 @@ public class TerminalToken implements CommandToken {
 		}
 	}
 
-
 }

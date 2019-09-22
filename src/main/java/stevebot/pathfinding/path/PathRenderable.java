@@ -1,6 +1,7 @@
 package stevebot.pathfinding.path;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
+import stevebot.Config;
 import stevebot.pathfinding.Node;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.rendering.Color;
@@ -10,11 +11,33 @@ import stevebot.rendering.Renderer;
 public class PathRenderable implements Renderable {
 
 
-	public enum Style {
+	public enum PathStyle {
 		SOLID,
-		COST_HEATMAP,
+		PATH_ID,
+		ACTION_TYPE,
 		ACTION_ID,
-		ACTION_TYPE
+		ACTION_COST;
+
+
+
+
+		public static PathStyle fromString(String str) {
+			switch (str.toLowerCase()) {
+				case "solid":
+					return SOLID;
+				case "pathid":
+					return PATH_ID;
+				case "actiontype":
+					return ACTION_TYPE;
+				case "actionid":
+					return ACTION_ID;
+				case "actioncost":
+					return ACTION_COST;
+				default:
+					return null;
+			}
+		}
+
 	}
 
 
@@ -23,20 +46,12 @@ public class PathRenderable implements Renderable {
 
 
 	private final Path path;
-	private Style style = Style.SOLID;
 
 
 
 
 	public PathRenderable(Path path) {
 		this.path = path;
-	}
-
-
-
-
-	public void setStyle(Style style) {
-		this.style = style;
 	}
 
 
@@ -72,15 +87,18 @@ public class PathRenderable implements Renderable {
 
 
 	private Color getColor(Node from, Node to, double cost, double minCost, double maxCost) {
+		PathStyle style = Config.getPathStyle();
 		switch (style) {
 			case SOLID:
 				return Color.RED;
-			case COST_HEATMAP:
-				return Color.mix(Color.GREEN, Color.RED, (float) ((cost - minCost) / (maxCost-minCost)));
-			case ACTION_ID:
-				return Color.random(to.action.hashCode());
+			case PATH_ID:
+				return Color.random(path.hashCode());
 			case ACTION_TYPE:
 				return Color.random(to.action.getClass().hashCode());
+			case ACTION_ID:
+				return Color.random(to.action.hashCode());
+			case ACTION_COST:
+				return Color.mix(Color.GREEN, Color.RED, (float) ((cost - minCost) / (maxCost - minCost)));
 			default:
 				return Color.BLACK;
 		}

@@ -109,6 +109,9 @@ public class CustomCommand {
 			for (int i = 0; i < n; i++) {
 				args[i] = argsList.get(i);
 			}
+			if (args.length == 1 && args[0].isEmpty()) {
+				return null;
+			}
 			return args;
 		}
 	}
