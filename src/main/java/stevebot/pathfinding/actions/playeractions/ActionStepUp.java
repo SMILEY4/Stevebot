@@ -28,7 +28,7 @@ public class ActionStepUp extends StatefulAction {
 
 
 	@Override
-	public PathExecutor.State tick(boolean firstTick) {
+	public PathExecutor.StateFollow tick(boolean firstTick) {
 
 		final PlayerController controller = Stevebot.get().getPlayerController();
 
@@ -45,7 +45,7 @@ public class ActionStepUp extends StatefulAction {
 				} else {
 					controller.camera().setLookAt(getTo().pos, true);
 				}
-				return PathExecutor.State.EXEC;
+				return PathExecutor.StateFollow.EXEC;
 			}
 
 			case STATE_JUMP: {
@@ -53,14 +53,14 @@ public class ActionStepUp extends StatefulAction {
 					controller.input().setJump(false);
 				}
 				if (controller.movement().moveTowards(getTo().pos, true)) {
-					return PathExecutor.State.DONE;
+					return PathExecutor.StateFollow.DONE;
 				} else {
-					return PathExecutor.State.EXEC;
+					return PathExecutor.StateFollow.EXEC;
 				}
 			}
 
 			default: {
-				return PathExecutor.State.FAILED;
+				return PathExecutor.StateFollow.FAILED;
 			}
 
 		}

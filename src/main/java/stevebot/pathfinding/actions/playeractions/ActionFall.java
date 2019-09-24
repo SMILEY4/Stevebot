@@ -20,16 +20,16 @@ public class ActionFall extends Action {
 
 
 	@Override
-	public PathExecutor.State tick(boolean fistTick) {
+	public PathExecutor.StateFollow tick(boolean fistTick) {
 		final PlayerController controller = Stevebot.get().getPlayerController();
 		if (controller.getPlayer().onGround) {
 			if (controller.movement().moveTowards(getTo().pos, false)) {
-				return PathExecutor.State.DONE;
+				return PathExecutor.StateFollow.DONE;
 			} else {
-				return PathExecutor.State.EXEC;
+				return PathExecutor.StateFollow.EXEC;
 			}
 		} else {
-			return PathExecutor.State.EXEC;
+			return PathExecutor.StateFollow.EXEC;
 		}
 	}
 

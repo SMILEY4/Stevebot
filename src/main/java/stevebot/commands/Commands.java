@@ -147,9 +147,9 @@ public class Commands {
 		final String state = (String) args.get("state").getValue();
 		if (Stevebot.get().getPlayerController().getPlayer() != null) {
 			if ("start".equalsIgnoreCase(state)) {
-				Stevebot.get().getPathHandler().startFollowing();
+//				Stevebot.get().getPathHandler().startFollowing();
 			} else if ("stop".equalsIgnoreCase(state)) {
-				Stevebot.get().getPathHandler().stopFollowing();
+//				Stevebot.get().getPathHandler().stopFollowing();
 			} else {
 				Stevebot.get().getPlayerController().utils().sendMessage("Unknown state: " + state + ". Must be 'start' or 'stop'.");
 			}

@@ -126,4 +126,18 @@ public class PathFactory {
 	}
 
 
+
+
+	public BlockPos getPosStart() {
+		return posStart;
+	}
+
+
+
+
+	public Goal getGoal() {
+		return goal;
+	}
+
+
 }

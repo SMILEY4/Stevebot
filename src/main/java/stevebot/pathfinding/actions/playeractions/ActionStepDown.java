@@ -21,11 +21,11 @@ public class ActionStepDown extends Action {
 
 
 	@Override
-	public PathExecutor.State tick(boolean firstTick) {
+	public PathExecutor.StateFollow tick(boolean firstTick) {
 		if (Stevebot.get().getPlayerController().movement().moveTowards(getTo().pos, true)) {
-			return PathExecutor.State.DONE;
+			return PathExecutor.StateFollow.DONE;
 		} else {
-			return PathExecutor.State.EXEC;
+			return PathExecutor.StateFollow.EXEC;
 		}
 	}
 

@@ -14,32 +14,37 @@ public class PathHandler {
 
 	public void createPath(BlockPos from, Goal goal, boolean startFollowing, boolean enableFreelook) {
 		if (excecutor == null) {
-			excecutor = new PathExecutor(from, goal);
+			excecutor = new PathExecutor(from, goal) {
+				@Override
+				public void onFinished() {
+					excecutor = null;
+				}
+			};
+			excecutor.start();
 		} else {
 			Stevebot.get().log("Can not start new path. Another path is already in progress.");
 		}
-
 	}
 
 
-
-
-	public void startFollowing() {
-		if (excecutor != null) {
-			excecutor.startFollowing();
-		}
-	}
-
-
-
-
-	public void stopFollowing() {
-		if (excecutor != null) {
-			excecutor.stopFollowing();
-			Stevebot.get().getEventHandler().removeListener(excecutor);
-			excecutor = null;
-		}
-	}
+//
+//
+//	public void startFollowing() {
+//		if (excecutor != null) {
+//			excecutor.startFollowing();
+//		}
+//	}
+//
+//
+//
+//
+//	public void stopFollowing() {
+//		if (excecutor != null) {
+//			excecutor.stopFollowing();
+//			Stevebot.get().getEventHandler().removeListener(excecutor);
+//			excecutor = null;
+//		}
+//	}
 
 
 }

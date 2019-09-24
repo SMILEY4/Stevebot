@@ -8,10 +8,10 @@ import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.path.PathFactory;
 
-public class PathExecutor implements GameTickListener {
+public abstract class PathExecutor implements GameTickListener {
 
 
-	public enum State {
+	public enum StateFollow {
 		EXEC, DONE, FAILED;
 	}
 
@@ -21,104 +21,123 @@ public class PathExecutor implements GameTickListener {
 
 
 	private PathFactory pathFactory;
+	private PathExecutionStateMachine stateMachine;
 
 	private int currentIndexFrom = 0;
 	private Node currentNodeTo;
 
-	private boolean isFollowing = false;
-	private long timeStart = 0;
+	private boolean isExecuting = false;
 	private boolean fistTick = true;
 
 
 
 
 	public PathExecutor(BlockPos posStart, Goal goal) {
-		Stevebot.get().log("Creating Path from " + posStart.getX() + " " + posStart.getY() + " " + posStart.getZ() + " to " + goal.goalString());
 		this.pathFactory = new PathFactory(posStart, goal);
 		Stevebot.get().getEventHandler().addListener(this);
-		pathFactory.prepareNextPath();
 	}
 
 
 
 
-	public void startFollowing() {
-		if (pathFactory.hasPath()) {
-			isFollowing = true;
-			timeStart = System.currentTimeMillis();
-			startPath();
-		}
+	public void start() {
+		Stevebot.get().log("Starting Path from " + pathFactory.getPosStart().getX() + " " + pathFactory.getPosStart().getY() + " " + pathFactory.getPosStart().getZ() + " to " + pathFactory.getGoal().goalString());
+		stateMachine = new PathExecutionStateMachine(PathExecutionStateMachine.ExecutionState.PREPARE_EXECUTION);
+		isExecuting = true;
 	}
 
 
 
 
-	private void startPath() {
-		currentIndexFrom = 0;
-		currentNodeTo = pathFactory.getCurrentPath().getNodes().get(currentIndexFrom + 1);
+	private void stop() {
+		isExecuting = false;
+		Stevebot.get().getEventHandler().removeListener(this);
+		onFinished();
 	}
 
 
 
 
-	public void stopFollowing() {
-		isFollowing = false;
-	}
+	public abstract void onFinished();
 
 
 
 
 	@Override
 	public void onClientTick(TickEvent.ClientTickEvent event) {
-		if (isFollowing && Stevebot.get().getPlayerController().getPlayer() != null) {
+		if (!isExecuting) {
+			return;
+		}
+		switch (stateMachine.getState()) {
 
-			if (pathFactory.getCurrentPath().getNodes().size() - currentIndexFrom < 20 && pathFactory.isCurrentLastSegment()) {
+			case PREPARE_EXECUTION: {
 				pathFactory.prepareNextPath();
+				stateMachine.fireTransition(PathExecutionStateMachine.ExecutionTransition.START);
+				onClientTick(event);
+				break;
 			}
 
-			Stevebot.get().getPlayerController().input().stopAll();
-
-			final State state = tick();
-
-			if (state == State.FAILED) {
-				stopFollowing();
-				Stevebot.get().log("Failed to follow path.");
-			}
-			if (state == State.DONE) {
-				pathFactory.removeCurrentPath();
+			case WAITING_FOR_SEGMENT: {
 				if (pathFactory.hasPath()) {
-					Stevebot.get().log("Reached waypoint. (" + ((System.currentTimeMillis() - timeStart) / 1000.0) + "s");
-					startPath();
-				} else {
-					stopFollowing();
-					Stevebot.get().log("Reached destination. (" + ((System.currentTimeMillis() - timeStart) / 1000.0) + "s");
+					currentIndexFrom = 0;
+					currentNodeTo = pathFactory.getCurrentPath().getNodes().get(currentIndexFrom + 1);
+					stateMachine.fireTransition(PathExecutionStateMachine.ExecutionTransition.SEGMENT_CALCULATED);
+					onClientTick(event);
 				}
+				break;
 			}
 
+			case FOLLOWING: {
+				final StateFollow state = tick();
+				if (state == StateFollow.FAILED) {
+					stateMachine.fireError();
+					onClientTick(event);
+				}
+				if (state == StateFollow.DONE) {
+					pathFactory.removeCurrentPath();
+					stateMachine.fireTransition(PathExecutionStateMachine.ExecutionTransition.REACHED_END_OF_PATH);
+					onClientTick(event);
+				}
+				break;
+			}
+
+			case DONE: {
+				Stevebot.get().log("Done following path.");
+				stop();
+				break;
+			}
+
+			case ERROR: {
+				Stevebot.get().log("Failed to follow path.");
+				stop();
+				break;
+			}
 		}
 	}
 
 
 
 
-	private State tick() {
+	private StateFollow tick() {
 
-		State actionState = currentNodeTo.action.tick(fistTick);
+		Stevebot.get().getPlayerController().input().stopAll();
+
+		StateFollow actionState = currentNodeTo.action.tick(fistTick);
 		fistTick = false;
 
-		if (actionState == State.FAILED) {
-			return State.FAILED;
+		if (actionState == StateFollow.FAILED) {
+			return StateFollow.FAILED;
 		}
 
-		if (actionState == State.DONE) {
+		if (actionState == StateFollow.DONE) {
 			fistTick = true;
 			boolean hasNext = nextAction();
 			if (!hasNext) {
-				return State.DONE;
+				return StateFollow.DONE;
 			}
 		}
 
-		return State.EXEC;
+		return StateFollow.EXEC;
 
 	}
 

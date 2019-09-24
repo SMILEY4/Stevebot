@@ -27,14 +27,14 @@ public class ActionWalk extends Action {
 
 
 	@Override
-	public PathExecutor.State tick(boolean fistTick) {
+	public PathExecutor.StateFollow tick(boolean fistTick) {
 		if (Stevebot.get().getPlayerController().movement().moveTowards(getTo().pos, true)) {
-			return PathExecutor.State.DONE;
+			return PathExecutor.StateFollow.DONE;
 		} else {
 			if (sprint) {
 				Stevebot.get().getPlayerController().input().setSprint();
 			}
-			return PathExecutor.State.EXEC;
+			return PathExecutor.StateFollow.EXEC;
 		}
 	}
 

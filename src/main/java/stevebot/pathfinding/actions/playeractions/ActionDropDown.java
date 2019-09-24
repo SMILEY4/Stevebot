@@ -35,7 +35,7 @@ public class ActionDropDown extends StatefulAction {
 
 
 	@Override
-	public PathExecutor.State tick(boolean firstTick) {
+	public PathExecutor.StateFollow tick(boolean firstTick) {
 		final PlayerController controller = Stevebot.get().getPlayerController();
 
 
@@ -48,7 +48,7 @@ public class ActionDropDown extends StatefulAction {
 				} else {
 					controller.movement().moveTowards(getTo().pos, true);
 				}
-				return PathExecutor.State.EXEC;
+				return PathExecutor.StateFollow.EXEC;
 			}
 
 			case STATE_PREPARE_2: {
@@ -58,26 +58,26 @@ public class ActionDropDown extends StatefulAction {
 				if (!controller.getPlayer().onGround) {
 					nextState();
 				}
-				return PathExecutor.State.EXEC;
+				return PathExecutor.StateFollow.EXEC;
 			}
 
 			case STATE_FALL: {
 				if (controller.getPlayer().onGround) {
 					nextState();
 				}
-				return PathExecutor.State.EXEC;
+				return PathExecutor.StateFollow.EXEC;
 			}
 
 			case STATE_FINISH: {
 				if (controller.movement().moveTowards(getTo().pos, true)) {
-					return PathExecutor.State.DONE;
+					return PathExecutor.StateFollow.DONE;
 				} else {
-					return PathExecutor.State.EXEC;
+					return PathExecutor.StateFollow.EXEC;
 				}
 			}
 
 			default: {
-				return PathExecutor.State.FAILED;
+				return PathExecutor.StateFollow.FAILED;
 			}
 		}
 

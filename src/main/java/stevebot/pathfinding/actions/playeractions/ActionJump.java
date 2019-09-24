@@ -29,7 +29,7 @@ public class ActionJump extends StatefulAction {
 
 
 	@Override
-	public PathExecutor.State tick(boolean firstTick) {
+	public PathExecutor.StateFollow tick(boolean firstTick) {
 
 		PlayerController controller = Stevebot.get().getPlayerController();
 
@@ -40,7 +40,7 @@ public class ActionJump extends StatefulAction {
 				if (slowEnough) {
 					nextState();
 				}
-				return PathExecutor.State.EXEC;
+				return PathExecutor.StateFollow.EXEC;
 			}
 
 			case STATE_JUMP: {
@@ -52,19 +52,19 @@ public class ActionJump extends StatefulAction {
 				if (controller.getPlayer().onGround && controller.utils().getPlayerBlockPos().equals(getTo().pos)) {
 					nextState();
 				}
-				return PathExecutor.State.EXEC;
+				return PathExecutor.StateFollow.EXEC;
 			}
 
 			case STATE_LAND: {
 				if (controller.movement().moveTowards(getTo().pos, true)) {
-					return PathExecutor.State.DONE;
+					return PathExecutor.StateFollow.DONE;
 				} else {
-					return PathExecutor.State.EXEC;
+					return PathExecutor.StateFollow.EXEC;
 				}
 			}
 
 			default: {
-				return PathExecutor.State.FAILED;
+				return PathExecutor.StateFollow.FAILED;
 			}
 
 		}

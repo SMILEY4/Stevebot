@@ -17,6 +17,11 @@ public class ModEventHandler {
 	private List<GameRenderListener> renderListeners = new ArrayList<>();
 	private List<GameCommandListener> commandListeners = new ArrayList<>();
 
+	private List<GameInitListener> initListenersToRemove = new ArrayList<>();
+	private List<GameTickListener> tickListenersToRemove = new ArrayList<>();
+	private List<GameRenderListener> renderListenersToRemove = new ArrayList<>();
+	private List<GameCommandListener> commandListenersToRemove = new ArrayList<>();
+
 
 
 
@@ -40,16 +45,16 @@ public class ModEventHandler {
 
 	public void removeListener(EventListener listener) {
 		if (listener instanceof GameInitListener) {
-			initListeners.remove(listener);
+			initListenersToRemove.add((GameInitListener) listener);
 		}
 		if (listener instanceof GameTickListener) {
-			tickListeners.remove(listener);
+			tickListenersToRemove.add((GameTickListener) listener);
 		}
 		if (listener instanceof GameRenderListener) {
-			renderListeners.remove(listener);
+			renderListenersToRemove.add((GameRenderListener) listener);
 		}
 		if (listener instanceof GameCommandListener) {
-			commandListeners.remove(listener);
+			commandListenersToRemove.add((GameCommandListener) listener);
 		}
 	}
 
@@ -57,6 +62,8 @@ public class ModEventHandler {
 
 
 	public void onPreInit() {
+		initListeners.removeAll(initListenersToRemove);
+		initListenersToRemove.clear();
 		initListeners.forEach(GameInitListener::onPreInit);
 	}
 
@@ -64,6 +71,8 @@ public class ModEventHandler {
 
 
 	public void onInit() {
+		initListeners.removeAll(initListenersToRemove);
+		initListenersToRemove.clear();
 		initListeners.forEach(GameInitListener::onInit);
 	}
 
@@ -72,6 +81,8 @@ public class ModEventHandler {
 
 	public void onPostInit() {
 		MinecraftForge.EVENT_BUS.register(this);
+		initListeners.removeAll(initListenersToRemove);
+		initListenersToRemove.clear();
 		initListeners.forEach(GameInitListener::onPostInit);
 	}
 
@@ -80,6 +91,8 @@ public class ModEventHandler {
 
 	@SubscribeEvent
 	public void onClientTick(TickEvent.ClientTickEvent event) {
+		tickListeners.removeAll(tickListenersToRemove);
+		tickListenersToRemove.clear();
 		tickListeners.forEach(listener -> listener.onClientTick(event));
 	}
 
@@ -88,6 +101,8 @@ public class ModEventHandler {
 
 	@SubscribeEvent
 	public void onWorldTickEvent(TickEvent.WorldTickEvent event) {
+		tickListeners.removeAll(tickListenersToRemove);
+		tickListenersToRemove.clear();
 		tickListeners.forEach(listener -> listener.onWorldTickEvent(event));
 	}
 
@@ -96,6 +111,8 @@ public class ModEventHandler {
 
 	@SubscribeEvent
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
+		tickListeners.removeAll(tickListenersToRemove);
+		tickListenersToRemove.clear();
 		tickListeners.forEach(listener -> listener.onPlayerTickEvent(event));
 	}
 
@@ -104,6 +121,8 @@ public class ModEventHandler {
 
 	@SubscribeEvent
 	public void onRenderTickEvent(TickEvent.RenderTickEvent event) {
+		tickListeners.removeAll(tickListenersToRemove);
+		tickListenersToRemove.clear();
 		renderListeners.forEach(listener -> listener.onRenderTickEvent(event));
 		tickListeners.forEach(listener -> listener.onRenderTickEvent(event));
 	}
@@ -113,6 +132,8 @@ public class ModEventHandler {
 
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event) {
+		renderListeners.removeAll(renderListenersToRemove);
+		renderListenersToRemove.clear();
 		renderListeners.forEach(listener -> listener.onRenderWorldLast(event));
 	}
 
@@ -121,6 +142,8 @@ public class ModEventHandler {
 
 	@SubscribeEvent
 	public void onCommand(CommandEvent event) {
+		commandListeners.removeAll(commandListenersToRemove);
+		commandListenersToRemove.clear();
 		commandListeners.forEach(listener -> listener.onCommand(event));
 	}
 

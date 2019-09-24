@@ -49,7 +49,7 @@ public abstract class Action {
 
 
 
-	public abstract PathExecutor.State tick(boolean fistTick);
+	public abstract PathExecutor.StateFollow tick(boolean fistTick);
 
 
 }
