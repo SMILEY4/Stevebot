@@ -147,7 +147,7 @@ public class Commands {
 		final String state = (String) args.get("state").getValue();
 		if (Stevebot.get().getPlayerController().getPlayer() != null) {
 			if ("start".equalsIgnoreCase(state)) {
-				Stevebot.get().getPathHandler().startFollowLastPath();
+				Stevebot.get().getPathHandler().startFollowing();
 			} else if ("stop".equalsIgnoreCase(state)) {
 				Stevebot.get().getPathHandler().stopFollowing();
 			} else {

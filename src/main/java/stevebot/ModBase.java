@@ -70,6 +70,23 @@ public class ModBase {
 
 
 	public void log(String message) {
+		log(true, message);
+	}
+
+
+
+
+	public void logNonCritical(String message) {
+		log(false, message);
+	}
+
+
+
+
+	public void log(boolean critical, String message) {
+		if (!Config.isVerboseMode() && !critical) {
+			return;
+		}
 		if (getPlayerController().getPlayer() == null) {
 			getLogger().info(message);
 		} else {

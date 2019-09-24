@@ -25,14 +25,15 @@ public class PathExecutor implements GameTickListener {
 	private int currentIndexFrom = 0;
 	private Node currentNodeTo;
 
+	private boolean isFollowing = false;
 	private long timeStart = 0;
 	private boolean fistTick = true;
-	private boolean isFollowing = false;
 
 
 
 
 	public PathExecutor(BlockPos posStart, Goal goal) {
+		Stevebot.get().log("Creating Path from " + posStart.getX() + " " + posStart.getY() + " " + posStart.getZ() + " to " + goal.goalString());
 		this.pathFactory = new PathFactory(posStart, goal);
 		Stevebot.get().getEventHandler().addListener(this);
 		pathFactory.prepareNextPath();
@@ -81,16 +82,16 @@ public class PathExecutor implements GameTickListener {
 
 			if (state == State.FAILED) {
 				stopFollowing();
-				Stevebot.get().getPlayerController().utils().sendMessage("Failed to follow path.");
+				Stevebot.get().log("Failed to follow path.");
 			}
 			if (state == State.DONE) {
 				pathFactory.removeCurrentPath();
 				if (pathFactory.hasPath()) {
-					Stevebot.get().getPlayerController().utils().sendMessage("Reached waypoint. (" + ((System.currentTimeMillis() - timeStart) / 1000.0) + "s");
+					Stevebot.get().log("Reached waypoint. (" + ((System.currentTimeMillis() - timeStart) / 1000.0) + "s");
 					startPath();
 				} else {
 					stopFollowing();
-					Stevebot.get().getPlayerController().utils().sendMessage("Reached destination. (" + ((System.currentTimeMillis() - timeStart) / 1000.0) + "s");
+					Stevebot.get().log("Reached destination. (" + ((System.currentTimeMillis() - timeStart) / 1000.0) + "s");
 				}
 			}
 
