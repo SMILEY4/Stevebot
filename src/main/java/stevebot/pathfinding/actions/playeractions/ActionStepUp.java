@@ -4,11 +4,12 @@ import net.minecraft.util.math.BlockPos;
 import stevebot.Direction;
 import stevebot.Stevebot;
 import stevebot.pathfinding.BlockUtils;
-import stevebot.pathfinding.nodes.Node;
-import stevebot.pathfinding.execution.PathExecutor;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
+import stevebot.pathfinding.execution.PathExecutor;
+import stevebot.pathfinding.nodes.Node;
+import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerController;
 
 public class ActionStepUp extends StatefulAction {
@@ -109,7 +110,7 @@ public class ActionStepUp extends StatefulAction {
 				return Result.invalid();
 			}
 
-			return Result.valid(Node.get(to), ActionCosts.COST_STEP_UP);
+			return Result.valid(NodeCache.get(to), ActionCosts.COST_STEP_UP);
 		}
 
 
@@ -141,7 +142,7 @@ public class ActionStepUp extends StatefulAction {
 			boolean traversable1 = ActionUtils.canMoveThrough(p1, 3) && BlockUtils.isLoaded(p1);
 
 			if (ActionUtils.canStandAt(to) && traversable0 && traversable1) {
-				return Result.valid(Node.get(to), ActionCosts.COST_STEP_UP * ActionCosts.COST_MULT_DIAGONAL);
+				return Result.valid(NodeCache.get(to), ActionCosts.COST_STEP_UP * ActionCosts.COST_MULT_DIAGONAL);
 			} else {
 				return Result.invalid();
 			}

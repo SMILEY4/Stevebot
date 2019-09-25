@@ -4,11 +4,12 @@ import net.minecraft.util.math.BlockPos;
 import stevebot.Direction;
 import stevebot.Stevebot;
 import stevebot.pathfinding.BlockUtils;
-import stevebot.pathfinding.nodes.Node;
-import stevebot.pathfinding.execution.PathExecutor;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
+import stevebot.pathfinding.execution.PathExecutor;
+import stevebot.pathfinding.nodes.Node;
+import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerController;
 
 public class ActionDropDown extends StatefulAction {
@@ -96,7 +97,7 @@ public class ActionDropDown extends StatefulAction {
 
 		ActionDropDown create(Node node, Direction direction) {
 			final Result result = direction.diagonal ? checkDiagonal(node, direction) : checkStraight(node, direction);
-			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(Node.get(node.pos.add(direction.dx, 0, direction.dz)));
+			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(NodeCache.get(node.pos.add(direction.dx, 0, direction.dz)));
 			return new ActionDropDown(node, result.to, result.estimatedCost, actionFall, direction);
 
 		}
@@ -133,12 +134,12 @@ public class ActionDropDown extends StatefulAction {
 			}
 
 			// check fall
-			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(Node.get(node.pos.add(direction.dx, 0, direction.dz)));
+			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(NodeCache.get(node.pos.add(direction.dx, 0, direction.dz)));
 			if (actionFall == null) {
 				return Result.invalid();
 			}
 
-			return Result.valid(Node.get(to), ActionCosts.COST_WALKING + actionFall.getCost());
+			return Result.valid(NodeCache.get(to), ActionCosts.COST_WALKING + actionFall.getCost());
 		}
 
 
@@ -170,12 +171,12 @@ public class ActionDropDown extends StatefulAction {
 			}
 
 			// check+create fall
-			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(Node.get(node.pos.add(direction.dx, 0, direction.dz)));
+			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(NodeCache.get(node.pos.add(direction.dx, 0, direction.dz)));
 			if (actionFall == null) {
 				return Result.invalid();
 			}
 
-			return Result.valid(Node.get(to), ActionCosts.COST_WALKING * ActionCosts.COST_MULT_DIAGONAL + actionFall.getCost());
+			return Result.valid(NodeCache.get(to), ActionCosts.COST_WALKING * ActionCosts.COST_MULT_DIAGONAL + actionFall.getCost());
 		}
 
 

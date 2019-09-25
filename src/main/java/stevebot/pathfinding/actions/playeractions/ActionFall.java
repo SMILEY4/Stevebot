@@ -3,10 +3,11 @@ package stevebot.pathfinding.actions.playeractions;
 import net.minecraft.util.math.BlockPos;
 import stevebot.Stevebot;
 import stevebot.pathfinding.BlockUtils;
-import stevebot.pathfinding.nodes.Node;
-import stevebot.pathfinding.execution.PathExecutor;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
+import stevebot.pathfinding.execution.PathExecutor;
+import stevebot.pathfinding.nodes.Node;
+import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerController;
 
 public class ActionFall extends Action {
@@ -60,7 +61,7 @@ public class ActionFall extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(Node.get(fallTo), ActionCosts.COST_FALL_N(from.getY() - fallTo.getY()));
+			return Result.valid(NodeCache.get(fallTo), ActionCosts.COST_FALL_N(from.getY() - fallTo.getY()));
 		}
 
 

@@ -4,11 +4,12 @@ import net.minecraft.util.math.BlockPos;
 import stevebot.Direction;
 import stevebot.Stevebot;
 import stevebot.pathfinding.BlockUtils;
-import stevebot.pathfinding.nodes.Node;
-import stevebot.pathfinding.execution.PathExecutor;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
+import stevebot.pathfinding.execution.PathExecutor;
+import stevebot.pathfinding.nodes.Node;
+import stevebot.pathfinding.nodes.NodeCache;
 
 public class ActionWalk extends Action {
 
@@ -80,7 +81,7 @@ public class ActionWalk extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(Node.get(to), ActionCosts.COST_SPRINTING);
+			return Result.valid(NodeCache.get(to), ActionCosts.COST_SPRINTING);
 		}
 
 
@@ -118,7 +119,7 @@ public class ActionWalk extends Action {
 				if ((traversable0 && avoid1) || (traversable1 && avoid0)) {
 					return Result.invalid();
 				} else {
-					return Result.valid(Node.get(to), ActionCosts.COST_SPRINTING * ActionCosts.COST_MULT_DIAGONAL * ((!traversable0 || !traversable1) ? ActionCosts.COST_MULT_TOUCHING : 1));
+					return Result.valid(NodeCache.get(to), ActionCosts.COST_SPRINTING * ActionCosts.COST_MULT_DIAGONAL * ((!traversable0 || !traversable1) ? ActionCosts.COST_MULT_TOUCHING : 1));
 				}
 			} else {
 				return Result.invalid();

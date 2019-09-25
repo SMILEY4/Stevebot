@@ -3,50 +3,7 @@ package stevebot.pathfinding.nodes;
 import net.minecraft.util.math.BlockPos;
 import stevebot.pathfinding.actions.playeractions.Action;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Node {
-
-
-	public static Map<BlockPos, Node> nodeCache = new HashMap<>();
-
-
-
-
-	public static Node get(BlockPos pos) {
-		Node n = nodeCache.get(pos);
-		if (n == null) {
-			return create(pos, null);
-		} else {
-			return n;
-		}
-	}
-
-
-
-
-	public static Node create(BlockPos pos, Node prev) {
-		return create(pos, prev, 1000000);
-	}
-
-
-
-
-	public static Node create(BlockPos pos, Node prev, double cost) {
-		Node node = nodeCache.get(pos);
-		if (node == null) {
-			node = new Node();
-			node.pos = pos;
-			node.prev = prev;
-			node.gcost = cost;
-			node.open = true;
-			nodeCache.put(pos, node);
-		}
-		return node;
-	}
-
-
 
 
 	public boolean open;

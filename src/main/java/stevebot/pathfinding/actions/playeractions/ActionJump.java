@@ -4,11 +4,12 @@ import net.minecraft.util.math.BlockPos;
 import stevebot.Direction;
 import stevebot.Stevebot;
 import stevebot.pathfinding.BlockUtils;
-import stevebot.pathfinding.nodes.Node;
-import stevebot.pathfinding.execution.PathExecutor;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
+import stevebot.pathfinding.execution.PathExecutor;
+import stevebot.pathfinding.nodes.Node;
+import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerController;
 
 public class ActionJump extends StatefulAction {
@@ -118,7 +119,7 @@ public class ActionJump extends StatefulAction {
 				return Result.invalid();
 			}
 
-			return Result.valid(Node.get(to), ActionCosts.COST_WALK_JUMP);
+			return Result.valid(NodeCache.get(to), ActionCosts.COST_WALK_JUMP);
 		}
 
 
@@ -154,7 +155,7 @@ public class ActionJump extends StatefulAction {
 				return Result.invalid();
 			}
 
-			return Result.valid(Node.get(to), ActionCosts.COST_WALK_JUMP * ActionCosts.COST_MULT_DIAGONAL);
+			return Result.valid(NodeCache.get(to), ActionCosts.COST_WALK_JUMP * ActionCosts.COST_MULT_DIAGONAL);
 		}
 
 

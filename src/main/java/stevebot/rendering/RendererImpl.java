@@ -16,7 +16,7 @@ import stevebot.Stevebot;
 import stevebot.data.blocks.ChunkCache;
 import stevebot.events.GameRenderListener;
 import stevebot.events.ModEventHandler;
-import stevebot.pathfinding.nodes.Node;
+import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.pathfinding.nodes.NodeRenderable;
 
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class RendererImpl implements Renderer {
 
 
 		addRenderable(Stevebot.get().getBlockProvider().getBlockCache().getChunkCache().getChunkCacheRenderable());
-		addRenderable(new NodeRenderable(Node.nodeCache));
+		addRenderable(new NodeRenderable(NodeCache.getNodes()));
 	}
 
 
