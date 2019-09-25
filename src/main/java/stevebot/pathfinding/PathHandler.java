@@ -4,6 +4,7 @@ import net.minecraft.util.math.BlockPos;
 import stevebot.Stevebot;
 import stevebot.pathfinding.execution.PathExecutor;
 import stevebot.pathfinding.goal.Goal;
+import stevebot.player.Camera;
 
 public class PathHandler {
 
@@ -24,6 +25,9 @@ public class PathHandler {
 			excecutor.start();
 			if (startFollowing) {
 				excecutor.startFollowing();
+				if (enableFreelook) {
+					Stevebot.get().getPlayerController().camera().setState(Camera.CameraState.FREELOOK);
+				}
 			}
 		} else {
 			Stevebot.get().log("Can not start new path. Another path is already in progress.");
