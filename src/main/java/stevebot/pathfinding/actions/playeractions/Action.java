@@ -1,7 +1,7 @@
 package stevebot.pathfinding.actions.playeractions;
 
 import stevebot.pathfinding.nodes.Node;
-import stevebot.pathfinding.PathExecutor;
+import stevebot.pathfinding.execution.PathExecutor;
 
 public abstract class Action {
 

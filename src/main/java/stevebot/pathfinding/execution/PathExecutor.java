@@ -1,11 +1,10 @@
-package stevebot.pathfinding;
+package stevebot.pathfinding.execution;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.Stevebot;
 import stevebot.events.GameTickListener;
 import stevebot.pathfinding.goal.Goal;
-import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.Path;
 import stevebot.pathfinding.path.PathFactory;
@@ -23,10 +22,8 @@ public abstract class PathExecutor implements GameTickListener {
 
 
 	private PathFactory pathFactory;
-	private PathExecutionStateMachine stateMachine;
-
-	private int currentIndexFrom = 0;
-	private Node currentNodeTo;
+	private PathExecutionStateMachine stateMachine = new PathExecutionStateMachine();
+	private PathCrawler crawler = new PathCrawler();
 
 	private boolean isExecuting = false;
 	private boolean follow = false;
@@ -45,7 +42,6 @@ public abstract class PathExecutor implements GameTickListener {
 
 	public void start() {
 		Stevebot.get().log("Starting Path from " + pathFactory.getPosStart().getX() + " " + pathFactory.getPosStart().getY() + " " + pathFactory.getPosStart().getZ() + " to " + pathFactory.getGoal().goalString());
-		stateMachine = new PathExecutionStateMachine(PathExecutionStateMachine.ExecutionState.PREPARE_EXECUTION);
 		isExecuting = true;
 	}
 
@@ -100,11 +96,12 @@ public abstract class PathExecutor implements GameTickListener {
 					if (pathFactory.getCurrentPath() instanceof EmptyPath || pathFactory.getCurrentPath().getNodes().size() <= 1) {
 						stateMachine.fireTransition(PathExecutionStateMachine.ExecutionTransition.REACHED_END_OF_PATH);
 					} else {
-						currentIndexFrom = 0;
-						currentNodeTo = pathFactory.getCurrentPath().getNodes().get(currentIndexFrom + 1);
+						crawler.startPath(pathFactory.getCurrentPath());
 						stateMachine.fireTransition(PathExecutionStateMachine.ExecutionTransition.SEGMENT_CALCULATED);
 					}
 					onClientTick(event);
+				} else {
+					Stevebot.get().getPlayerController().input().stopAll();
 				}
 				break;
 			}
@@ -151,7 +148,7 @@ public abstract class PathExecutor implements GameTickListener {
 
 		Stevebot.get().getPlayerController().input().stopAll();
 
-		StateFollow actionState = currentNodeTo.action.tick(fistTick);
+		StateFollow actionState = crawler.getCurrentNodeTo().action.tick(fistTick);
 		fistTick = false;
 
 		if (actionState == StateFollow.FAILED) {
@@ -160,29 +157,13 @@ public abstract class PathExecutor implements GameTickListener {
 
 		if (actionState == StateFollow.DONE) {
 			fistTick = true;
-			boolean hasNext = nextAction();
+			boolean hasNext = crawler.nextAction();
 			if (!hasNext) {
 				return StateFollow.DONE;
 			}
 		}
 
 		return StateFollow.EXEC;
-
-	}
-
-
-
-
-	private boolean nextAction() {
-		currentIndexFrom++;
-		if (currentIndexFrom == pathFactory.getCurrentPath().getNodes().size() - 1) { // next is last node
-			currentNodeTo = null;
-			return false;
-		} else {
-			currentNodeTo = pathFactory.getCurrentPath().getNodes().get(currentIndexFrom + 1);
-			currentNodeTo.action.resetAction();
-			return true;
-		}
 	}
 
 

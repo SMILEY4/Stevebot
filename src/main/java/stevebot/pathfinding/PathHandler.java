@@ -2,6 +2,7 @@ package stevebot.pathfinding;
 
 import net.minecraft.util.math.BlockPos;
 import stevebot.Stevebot;
+import stevebot.pathfinding.execution.PathExecutor;
 import stevebot.pathfinding.goal.Goal;
 
 public class PathHandler {

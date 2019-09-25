@@ -1,4 +1,4 @@
-package stevebot.pathfinding;
+package stevebot.pathfinding.execution;
 
 import stevebot.StateMachine;
 
@@ -30,7 +30,7 @@ public class PathExecutionStateMachine extends StateMachine<PathExecutionStateMa
 
 
 
-	public PathExecutionStateMachine(ExecutionState startState) {
+	public PathExecutionStateMachine() {
 		defineTransition(ExecutionState.PREPARE_EXECUTION, ExecutionTransition.START, ExecutionState.WAITING_TO_START);
 		defineTransition(ExecutionState.WAITING_TO_START, ExecutionTransition.START_FOLLOW, ExecutionState.WAITING_FOR_SEGMENT);
 		defineTransition(ExecutionState.WAITING_FOR_SEGMENT, ExecutionTransition.SEGMENT_CALCULATED, ExecutionState.FOLLOWING);
@@ -38,7 +38,7 @@ public class PathExecutionStateMachine extends StateMachine<PathExecutionStateMa
 		defineTransition(ExecutionState.FOLLOWING, ExecutionTransition.REACHED_END_OF_SEGMENT, ExecutionState.WAITING_FOR_SEGMENT);
 		defineTransition(ExecutionState.FOLLOWING, ExecutionTransition.REACHED_END_OF_PATH, ExecutionState.DONE);
 		defineErrorState(ExecutionState.ERROR);
-		setState(startState);
+		setState(ExecutionState.PREPARE_EXECUTION);
 	}
 
 

@@ -28,7 +28,6 @@ public class StateMachine<S extends Enum, T extends Enum> {
 
 
 	public void fireTransition(T transition) {
-		System.out.println("TRANSITION: " + transition);
 		for (TransitionDefinition definition : definitions) {
 			if (definition.transition == transition && definition.start == getState()) {
 				setState(definition.target);
@@ -78,6 +77,7 @@ public class StateMachine<S extends Enum, T extends Enum> {
 
 
 	}
+
 
 }
 
