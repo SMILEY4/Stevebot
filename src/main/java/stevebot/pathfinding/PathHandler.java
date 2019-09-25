@@ -21,21 +21,24 @@ public class PathHandler {
 				}
 			};
 			excecutor.start();
+			if(startFollowing) {
+				excecutor.startFollowing();
+			}
 		} else {
 			Stevebot.get().log("Can not start new path. Another path is already in progress.");
 		}
 	}
 
 
-//
-//
-//	public void startFollowing() {
-//		if (excecutor != null) {
-//			excecutor.startFollowing();
-//		}
-//	}
-//
-//
+
+
+	public void startFollowing() {
+		if (excecutor != null) {
+			excecutor.startFollowing();
+		}
+	}
+
+
 //
 //
 //	public void stopFollowing() {

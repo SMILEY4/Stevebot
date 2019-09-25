@@ -116,7 +116,7 @@ public class Commands {
 	private static void onPathTo(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
 		final BlockPos from = Stevebot.get().getPlayerController().utils().getPlayerBlockPos();
 		final BlockPos to = (BlockPos) args.get("to").getValue();
-		final boolean follow = (Boolean) args.getOrDefault("follow", new CommandArgument<>(false)).getValue();
+		final boolean follow = (Boolean) args.getOrDefault("follow", new CommandArgument<>(true)).getValue();
 		final boolean freelook = (Boolean) args.getOrDefault("freelook", new CommandArgument<>(false)).getValue();
 
 		if (Stevebot.get().getPlayerController().getPlayer() != null) {
@@ -129,7 +129,7 @@ public class Commands {
 
 	private static void onPathDir(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
 		final int distance = (Integer) args.get("distance").getValue();
-		final boolean follow = (Boolean) args.getOrDefault("follow", new CommandArgument<>(false)).getValue();
+		final boolean follow = (Boolean) args.getOrDefault("follow", new CommandArgument<>(true)).getValue();
 		final boolean freelook = (Boolean) args.getOrDefault("freelook", new CommandArgument<>(false)).getValue();
 
 		if (Stevebot.get().getPlayerController().getPlayer() != null) {
@@ -147,9 +147,9 @@ public class Commands {
 		final String state = (String) args.get("state").getValue();
 		if (Stevebot.get().getPlayerController().getPlayer() != null) {
 			if ("start".equalsIgnoreCase(state)) {
-//				Stevebot.get().getPathHandler().startFollowing();
+				Stevebot.get().getPathHandler().startFollowing();
 			} else if ("stop".equalsIgnoreCase(state)) {
-//				Stevebot.get().getPathHandler().stopFollowing();
+//				Stevebot.get().getPathHandler().stopFollowing(); // TODO
 			} else {
 				Stevebot.get().getPlayerController().utils().sendMessage("Unknown state: " + state + ". Must be 'start' or 'stop'.");
 			}

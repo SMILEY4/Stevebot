@@ -6,6 +6,8 @@ import stevebot.Stevebot;
 import stevebot.events.GameTickListener;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.nodes.Node;
+import stevebot.pathfinding.path.EmptyPath;
+import stevebot.pathfinding.path.Path;
 import stevebot.pathfinding.path.PathFactory;
 
 public abstract class PathExecutor implements GameTickListener {
@@ -27,6 +29,7 @@ public abstract class PathExecutor implements GameTickListener {
 	private Node currentNodeTo;
 
 	private boolean isExecuting = false;
+	private boolean follow = false;
 	private boolean fistTick = true;
 
 
@@ -58,6 +61,13 @@ public abstract class PathExecutor implements GameTickListener {
 
 
 
+	public void startFollowing() {
+		follow = true;
+	}
+
+
+
+
 	public abstract void onFinished();
 
 
@@ -77,11 +87,23 @@ public abstract class PathExecutor implements GameTickListener {
 				break;
 			}
 
+			case WAITING_TO_START: {
+				if (follow) {
+					stateMachine.fireTransition(PathExecutionStateMachine.ExecutionTransition.START_FOLLOW);
+					onClientTick(event);
+				}
+				break;
+			}
+
 			case WAITING_FOR_SEGMENT: {
 				if (pathFactory.hasPath()) {
-					currentIndexFrom = 0;
-					currentNodeTo = pathFactory.getCurrentPath().getNodes().get(currentIndexFrom + 1);
-					stateMachine.fireTransition(PathExecutionStateMachine.ExecutionTransition.SEGMENT_CALCULATED);
+					if (pathFactory.getCurrentPath() instanceof EmptyPath || pathFactory.getCurrentPath().getNodes().size() <= 1) {
+						stateMachine.fireTransition(PathExecutionStateMachine.ExecutionTransition.REACHED_END_OF_PATH);
+					} else {
+						currentIndexFrom = 0;
+						currentNodeTo = pathFactory.getCurrentPath().getNodes().get(currentIndexFrom + 1);
+						stateMachine.fireTransition(PathExecutionStateMachine.ExecutionTransition.SEGMENT_CALCULATED);
+					}
 					onClientTick(event);
 				}
 				break;
@@ -94,8 +116,15 @@ public abstract class PathExecutor implements GameTickListener {
 					onClientTick(event);
 				}
 				if (state == StateFollow.DONE) {
-					pathFactory.removeCurrentPath();
-					stateMachine.fireTransition(PathExecutionStateMachine.ExecutionTransition.REACHED_END_OF_PATH);
+					Path path = pathFactory.getCurrentPath();
+					if (path.reachedGoal() || path instanceof EmptyPath) {
+						pathFactory.removeCurrentPath();
+						stateMachine.fireTransition(PathExecutionStateMachine.ExecutionTransition.REACHED_END_OF_PATH);
+					} else {
+						pathFactory.prepareNextPath();
+						pathFactory.removeCurrentPath();
+						stateMachine.fireTransition(PathExecutionStateMachine.ExecutionTransition.REACHED_END_OF_SEGMENT);
+					}
 					onClientTick(event);
 				}
 				break;
