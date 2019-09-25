@@ -149,7 +149,7 @@ public class Commands {
 			if ("start".equalsIgnoreCase(state)) {
 				Stevebot.get().getPathHandler().startFollowing();
 			} else if ("stop".equalsIgnoreCase(state)) {
-//				Stevebot.get().getPathHandler().stopFollowing(); // TODO
+				Stevebot.get().getPathHandler().cancelPath();
 			} else {
 				Stevebot.get().getPlayerController().utils().sendMessage("Unknown state: " + state + ". Must be 'start' or 'stop'.");
 			}

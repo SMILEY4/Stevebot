@@ -22,7 +22,7 @@ public class PathHandler {
 				}
 			};
 			excecutor.start();
-			if(startFollowing) {
+			if (startFollowing) {
 				excecutor.startFollowing();
 			}
 		} else {
@@ -40,15 +40,13 @@ public class PathHandler {
 	}
 
 
-//
-//
-//	public void stopFollowing() {
-//		if (excecutor != null) {
-//			excecutor.stopFollowing();
-//			Stevebot.get().getEventHandler().removeListener(excecutor);
-//			excecutor = null;
-//		}
-//	}
+
+
+	public void cancelPath() {
+		if (excecutor != null) {
+			excecutor.stop();
+		}
+	}
 
 
 }

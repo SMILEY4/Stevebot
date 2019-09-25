@@ -1,7 +1,10 @@
 package stevebot.pathfinding.goal;
 
+import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.util.math.BlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
+import stevebot.rendering.Color;
+import stevebot.rendering.Renderable;
 
 public class ExactGoal extends Goal {
 
@@ -45,6 +48,20 @@ public class ExactGoal extends Goal {
 	@Override
 	public String goalString() {
 		return pos.getX() + " " + pos.getY() + " " + pos.getZ();
+	}
+
+
+
+
+	@Override
+	public Renderable createRenderable() {
+		final Vector3d posMin = new Vector3d(pos.getX(), pos.getY(), pos.getZ());
+		final Vector3d posMax = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(1, 2, 1);
+		return renderer -> {
+			renderer.beginBoxes(3);
+			renderer.drawBoxOpen(posMin, posMax, Color.GREEN);
+			renderer.end();
+		};
 	}
 
 }

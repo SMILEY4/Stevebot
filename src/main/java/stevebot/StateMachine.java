@@ -9,6 +9,21 @@ public class StateMachine<S extends Enum, T extends Enum> {
 	private S errorState = null;
 	private S current;
 	private List<TransitionDefinition> definitions = new ArrayList<>();
+	private List<StateMachineListener<S, T>> listeners = new ArrayList<>();
+
+
+
+
+	public void addListener(StateMachineListener<S, T> listener) {
+		this.listeners.add(listener);
+	}
+
+
+
+
+	public void removeListener(StateMachineListener<S, T> listener) {
+		this.listeners.remove(listener);
+	}
 
 
 
@@ -31,6 +46,8 @@ public class StateMachine<S extends Enum, T extends Enum> {
 		for (TransitionDefinition definition : definitions) {
 			if (definition.transition == transition && definition.start == getState()) {
 				setState(definition.target);
+				listeners.forEach(listener -> listener.onTransition(definition.start, definition.target, transition));
+				return;
 			}
 		}
 	}

@@ -12,7 +12,6 @@ import stevebot.pathfinding.path.CompletedPath;
 import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.PartialPath;
 import stevebot.pathfinding.path.Path;
-import stevebot.rendering.Renderable;
 
 import java.util.*;
 
@@ -166,11 +165,6 @@ public class Pathfinding {
 
 
 
-	private Renderable lastPathRenderable = null;
-
-
-
-
 	private Path buildPath(Node start, Node end, boolean reachedGoal) {
 
 		List<Node> nodes = new ArrayList<>();
@@ -187,10 +181,6 @@ public class Pathfinding {
 		} else {
 			path = new PartialPath(end.gcost, nodes);
 		}
-
-//		Stevebot.get().getRenderer().removeRenderable(lastPathRenderable);
-		lastPathRenderable = Path.toRenderable(path);
-		Stevebot.get().getRenderer().addRenderable(lastPathRenderable);
 
 		return path;
 	}

@@ -56,15 +56,6 @@ public class PathFactory {
 
 
 
-	public boolean isCurrentLastSegment() {
-		synchronized (pathQueue) {
-			return pathQueue.size() == 1;
-		}
-	}
-
-
-
-
 	public Path getLastPath() {
 		synchronized (pathQueue) {
 			if (hasPath()) {
