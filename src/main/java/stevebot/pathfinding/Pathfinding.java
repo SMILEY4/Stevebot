@@ -5,6 +5,8 @@ import stevebot.Config;
 import stevebot.Stevebot;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionFactoryProvider;
+import stevebot.pathfinding.actions.playeractions.Action;
+import stevebot.pathfinding.actions.playeractions.BlockChange;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.nodes.BestNodesContainer;
 import stevebot.pathfinding.nodes.Node;
@@ -13,7 +15,6 @@ import stevebot.pathfinding.path.CompletedPath;
 import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.PartialPath;
 import stevebot.pathfinding.path.Path;
-import stevebot.rendering.Renderable;
 
 import java.util.*;
 
@@ -21,18 +22,6 @@ public class Pathfinding {
 
 
 	private static final ActionFactoryProvider actionFactoryProvider = new ActionFactoryProvider();
-
-
-	private Renderable pathRenderable;
-
-
-
-
-	private void updatePathRenderable(Path path) {
-		Stevebot.get().getRenderer().removeRenderable(pathRenderable);
-		pathRenderable = Path.toRenderable(path);
-		Stevebot.get().getRenderer().addRenderable(pathRenderable);
-	}
 
 
 
@@ -71,13 +60,6 @@ public class Pathfinding {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}
-
-			// TODO tmp: display path to best node
-			Node tmpBest = bestNodes.getBest();
-			if (tmpBest != null) {
-				Path path = buildPath(nodeStart, tmpBest, false);
-				updatePathRenderable(path);
 			}
 
 			// get next node
@@ -129,10 +111,11 @@ public class Pathfinding {
 						continue;
 					}
 					if (newCost < next.gcost || !openSet.contains(next)) {
+						Action action = factory.createAction(current);
 						next.gcost = newCost;
 						next.hcost = goal.calcHCost(next.pos);
 						next.prev = current;
-						next.action = factory.createAction(current);
+						next.action = action;
 						next.open = true;
 						openSet.add(next);
 						bestNodes.update(next, goal);
@@ -181,6 +164,20 @@ public class Pathfinding {
 		}
 		set.remove(bestNode);
 		return bestNode;
+	}
+
+
+
+
+	private List<BlockChange> collectBlockChanges(Node node) {
+		List<BlockChange> list = new ArrayList<>();
+		Node current = node;
+		while (current.prev != null) {
+			Action action = current.action;
+			list.addAll(Arrays.asList(action.getBlockChanges()));
+			current = current.prev;
+		}
+		return list;
 	}
 
 

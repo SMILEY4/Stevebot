@@ -49,6 +49,20 @@ public abstract class Action {
 
 
 
+	public boolean changedBlocks() {
+		return false;
+	}
+
+
+
+
+	public BlockChange[] getBlockChanges() {
+		return BlockChange.EMPTY;
+	}
+
+
+
+
 	public abstract PathExecutor.StateFollow tick(boolean fistTick);
 
 
