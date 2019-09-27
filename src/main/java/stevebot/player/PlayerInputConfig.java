@@ -54,6 +54,10 @@ class PlayerInputConfig {
 
 
 
+	/**
+	 * @param type the {@link InputType}
+	 * @return the {@link KeyBinding} of the given {@link InputType}
+	 */
 	KeyBinding getBinding(InputType type) {
 		return bindingMap.get(type);
 	}

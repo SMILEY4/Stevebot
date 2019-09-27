@@ -26,6 +26,9 @@ public class PlayerController {
 
 
 
+	/**
+	 * @return the object controlling the camera of the player.
+	 */
 	public Camera camera() {
 		return camera;
 	}
@@ -33,6 +36,9 @@ public class PlayerController {
 
 
 
+	/**
+	 * @return the object controlling the input of the player.
+	 */
 	public PlayerInput input() {
 		return input;
 	}
@@ -40,6 +46,9 @@ public class PlayerController {
 
 
 
+	/**
+	 * @return the object controlling the movement of the player.
+	 */
 	public Movement movement() {
 		return movement;
 	}
@@ -47,6 +56,9 @@ public class PlayerController {
 
 
 
+	/**
+	 * @return player-utilities
+	 */
 	public PlayerUtils utils() {
 		return utils;
 	}
@@ -54,6 +66,9 @@ public class PlayerController {
 
 
 
+	/**
+	 * @return the player entity.
+	 */
 	public EntityPlayerSP getPlayer() {
 		return Minecraft.getMinecraft().player;
 	}

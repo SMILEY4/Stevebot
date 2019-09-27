@@ -45,6 +45,9 @@ public class Camera implements GameTickListener {
 
 
 
+	/**
+	 * Setup for the {@code  CameraState.LOCKED} mode.
+	 */
 	private void setupLock() {
 		Minecraft.getMinecraft().mouseHelper = new MouseHelper() {
 			@Override
@@ -59,6 +62,11 @@ public class Camera implements GameTickListener {
 
 
 
+	/**
+	 * Sets the state of the player-camera
+	 *
+	 * @param state the new state of the camera
+	 */
 	public void setState(CameraState state) {
 		this.state = state;
 	}
@@ -66,6 +74,9 @@ public class Camera implements GameTickListener {
 
 
 
+	/**
+	 * @return the {@link CameraState} of the player-camera
+	 */
 	public CameraState getState() {
 		return state;
 	}
@@ -106,6 +117,9 @@ public class Camera implements GameTickListener {
 
 
 
+	/**
+	 * Starts the {@code CameraState.FREELOOK}-mode
+	 */
 	private void startFreelook() {
 		final EntityPlayerSP player = controller.getPlayer();
 		playerYaw = player.rotationYaw;
@@ -120,6 +134,23 @@ public class Camera implements GameTickListener {
 
 
 
+	/**
+	 * Stops the {@code CameraState.FREELOOK}-mode
+	 */
+	private void stopFreelook() {
+		cameraYaw = originalYaw;
+		cameraPitch = originalPitch;
+		playerYaw = originalYaw;
+		playerPitch = originalPitch;
+		isFreelook = false;
+	}
+
+
+
+
+	/**
+	 * Update the camera in the {@code CameraState.FREELOOK}-mode
+	 */
 	private void updateFreelook(TickEvent.Phase phase) {
 
 		final Entity player = Minecraft.getMinecraft().getRenderViewEntity();
@@ -154,6 +185,14 @@ public class Camera implements GameTickListener {
 
 
 
+	/**
+	 * Checks if the player is looking at the given position
+	 *
+	 * @param pos           the position
+	 * @param ignorePitch   set to true to ignore the pitch / up-down-axis
+	 * @param rangeAngleDeg the threshold of the angle in degrees
+	 * @return
+	 */
 	public boolean isLookingAt(BlockPos pos, boolean ignorePitch, double rangeAngleDeg) {
 
 		EntityPlayerSP player = controller.getPlayer();
@@ -184,17 +223,9 @@ public class Camera implements GameTickListener {
 
 
 
-	private void stopFreelook() {
-		cameraYaw = originalYaw;
-		cameraPitch = originalPitch;
-		playerYaw = originalYaw;
-		playerPitch = originalPitch;
-		isFreelook = false;
-	}
-
-
-
-
+	/**
+	 * @return the direction the player is looking as a {@link Vector3d}
+	 */
 	public Vector3d getLookDir() {
 		Vec3d v = getLookDirMC();
 		if (v != null) {
@@ -207,6 +238,9 @@ public class Camera implements GameTickListener {
 
 
 
+	/**
+	 * @return the direction the player is looking as a {@link Vec3d}
+	 */
 	private Vec3d getLookDirMC() {
 		EntityPlayerSP player = controller.getPlayer();
 		if (player != null) {
@@ -219,6 +253,11 @@ public class Camera implements GameTickListener {
 
 
 
+	/**
+	 * Sets the view-direction of the player.
+	 *
+	 * @param pos the position to look at
+	 */
 	public void setLookAt(BlockPos pos) {
 		setLookAt(pos, false);
 	}
@@ -226,6 +265,12 @@ public class Camera implements GameTickListener {
 
 
 
+	/**
+	 * Sets the view-direction of the player.
+	 *
+	 * @param pos       the position to look at
+	 * @param keepPitch set to true to keep the pitch of the current view-direction
+	 */
 	public void setLookAt(BlockPos pos, boolean keepPitch) {
 		EntityPlayerSP player = controller.getPlayer();
 		if (player != null && pos != null) {
@@ -242,6 +287,11 @@ public class Camera implements GameTickListener {
 
 
 
+	/**
+	 * Sets the view-direction of the player.
+	 *
+	 * @param dir the new view-direction
+	 */
 	public void setLook(Vector3d dir) {
 		double pitch = Math.asin(dir.y);
 		double yaw = Math.atan2(dir.z, dir.x);
@@ -254,6 +304,12 @@ public class Camera implements GameTickListener {
 
 
 
+	/**
+	 * Sets the view-direction of the player.
+	 *
+	 * @param pitch the new pitch
+	 * @param yaw   the new yaw
+	 */
 	public void setLook(double pitch, double yaw) {
 		EntityPlayerSP player = controller.getPlayer();
 		if (player != null) {
