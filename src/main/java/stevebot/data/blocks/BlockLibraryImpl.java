@@ -16,6 +16,7 @@ public class BlockLibraryImpl implements BlockLibrary {
 
 
 
+	@Override
 	public void initialize() {
 
 		List<BlockEntry> entryList = new ArrayList<>();
@@ -92,6 +93,9 @@ public class BlockLibraryImpl implements BlockLibrary {
 
 
 
+	/**
+	 * @return the BlockEntry at the given index or the {@code NULL_ENTRY}.
+	 */
 	private BlockEntry getEntryByIndex(int index) {
 		if (MathUtils.inRange(index, 0, entries.length)) {
 			return entries[index];
@@ -103,6 +107,9 @@ public class BlockLibraryImpl implements BlockLibrary {
 
 
 
+	/**
+	 * An entry for one block containing its id, name and object representation.
+	 */
 	static class BlockEntry {
 
 

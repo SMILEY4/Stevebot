@@ -13,6 +13,9 @@ public class BlockProviderImpl implements BlockProvider {
 
 
 
+	/**
+	 * @param library the {@link BlockLibrary} to be used by this provider.
+	 */
 	public BlockProviderImpl(BlockLibrary library) {
 		this.library = library;
 		this.cache = new BlockCache(library);

@@ -15,6 +15,9 @@ import java.util.Map;
 public class ChunkCache {
 
 
+	/**
+	 * The maximum number of chunks cached
+	 */
 	private final int MAX_CAPACITY = 9999;
 
 	private Map<ChunkPos, CachedChunk> chunks = new HashMap<>();
@@ -22,6 +25,12 @@ public class ChunkCache {
 
 
 
+	/**
+	 * @param blockX the x position of the block
+	 * @param blockY the y position of the block
+	 * @param blockZ the z position of the block
+	 * @return the position of the block inside / relative to the chunk,
+	 */
 	public ChunkPos getCachedChunkPos(int blockX, int blockY, int blockZ) {
 		return new ChunkPos(blockX >> 4, blockY >> 4, blockZ >> 4);
 	}
@@ -29,6 +38,12 @@ public class ChunkCache {
 
 
 
+	/**
+	 * @param blockX the x position of the block
+	 * @param blockY the y position of the block
+	 * @param blockZ the z position of the block
+	 * @return the {@link CachedChunk} containing this position. If the chunk is not yet cached, it will be put into the cache.
+	 */
 	public CachedChunk getCachedChunk(int blockX, int blockY, int blockZ) {
 		final ChunkPos chunkPos = getCachedChunkPos(blockX, blockY, blockZ);
 		return getCachedChunk(chunkPos);
@@ -37,6 +52,10 @@ public class ChunkCache {
 
 
 
+	/**
+	 * @param chunkPos the position of the chunk.
+	 * @return the chunk at the given position. If the chunk is not yet cached, it will be put into the cache.
+	 */
 	public CachedChunk getCachedChunk(ChunkPos chunkPos) {
 		CachedChunk chunk = chunks.get(chunkPos);
 		if (chunk == null) {
@@ -48,6 +67,12 @@ public class ChunkCache {
 
 
 
+	/**
+	 * Adds the chunk at the given position to the cache.
+	 *
+	 * @param chunkPos the position of the chunk
+	 * @return the {@link CachedChunk} that was saved
+	 */
 	private CachedChunk addChunk(ChunkPos chunkPos) {
 		if (chunks.size() >= MAX_CAPACITY) {
 			removeFurthestChunk(chunkPos);
@@ -65,12 +90,17 @@ public class ChunkCache {
 
 
 
-	private void removeFurthestChunk(ChunkPos lastRequestedPos) {
+	/**
+	 * Removes the cached chunk that is the furthest away from the given position
+	 *
+	 * @param refPos the position
+	 */
+	private void removeFurthestChunk(ChunkPos refPos) {
 		ChunkPos furthestChunkPos = null;
 		int maxDist = 0;
 
 		for (ChunkPos pos : chunks.keySet()) {
-			int dist2 = vecHelper.set(lastRequestedPos.x, lastRequestedPos.y, lastRequestedPos.z).dist2(pos.x, pos.y, pos.z);
+			int dist2 = vecHelper.set(refPos.x, refPos.y, refPos.z).dist2(pos.x, pos.y, pos.z);
 			if (maxDist < dist2) {
 				maxDist = dist2;
 				furthestChunkPos = pos;
@@ -86,6 +116,14 @@ public class ChunkCache {
 
 
 
+	/**
+	 * Removes the chunk containing the given block-position from the cache
+	 *
+	 * @param blockX the x position of the block
+	 * @param blockY the y position of the block
+	 * @param blockZ the z position of the block
+	 * @return the removed {@link CachedChunk}
+	 */
 	public CachedChunk deleteCachedChunk(int blockX, int blockY, int blockZ) {
 		final ChunkPos chunkPos = getCachedChunkPos(blockX, blockY, blockZ);
 		return deleteCachedChunk(chunkPos);
@@ -94,6 +132,13 @@ public class ChunkCache {
 
 
 
+	/**
+	 * Removes the chunk at the given position from the cache
+	 *
+	 * @param chunkPos the position of the chunk
+	 * @return the removed {@link CachedChunk}
+	 */
+
 	public CachedChunk deleteCachedChunk(ChunkPos chunkPos) {
 		return chunks.remove(chunkPos);
 	}
@@ -101,6 +146,9 @@ public class ChunkCache {
 
 
 
+	/**
+	 * @return a {@link Renderable} representing this {@link ChunkCache}.
+	 */
 	public Renderable getChunkCacheRenderable() {
 		return new ChunkCacheRenderable(chunks);
 	}
@@ -158,6 +206,9 @@ public class ChunkCache {
 
 
 
+	/**
+	 * Represents a 16x16x16 part of the world in the cache.
+	 */
 	static class CachedChunk {
 
 
@@ -167,6 +218,9 @@ public class ChunkCache {
 
 
 
+		/**
+		 * @param pos the chunk-position of this {@link CachedChunk}
+		 */
 		CachedChunk(ChunkPos pos) {
 			this.pos = pos;
 			this.blockIds = new int[16][16][16];
@@ -184,6 +238,12 @@ public class ChunkCache {
 
 
 
+		/**
+		 * @param i the x position of the block inside / relative to this chunk
+		 * @param j the y position of the block inside / relative to this chunk
+		 * @param k the z position of the block inside / relative to this chunk
+		 * @return the cached id of the block or {@code BlockLibrary.ID_INVALID_BLOCK}.
+		 */
 		public int getId(int i, int j, int k) {
 			if (MathUtils.inRange(i, 0, 16) && MathUtils.inRange(j, 0, 16) && MathUtils.inRange(k, 0, 16)) {
 				return getIdUnsafe(i, j, k);
@@ -195,6 +255,12 @@ public class ChunkCache {
 
 
 
+		/**
+		 * @param i the x position of the block inside / relative to this chunk
+		 * @param j the y position of the block inside / relative to this chunk
+		 * @param k the z position of the block inside / relative to this chunk
+		 * @return the cached id of the block or {@code BlockLibrary.ID_INVALID_BLOCK} without checking i, j and k.
+		 */
 		private int getIdUnsafe(int i, int j, int k) {
 			return blockIds[i][j][k];
 		}
@@ -202,6 +268,14 @@ public class ChunkCache {
 
 
 
+		/**
+		 * Sets the id of a block in this {@link CachedChunk}.
+		 *
+		 * @param i  the x position of the block inside / relative to this chunk
+		 * @param j  the y position of the block inside / relative to this chunk
+		 * @param k  the z position of the block inside / relative to this chunk
+		 * @param id the new id of the block
+		 */
 		public void setId(int i, int j, int k, int id) {
 			if (MathUtils.inRange(i, 0, 16) && MathUtils.inRange(j, 0, 16) && MathUtils.inRange(k, 0, 16)) {
 				setIdUnsafe(i, j, k, id);
@@ -211,6 +285,14 @@ public class ChunkCache {
 
 
 
+		/**
+		 * Sets the id of a block in this {@link CachedChunk} without checking i, j, and k.
+		 *
+		 * @param i  the x position of the block inside / relative to this chunk
+		 * @param j  the y position of the block inside / relative to this chunk
+		 * @param k  the z position of the block inside / relative to this chunk
+		 * @param id the new id of the block
+		 */
 		private void setIdUnsafe(int i, int j, int k, int id) {
 			blockIds[i][j][k] = id;
 		}
@@ -218,6 +300,10 @@ public class ChunkCache {
 
 
 
+		/**
+		 * @param globalBlockX the x position of the block in the world.
+		 * @return the x position of the block inside / relative to this chunk
+		 */
 		public int toLocalX(int globalBlockX) {
 			return globalBlockX & 15;
 		}
@@ -225,6 +311,10 @@ public class ChunkCache {
 
 
 
+		/**
+		 * @param globalBlockY the y position of the block in the world.
+		 * @return the y position of the block inside / relative to this chunk
+		 */
 		public int toLocalY(int globalBlockY) {
 			return globalBlockY & 15;
 		}
@@ -232,6 +322,10 @@ public class ChunkCache {
 
 
 
+		/**
+		 * @param globalBlockZ the z position of the block in the world.
+		 * @return the z position of the block inside / relative to this chunk
+		 */
 		public int toLocalZ(int globalBlockZ) {
 			return globalBlockZ & 15;
 		}
