@@ -25,6 +25,11 @@ public class ModEventHandler {
 
 
 
+	/**
+	 * Adds the given {@link EventListener}.
+	 *
+	 * @param listener the listener
+	 */
 	public void addListener(EventListener listener) {
 		if (listener instanceof GameInitListener) {
 			initListeners.add((GameInitListener) listener);
@@ -43,6 +48,11 @@ public class ModEventHandler {
 
 
 
+	/**
+	 * Removes the given {@link EventListener}.
+	 *
+	 * @param listener the listener
+	 */
 	public void removeListener(EventListener listener) {
 		if (listener instanceof GameInitListener) {
 			initListenersToRemove.add((GameInitListener) listener);
