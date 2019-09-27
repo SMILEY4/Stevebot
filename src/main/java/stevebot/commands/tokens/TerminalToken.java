@@ -10,6 +10,11 @@ public class TerminalToken implements CommandToken {
 
 
 
+	/**
+	 * Creates a new terminal token. This token can only be one fixed word in the command.
+	 *
+	 * @param terminalID the name of this terminal
+	 */
 	public TerminalToken(String terminalID) {
 		this.terminalID = terminalID;
 	}

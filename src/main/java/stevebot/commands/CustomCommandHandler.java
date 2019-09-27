@@ -15,6 +15,9 @@ public class CustomCommandHandler implements GameInitListener {
 
 
 
+	/**
+	 * @param eventHandler the {@link ModEventHandler}
+	 */
 	public CustomCommandHandler(ModEventHandler eventHandler) {
 		eventHandler.addListener(this);
 		Commands.create(this);
@@ -33,6 +36,9 @@ public class CustomCommandHandler implements GameInitListener {
 
 
 
+	/**
+	 * Register the given command. Commands have to be registered before the pre-init phase.
+	 */
 	void registerCommand(CustomCommand command) {
 		commandList.add(command);
 	}

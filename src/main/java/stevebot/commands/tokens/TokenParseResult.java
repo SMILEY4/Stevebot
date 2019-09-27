@@ -14,6 +14,11 @@ public class TokenParseResult {
 
 
 
+	/**
+	 * Creates a result without an {@link CommandArgument}
+	 *
+	 * @param success whether the result is success or failed.
+	 */
 	public TokenParseResult(boolean success) {
 		this.success = success;
 		this.argument = null;
@@ -22,6 +27,11 @@ public class TokenParseResult {
 
 
 
+	/**
+	 * Creates a success-result.
+	 *
+	 * @param argument the argument.
+	 */
 	public TokenParseResult(CommandArgument<?> argument) {
 		this.success = true;
 		this.argument = argument;

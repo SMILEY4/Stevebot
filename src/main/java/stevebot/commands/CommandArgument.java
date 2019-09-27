@@ -8,6 +8,11 @@ public class CommandArgument<T> {
 
 
 
+	/**
+	 * Create a new argument with the given value.
+	 *
+	 * @param value the value of this argument
+	 */
 	public CommandArgument(T value) {
 		this.value = value;
 	}
@@ -15,6 +20,9 @@ public class CommandArgument<T> {
 
 
 
+	/**
+	 * Create a new argument with the null as its value.
+	 */
 	public CommandArgument() {
 		this(null);
 	}
@@ -22,6 +30,9 @@ public class CommandArgument<T> {
 
 
 
+	/**
+	 * @return true, if the value of this argument is not null.
+	 */
 	public boolean existsValue() {
 		return value != null;
 	}
@@ -29,6 +40,9 @@ public class CommandArgument<T> {
 
 
 
+	/**
+	 * @return the value of this argument or null.
+	 */
 	public T getValue() {
 		return value;
 	}

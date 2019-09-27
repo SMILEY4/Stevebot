@@ -21,6 +21,12 @@ public class CustomCommand {
 
 
 
+	/**
+	 * @param name     the minecraft name of this command. This command will start with "/name ...".
+	 * @param usage    the usage string of this command.
+	 * @param tokens   the tokens that make up this command.
+	 * @param listener a command listener.
+	 */
 	public CustomCommand(String name, String usage, List<CommandToken> tokens, CustomCommandListener listener) {
 		this.name = name;
 		this.usage = usage;
@@ -31,6 +37,12 @@ public class CustomCommand {
 
 
 
+	/**
+	 * Execute this command.
+	 *
+	 * @param sender the sender of the command.
+	 * @param args   the command arguments
+	 */
 	public void execute(ICommandSender sender, String[] args) throws WrongUsageException {
 
 		Map<String, CommandArgument<?>> argsMap = new HashMap<>();
@@ -53,7 +65,12 @@ public class CustomCommand {
 
 
 
-	public String parse(ICommandSender sender, String[] args, Map<String, CommandArgument<?>> argsMap) {
+	/**
+	 * Parse the command arguments into the given argsMap
+	 *
+	 * @return the string "success" or "failed".
+	 */
+	private String parse(ICommandSender sender, String[] args, Map<String, CommandArgument<?>> argsMap) {
 
 		List<String> argsList = new ArrayList<>(Arrays.asList(args));
 
@@ -101,6 +118,9 @@ public class CustomCommand {
 
 
 
+	/**
+	 * @return the next n args from the given list, or null, if the list has less elements than n.
+	 */
 	private String[] nextArgs(List<String> argsList, int n) {
 		if (argsList.size() < n) {
 			return null;
@@ -119,6 +139,9 @@ public class CustomCommand {
 
 
 
+	/**
+	 * Remove the first n elements from the given list.
+	 */
 	private void consume(List<String> argsList, int n) {
 		if (argsList.size() >= n) {
 			for (int i = 0; i < n; i++) {
@@ -130,6 +153,9 @@ public class CustomCommand {
 
 
 
+	/**
+	 * @param commandBase the new {@link CommandBase} of this command.
+	 */
 	void setCommandBase(CommandBase commandBase) {
 		this.commandBase = commandBase;
 	}
@@ -137,6 +163,9 @@ public class CustomCommand {
 
 
 
+	/**
+	 * @return the {@link CommandBase} of this command.
+	 */
 	public CommandBase getCommandBase() {
 		return this.commandBase;
 	}

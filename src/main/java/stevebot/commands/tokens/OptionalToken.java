@@ -10,6 +10,11 @@ public class OptionalToken implements CommandToken {
 
 
 
+	/**
+	 * Wraps the given (non-optional) token making it optional.
+	 *
+	 * @param token the (non-optiona) token
+	 */
 	public OptionalToken(CommandToken token) {
 		if (token instanceof OptionalToken) {
 			throw new IllegalArgumentException("Token of an optional token can not be optional.");
@@ -56,6 +61,9 @@ public class OptionalToken implements CommandToken {
 
 
 
+	/**
+	 * @return the (non-optional) token
+	 */
 	public CommandToken getToken() {
 		return token;
 	}

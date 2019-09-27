@@ -16,6 +16,11 @@ public class MultiCommandToken implements CommandToken {
 
 
 
+	/**
+	 * Creates a multi-command-token. This token allows to have multiple (different) commands start with the same name
+	 *
+	 * @param id the id of this token. The id will not be shown in the command.
+	 */
 	public MultiCommandToken(String id) {
 		this.id = id;
 	}
@@ -23,6 +28,11 @@ public class MultiCommandToken implements CommandToken {
 
 
 
+	/**
+	 * Add the given {@link CustomCommand} to this command.
+	 *
+	 * @param command the command to add.
+	 */
 	public MultiCommandToken addCommand(CustomCommand command) {
 		this.commands.add(command);
 		return this;

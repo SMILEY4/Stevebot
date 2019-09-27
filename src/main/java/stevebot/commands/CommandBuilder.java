@@ -20,6 +20,9 @@ public class CommandBuilder {
 
 
 
+	/**
+	 * @param commandName the unique name of the minecraft command. The final command will start with "/commandName"
+	 */
 	public CommandBuilder(String commandName) {
 		this.commandName = commandName;
 	}
@@ -27,6 +30,12 @@ public class CommandBuilder {
 
 
 
+	/**
+	 * Add the given token to this command.
+	 *
+	 * @param token the token to add
+	 * @return this builder for chaining
+	 */
 	public CommandBuilder addToken(CommandToken token) {
 		tokens.add(token);
 		return this;
@@ -35,6 +44,12 @@ public class CommandBuilder {
 
 
 
+	/**
+	 * Add the given token as an option token to this command.
+	 *
+	 * @param token the optional token to add
+	 * @return this builder for chaining
+	 */
 	public CommandBuilder addOptional(CommandToken token) {
 		tokens.add(new OptionalToken(token));
 		return this;
@@ -43,6 +58,12 @@ public class CommandBuilder {
 
 
 
+	/**
+	 * Set the listener of the command to the given listener.
+	 *
+	 * @param listener the command listener
+	 * @return this builder for chaining
+	 */
 	public CommandBuilder setListener(CustomCommandListener listener) {
 		this.listener = listener;
 		return this;
@@ -51,6 +72,11 @@ public class CommandBuilder {
 
 
 
+	/**
+	 * Builds the final command.
+	 *
+	 * @return the finished command.
+	 */
 	public CustomCommand build() {
 		CustomCommand command = new CustomCommand(commandName, buildUsageString(), tokens, listener);
 		command.setCommandBase(buildCommandBase(command.name, command.usage, command));
@@ -60,6 +86,9 @@ public class CommandBuilder {
 
 
 
+	/**
+	 * @return the usage string
+	 */
 	private String buildUsageString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("/").append(commandName).append(" ");
@@ -75,6 +104,12 @@ public class CommandBuilder {
 
 
 
+	/**
+	 * @param name    the name of the command
+	 * @param usage   the usage string of the command
+	 * @param command the custom command
+	 * @return the {@link CommandBase}
+	 */
 	private CommandBase buildCommandBase(String name, String usage, CustomCommand command) {
 
 		return new CommandBase() {

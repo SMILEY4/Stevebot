@@ -18,6 +18,9 @@ import java.util.Map;
 public class Commands {
 
 
+	/**
+	 * Creates all commands and registers them in the given {@link CustomCommandHandler}.
+	 */
 	public static void create(CustomCommandHandler commandHandler) {
 
 

@@ -16,6 +16,10 @@ public abstract class ValueToken implements CommandToken {
 
 
 
+	/**
+	 * @param valueID the name of this value.
+	 * @param type    the datatype of this value-token. Valid types are: Integer, Float, Boolean, String, BlockPos.
+	 */
 	public ValueToken(String valueID, Class<?> type) {
 		this.type = type;
 		this.valueID = valueID;
@@ -24,6 +28,9 @@ public abstract class ValueToken implements CommandToken {
 
 
 
+	/**
+	 * @return the data-type of this token.
+	 */
 	public Class<?> getType() {
 		return type;
 	}
@@ -39,6 +46,9 @@ public abstract class ValueToken implements CommandToken {
 
 
 
+	/**
+	 * A value-token of the type Integer. Takes a single positive or negative number.
+	 */
 	public static class IntegerToken extends ValueToken {
 
 
@@ -82,6 +92,9 @@ public abstract class ValueToken implements CommandToken {
 
 
 
+	/**
+	 * A value-token of the type Float. Takes a positive or negative floating point value.
+	 */
 	public static class FloatToken extends ValueToken {
 
 
@@ -125,6 +138,9 @@ public abstract class ValueToken implements CommandToken {
 
 
 
+	/**
+	 * A value-token of the type Float. Takes a "true", "1", "false", or "0" as input.
+	 */
 	public static class BooleanToken extends ValueToken {
 
 
@@ -168,6 +184,9 @@ public abstract class ValueToken implements CommandToken {
 
 
 
+	/**
+	 * A value-token of the type String. Takes one (or more) word(s) as input.
+	 */
 	public static class TextToken extends ValueToken {
 
 
@@ -183,6 +202,9 @@ public abstract class ValueToken implements CommandToken {
 
 
 
+		/**
+		 * @param joinAll false to use only one word, true to use all remaining words for this value.
+		 */
 		public TextToken(String valueID, boolean joinAll) {
 			super(valueID, String.class);
 			this.joinAll = joinAll;
@@ -219,6 +241,9 @@ public abstract class ValueToken implements CommandToken {
 
 
 
+	/**
+	 * A value-token of the type String/Enum. Takes one of the predefined words as input.
+	 */
 	public static class EnumToken extends ValueToken {
 
 
@@ -227,6 +252,9 @@ public abstract class ValueToken implements CommandToken {
 
 
 
+		/**
+		 * @param values the valid values/words for this token.
+		 */
 		public EnumToken(String valueID, String... values) {
 			super(valueID, String.class);
 			this.values = values;
@@ -269,6 +297,9 @@ public abstract class ValueToken implements CommandToken {
 
 
 
+	/**
+	 * A value-token of the type BlockPos. Takes three coordinates as input. A coordinate can be positive or negative. The number can be replaced by a "~".
+	 */
 	public static class BlockPosToken extends ValueToken {
 
 
@@ -277,6 +308,9 @@ public abstract class ValueToken implements CommandToken {
 
 
 
+		/**
+		 * @param center whether or not the result should be the exact coordinate or the center of the block.
+		 */
 		public BlockPosToken(String valueID, boolean center) {
 			super(valueID, BlockPos.class);
 			this.center = center;
