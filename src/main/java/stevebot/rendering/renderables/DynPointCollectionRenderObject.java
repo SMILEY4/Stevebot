@@ -19,6 +19,9 @@ public class DynPointCollectionRenderObject implements Renderable {
 
 
 
+	/**
+	 * A new empty renderable collections of points
+	 */
 	public DynPointCollectionRenderObject() {
 		this(Renderable.DEFAULT_POINT_SIZE);
 	}
@@ -26,6 +29,11 @@ public class DynPointCollectionRenderObject implements Renderable {
 
 
 
+	/**
+	 * A new empty renderable collections of points
+	 *
+	 * @param size the size of this points in pixels
+	 */
 	public DynPointCollectionRenderObject(float size) {
 		this.size = size;
 	}
@@ -33,6 +41,12 @@ public class DynPointCollectionRenderObject implements Renderable {
 
 
 
+	/**
+	 * Adds a new point to this renderable
+	 *
+	 * @param pos   the position of the point. The point will be in the center of the block.
+	 * @param color the color of the point
+	 */
 	public void addPoint(BlockPos pos, Color color) {
 		this.addPoint(new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), color);
 	}
@@ -40,6 +54,12 @@ public class DynPointCollectionRenderObject implements Renderable {
 
 
 
+	/**
+	 * Adds a new point to this renderable
+	 *
+	 * @param pos   the position of the point
+	 * @param color the color of the point
+	 */
 	public void addPoint(Vector3d pos, Color color) {
 		this.positions.add(pos);
 		this.colors.add(color);
@@ -62,6 +82,9 @@ public class DynPointCollectionRenderObject implements Renderable {
 
 
 
+	/**
+	 * @return the position of the points
+	 */
 	public List<Vector3d> getPositions() {
 		return positions;
 	}
@@ -69,6 +92,9 @@ public class DynPointCollectionRenderObject implements Renderable {
 
 
 
+	/**
+	 * @return the color of the points
+	 */
 	public List<Color> getColors() {
 		return colors;
 	}
@@ -76,6 +102,9 @@ public class DynPointCollectionRenderObject implements Renderable {
 
 
 
+	/**
+	 * @return the size in pixels of the points
+	 */
 	public float getSize() {
 		return size;
 	}
@@ -83,6 +112,9 @@ public class DynPointCollectionRenderObject implements Renderable {
 
 
 
+	/**
+	 * @param size the new size in pixels of the points
+	 */
 	public void setSize(float size) {
 		this.size = size;
 	}

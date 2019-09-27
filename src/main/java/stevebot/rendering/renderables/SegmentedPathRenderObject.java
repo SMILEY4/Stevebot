@@ -16,6 +16,10 @@ public class SegmentedPathRenderObject implements Renderable {
 
 
 
+	/**
+	 * @param positions the position of the vertices of this path.
+	 * @param colors    the colors of the vertices of this path.
+	 */
 	public SegmentedPathRenderObject(BlockPos[] positions, Color[] colors) {
 		this(positions, DEFAULT_LINE_WIDTH, colors);
 	}
@@ -23,6 +27,11 @@ public class SegmentedPathRenderObject implements Renderable {
 
 
 
+	/**
+	 * @param positions the position of the vertices of this path.
+	 * @param width     the with of the path in pixels
+	 * @param colors    the colors of the vertices of this path.
+	 */
 	public SegmentedPathRenderObject(BlockPos[] positions, float width, Color[] colors) {
 		this(Renderable.toVecArray(positions), width, colors);
 	}
@@ -30,15 +39,24 @@ public class SegmentedPathRenderObject implements Renderable {
 
 
 
-	public SegmentedPathRenderObject(Vector3d[] position, Color[] colors) {
-		this(position, DEFAULT_LINE_WIDTH, colors);
+	/**
+	 * @param positions the position of the vertices of this path.
+	 * @param colors    the colors of the vertices of this path.
+	 */
+	public SegmentedPathRenderObject(Vector3d[] positions, Color[] colors) {
+		this(positions, DEFAULT_LINE_WIDTH, colors);
 	}
 
 
 
 
-	public SegmentedPathRenderObject(Vector3d[] position, float width, Color[] colors) {
-		this.positions = position;
+	/**
+	 * @param positions the position of the vertices of this path.
+	 * @param width     the with of the path in pixels
+	 * @param colors    the colors of the vertices of this path.
+	 */
+	public SegmentedPathRenderObject(Vector3d[] positions, float width, Color[] colors) {
+		this.positions = positions;
 		this.width = width;
 		this.colors = colors;
 	}
@@ -61,6 +79,9 @@ public class SegmentedPathRenderObject implements Renderable {
 
 
 
+	/**
+	 * @return the position of the vertices of this path
+	 */
 	public Vector3d[] getPositions() {
 		return positions;
 	}
@@ -68,6 +89,9 @@ public class SegmentedPathRenderObject implements Renderable {
 
 
 
+	/**
+	 * @return the colors of the vertices of this path
+	 */
 	public Color[] getColors() {
 		return colors;
 	}
@@ -75,6 +99,9 @@ public class SegmentedPathRenderObject implements Renderable {
 
 
 
+	/**
+	 * @return the with in pixels of this path
+	 */
 	public float getWidth() {
 		return width;
 	}
@@ -82,6 +109,9 @@ public class SegmentedPathRenderObject implements Renderable {
 
 
 
+	/**
+	 * @@param width the new with in pixels of this path
+	 */
 	public void setWidth(float width) {
 		this.width = width;
 	}

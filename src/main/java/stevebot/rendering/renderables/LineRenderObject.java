@@ -16,6 +16,11 @@ public class LineRenderObject implements Renderable {
 
 
 
+	/**
+	 * @param start the start position of this line
+	 * @param end   the end position of this line
+	 * @param color the color of this line
+	 */
 	public LineRenderObject(BlockPos start, BlockPos end, Color color) {
 		this(start, end, DEFAULT_LINE_WIDTH, color);
 	}
@@ -23,6 +28,12 @@ public class LineRenderObject implements Renderable {
 
 
 
+	/**
+	 * @param start the start position of this line
+	 * @param end   the end position of this line
+	 * @param width the with of this line
+	 * @param color the color of this line
+	 */
 	public LineRenderObject(BlockPos start, BlockPos end, float width, Color color) {
 		this(
 				new Vector3d(start.getX() + 0.5, start.getY() + 0.5, start.getZ() + 0.5),
@@ -35,6 +46,11 @@ public class LineRenderObject implements Renderable {
 
 
 
+	/**
+	 * @param start the start position of this line
+	 * @param end   the end position of this line
+	 * @param color the color of this line
+	 */
 	public LineRenderObject(Vector3d start, Vector3d end, Color color) {
 		this(start, end, DEFAULT_LINE_WIDTH, color);
 	}
@@ -42,6 +58,12 @@ public class LineRenderObject implements Renderable {
 
 
 
+	/**
+	 * @param start the start position of this line
+	 * @param end   the end position of this line
+	 * @param width the with of this line
+	 * @param color the color of this line
+	 */
 	public LineRenderObject(Vector3d start, Vector3d end, float width, Color color) {
 		this.start = start;
 		this.end = end;
@@ -60,6 +82,9 @@ public class LineRenderObject implements Renderable {
 
 
 
+	/**
+	 * @return the start position of this line
+	 */
 	public Vector3d getStart() {
 		return start;
 	}
@@ -67,6 +92,9 @@ public class LineRenderObject implements Renderable {
 
 
 
+	/**
+	 * @return the end position of this line
+	 */
 	public Vector3d getEnd() {
 		return end;
 	}
@@ -74,6 +102,9 @@ public class LineRenderObject implements Renderable {
 
 
 
+	/**
+	 * @return the color of this line
+	 */
 	public Color getColor() {
 		return color;
 	}
@@ -81,6 +112,9 @@ public class LineRenderObject implements Renderable {
 
 
 
+	/**
+	 * @return the with in pixels of this line
+	 */
 	public float getWidth() {
 		return width;
 	}
@@ -88,6 +122,9 @@ public class LineRenderObject implements Renderable {
 
 
 
+	/**
+	 * @param width the new with in pixels of this line
+	 */
 	public void setWidth(float width) {
 		this.width = width;
 	}

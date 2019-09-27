@@ -69,6 +69,11 @@ public class RendererImpl implements Renderer {
 
 
 
+	/**
+	 * Prepare the opengl state for drawing shapes.
+	 *
+	 * @param playerPos the current position of the player/camera
+	 */
 	private void setup(Vec3d playerPos) {
 		GlStateManager.pushMatrix();
 		GlStateManager.disableTexture2D();
@@ -82,6 +87,9 @@ public class RendererImpl implements Renderer {
 
 
 
+	/**
+	 * Resets the opengl state to the default state.
+	 */
 	private void reset() {
 		GlStateManager.glLineWidth(1.0f);
 		GlStateManager.disableBlend();
@@ -94,6 +102,12 @@ public class RendererImpl implements Renderer {
 
 
 
+	/**
+	 * Adds a new vertex to the buffer.
+	 *
+	 * @param pos   the position of the vertex
+	 * @param color the color of the vertex
+	 */
 	private void addVertex(Vector3d pos, Color color) {
 		addVertex(pos.x, pos.y, pos.z, color.x, color.y, color.z, 1f);
 	}
@@ -101,6 +115,12 @@ public class RendererImpl implements Renderer {
 
 
 
+	/**
+	 * Adds a new vertex to the buffer.
+	 *
+	 * @param pos   the position of the vertex
+	 * @param color the color of the vertex
+	 */
 	private void addVertex(Vector3d pos, Color color, float alpha) {
 		addVertex(pos.x, pos.y, pos.z, color.x, color.y, color.z, alpha);
 
@@ -109,6 +129,12 @@ public class RendererImpl implements Renderer {
 
 
 
+	/**
+	 * @param x     the x-position of the vertex
+	 * @param y     the y-position of the vertex
+	 * @param z     the z-position of the vertex
+	 * @param color the color of the vertex
+	 */
 	private void addVertex(double x, double y, double z, Color color) {
 		addVertex(x, y, z, color.x, color.y, color.z, 1f);
 	}
@@ -116,6 +142,13 @@ public class RendererImpl implements Renderer {
 
 
 
+	/**
+	 * @param x     the x-position of the vertex
+	 * @param y     the y-position of the vertex
+	 * @param z     the z-position of the vertex
+	 * @param color the color of the vertex
+	 * @param alpha the alpha-component of the color of the vertex
+	 */
 	private void addVertex(double x, double y, double z, Color color, float alpha) {
 		addVertex(x, y, z, color.x, color.y, color.z, alpha);
 	}
@@ -123,6 +156,14 @@ public class RendererImpl implements Renderer {
 
 
 
+	/**
+	 * @param x     the x-position of the vertex
+	 * @param y     the y-position of the vertex
+	 * @param z     the z-position of the vertex
+	 * @param red   the red-component of the color of the vertex
+	 * @param green the green-component of the color of the vertex
+	 * @param blue  the blue-component of the color of the vertex
+	 */
 	private void addVertex(double x, double y, double z, float red, float green, float blue) {
 		addVertex(x, y, z, red, green, blue, 1f);
 	}
@@ -130,6 +171,15 @@ public class RendererImpl implements Renderer {
 
 
 
+	/**
+	 * @param x     the x-position of the vertex
+	 * @param y     the y-position of the vertex
+	 * @param z     the z-position of the vertex
+	 * @param red   the red-component of the color of the vertex
+	 * @param green the green-component of the color of the vertex
+	 * @param blue  the blue-component of the color of the vertex
+	 * @param alpha the alpha-component of the color of the vertex
+	 */
 	private void addVertex(double x, double y, double z, float red, float green, float blue, float alpha) {
 		BUFFER.pos(x, y, z).color(red, green, blue, alpha).endVertex();
 	}

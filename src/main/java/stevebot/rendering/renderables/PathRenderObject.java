@@ -16,6 +16,10 @@ public class PathRenderObject implements Renderable {
 
 
 
+	/**
+	 * @param positions the positions of the vertices of this path
+	 * @param color     the color of this path
+	 */
 	public PathRenderObject(BlockPos[] positions, Color color) {
 		this(positions, DEFAULT_LINE_WIDTH, color);
 	}
@@ -23,6 +27,11 @@ public class PathRenderObject implements Renderable {
 
 
 
+	/**
+	 * @param positions the positions of the vertices of this path
+	 * @param width     the with of this path in pixels
+	 * @param color     the color of this path
+	 */
 	public PathRenderObject(BlockPos[] positions, float width, Color color) {
 		this(Renderable.toVecArray(positions), width, color);
 	}
@@ -30,21 +39,27 @@ public class PathRenderObject implements Renderable {
 
 
 
-	public PathRenderObject(Vector3d[] position, Color color) {
-		this(position, DEFAULT_LINE_WIDTH, color);
+	/**
+	 * @param positions the positions of the vertices of this path
+	 * @param color     the color of this path
+	 */
+	public PathRenderObject(Vector3d[] positions, Color color) {
+		this(positions, DEFAULT_LINE_WIDTH, color);
 	}
 
 
 
 
-	public PathRenderObject(Vector3d[] position, float width, Color color) {
-		this.positions = position;
+	/**
+	 * @param positions the positions of the vertices of this path
+	 * @param width     the with of this path in pixels
+	 * @param color     the color of this path
+	 */
+	public PathRenderObject(Vector3d[] positions, float width, Color color) {
+		this.positions = positions;
 		this.width = width;
 		this.color = color;
 	}
-
-
-
 
 
 
@@ -63,6 +78,9 @@ public class PathRenderObject implements Renderable {
 
 
 
+	/**
+	 * @return the positions of the vertices of this path
+	 */
 	public Vector3d[] getPositions() {
 		return positions;
 	}
@@ -70,6 +88,9 @@ public class PathRenderObject implements Renderable {
 
 
 
+	/**
+	 * @return the colors of the vertices of this path
+	 */
 	public Color getColor() {
 		return color;
 	}
@@ -77,6 +98,9 @@ public class PathRenderObject implements Renderable {
 
 
 
+	/**
+	 * @return the with of this path in pixels
+	 */
 	public float getWidth() {
 		return width;
 	}
@@ -84,6 +108,9 @@ public class PathRenderObject implements Renderable {
 
 
 
+	/**
+	 * @return the new with of this path in pixels
+	 */
 	public void setWidth(float width) {
 		this.width = width;
 	}
