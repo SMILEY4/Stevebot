@@ -13,6 +13,11 @@ public abstract class Action {
 
 
 
+	/**
+	 * @param from the start node of this action
+	 * @param to   the destination node of this action
+	 * @param cost the cost to get from the start to the destination node with this action
+	 */
 	protected Action(Node from, Node to, double cost) {
 		this.from = from;
 		this.to = to;
@@ -22,6 +27,9 @@ public abstract class Action {
 
 
 
+	/**
+	 * @return the cost of this action
+	 */
 	public double getCost() {
 		return cost;
 	}
@@ -29,6 +37,9 @@ public abstract class Action {
 
 
 
+	/**
+	 * @return the starting node of this action
+	 */
 	public Node getFrom() {
 		return from;
 	}
@@ -36,6 +47,9 @@ public abstract class Action {
 
 
 
+	/**
+	 * @return the destination node of this action
+	 */
 	public Node getTo() {
 		return to;
 	}
@@ -43,6 +57,9 @@ public abstract class Action {
 
 
 
+	/**
+	 * Resets this action.
+	 */
 	public void resetAction() {
 	}
 
@@ -63,6 +80,12 @@ public abstract class Action {
 
 
 
+	/**
+	 * Updates this action.
+	 *
+	 * @param fistTick true on the first update of this action
+	 * @return the resulting {@link PathExecutor.StateFollow} of the update
+	 */
 	public abstract PathExecutor.StateFollow tick(boolean fistTick);
 
 

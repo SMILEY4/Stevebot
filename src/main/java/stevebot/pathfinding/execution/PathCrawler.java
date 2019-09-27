@@ -13,6 +13,11 @@ public class PathCrawler {
 
 
 
+	/**
+	 * Starts the given path(-segment)
+	 *
+	 * @param path the path(-segment)
+	 */
 	public void startPath(Path path) {
 		this.path = path;
 		currentIndexFrom = 0;
@@ -22,6 +27,11 @@ public class PathCrawler {
 
 
 
+	/**
+	 * Steps to the next action in the current path(-segment)
+	 *
+	 * @return false, if the action is the last action in the current path(-segment)
+	 */
 	public boolean nextAction() {
 		currentIndexFrom++;
 		if (currentIndexFrom == path.getNodes().size() - 1) { // next is last node
@@ -37,6 +47,9 @@ public class PathCrawler {
 
 
 
+	/**
+	 * @return the starting node of the current action
+	 */
 	public Node getCurrentNodeFrom() {
 		return path.getNodes().get(currentIndexFrom);
 	}
@@ -44,6 +57,9 @@ public class PathCrawler {
 
 
 
+	/**
+	 * @return the destination node of the current action
+	 */
 	public Node getCurrentNodeTo() {
 		return currentNodeTo;
 	}

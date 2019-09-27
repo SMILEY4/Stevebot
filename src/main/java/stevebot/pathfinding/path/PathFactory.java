@@ -26,6 +26,10 @@ public class PathFactory {
 
 
 
+	/**
+	 * @param posStart the start position of the path
+	 * @param goal     the goal of the path
+	 */
 	public PathFactory(BlockPos posStart, Goal goal) {
 		this.posStart = posStart;
 		this.goal = goal;
@@ -34,6 +38,9 @@ public class PathFactory {
 
 
 
+	/**
+	 * @return true, if a path(-segment) is ready.
+	 */
 	public boolean hasPath() {
 		synchronized (pathQueue) {
 			return !pathQueue.isEmpty();
@@ -43,6 +50,9 @@ public class PathFactory {
 
 
 
+	/**
+	 * @return the current/oldest path(-segment)
+	 */
 	public Path getCurrentPath() {
 		synchronized (pathQueue) {
 			if (hasPath()) {
@@ -56,6 +66,9 @@ public class PathFactory {
 
 
 
+	/**
+	 * @return the last/newest calculated path(-segment)
+	 */
 	public Path getLastPath() {
 		synchronized (pathQueue) {
 			if (hasPath()) {
@@ -69,16 +82,20 @@ public class PathFactory {
 
 
 
-	public boolean prepareNextPath() {
+	/**
+	 * Start calculating the next path-segment
+	 *
+	 * @return
+	 */
+	public void prepareNextPath() {
 		if (preparingPath) {
-			return false;
+			return;
 		}
 		preparingPath = true;
 		Stevebot.get().getLogger().info("Preparing path segment");
 		if (hasPath()) {
 			if (getCurrentPath().reachedGoal()) {
 				preparingPath = false;
-				return true;
 			} else {
 				final Path prevPath = getLastPath();
 				executorService.submit(() -> {
@@ -88,7 +105,6 @@ public class PathFactory {
 						preparingPath = false;
 					}
 				});
-				return false;
 			}
 
 		} else {
@@ -101,13 +117,15 @@ public class PathFactory {
 					}
 				}
 			});
-			return false;
 		}
 	}
 
 
 
 
+	/**
+	 * Removes the current/oldest path
+	 */
 	public void removeCurrentPath() {
 		if (hasPath()) {
 			synchronized (pathQueue) {
@@ -119,6 +137,9 @@ public class PathFactory {
 
 
 
+	/**
+	 * @return the starting position of the complete path
+	 */
 	public BlockPos getPosStart() {
 		return posStart;
 	}
@@ -126,6 +147,9 @@ public class PathFactory {
 
 
 
+	/**
+	 * @return the goal of the complete path
+	 */
 	public Goal getGoal() {
 		return goal;
 	}

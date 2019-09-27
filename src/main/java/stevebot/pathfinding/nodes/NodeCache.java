@@ -13,6 +13,9 @@ public class NodeCache {
 
 
 
+	/**
+	 * @return the map with all cached nodes
+	 */
 	public static Map<BlockPos, Node> getNodes() {
 		return nodes;
 	}
@@ -20,6 +23,9 @@ public class NodeCache {
 
 
 
+	/**
+	 * Clears this node cache
+	 */
 	public static void clear() {
 		nodes.clear();
 	}
@@ -27,6 +33,12 @@ public class NodeCache {
 
 
 
+	/**
+	 * Returns the node at the given position. If the node is not yet cached it will be saved in the cache.
+	 *
+	 * @param pos the position of the node
+	 * @return the node at the given position.
+	 */
 	public static Node get(BlockPos pos) {
 		Node n = nodes.get(pos);
 		if (n == null) {
@@ -39,6 +51,13 @@ public class NodeCache {
 
 
 
+	/**
+	 * Creates a new node
+	 *
+	 * @param pos  the position of the node
+	 * @param prev the previous node
+	 * @return the created node
+	 */
 	private static Node create(BlockPos pos, Node prev) {
 		return create(pos, prev, 1000000);
 	}
@@ -46,6 +65,14 @@ public class NodeCache {
 
 
 
+	/**
+	 * Creates a new node
+	 *
+	 * @param pos  the position of the node
+	 * @param prev the previous node
+	 * @param cost the (g-)cost of the node
+	 * @return the created node
+	 */
 	private static Node create(BlockPos pos, Node prev, double cost) {
 		Node node = nodes.get(pos);
 		if (node == null) {

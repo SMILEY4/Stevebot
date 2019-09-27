@@ -3,6 +3,9 @@ package stevebot.pathfinding.nodes;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.goal.Goal;
 
+/**
+ * A container holding the estimated best nodes to the goal. If the path could not reach the goal, the best node from this container is the next best option.
+ */
 public class BestNodesContainer {
 
 
@@ -40,20 +43,13 @@ public class BestNodesContainer {
 
 
 
-//	public boolean update(Node node) {
-//		for (int i = 0; i < capacity; i++) {
-//			final double costNode = node.fcost() / modifiers[i];
-//			final double costBest = costs[i];
-//			if (costNode < costBest) {
-//				costs[i] = costNode;
-//				nodes[i] = node;
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-
-
+	/**
+	 * Updates the given node in the set. If the node is not yet in this collection it wll be added. Required when the cost of a node changes.
+	 *
+	 * @param node the node
+	 * @param goal the goal of the path
+	 * @return true, if it was added to the best nodes
+	 */
 	public boolean update(Node node, Goal goal) {
 		for (int i = 0; i < capacity; i++) {
 			final double costNode = node.fcost() * goal.calcHCost(node.pos);
@@ -68,6 +64,11 @@ public class BestNodesContainer {
 	}
 
 
+
+
+	/**
+	 * @return the estimated best node to the goal
+	 */
 	public Node getBest() {
 		for (int i = 0; i < capacity; i++) {
 			Node node = nodes[i];

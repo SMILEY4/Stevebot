@@ -4,6 +4,9 @@ import stevebot.pathfinding.nodes.Node;
 
 import java.util.List;
 
+/**
+ * A path that successfully reached the goal
+ */
 public class CompletedPath implements Path {
 
 

@@ -19,6 +19,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param pos the position of the block
+	 * @return whether the position is currently in a loaded chunk.
+	 */
 	public static boolean isLoaded(BlockPos pos) {
 		return Stevebot.get().getBlockProvider().isLoaded(pos);
 	}
@@ -26,6 +30,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param block the block
+	 * @return whether the given block is water (flowing or still)
+	 */
 	public static boolean isWater(Block block) {
 		return WATER_FLOWING.equals(block) || WATER_STILL.equals(block);
 	}
@@ -33,6 +41,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param pos the position
+	 * @return whether the block at the given position is water (flowing or still)
+	 */
 	public static boolean isWater(BlockPos pos) {
 		return isWater(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
@@ -40,6 +52,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param block the block
+	 * @return whether the given block is lava (flowing or still)
+	 */
 	public static boolean isLava(Block block) {
 		return LAVAL_FLOWING.equals(block) || LAVA_STILL.equals(block);
 	}
@@ -47,6 +63,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param pos the position
+	 * @return whether the block at the given position is lava (flowing or still)
+	 */
 	public static boolean isLava(BlockPos pos) {
 		return isLava(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
@@ -54,6 +74,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param block the block
+	 * @return whether the given block is flowing water or lava.
+	 */
 	public static boolean isFlowingLiquid(Block block) {
 		return WATER_FLOWING.equals(block) || LAVAL_FLOWING.equals(block);
 	}
@@ -61,6 +85,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param pos the position
+	 * @return whether the block at the given position is flowing water or lava.
+	 */
 	public static boolean isFlowingLiquid(BlockPos pos) {
 		return isFlowingLiquid(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
@@ -68,6 +96,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param block the block
+	 * @return whether the given block is water or lava (flowing or still)
+	 */
 	public static boolean isLiquid(Block block) {
 		return isLava(block) || isWater(block);
 	}
@@ -75,6 +107,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param pos the position
+	 * @return whether the block at the given position is water or lava (flowing or still)
+	 */
 	public static boolean isLiquid(BlockPos pos) {
 		return isLiquid(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
@@ -82,6 +118,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param block the block
+	 * @return whether the given block can be dangerous to the player and should be avoided.
+	 */
 	public static boolean isDangerous(Block block) {
 		return isLava(block) || block == Blocks.FIRE || block == Blocks.CACTUS || block == Blocks.WEB;
 	}
@@ -89,6 +129,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param pos the position
+	 * @return whether the block given position can be dangerous to the player and should be avoided.
+	 */
 	public static boolean isDangerous(BlockPos pos) {
 		return isDangerous(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
@@ -96,6 +140,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param pos the position
+	 * @return whether the player can walk through the block at the given position. This does not check the surrounding blocks.
+	 */
 	public static boolean canWalkThrough(BlockPos pos) {
 		final Block block = Stevebot.get().getBlockProvider().getBlockAt(pos);
 		if (isLiquid(block) || Blocks.WATERLILY.equals(block) || isDangerous(block)
@@ -109,6 +157,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param pos the position
+	 * @return whether the player can walk on the block at the given position. This does not check the surrounding blocks.
+	 */
 	public static boolean canWalkOn(BlockPos pos) {
 		final Block block = Stevebot.get().getBlockProvider().getBlockAt(pos);
 		if (isLiquid(block) || isDangerous(block)) {
@@ -121,6 +173,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param block the block
+	 * @return whether the player should avoid touching the given block
+	 */
 	public static boolean avoidTouching(Block block) {
 		return BlockUtils.isDangerous(block) || BlockUtils.isFlowingLiquid(block);
 	}
@@ -128,6 +184,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param pos the position
+	 * @return whether the player should avoid touching the block at the given position
+	 */
 	public static boolean avoidTouching(BlockPos pos) {
 		return avoidTouching(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
@@ -135,6 +195,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param pos the position
+	 * @return the distance of the nearest block-center to the given position on one axis
+	 */
 	public static double distToCenter(Vector3d pos) {
 		final BlockPos blockPos = toBlockPos(pos);
 		final double dx = Math.abs((blockPos.getX() + 0.5) - pos.x);
@@ -145,6 +209,11 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param pos       the position
+	 * @param direction the direction
+	 * @return the distance of the nearest block-edge in the given direction to the given position
+	 */
 	public static double distToEdge(Vector3d pos, Direction direction) {
 
 		final double edgeNorth = Math.floor(pos.z);
@@ -184,6 +253,10 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param pos the position as a {@link Vector3d}
+	 * @return the position as a {@link BlockPos}
+	 */
 	public static BlockPos toBlockPos(Vector3d pos) {
 		return toBlockPos(pos.x, pos.y, pos.z);
 	}
@@ -191,6 +264,12 @@ public class BlockUtils {
 
 
 
+	/**
+	 * @param x the x-position
+	 * @param y the x-position
+	 * @param z the x-position
+	 * @return the position as a {@link BlockPos}
+	 */
 	public static BlockPos toBlockPos(double x, double y, double z) {
 		final boolean isNegativeX = x < 0;
 		final boolean isNegativeY = y < 0;

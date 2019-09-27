@@ -5,6 +5,9 @@ import stevebot.pathfinding.nodes.Node;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A failed path (a path that does not contain any nodes).
+ */
 public class EmptyPath implements Path {
 
 

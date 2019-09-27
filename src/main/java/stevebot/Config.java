@@ -20,6 +20,9 @@ public class Config {
 
 
 
+	/**
+	 * @return the timeout for the pathfinding in seconds
+	 */
 	public static int getPathfindingTimeout() {
 		return pathfindingTimeoutSeconds;
 	}
@@ -27,6 +30,11 @@ public class Config {
 
 
 
+	/**
+	 * Sets the timeout for the pathfinding in seconds
+	 *
+	 * @param timeoutSeconds the new timeout in seconds
+	 */
 	public static void setPathfindingTimeout(int timeoutSeconds) {
 		Config.pathfindingTimeoutSeconds = timeoutSeconds;
 		Stevebot.get().log("Set pathfindingTimeoutSeconds: " + getPathfindingTimeout());
@@ -35,6 +43,9 @@ public class Config {
 
 
 
+	/**
+	 * @return the style of the paths
+	 */
 	public static PathRenderable.PathStyle getPathStyle() {
 		return pathStyle;
 	}
@@ -42,6 +53,11 @@ public class Config {
 
 
 
+	/**
+	 * Sets the style of the paths.
+	 *
+	 * @param pathStyle the new style
+	 */
 	public static void setPathStyle(PathRenderable.PathStyle pathStyle) {
 		Config.pathStyle = pathStyle;
 		Stevebot.get().log("Set pathStyle: " + getPathStyle());
@@ -50,6 +66,9 @@ public class Config {
 
 
 
+	/**
+	 * @return whether verbose-mode is enabled. Verbose mode will display more status/debug messages
+	 */
 	public static boolean isVerboseMode() {
 		return verboseMode;
 	}
@@ -57,6 +76,9 @@ public class Config {
 
 
 
+	/**
+	 * @param verboseMode true, to enable verbose mode.
+	 */
 	public static void setVerboseMode(boolean verboseMode) {
 		Config.verboseMode = verboseMode;
 		Stevebot.get().log("Enable verboseMode: " + isVerboseMode());
@@ -65,6 +87,9 @@ public class Config {
 
 
 
+	/**
+	 * @return whether the outlines of all currently cached chunks are shown
+	 */
 	public static boolean isShowChunkCache() {
 		return showChunkCache;
 	}
@@ -72,6 +97,9 @@ public class Config {
 
 
 
+	/**
+	 * @param showChunkCache true, to show the outlines of all currently cached chunks
+	 */
 	public static void setShowChunkCache(boolean showChunkCache) {
 		Config.showChunkCache = showChunkCache;
 		Stevebot.get().log("Show chunkCache: " + isShowChunkCache());
@@ -80,6 +108,19 @@ public class Config {
 
 
 
+	/**
+	 * @return whether the positions of all currently cached nodes are shown
+	 */
+	public static boolean isShowNodeCache() {
+		return showNodeCache;
+	}
+
+
+
+
+	/**
+	 * @param showNodeCache true, to show the positions of all currently cached nodes
+	 */
 	public static void setShowNodeCache(boolean showNodeCache) {
 		Config.showNodeCache = showNodeCache;
 		Stevebot.get().log("Show nodeCache: " + isShowNodeCache());
@@ -88,23 +129,22 @@ public class Config {
 
 
 
-	public static boolean isShowNodeCache() {
-		return showNodeCache;
+	/**
+	 * @return the delay in each step of the pathfinder in milliseconds
+	 */
+	public static int getPathfindingSlowdown() {
+		return pathfindingSlowdown;
 	}
 
 
 
 
+	/**
+	 * @param pathfindingSlowdown the delay of each step of the pathfinder in milliseconds
+	 */
 	public static void setPathfindingSlowdown(int pathfindingSlowdown) {
 		Config.pathfindingSlowdown = pathfindingSlowdown;
 		Stevebot.get().log("Set pathfinding-slodown: " + getPathfindingSlowdown() + "ms");
-	}
-
-
-
-
-	public static int getPathfindingSlowdown() {
-		return pathfindingSlowdown;
 	}
 
 

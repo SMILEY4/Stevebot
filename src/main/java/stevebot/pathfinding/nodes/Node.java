@@ -11,12 +11,22 @@ public class Node {
 	public Node prev;
 	public Action action; // action required to reach this node
 
-	public double gcost; // dist to starting nodes
-	public double hcost; // dist to destination nodes
+	/**
+	 * The cost from the start to this node.
+	 */
+	public double gcost;
+
+	/**
+	 * The estimated cost from this node to the goal.
+	 */
+	public double hcost;
 
 
 
 
+	/**
+	 * @return the f-cost of this node ( = gcost + hcost)
+	 */
 	public double fcost() {
 		return gcost + hcost;
 	}
@@ -24,6 +34,9 @@ public class Node {
 
 
 
+	/**
+	 * Closes this node.
+	 */
 	public void close() {
 		this.open = false;
 	}

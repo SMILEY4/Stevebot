@@ -63,9 +63,20 @@ public interface ActionFactory {
 
 	}
 
-
+	/**
+	 * Check if a valid action can be created starting from the given node
+	 *
+	 * @param node the node
+	 * @return the {@link Result} of the check
+	 */
 	Result check(Node node);
 
+	/**
+	 * Creates an action starting from the given node
+	 *
+	 * @param node the node
+	 * @return the created action
+	 */
 	Action createAction(Node node);
 
 }

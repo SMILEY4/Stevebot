@@ -4,6 +4,9 @@ import stevebot.pathfinding.nodes.Node;
 
 import java.util.List;
 
+/**
+ * A successful path that did not reach the goal
+ */
 public class PartialPath implements Path {
 
 

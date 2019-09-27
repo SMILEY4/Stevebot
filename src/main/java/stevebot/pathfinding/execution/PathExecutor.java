@@ -51,6 +51,9 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 
 
 
+	/**
+	 * Starts execution the specified path.
+	 */
 	public void start() {
 		Stevebot.get().log("Starting Path from " + pathFactory.getPosStart().getX() + " " + pathFactory.getPosStart().getY() + " " + pathFactory.getPosStart().getZ() + " to " + pathFactory.getGoal().goalString());
 		isExecuting = true;
@@ -59,6 +62,9 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 
 
 
+	/**
+	 * Stops the execution the specified path. It can not be restarted.
+	 */
 	public void stop() {
 		isExecuting = false;
 		Stevebot.get().getEventHandler().removeListener(this);
@@ -70,6 +76,9 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 
 
 
+	/**
+	 * Start following the path.
+	 */
 	public void startFollowing() {
 		follow = true;
 	}
@@ -77,6 +86,9 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 
 
 
+	/**
+	 * Called when the path is completed, failed or stopped
+	 */
 	public abstract void onFinished();
 
 
@@ -170,6 +182,11 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 
 
 
+	/**
+	 * Update the current action. If the action is completed the {@link PathCrawler} will step to the next action.
+	 *
+	 * @return the resulting {@link StateFollow} of this tick
+	 */
 	private StateFollow tick() {
 
 		Stevebot.get().getPlayerController().input().stopAll();

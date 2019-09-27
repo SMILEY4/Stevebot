@@ -64,6 +64,12 @@ public enum Direction {
 
 
 
+	/**
+	 * Splits a "composite" direction (NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST) into its two "primary" directions (NORTH, EAST, SOUTH, WEST).
+	 * If the given direction is a "primary" direction, it will return this direction twice
+	 *
+	 * @return an array of length 2 with the two "primary" directions
+	 */
 	public Direction[] split() {
 		switch (this) {
 			case NORTH_EAST:
@@ -82,6 +88,12 @@ public enum Direction {
 
 
 
+	/**
+	 * Merges this "primary" direction (NORTH, EAST, SOUTH, WEST) with another to create a "composite" direction (NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST) if possible.
+	 *
+	 * @param other the other "primary" direction
+	 * @return the new "composite" direction
+	 */
 	public Direction merge(Direction other) {
 		return Direction.merge(this, other);
 	}
@@ -89,6 +101,13 @@ public enum Direction {
 
 
 
+	/**
+	 * Merges the two given "primary" direction (NORTH, EAST, SOUTH, WEST) to create a "composite" direction (NORTH_EAST, NORTH_WEST, SOUTH_EAST, SOUTH_WEST) if possible.
+	 *
+	 * @param a the first "primary" direction
+	 * @param b the second "primary" direction
+	 * @return the new "composite" direction
+	 */
 	public static Direction merge(Direction a, Direction b) {
 		return get(a.dx + b.dx, a.dy + b.dy, a.dz + b.dz);
 	}
@@ -96,6 +115,13 @@ public enum Direction {
 
 
 
+	/***
+	 * Creates a {@link Direction} from the given components.
+	 * @param dx the x-component of the direction
+	 * @param dy the y-component of the direction
+	 * @param dz the z-component of the direction
+	 * @return the created direction
+	 */
 	public static Direction get(int dx, int dy, int dz) {
 		if (dy < 0) {
 			return DOWN;
@@ -142,6 +168,10 @@ public enum Direction {
 
 
 
+	/***
+	 * @param direction the direction
+	 * @return the opposite direction of the given direction
+	 */
 	public Direction opposite(Direction direction) {
 		switch (direction) {
 			case NORTH:
@@ -172,6 +202,10 @@ public enum Direction {
 
 
 
+	/***
+	 *
+	 * @return the closest direction to get from the given "from" block to the other given "to" block
+	 */
 	public static Direction get(BlockPos from, BlockPos to) {
 		return Direction.get(from, to, false);
 	}
@@ -179,6 +213,11 @@ public enum Direction {
 
 
 
+	/***
+	 *
+	 * @param ignoreY set to true to ignore the y-components of the positions
+	 * @return the closest direction to get from the given "from" block to the other given "to" block
+	 */
 	public static Direction get(BlockPos from, BlockPos to, boolean ignoreY) {
 		final int dx = to.getX() - from.getX();
 		final int dy = ignoreY ? 0 : to.getY() - from.getY();

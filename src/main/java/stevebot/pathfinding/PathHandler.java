@@ -14,6 +14,14 @@ public class PathHandler {
 
 
 
+	/**
+	 * Creates a new path and executor from the given start position to the given goal.
+	 *
+	 * @param from           the starting position
+	 * @param goal           the goal of the resulting path
+	 * @param startFollowing true, to immediately start following the path
+	 * @param enableFreelook true, to enable freelook when following the path
+	 */
 	public void createPath(BlockPos from, Goal goal, boolean startFollowing, boolean enableFreelook) {
 		if (excecutor == null) {
 			excecutor = new PathExecutor(from, goal) {
@@ -37,6 +45,9 @@ public class PathHandler {
 
 
 
+	/**
+	 * Start following the created path.
+	 */
 	public void startFollowing() {
 		if (excecutor != null) {
 			excecutor.startFollowing();
@@ -46,6 +57,9 @@ public class PathHandler {
 
 
 
+	/**
+	 * Stop the current path
+	 */
 	public void cancelPath() {
 		if (excecutor != null) {
 			excecutor.stop();

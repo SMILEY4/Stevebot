@@ -26,6 +26,14 @@ public class Pathfinding {
 
 
 
+	/**
+	 * Calculates a new path from the given starting position to the given goal
+	 *
+	 * @param posStart    the start position
+	 * @param goal        the goal
+	 * @param timeoutInMs the timeout in milliseconds
+	 * @return the created path or an {@link EmptyPath}
+	 */
 	public Path calculatePath(BlockPos posStart, Goal goal, long timeoutInMs) {
 
 		// prepare node cache
@@ -146,6 +154,11 @@ public class Pathfinding {
 
 
 
+	/**
+	 * @param timeStart   the timestamp of the start of the calculation
+	 * @param timeoutInMs the timeout in milliseconds
+	 * @return true, if the timeout was reached
+	 */
 	private boolean checkForTimeout(long timeStart, long timeoutInMs) {
 		return System.currentTimeMillis() > timeStart + timeoutInMs;
 	}
@@ -153,6 +166,12 @@ public class Pathfinding {
 
 
 
+	/**
+	 * Removes the node with the smallest cost from the given set
+	 *
+	 * @param set the set
+	 * @return the removed node
+	 */
 	private Node removeLowest(Set<Node> set) {
 		Node bestNode = null;
 		for (Node node : set) {
@@ -169,6 +188,12 @@ public class Pathfinding {
 
 
 
+	/**
+	 * Collects all block changes that are neccessary to get from the starting node to the given node.
+	 *
+	 * @param node the target node
+	 * @return a list of all {@link BlockChange}s
+	 */
 	private List<BlockChange> collectBlockChanges(Node node) {
 		List<BlockChange> list = new ArrayList<>();
 		Node current = node;
@@ -183,6 +208,14 @@ public class Pathfinding {
 
 
 
+	/**
+	 * Creates/Traces the path from the given starting node to the end node
+	 *
+	 * @param start       the start node
+	 * @param end         the end node
+	 * @param reachedGoal true, if the path was completed; false if it didnt reach the goal.
+	 * @return
+	 */
 	private Path buildPath(Node start, Node end, boolean reachedGoal) {
 
 		List<Node> nodes = new ArrayList<>();

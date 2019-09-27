@@ -10,6 +10,7 @@ import stevebot.data.blocks.BlockProviderImpl;
 import stevebot.events.ModEventHandler;
 import stevebot.pathfinding.PathHandler;
 import stevebot.player.PlayerController;
+import stevebot.rendering.Renderer;
 import stevebot.rendering.RendererImpl;
 
 public class ModBase {
@@ -39,6 +40,9 @@ public class ModBase {
 
 
 
+	/**
+	 * Called in the pre-init-stage
+	 */
 	void onPreInit() {
 		ModBase.instance = this;
 		eventHandler = new ModEventHandler();
@@ -54,6 +58,9 @@ public class ModBase {
 
 
 
+	/**
+	 * Called in the init-stage
+	 */
 	void onInit() {
 		eventHandler.onInit();
 	}
@@ -61,6 +68,9 @@ public class ModBase {
 
 
 
+	/**
+	 * Called in the post-init-stage
+	 */
 	void onPostInit() {
 		eventHandler.onPostInit();
 		blockLibrary.initialize();
@@ -69,6 +79,11 @@ public class ModBase {
 
 
 
+	/**
+	 * Sends the message to the players chat (if possible) and to the logger of this mod.
+	 *
+	 * @param message the message to log
+	 */
 	public void log(String message) {
 		log(true, message);
 	}
@@ -76,6 +91,11 @@ public class ModBase {
 
 
 
+	/**
+	 * Sends the message to the players chat (if possible) and to the logger of this mod only if {@code Config.isVerboseMode()} is true.
+	 *
+	 * @param message the message to log
+	 */
 	public void logNonCritical(String message) {
 		log(false, message);
 	}
@@ -83,6 +103,12 @@ public class ModBase {
 
 
 
+	/**
+	 * Sends the message to the players chat (if possible) and to the logger of this mod.
+	 *
+	 * @param message  the message to log
+	 * @param critical set to false to not send the message if {@code Config.isVerboseMode()} is false
+	 */
 	public void log(boolean critical, String message) {
 		if (!Config.isVerboseMode() && !critical) {
 			return;
@@ -97,6 +123,9 @@ public class ModBase {
 
 
 
+	/**
+	 * @return the {@link ModEventHandler}
+	 */
 	public ModEventHandler getEventHandler() {
 		return eventHandler;
 	}
@@ -104,6 +133,9 @@ public class ModBase {
 
 
 
+	/**
+	 * @return the {@link PlayerController}
+	 */
 	public PlayerController getPlayerController() {
 		return playerController;
 	}
@@ -111,6 +143,9 @@ public class ModBase {
 
 
 
+	/**
+	 * @return the {@link CustomCommandHandler}
+	 */
 	public CustomCommandHandler getCommandHandler() {
 		return commandHandler;
 	}
@@ -118,13 +153,19 @@ public class ModBase {
 
 
 
-	public RendererImpl getRenderer() {
+	/**
+	 * @return the {@link Renderer}
+	 */
+	public Renderer getRenderer() {
 		return renderer;
 	}
 
 
 
 
+	/**
+	 * @return the {@link PathHandler}
+	 */
 	public PathHandler getPathHandler() {
 		return pathHandler;
 	}
@@ -132,6 +173,9 @@ public class ModBase {
 
 
 
+	/**
+	 * @return the {@link BlockLibrary}
+	 */
 	public BlockLibrary getBlockLibrary() {
 		return blockLibrary;
 	}
@@ -139,6 +183,9 @@ public class ModBase {
 
 
 
+	/**
+	 * @return the {@link BlockProvider}
+	 */
 	public BlockProvider getBlockProvider() {
 		return blockProvider;
 	}
@@ -146,6 +193,9 @@ public class ModBase {
 
 
 
+	/**
+	 * @return the {@link Logger}
+	 */
 	public Logger getLogger() {
 		return logger;
 	}

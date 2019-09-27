@@ -26,7 +26,6 @@ public class NodeRenderable implements Renderable {
 
 	@Override
 	public void render(Renderer renderer) {
-//		renderPaths(renderer);
 		renderAABB(renderer);
 	}
 

@@ -81,6 +81,11 @@ public class ActionFactoryProvider {
 
 
 
+	/**
+	 * Register the given factory
+	 *
+	 * @param factory the factory
+	 */
 	private void registerFactory(ActionFactory factory) {
 		factories.add(factory);
 	}
@@ -88,6 +93,9 @@ public class ActionFactoryProvider {
 
 
 
+	/**
+	 * @return the list of all registered {@link ActionFactory}
+	 */
 	public List<ActionFactory> getAllFactories() {
 		return factories;
 	}
