@@ -1,7 +1,7 @@
 package stevebot.data.blocks;
 
 import net.minecraft.block.Block;
-import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.actions.playeractions.BlockChange;
 
 public interface BlockProvider {
@@ -10,22 +10,24 @@ public interface BlockProvider {
 	/**
 	 * @return true, if the given position is in a loaded chunk.
 	 */
-	boolean isLoaded(BlockPos pos);
+	boolean isLoaded(BaseBlockPos pos);
+
 
 	/**
 	 * @return the {@link Block} at the given position.
 	 */
-	Block getBlockAt(BlockPos pos);
+	Block getBlockAt(BaseBlockPos pos);
 
 	/**
 	 * @return the {@link Block} at the given position.
 	 */
 	Block getBlockAt(int x, int y, int z);
 
+
 	/**
 	 * @return the id of the block at the given position.
 	 */
-	int getBlockIdAt(BlockPos pos);
+	int getBlockIdAt(BaseBlockPos pos);
 
 	/**
 	 * @return the id of the block at the given position.

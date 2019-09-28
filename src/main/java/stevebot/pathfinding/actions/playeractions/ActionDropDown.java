@@ -1,9 +1,9 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import net.minecraft.util.math.BlockPos;
+import stevebot.BlockUtils;
 import stevebot.Direction;
 import stevebot.Stevebot;
-import stevebot.pathfinding.BlockUtils;
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
@@ -47,14 +47,14 @@ public class ActionDropDown extends StatefulAction {
 				if (distToEdge <= 0.4) {
 					nextState();
 				} else {
-					controller.movement().moveTowards(getTo().pos, true);
+					controller.movement().moveTowards(getTo().getPos(), true);
 				}
 				return PathExecutor.StateFollow.EXEC;
 			}
 
 			case STATE_PREPARE_2: {
 				if (controller.getPlayer().onGround && !controller.utils().isPlayerMoving(0.0001, false)) {
-					controller.movement().moveTowards(getTo().pos, true);
+					controller.movement().moveTowards(getTo().getPos(), true);
 				}
 				if (!controller.getPlayer().onGround) {
 					nextState();
@@ -70,7 +70,7 @@ public class ActionDropDown extends StatefulAction {
 			}
 
 			case STATE_FINISH: {
-				if (controller.movement().moveTowards(getTo().pos, true)) {
+				if (controller.movement().moveTowards(getTo().getPos(), true)) {
 					return PathExecutor.StateFollow.DONE;
 				} else {
 					return PathExecutor.StateFollow.EXEC;
@@ -96,8 +96,7 @@ public class ActionDropDown extends StatefulAction {
 
 
 		ActionDropDown create(Node node, Direction direction, Result result) {
-			//final Result result = direction.diagonal ? checkDiagonal(node, direction) : checkStraight(node, direction);
-			final Node nodeFall = NodeCache.get(node.pos.add(direction.dx, 0, direction.dz));
+			final Node nodeFall = NodeCache.get(node.getPosCopy().add(direction.dx, 0, direction.dz));
 			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(nodeFall, fallActionFactory.check(nodeFall));
 			return new ActionDropDown(node, result.to, result.estimatedCost, actionFall, direction);
 
@@ -120,7 +119,7 @@ public class ActionDropDown extends StatefulAction {
 		Result checkStraight(Node node, Direction direction) {
 
 			// check to-position horizontal
-			final BlockPos to = node.pos.add(direction.dx, 0, direction.dz);
+			final BaseBlockPos to = node.getPosCopy().add(direction.dx, 0, direction.dz);
 			if (!BlockUtils.isLoaded(to)) {
 				return Result.unloaded();
 			}
@@ -129,13 +128,12 @@ public class ActionDropDown extends StatefulAction {
 			}
 
 			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canStandAt(from)) {
+			if (!ActionUtils.canStandAt(node.getPos())) {
 				return Result.invalid();
 			}
 
 			// check fall
-			final Node nodeFall = NodeCache.get(node.pos.add(direction.dx, 0, direction.dz));
+			final Node nodeFall = NodeCache.get(node.getPosCopy().add(direction.dx, 0, direction.dz));
 			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(nodeFall, fallActionFactory.check(nodeFall));
 			if (actionFall == null) {
 				return Result.invalid();
@@ -150,7 +148,7 @@ public class ActionDropDown extends StatefulAction {
 		Result checkDiagonal(Node node, Direction direction) {
 
 			// check to-position horizontal
-			final BlockPos to = node.pos.add(direction.dx, -1, direction.dz);
+			final BaseBlockPos to = node.getPosCopy().add(direction.dx, -1, direction.dz);
 			if (!BlockUtils.isLoaded(to)) {
 				return Result.unloaded();
 			}
@@ -159,21 +157,20 @@ public class ActionDropDown extends StatefulAction {
 			}
 
 			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canStandAt(from)) {
+			if (!ActionUtils.canStandAt(node.getPos())) {
 				return Result.invalid();
 			}
 
 			// check diagonal blocks
 			Direction[] splitDirection = direction.split();
-			final BlockPos p0 = node.pos.add(splitDirection[0].dx, 0, splitDirection[0].dz);
-			final BlockPos p1 = node.pos.add(splitDirection[1].dx, 0, splitDirection[1].dz);
+			final BaseBlockPos p0 = node.getPosCopy().add(splitDirection[0].dx, 0, splitDirection[0].dz);
+			final BaseBlockPos p1 = node.getPosCopy().add(splitDirection[1].dx, 0, splitDirection[1].dz);
 			if (!ActionUtils.canMoveThroughAll(p0, p1)) {
 				return Result.invalid();
 			}
 
 			// check+create fall
-			final Node nodeFall = NodeCache.get(node.pos.add(direction.dx, 0, direction.dz));
+			final Node nodeFall = NodeCache.get(node.getPosCopy().add(direction.dx, 0, direction.dz));
 			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(nodeFall, fallActionFactory.check(nodeFall));
 			if (actionFall == null) {
 				return Result.invalid();

@@ -1,7 +1,7 @@
 package stevebot.pathfinding.goal;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
@@ -23,20 +23,18 @@ public class XZGoal extends Goal {
 
 
 	@Override
-	public boolean reached(BlockPos pos) {
-		return x == pos.getX() && z == pos.getZ();
+	public boolean reached(BaseBlockPos pos) {
+		return x == pos.getY() && z == pos.getY();
 	}
 
 
 
 
 	@Override
-	public double calcHCost(BlockPos pos) {
+	public double calcHCost(BaseBlockPos pos) {
 		// https://www.growingwiththeweb.com/2012/06/a-pathfinding-algorithm.html
-		final int px = pos.getX();
-		final int pz = pos.getZ();
-		int dMax = Math.max(Math.abs(px - x), Math.abs(pz - z));
-		int dMin = Math.min(Math.abs(px - x), Math.abs(pz - z));
+		int dMax = Math.max(Math.abs(pos.getX() - x), Math.abs(pos.getZ() - z));
+		int dMin = Math.min(Math.abs(pos.getX() - x), Math.abs(pos.getZ() - z));
 		return (dMin * ActionCosts.COST_MULT_DIAGONAL + (dMax - dMin)) * ActionCosts.COST_WALKING;
 	}
 

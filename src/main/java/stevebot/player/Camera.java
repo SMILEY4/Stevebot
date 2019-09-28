@@ -2,16 +2,16 @@ package stevebot.player;
 
 import com.ruegnerlukas.simplemath.vectors.vec2.Vector2d;
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import stevebot.events.GameTickListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MouseHelper;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
+import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.events.GameTickListener;
 import stevebot.events.ModEventHandler;
 
 public class Camera implements GameTickListener {
@@ -193,14 +193,31 @@ public class Camera implements GameTickListener {
 	 * @param rangeAngleDeg the threshold of the angle in degrees
 	 * @return
 	 */
-	public boolean isLookingAt(BlockPos pos, boolean ignorePitch, double rangeAngleDeg) {
+	public boolean isLookingAt(BaseBlockPos pos, boolean ignorePitch, double rangeAngleDeg) {
+		return isLookingAt(pos.getX(), pos.getY(), pos.getZ(), ignorePitch, rangeAngleDeg);
+	}
+
+
+
+
+	/**
+	 * Checks if the player is looking at the given position
+	 *
+	 * @param x             the x position
+	 * @param y             the y position
+	 * @param y             the y position
+	 * @param ignorePitch   set to true to ignore the pitch / up-down-axis
+	 * @param rangeAngleDeg the threshold of the angle in degrees
+	 * @return
+	 */
+	public boolean isLookingAt(int x, int y, int z, boolean ignorePitch, double rangeAngleDeg) {
 
 		EntityPlayerSP player = controller.getPlayer();
 		if (player != null) {
 
 			if (ignorePitch) {
 				final Vector2d posHead = new Vector2d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).z);
-				final Vector2d posBlock = new Vector2d(pos.getX() + 0.5, pos.getZ() + 0.5);
+				final Vector2d posBlock = new Vector2d(x + 0.5, z + 0.5);
 				final Vector2d dirBlock = posBlock.copy().sub(posHead).normalize();
 				final Vector2d lookDir = new Vector2d(getLookDir().x, getLookDir().z).normalize();
 				final double angle = lookDir.angleDeg(dirBlock);
@@ -208,7 +225,7 @@ public class Camera implements GameTickListener {
 
 			} else {
 				final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
-				final Vector3d posBlock = new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+				final Vector3d posBlock = new Vector3d(x + 0.5, y + 0.5, z + 0.5);
 				final Vector3d dirBlock = posBlock.copy().sub(posHead).normalize();
 				final Vector3d lookDir = getLookDir().normalize();
 				final double angle = lookDir.angleDeg(dirBlock);
@@ -258,8 +275,8 @@ public class Camera implements GameTickListener {
 	 *
 	 * @param pos the position to look at
 	 */
-	public void setLookAt(BlockPos pos) {
-		setLookAt(pos, false);
+	public void setLookAt(BaseBlockPos pos) {
+		setLookAt(pos.getX(), pos.getY(), pos.getZ(), false);
 	}
 
 
@@ -268,13 +285,15 @@ public class Camera implements GameTickListener {
 	/**
 	 * Sets the view-direction of the player.
 	 *
-	 * @param pos       the position to look at
+	 * @param x         the x position to look at
+	 * @param y         the y position to look at
+	 * @param z         the z position to look at
 	 * @param keepPitch set to true to keep the pitch of the current view-direction
 	 */
-	public void setLookAt(BlockPos pos, boolean keepPitch) {
+	public void setLookAt(int x, int y, int z, boolean keepPitch) {
 		EntityPlayerSP player = controller.getPlayer();
-		if (player != null && pos != null) {
-			final Vector3d posBlock = new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+		if (player != null) {
+			final Vector3d posBlock = new Vector3d(x + 0.5, y + 0.5, z + 0.5);
 			final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
 			final Vector3d dir = posBlock.copy().sub(posHead).normalize().scale(-1);
 			if (keepPitch) {

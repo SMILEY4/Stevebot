@@ -1,7 +1,7 @@
 package stevebot.pathfinding.goal;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
@@ -9,12 +9,12 @@ import stevebot.rendering.Renderable;
 public class ExactGoal extends Goal {
 
 
-	public final BlockPos pos;
+	public final BaseBlockPos pos;
 
 
 
 
-	public ExactGoal(BlockPos pos) {
+	public ExactGoal(BaseBlockPos pos) {
 		this.pos = pos;
 	}
 
@@ -22,7 +22,7 @@ public class ExactGoal extends Goal {
 
 
 	@Override
-	public boolean reached(BlockPos pos) {
+	public boolean reached(BaseBlockPos pos) {
 		return this.pos.getX() == pos.getX() && this.pos.getY() == pos.getY() && this.pos.getZ() == pos.getZ();
 	}
 
@@ -30,7 +30,7 @@ public class ExactGoal extends Goal {
 
 
 	@Override
-	public double calcHCost(BlockPos pos) {
+	public double calcHCost(BaseBlockPos pos) {
 		final int gx = this.pos.getX();
 		final int gy = this.pos.getY();
 		final int gz = this.pos.getZ();

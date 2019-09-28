@@ -1,8 +1,9 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import net.minecraft.util.math.BlockPos;
+import stevebot.BlockUtils;
 import stevebot.Stevebot;
-import stevebot.pathfinding.BlockUtils;
+import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blockpos.FastBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.execution.PathExecutor;
@@ -24,7 +25,7 @@ public class ActionFall extends Action {
 	public PathExecutor.StateFollow tick(boolean fistTick) {
 		final PlayerController controller = Stevebot.get().getPlayerController();
 		if (controller.getPlayer().onGround) {
-			if (controller.movement().moveTowards(getTo().pos, false)) {
+			if (controller.movement().moveTowards(getTo().getPos(), false)) {
 				return PathExecutor.StateFollow.DONE;
 			} else {
 				return PathExecutor.StateFollow.EXEC;
@@ -43,10 +44,10 @@ public class ActionFall extends Action {
 		@Override
 		public Result check(Node node) {
 
-			final BlockPos from = node.pos;
+			final BaseBlockPos from = node.getPos();
 
 			int height = 0;
-			BlockPos fallTo = from.add(0, -1, 0);
+			FastBlockPos fallTo = from.copyAsFastBlockPos().add(0, -1, 0);
 			while (BlockUtils.canWalkThrough(fallTo)) {
 				fallTo = fallTo.add(0, -1, 0);
 				height++;
@@ -56,7 +57,7 @@ public class ActionFall extends Action {
 			}
 			fallTo = fallTo.add(0, 1, 0);
 
-			final BlockPos d0 = fallTo.add(0, -1, 0);
+			final FastBlockPos d0 = fallTo.copy().add(0, -1, 0);
 			if (height <= 0 || !BlockUtils.canWalkOn(d0) || BlockUtils.isDangerous(d0)) {
 				return Result.invalid();
 			}

@@ -2,7 +2,7 @@ package stevebot.player;
 
 import com.ruegnerlukas.simplemath.MathUtils;
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
 
 public class Movement {
 
@@ -26,14 +26,11 @@ public class Movement {
 	 * @param ignoreY true to ignore the y-coordinate while checking if the player reached the target
 	 * @return true, if the player reached the given target position
 	 */
-	public boolean moveTowards(BlockPos pos, boolean ignoreY) {
-		final double x = pos.getX() + 0.5;
-		final double y = pos.getY();
-		final double z = pos.getZ() + 0.5;
+	public boolean moveTowards(BaseBlockPos pos, boolean ignoreY) {
 		if (ignoreY) {
-			return moveTowards(x, z);
+			return moveTowards(pos.getX(), pos.getZ());
 		} else {
-			return moveTowards(x, y, z);
+			return moveTowards(pos.getX(), pos.getY(), pos.getZ());
 		}
 	}
 
@@ -50,8 +47,7 @@ public class Movement {
 	 */
 	public boolean moveTowards(double x, double y, double z) {
 		if (!controller.utils().isAtLocation(x, y, z)) {
-			final BlockPos targetBlockPos = new BlockPos(x, (int) controller.utils().getPlayerPosition().y, z);
-			controller.camera().setLookAt(targetBlockPos, true);
+			controller.camera().setLookAt((int) x, (int) controller.utils().getPlayerPosition().y, (int) z, true);
 			controller.input().setMoveForward();
 			return false;
 		} else {
@@ -71,8 +67,7 @@ public class Movement {
 	 */
 	public boolean moveTowards(double x, double z) {
 		if (!controller.utils().isAtLocation(x, z)) {
-			final BlockPos targetBlockPos = new BlockPos(x, (int) controller.utils().getPlayerPosition().y, z);
-			controller.camera().setLookAt(targetBlockPos, true);
+			controller.camera().setLookAt((int) x, (int) controller.utils().getPlayerPosition().y, (int) z, true);
 			controller.input().setMoveForward();
 			return false;
 		} else {

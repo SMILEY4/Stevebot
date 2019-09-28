@@ -2,9 +2,9 @@ package stevebot.player;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import stevebot.pathfinding.BlockUtils;
+import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.BlockUtils;
 
 public class PlayerUtils {
 
@@ -37,12 +37,12 @@ public class PlayerUtils {
 
 
 	/**
-	 * @return the current position of the player as a {@link BlockPos}
+	 * @return the current position of the player as a {@link BaseBlockPos}
 	 */
-	public BlockPos getPlayerBlockPos() {
+	public BaseBlockPos getPlayerBlockPos() {
 		EntityPlayerSP player = controller.getPlayer();
 		if (player != null) {
-			return BlockUtils.toBlockPos(player.posX, player.posY, player.posZ);
+			return BlockUtils.toBaseBlockPos(player.posX, player.posY, player.posZ);
 		} else {
 			return null;
 		}
@@ -135,11 +135,11 @@ public class PlayerUtils {
 
 
 	/**
-	 * @param pos     the target position as a {@link BlockPos}
+	 * @param pos     the target position as a {@link BaseBlockPos}
 	 * @param ignoreY set to true to only check the x- and z-coordinates.
 	 * @return true, if the player is currently at the given location (within a threshold defined by {@code PlayerUtils.AT_LOC_DIST_ERROR}).
 	 */
-	public boolean isAtLocation(BlockPos pos, boolean ignoreY) {
+	public boolean isAtLocation(BaseBlockPos pos, boolean ignoreY) {
 		final double x = pos.getX() + 0.5;
 		final double y = pos.getY();
 		final double z = pos.getZ() + 0.5;

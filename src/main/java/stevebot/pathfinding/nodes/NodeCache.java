@@ -1,6 +1,6 @@
 package stevebot.pathfinding.nodes;
 
-import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.Map;
 public class NodeCache {
 
 
-	private static Map<BlockPos, Node> nodes = new HashMap<>();
+	private static Map<BaseBlockPos, Node> nodes = new HashMap<>();
 
 
 
@@ -16,7 +16,7 @@ public class NodeCache {
 	/**
 	 * @return the map with all cached nodes
 	 */
-	public static Map<BlockPos, Node> getNodes() {
+	public static Map<BaseBlockPos, Node> getNodes() {
 		return nodes;
 	}
 
@@ -39,7 +39,7 @@ public class NodeCache {
 	 * @param pos the position of the node
 	 * @return the node at the given position.
 	 */
-	public static Node get(BlockPos pos) {
+	public static Node get(BaseBlockPos pos) {
 		Node n = nodes.get(pos);
 		if (n == null) {
 			return create(pos, null);
@@ -58,7 +58,7 @@ public class NodeCache {
 	 * @param prev the previous node
 	 * @return the created node
 	 */
-	private static Node create(BlockPos pos, Node prev) {
+	private static Node create(BaseBlockPos pos, Node prev) {
 		return create(pos, prev, 1000000);
 	}
 
@@ -73,14 +73,14 @@ public class NodeCache {
 	 * @param cost the (g-)cost of the node
 	 * @return the created node
 	 */
-	private static Node create(BlockPos pos, Node prev, double cost) {
+	private static Node create(BaseBlockPos pos, Node prev, double cost) {
 		Node node = nodes.get(pos);
 		if (node == null) {
 			node = new Node();
-			node.pos = pos;
-			node.prev = prev;
-			node.gcost = cost;
-			node.open = true;
+			node.setPos(pos);
+			node.setPrev(prev);
+			node.setGCost(cost);
+			node.open();
 			nodes.put(pos, node);
 		}
 		return node;

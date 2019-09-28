@@ -1,9 +1,9 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import net.minecraft.util.math.BlockPos;
+import stevebot.BlockUtils;
 import stevebot.Direction;
 import stevebot.Stevebot;
-import stevebot.pathfinding.BlockUtils;
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
@@ -36,7 +36,7 @@ public class ActionSprintJump extends StatefulAction {
 
 		switch (getCurrentState()) {
 			case STATE_PREPARE: {
-				controller.camera().setLookAt(getTo().pos, true);
+				controller.camera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
 				boolean slowEnough = controller.movement().slowDown(0.055);
 				if (slowEnough) {
 					nextState();
@@ -45,13 +45,13 @@ public class ActionSprintJump extends StatefulAction {
 			}
 
 			case STATE_JUMP: {
-				controller.movement().moveTowards(getTo().pos, true);
+				controller.movement().moveTowards(getTo().getPos(), true);
 				controller.input().setSprint();
 				final double distToEdge = BlockUtils.distToCenter(controller.utils().getPlayerPosition());
 				if (distToEdge > 0.4) {
 					controller.input().setJump(false);
 				}
-				if (controller.getPlayer().onGround && controller.utils().getPlayerBlockPos().equals(getTo().pos)) {
+				if (controller.getPlayer().onGround && controller.utils().getPlayerBlockPos().equals(getTo().getPos())) {
 					nextState();
 				}
 				return PathExecutor.StateFollow.EXEC;
@@ -59,7 +59,7 @@ public class ActionSprintJump extends StatefulAction {
 
 
 			case STATE_LAND: {
-				if (controller.movement().moveTowards(getTo().pos, true)) {
+				if (controller.movement().moveTowards(getTo().getPos(), true)) {
 					return PathExecutor.StateFollow.DONE;
 				} else {
 					return PathExecutor.StateFollow.EXEC;
@@ -95,7 +95,7 @@ public class ActionSprintJump extends StatefulAction {
 			}
 
 			// check to-position
-			final BlockPos to = node.pos.add(direction.dx * 4, 0, direction.dz * 4);
+			final BaseBlockPos to = node.getPosCopy().add(direction.dx * 4, 0, direction.dz * 4);
 			if (!BlockUtils.isLoaded(to)) {
 				return Result.unloaded();
 			}
@@ -104,14 +104,13 @@ public class ActionSprintJump extends StatefulAction {
 			}
 
 			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canJumpAt(from)) {
+			if (!ActionUtils.canJumpAt(node.getPos())) {
 				return Result.invalid();
 			}
 
 			// check gap
 			for (int i = 0; i < 3; i++) {
-				final BlockPos gap = from.add(direction.dx * (i + 1), 0, direction.dz * (i + 1));
+				final BaseBlockPos gap = node.getPosCopy().add(direction.dx * (i + 1), 0, direction.dz * (i + 1));
 				if (i == 2) {
 					if (!ActionUtils.canJump(gap)) {
 						return Result.invalid();

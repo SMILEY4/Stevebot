@@ -2,7 +2,8 @@ package stevebot.data.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blockpos.FastBlockPos;
 import stevebot.pathfinding.actions.playeractions.BlockChange;
 
 import java.util.HashMap;
@@ -14,7 +15,7 @@ public class BlockProviderImpl implements BlockProvider {
 	private final BlockCache cache;
 	private final BlockLibrary library;
 
-	private final Map<BlockPos, BlockChange> blockChanges = new HashMap<>();
+	private final Map<BaseBlockPos, BlockChange> blockChanges = new HashMap<>();
 
 
 
@@ -31,20 +32,16 @@ public class BlockProviderImpl implements BlockProvider {
 
 
 	@Override
-	public boolean isLoaded(BlockPos pos) {
-		return Minecraft.getMinecraft().world.getChunkFromBlockCoords(pos).isLoaded();
+	public boolean isLoaded(BaseBlockPos pos) {
+		return Minecraft.getMinecraft().world.getChunkFromChunkCoords(pos.getX() >> 4, pos.getZ() >> 4).isLoaded();
 	}
 
 
 
 
 	@Override
-	public Block getBlockAt(BlockPos pos) {
-		BlockChange blockChange = getBlockChangeAt(pos);
-		if (blockChange != null) {
-			return blockChange.newBlock;
-		}
-		return library.getBlockById(cache.getBlockIdAt(pos));
+	public Block getBlockAt(BaseBlockPos pos) {
+		return getBlockAt(pos.getX(), pos.getY(), pos.getZ());
 	}
 
 
@@ -63,12 +60,8 @@ public class BlockProviderImpl implements BlockProvider {
 
 
 	@Override
-	public int getBlockIdAt(BlockPos pos) {
-		BlockChange blockChange = getBlockChangeAt(pos);
-		if (blockChange != null) {
-			return library.getIdOfBlock(blockChange.newBlock);
-		}
-		return cache.getBlockIdAt(pos);
+	public int getBlockIdAt(BaseBlockPos pos) {
+		return getBlockIdAt(pos.getX(), pos.getY(), pos.getZ());
 	}
 
 
@@ -86,15 +79,7 @@ public class BlockProviderImpl implements BlockProvider {
 
 
 
-	/**
-	 * @param x the x position
-	 * @param y the y position
-	 * @param z the z position
-	 * @return the temporary {@link BlockChange} at the given position or null.
-	 */
-	public BlockChange getBlockChangeAt(int x, int y, int z) {
-		return getBlockChangeAt(new BlockPos(x, y, z));
-	}
+	private final FastBlockPos tempKey = new FastBlockPos();
 
 
 
@@ -103,11 +88,24 @@ public class BlockProviderImpl implements BlockProvider {
 	 * @param pos the position
 	 * @return the temporary {@link BlockChange} at the given position or null.
 	 */
-	public BlockChange getBlockChangeAt(BlockPos pos) {
+	public BlockChange getBlockChangeAt(BaseBlockPos pos) {
+		return getBlockChangeAt(pos.getX(), pos.getY(), pos.getZ());
+	}
+
+
+
+
+	/**
+	 * @param x the x position
+	 * @param y the y position
+	 * @param z the z position
+	 * @return the temporary {@link BlockChange} at the given position or null.
+	 */
+	public BlockChange getBlockChangeAt(int x, int y, int z) {
 		if (blockChanges.isEmpty()) {
 			return null;
 		} else {
-			return blockChanges.get(pos);
+			return blockChanges.get(tempKey.set(x, y, z));
 		}
 	}
 

@@ -1,9 +1,9 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import net.minecraft.util.math.BlockPos;
+import stevebot.BlockUtils;
 import stevebot.Direction;
 import stevebot.Stevebot;
-import stevebot.pathfinding.BlockUtils;
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
@@ -29,7 +29,7 @@ public class ActionWalk extends Action {
 
 	@Override
 	public PathExecutor.StateFollow tick(boolean fistTick) {
-		if (Stevebot.get().getPlayerController().movement().moveTowards(getTo().pos, true)) {
+		if (Stevebot.get().getPlayerController().movement().moveTowards(getTo().getPos(), true)) {
 			return PathExecutor.StateFollow.DONE;
 		} else {
 			if (sprint) {
@@ -67,7 +67,7 @@ public class ActionWalk extends Action {
 		Result checkStraight(Node node, Direction direction) {
 
 			// check to-position
-			final BlockPos to = node.pos.add(direction.dx, 0, direction.dz);
+			final BaseBlockPos to = node.getPosCopy().add(direction.dx, 0, direction.dz);
 			if (!BlockUtils.isLoaded(to)) {
 				return Result.unloaded();
 			}
@@ -76,8 +76,7 @@ public class ActionWalk extends Action {
 			}
 
 			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canStandAt(from)) {
+			if (!ActionUtils.canStandAt(node.getPos())) {
 				return Result.invalid();
 			}
 
@@ -90,7 +89,7 @@ public class ActionWalk extends Action {
 		Result checkDiagonal(Node node, Direction direction) {
 
 			// check to-position
-			final BlockPos to = node.pos.add(direction.dx, 0, direction.dz);
+			final BaseBlockPos to = node.getPosCopy().add(direction.dx, 0, direction.dz);
 			if (!BlockUtils.isLoaded(to)) {
 				return Result.unloaded();
 			}
@@ -99,21 +98,20 @@ public class ActionWalk extends Action {
 			}
 
 			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canStandAt(from)) {
+			if (!ActionUtils.canStandAt(node.getPos())) {
 				return Result.invalid();
 			}
 
 			// check diagonal
 			Direction[] splitDirection = direction.split();
-			final BlockPos p0 = node.pos.add(splitDirection[0].dx, 0, splitDirection[0].dz);
-			final BlockPos p1 = node.pos.add(splitDirection[1].dx, 0, splitDirection[1].dz);
+			final BaseBlockPos p0 = node.getPosCopy().add(splitDirection[0].dx, 0, splitDirection[0].dz);
+			final BaseBlockPos p1 = node.getPosCopy().add(splitDirection[1].dx, 0, splitDirection[1].dz);
 
 			boolean traversable0 = ActionUtils.canMoveThrough(p0) && BlockUtils.isLoaded(p0);
 			boolean traversable1 = ActionUtils.canMoveThrough(p1) && BlockUtils.isLoaded(p1);
 
-			boolean avoid0 = BlockUtils.avoidTouching(p0) || BlockUtils.avoidTouching(p0.add(0, 1, 0));
-			boolean avoid1 = BlockUtils.avoidTouching(p1) || BlockUtils.avoidTouching(p1.add(0, 1, 0));
+			boolean avoid0 = BlockUtils.avoidTouching(p0) || BlockUtils.avoidTouching(p0.copyAsFastBlockPos().add(0, 1, 0));
+			boolean avoid1 = BlockUtils.avoidTouching(p1) || BlockUtils.avoidTouching(p1.copyAsFastBlockPos().add(0, 1, 0));
 
 			if (traversable0 || traversable1) {
 				if ((traversable0 && avoid1) || (traversable1 && avoid0)) {

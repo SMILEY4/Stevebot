@@ -1,9 +1,9 @@
 package stevebot.pathfinding.execution;
 
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.StateMachineListener;
 import stevebot.Stevebot;
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.GameTickListener;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.path.EmptyPath;
@@ -40,7 +40,7 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 
 
 
-	public PathExecutor(BlockPos posStart, Goal goal) {
+	public PathExecutor(BaseBlockPos posStart, Goal goal) {
 		this.pathFactory = new PathFactory(posStart, goal);
 		this.stateMachine.addListener(this);
 		this.goalRenderable = goal.createRenderable();
@@ -191,7 +191,7 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 
 		Stevebot.get().getPlayerController().input().stopAll();
 
-		StateFollow actionState = crawler.getCurrentNodeTo().action.tick(fistTick);
+		StateFollow actionState = crawler.getCurrentNodeTo().getAction().tick(fistTick);
 		fistTick = false;
 
 		if (actionState == StateFollow.FAILED) {

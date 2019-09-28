@@ -2,6 +2,7 @@ package stevebot.rendering;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
 
 public interface Renderable {
 
@@ -43,6 +44,7 @@ public interface Renderable {
 		return toVecArray(bpArray, 0.5, 0.5, 0.5);
 	}
 
+
 	/***
 	 * Converts the array of {@link BlockPos} into an array of {@link Vector3d}. The given offsets will be added to the {@link BlockPos}.
 	 * @param bpArray the {@link BlockPos} array
@@ -52,6 +54,31 @@ public interface Renderable {
 		Vector3d[] vecArray = new Vector3d[bpArray.length];
 		for (int i = 0, n = bpArray.length; i < n; i++) {
 			final BlockPos pos = bpArray[i];
+			vecArray[i] = new Vector3d(pos.getX() + offX, pos.getY() + offY, pos.getZ() + offZ);
+		}
+		return vecArray;
+	}
+
+
+	/***
+	 * Converts the array of {@link BaseBlockPos} into an array of {@link Vector3d}. The resulting positions will be the centers of the blocks.
+	 * @param bpArray the {@link BaseBlockPos} array
+	 * @return the {@link Vector3d} array
+	 */
+	static Vector3d[] toVecArray(BaseBlockPos[] bpArray) {
+		return toVecArray(bpArray, 0.5, 0.5, 0.5);
+	}
+
+
+	/***
+	 * Converts the array of {@link BaseBlockPos} into an array of {@link Vector3d}. The given offsets will be added to the {@link BaseBlockPos}.
+	 * @param bpArray the {@link BaseBlockPos} array
+	 * @return the {@link Vector3d} array
+	 */
+	static Vector3d[] toVecArray(BaseBlockPos[] bpArray, double offX, double offY, double offZ) {
+		Vector3d[] vecArray = new Vector3d[bpArray.length];
+		for (int i = 0, n = bpArray.length; i < n; i++) {
+			final BaseBlockPos pos = bpArray[i];
 			vecArray[i] = new Vector3d(pos.getX() + offX, pos.getY() + offY, pos.getZ() + offZ);
 		}
 		return vecArray;

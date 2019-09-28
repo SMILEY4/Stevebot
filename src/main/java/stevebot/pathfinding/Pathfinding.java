@@ -1,6 +1,6 @@
 package stevebot.pathfinding;
 
-import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.Config;
 import stevebot.Stevebot;
 import stevebot.data.blocks.BlockProvider;
@@ -38,18 +38,18 @@ public class Pathfinding {
 	 * @param timeoutInMs the timeout in milliseconds
 	 * @return the created path or an {@link EmptyPath}
 	 */
-	public Path calculatePath(BlockPos posStart, Goal goal, long timeoutInMs) {
+	public Path calculatePath(BaseBlockPos posStart, Goal goal, long timeoutInMs) {
 
 		// prepare node cache
 		NodeCache.clear();
 		Node nodeStart = NodeCache.get(posStart);
-		nodeStart.gcost = 0;
+		nodeStart.setGCost(0);
 
 		// prepare open set
 		final PriorityQueue<Node> openSet = new PriorityQueue<>((o1, o2) -> {
 			final int fcostResult = Double.compare(o1.fcost(), o2.fcost());
 			if (fcostResult == 0) {
-				return Double.compare(o1.hcost, o2.hcost);
+				return Double.compare(o1.hcost(), o2.hcost());
 			} else {
 				return fcostResult;
 			}
@@ -63,6 +63,8 @@ public class Pathfinding {
 		BestNodesContainer bestNodes = new BestNodesContainer(20);
 		int nWorseThanBest = 0;
 
+		long timeLast = System.currentTimeMillis();
+
 		// calculate path
 		while (!openSet.isEmpty() && nUnloadedHits < 400) {
 
@@ -70,6 +72,11 @@ public class Pathfinding {
 			if (checkForTimeout(timeStart, timeoutInMs)) {
 				Stevebot.get().getPlayerController().utils().sendMessage("Timeout");
 				break;
+			}
+
+			if (System.currentTimeMillis() - timeLast > 1000 * 10) {
+				timeLast = System.currentTimeMillis();
+				Stevebot.get().logNonCritical("Searching... " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size() + " nodes.");
 			}
 
 			// slowdown
@@ -86,7 +93,7 @@ public class Pathfinding {
 			current.close();
 
 			// check if reached goal
-			if (goal.reached(current.pos)) {
+			if (goal.reached(current.getPos())) {
 				Path currentPath = buildPath(nodeStart, current, true);
 				if (currentPath.getCost() < bestPath.getCost()) {
 					bestPath = currentPath;
@@ -95,10 +102,10 @@ public class Pathfinding {
 			}
 
 			// check if current path cost is already higher than prev. path cost / the best node
-			if (bestPath.getCost() < current.gcost) {
+			if (bestPath.getCost() < current.gcost()) {
 				continue;
 			}
-			if (bestNodes.getBest() != null && bestNodes.getBest().gcost < current.gcost) {
+			if (bestNodes.getBest() != null && bestNodes.getBest().gcost() < current.gcost()) {
 				nWorseThanBest++;
 			} else {
 				nWorseThanBest = 0;
@@ -129,17 +136,17 @@ public class Pathfinding {
 				if (result.type == ActionFactory.ResultType.VALID) {
 					final Node next = result.to;
 
-					final double newCost = current.gcost + result.estimatedCost;
-					if (!next.open && newCost >= next.gcost) {
+					final double newCost = current.gcost() + result.estimatedCost;
+					if (!next.isOpen() && newCost >= next.gcost()) {
 						continue;
 					}
-					if (newCost < next.gcost || !openSet.contains(next)) {
+					if (newCost < next.gcost() || !openSet.contains(next)) {
 						Action action = factory.createAction(current, result);
-						next.gcost = newCost;
-						next.hcost = goal.calcHCost(next.pos);
-						next.prev = current;
-						next.action = action;
-						next.open = true;
+						next.setGCost(newCost);
+						next.setHCost(goal.calcHCost(next.getPos()));
+						next.setPrev(current);
+						next.setAction(action);
+						next.open();
 						openSet.add(next);
 						bestNodes.update(next, goal);
 					}
@@ -209,15 +216,15 @@ public class Pathfinding {
 		// 							-> if true -> set flag "changesInHistory"
 		// when collecting changes -> check for flag -> if false, do nothing
 		Node current = node;
-		while (current.prev != null) {
-			Action action = current.action;
+		while (current.getPrev() != null) {
+			Action action = current.getAction();
 			if (action.changedBlocks()) {
 				BlockChange[] changes = action.getBlockChanges();
 				for (int i = 0; i < changes.length; i++) {
 					blockProvider.addBlockChange(changes[i], false);
 				}
 			}
-			current = current.prev;
+			current = current.getPrev();
 		}
 	}
 
@@ -238,15 +245,15 @@ public class Pathfinding {
 		Node current = end;
 		while (current != start) {
 			nodes.add(current);
-			current = current.prev;
+			current = current.getPrev();
 		}
 		Collections.reverse(nodes);
 
 		Path path;
 		if (reachedGoal) {
-			path = new CompletedPath(end.gcost, nodes);
+			path = new CompletedPath(end.gcost(), nodes);
 		} else {
-			path = new PartialPath(end.gcost, nodes);
+			path = new PartialPath(end.gcost(), nodes);
 		}
 
 		return path;

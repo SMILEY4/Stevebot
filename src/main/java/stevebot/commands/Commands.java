@@ -7,6 +7,8 @@ import stevebot.Config;
 import stevebot.Stevebot;
 import stevebot.commands.tokens.MultiCommandToken;
 import stevebot.commands.tokens.ValueToken;
+import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blockpos.FastBlockPos;
 import stevebot.pathfinding.goal.ExactGoal;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.goal.XZGoal;
@@ -109,7 +111,7 @@ public class Commands {
 		final BlockPos to = (BlockPos) args.get("to").getValue();
 
 		if (Stevebot.get().getPlayerController().getPlayer() != null) {
-			Stevebot.get().getPathHandler().createPath(from, new ExactGoal(to), false, false);
+			Stevebot.get().getPathHandler().createPath(new BaseBlockPos(from), new ExactGoal(new BaseBlockPos(to)), false, false);
 		}
 	}
 
@@ -117,13 +119,13 @@ public class Commands {
 
 
 	private static void onPathTo(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
-		final BlockPos from = Stevebot.get().getPlayerController().utils().getPlayerBlockPos();
+		final BaseBlockPos from = Stevebot.get().getPlayerController().utils().getPlayerBlockPos();
 		final BlockPos to = (BlockPos) args.get("to").getValue();
 		final boolean follow = (Boolean) args.getOrDefault("follow", new CommandArgument<>(true)).getValue();
 		final boolean freelook = (Boolean) args.getOrDefault("freelook", new CommandArgument<>(false)).getValue();
 
 		if (Stevebot.get().getPlayerController().getPlayer() != null) {
-			Stevebot.get().getPathHandler().createPath(from, new ExactGoal(to), follow, freelook);
+			Stevebot.get().getPathHandler().createPath(new FastBlockPos(from), new ExactGoal(new BaseBlockPos(to)), follow, freelook);
 		}
 	}
 
@@ -136,10 +138,10 @@ public class Commands {
 		final boolean freelook = (Boolean) args.getOrDefault("freelook", new CommandArgument<>(false)).getValue();
 
 		if (Stevebot.get().getPlayerController().getPlayer() != null) {
-			final BlockPos from = Stevebot.get().getPlayerController().utils().getPlayerBlockPos();
+			final BaseBlockPos from = Stevebot.get().getPlayerController().utils().getPlayerBlockPos();
 			final Vector3d dir = Stevebot.get().getPlayerController().camera().getLookDir().setLength(distance);
 			Goal goal = new XZGoal(from.getX() + dir.getIntX(), from.getZ() + dir.getIntZ());
-			Stevebot.get().getPathHandler().createPath(from, goal, follow, freelook);
+			Stevebot.get().getPathHandler().createPath(new BaseBlockPos(from), goal, follow, freelook);
 		}
 	}
 

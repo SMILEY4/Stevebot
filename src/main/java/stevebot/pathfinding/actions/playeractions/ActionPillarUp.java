@@ -2,7 +2,7 @@ package stevebot.pathfinding.actions.playeractions;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.FastBlockPos;
 import stevebot.Stevebot;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
@@ -49,17 +49,17 @@ public class ActionPillarUp extends StatefulAction {
 				if (slowEnough) {
 					setState(STATE_JUMP);
 				} else {
-					controller.camera().setLookAt(getTo().pos, true);
+					controller.camera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
 				}
 				return PathExecutor.StateFollow.EXEC;
 			}
 
 			case STATE_JUMP: {
-				if (controller.utils().getPlayerBlockPos().equals(getFrom().pos)) {
+				if (controller.utils().getPlayerBlockPos().equals(getFrom().getPos())) {
 					controller.input().setJump(false);
 				}
-				if (controller.utils().getPlayerBlockPos().equals(getTo().pos)) {
-					Minecraft.getMinecraft().world.setBlockState(getFrom().pos, Blocks.GOLD_BLOCK.getDefaultState());
+				if (controller.utils().getPlayerBlockPos().equals(getTo().getPos())) {
+					Minecraft.getMinecraft().world.setBlockState(getFrom().getPos().copyAsMCBlockPos(), Blocks.GOLD_BLOCK.getDefaultState());
 					setState(STATE_LAND);
 				}
 				return PathExecutor.StateFollow.EXEC;
@@ -67,7 +67,7 @@ public class ActionPillarUp extends StatefulAction {
 
 
 			case STATE_LAND: {
-				if (controller.getPlayer().onGround && controller.utils().getPlayerBlockPos().equals(getTo().pos)) {
+				if (controller.getPlayer().onGround && controller.utils().getPlayerBlockPos().equals(getTo().getPos())) {
 					return PathExecutor.StateFollow.DONE;
 				} else {
 					return PathExecutor.StateFollow.EXEC;
@@ -103,7 +103,7 @@ public class ActionPillarUp extends StatefulAction {
 		@Override
 		public Action createAction(Node node, Result result) {
 			// final Result result = check(node);
-			return new ActionPillarUp(node, result.to, result.estimatedCost, new BlockChange(node.pos, Blocks.GOLD_BLOCK));
+			return new ActionPillarUp(node, result.to, result.estimatedCost, new BlockChange(node.getPos(), Blocks.GOLD_BLOCK));
 		}
 
 
@@ -113,14 +113,13 @@ public class ActionPillarUp extends StatefulAction {
 		public Result check(Node node) {
 
 			// check to-position
-			final BlockPos to = node.pos.add(0, 1, 0);
+			final FastBlockPos to = node.getPosCopy().add(0, 1, 0);
 			if (!ActionUtils.canMoveThrough(to)) {
 				return Result.invalid();
 			}
 
 			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canStandAt(from)) {
+			if (!ActionUtils.canStandAt(node.getPos())) {
 				return Result.invalid();
 			}
 

@@ -1,8 +1,8 @@
 package stevebot.pathfinding.path;
 
-import net.minecraft.util.math.BlockPos;
 import stevebot.Config;
 import stevebot.Stevebot;
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.Pathfinding;
 import stevebot.pathfinding.goal.Goal;
 
@@ -20,7 +20,7 @@ public class PathFactory {
 	private final List<Path> pathQueue = new ArrayList<>();
 	private volatile boolean preparingPath = false;
 
-	private final BlockPos posStart;
+	private final BaseBlockPos posStart;
 	private final Goal goal;
 
 
@@ -30,7 +30,7 @@ public class PathFactory {
 	 * @param posStart the start position of the path
 	 * @param goal     the goal of the path
 	 */
-	public PathFactory(BlockPos posStart, Goal goal) {
+	public PathFactory(BaseBlockPos posStart, Goal goal) {
 		this.posStart = posStart;
 		this.goal = goal;
 	}
@@ -99,7 +99,7 @@ public class PathFactory {
 			} else {
 				final Path prevPath = getLastPath();
 				executorService.submit(() -> {
-					Path path = pathfinding.calculatePath(prevPath.getLastNode().pos, goal, Config.getPathfindingTimeout() * 1000);
+					Path path = pathfinding.calculatePath(prevPath.getLastNode().getPos(), goal, Config.getPathfindingTimeout() * 1000);
 					synchronized (pathQueue) {
 						pathQueue.add(path);
 						preparingPath = false;
@@ -140,7 +140,7 @@ public class PathFactory {
 	/**
 	 * @return the starting position of the complete path
 	 */
-	public BlockPos getPosStart() {
+	public BaseBlockPos getPosStart() {
 		return posStart;
 	}
 

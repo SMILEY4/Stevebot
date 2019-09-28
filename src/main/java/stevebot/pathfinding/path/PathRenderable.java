@@ -64,7 +64,7 @@ public class PathRenderable implements Renderable {
 		double minCost = ActionCosts.COST_INFINITE;
 		double maxCost = 0;
 		for (int i = 0; i < path.getNodes().size() - 1; i++) {
-			final double cost = path.getNodes().get(i).action.getCost();
+			final double cost = path.getNodes().get(i).getAction().getCost();
 			minCost = Math.min(minCost, cost);
 			maxCost = Math.max(maxCost, cost);
 		}
@@ -75,9 +75,9 @@ public class PathRenderable implements Renderable {
 		for (int i = 0; i < path.getNodes().size() - 1; i++) {
 			final Node node0 = path.getNodes().get(i);
 			final Node node1 = path.getNodes().get(i + 1);
-			p0.set(node0.pos.getX() + 0.5, node0.pos.getY() + 0.5, node0.pos.getZ() + 0.5);
-			p1.set(node1.pos.getX() + 0.5, node1.pos.getY() + 0.5, node1.pos.getZ() + 0.5);
-			renderer.drawLineOpen(p0, p1, getColor(node0, node1, node1.action.getCost(), minCost, maxCost));
+			p0.set(node0.getPos().getX() + 0.5, node0.getPos().getY() + 0.5, node0.getPos().getZ() + 0.5);
+			p1.set(node1.getPos().getX() + 0.5, node1.getPos().getY() + 0.5, node1.getPos().getZ() + 0.5);
+			renderer.drawLineOpen(p0, p1, getColor(node0, node1, node1.getAction().getCost(), minCost, maxCost));
 		}
 
 		renderer.end();
@@ -94,9 +94,9 @@ public class PathRenderable implements Renderable {
 			case PATH_ID:
 				return Color.random(path.hashCode());
 			case ACTION_TYPE:
-				return Color.random(to.action.getClass().hashCode());
+				return Color.random(to.getAction().getClass().hashCode());
 			case ACTION_ID:
-				return Color.random(to.action.hashCode());
+				return Color.random(to.getAction().hashCode());
 			case ACTION_COST:
 				return Color.mix(Color.GREEN, Color.RED, (float) ((cost - minCost) / (maxCost - minCost)));
 			default:

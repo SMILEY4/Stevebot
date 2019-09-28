@@ -1,6 +1,6 @@
 package stevebot;
 
-import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
 
 public enum Direction {
 
@@ -206,7 +206,7 @@ public enum Direction {
 	 *
 	 * @return the closest direction to get from the given "from" block to the other given "to" block
 	 */
-	public static Direction get(BlockPos from, BlockPos to) {
+	public static Direction get(BaseBlockPos from, BaseBlockPos to) {
 		return Direction.get(from, to, false);
 	}
 
@@ -218,11 +218,12 @@ public enum Direction {
 	 * @param ignoreY set to true to ignore the y-components of the positions
 	 * @return the closest direction to get from the given "from" block to the other given "to" block
 	 */
-	public static Direction get(BlockPos from, BlockPos to, boolean ignoreY) {
+	public static Direction get(BaseBlockPos from, BaseBlockPos to, boolean ignoreY) {
 		final int dx = to.getX() - from.getX();
 		final int dy = ignoreY ? 0 : to.getY() - from.getY();
 		final int dz = to.getZ() - from.getZ();
 		return Direction.get(dx, dy, dz);
 	}
+
 
 }

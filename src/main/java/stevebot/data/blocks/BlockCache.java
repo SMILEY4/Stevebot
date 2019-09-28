@@ -2,7 +2,8 @@ package stevebot.data.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.Stevebot;
 
 public class BlockCache {
 
@@ -26,7 +27,7 @@ public class BlockCache {
 	/**
 	 * @return the id of the block at the given position
 	 */
-	public int getBlockIdAt(BlockPos pos) {
+	public int getBlockIdAt(BaseBlockPos pos) {
 		return getBlockIdAt(pos.getX(), pos.getY(), pos.getZ());
 	}
 
@@ -66,10 +67,11 @@ public class BlockCache {
 	 */
 	private int cacheBlockId(int blockX, int blockY, int blockZ, ChunkCache.CachedChunk chunk, int chunkX, int chunkY, int chunkZ) {
 
-		BlockPos blockPos = new BlockPos(blockX, blockY, blockZ);
+		BaseBlockPos blockPos = new BaseBlockPos(blockX, blockY, blockZ);
 		int blockId;
 
-		if (isBlockLoaded(blockPos)) {
+
+		if (Stevebot.get().getBlockProvider().isLoaded(blockPos)) {
 			Block block = getBlockFromMinecraft(blockPos);
 			if (block == null) {
 				blockId = BlockLibrary.ID_INVALID_BLOCK;
@@ -91,19 +93,8 @@ public class BlockCache {
 	 * @param pos the position of the block
 	 * @return the block at the given position from the minecraft world (never from the cache).
 	 */
-	private Block getBlockFromMinecraft(BlockPos pos) {
-		return Minecraft.getMinecraft().world.getBlockState(pos).getBlock();
-	}
-
-
-
-
-	/**
-	 * @param pos the position of the block
-	 * @return true, if the block at the given position is currently loaded.
-	 */
-	private boolean isBlockLoaded(BlockPos pos) {
-		return Minecraft.getMinecraft().world.isBlockLoaded(pos);
+	private Block getBlockFromMinecraft(BaseBlockPos pos) {
+		return Minecraft.getMinecraft().world.getBlockState(pos.copyAsMCBlockPos()).getBlock();
 	}
 
 

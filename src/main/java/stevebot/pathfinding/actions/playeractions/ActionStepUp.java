@@ -1,9 +1,9 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import net.minecraft.util.math.BlockPos;
+import stevebot.BlockUtils;
 import stevebot.Direction;
+import stevebot.data.blockpos.FastBlockPos;
 import stevebot.Stevebot;
-import stevebot.pathfinding.BlockUtils;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
@@ -12,7 +12,7 @@ import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerController;
 
-public class  ActionStepUp extends StatefulAction {
+public class ActionStepUp extends StatefulAction {
 
 
 	private static final String STATE_SLOW_DOWN = "SLOW_DOWN";
@@ -44,16 +44,16 @@ public class  ActionStepUp extends StatefulAction {
 				if (slowEnough) {
 					setState(STATE_JUMP);
 				} else {
-					controller.camera().setLookAt(getTo().pos, true);
+					controller.camera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
 				}
 				return PathExecutor.StateFollow.EXEC;
 			}
 
 			case STATE_JUMP: {
-				if (controller.utils().getPlayerBlockPos().equals(getFrom().pos)) {
+				if (controller.utils().getPlayerBlockPos().equals(getFrom().getPos())) {
 					controller.input().setJump(false);
 				}
-				if (controller.movement().moveTowards(getTo().pos, true)) {
+				if (controller.movement().moveTowards(getTo().getPos(), true)) {
 					return PathExecutor.StateFollow.DONE;
 				} else {
 					return PathExecutor.StateFollow.EXEC;
@@ -96,7 +96,7 @@ public class  ActionStepUp extends StatefulAction {
 		Result checkStraight(Node node, Direction direction) {
 
 			// check to-position
-			final BlockPos to = node.pos.add(direction.dx, 1, direction.dz);
+			final FastBlockPos to = node.getPosCopy().add(direction.dx, 1, direction.dz);
 			if (!BlockUtils.isLoaded(to)) {
 				return Result.unloaded();
 			}
@@ -105,8 +105,7 @@ public class  ActionStepUp extends StatefulAction {
 			}
 
 			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canStandAt(from, 3)) {
+			if (!ActionUtils.canStandAt(node.getPos(), 3)) {
 				return Result.invalid();
 			}
 
@@ -119,7 +118,7 @@ public class  ActionStepUp extends StatefulAction {
 		Result checkDiagonal(Node node, Direction direction) {
 
 			// check to-position
-			final BlockPos to = node.pos.add(direction.dx, 1, direction.dz);
+			final FastBlockPos to = node.getPosCopy().add(direction.dx, 1, direction.dz);
 			if (!BlockUtils.isLoaded(to)) {
 				return Result.unloaded();
 			}
@@ -128,15 +127,14 @@ public class  ActionStepUp extends StatefulAction {
 			}
 
 			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canStandAt(from, 3)) {
+			if (!ActionUtils.canStandAt(node.getPos(), 3)) {
 				return Result.invalid();
 			}
 
 			// check diagonal
 			Direction[] splitDirection = direction.split();
-			final BlockPos p0 = node.pos.add(splitDirection[0].dx, 1, splitDirection[0].dz);
-			final BlockPos p1 = node.pos.add(splitDirection[1].dx, 1, splitDirection[1].dz);
+			final FastBlockPos p0 = node.getPosCopy().add(splitDirection[0].dx, 1, splitDirection[0].dz);
+			final FastBlockPos p1 = node.getPosCopy().add(splitDirection[1].dx, 1, splitDirection[1].dz);
 
 			boolean traversable0 = ActionUtils.canMoveThrough(p0, 3) && BlockUtils.isLoaded(p0);
 			boolean traversable1 = ActionUtils.canMoveThrough(p1, 3) && BlockUtils.isLoaded(p1);

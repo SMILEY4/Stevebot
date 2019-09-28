@@ -1,6 +1,6 @@
 package stevebot.pathfinding.path;
 
-import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
@@ -18,10 +18,10 @@ public interface Path {
 	 * @return the created renderable
 	 */
 	static Renderable toRenderable(Path path) {
-		BlockPos[] positions = new BlockPos[path.getNodes().size()];
+		BaseBlockPos[] positions = new BaseBlockPos[path.getNodes().size()];
 		for (int i = 0; i < path.getNodes().size(); i++) {
 			Node node = path.getNodes().get(i);
-			positions[i] = node.pos;
+			positions[i] = node.getPos();
 		}
 		return new PathRenderObject(positions, Color.RED);
 	}

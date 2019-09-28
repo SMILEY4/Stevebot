@@ -1,7 +1,7 @@
 package stevebot.pathfinding;
 
-import net.minecraft.util.math.BlockPos;
 import stevebot.Stevebot;
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.execution.PathExecutor;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.player.Camera;
@@ -22,7 +22,7 @@ public class PathHandler {
 	 * @param startFollowing true, to immediately start following the path
 	 * @param enableFreelook true, to enable freelook when following the path
 	 */
-	public void createPath(BlockPos from, Goal goal, boolean startFollowing, boolean enableFreelook) {
+	public void createPath(BaseBlockPos from, Goal goal, boolean startFollowing, boolean enableFreelook) {
 		if (excecutor == null) {
 			excecutor = new PathExecutor(from, goal) {
 				@Override

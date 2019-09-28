@@ -2,6 +2,7 @@ package stevebot.rendering.renderables;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
 import stevebot.rendering.Renderer;
@@ -14,7 +15,13 @@ public class PathRenderObject implements Renderable {
 	private final Color color;
 
 
-
+	/**
+	 * @param positions the positions of the vertices of this path
+	 * @param color     the color of this path
+	 */
+	public PathRenderObject(BaseBlockPos[] positions, Color color) {
+		this(Renderable.toVecArray(positions), DEFAULT_LINE_WIDTH, color);
+	}
 
 	/**
 	 * @param positions the positions of the vertices of this path

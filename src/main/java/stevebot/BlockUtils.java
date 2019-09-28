@@ -1,12 +1,12 @@
-package stevebot.pathfinding;
+package stevebot;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import stevebot.Direction;
-import stevebot.Stevebot;
+import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blockpos.FastBlockPos;
 
 public class BlockUtils {
 
@@ -23,7 +23,7 @@ public class BlockUtils {
 	 * @param pos the position of the block
 	 * @return whether the position is currently in a loaded chunk.
 	 */
-	public static boolean isLoaded(BlockPos pos) {
+	public static boolean isLoaded(BaseBlockPos pos) {
 		return Stevebot.get().getBlockProvider().isLoaded(pos);
 	}
 
@@ -45,7 +45,7 @@ public class BlockUtils {
 	 * @param pos the position
 	 * @return whether the block at the given position is water (flowing or still)
 	 */
-	public static boolean isWater(BlockPos pos) {
+	public static boolean isWater(BaseBlockPos pos) {
 		return isWater(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
 
@@ -67,7 +67,7 @@ public class BlockUtils {
 	 * @param pos the position
 	 * @return whether the block at the given position is lava (flowing or still)
 	 */
-	public static boolean isLava(BlockPos pos) {
+	public static boolean isLava(BaseBlockPos pos) {
 		return isLava(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
 
@@ -89,7 +89,7 @@ public class BlockUtils {
 	 * @param pos the position
 	 * @return whether the block at the given position is flowing water or lava.
 	 */
-	public static boolean isFlowingLiquid(BlockPos pos) {
+	public static boolean isFlowingLiquid(BaseBlockPos pos) {
 		return isFlowingLiquid(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
 
@@ -111,7 +111,7 @@ public class BlockUtils {
 	 * @param pos the position
 	 * @return whether the block at the given position is water or lava (flowing or still)
 	 */
-	public static boolean isLiquid(BlockPos pos) {
+	public static boolean isLiquid(BaseBlockPos pos) {
 		return isLiquid(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
 
@@ -133,7 +133,7 @@ public class BlockUtils {
 	 * @param pos the position
 	 * @return whether the block given position can be dangerous to the player and should be avoided.
 	 */
-	public static boolean isDangerous(BlockPos pos) {
+	public static boolean isDangerous(BaseBlockPos pos) {
 		return isDangerous(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
 
@@ -144,13 +144,24 @@ public class BlockUtils {
 	 * @param pos the position
 	 * @return whether the player can walk through the block at the given position. This does not check the surrounding blocks.
 	 */
-	public static boolean canWalkThrough(BlockPos pos) {
+	public static boolean canWalkThrough(BaseBlockPos pos) {
 		final Block block = Stevebot.get().getBlockProvider().getBlockAt(pos);
+		return canWalkThrough(block);
+	}
+
+
+
+
+	/**
+	 * @param block the block
+	 * @return whether the player can walk through the given block. This does not check the surrounding blocks.
+	 */
+	public static boolean canWalkThrough(Block block) {
 		if (isLiquid(block) || Blocks.WATERLILY.equals(block) || isDangerous(block)
 				|| Blocks.ICE.equals(block) || Blocks.FROSTED_ICE.equals(block) || Blocks.PACKED_ICE.equals(block)) {
 			return false;
 		} else {
-			return block.isPassable(Minecraft.getMinecraft().world, pos);
+			return block.isPassable(Minecraft.getMinecraft().world, null);
 		}
 	}
 
@@ -161,8 +172,19 @@ public class BlockUtils {
 	 * @param pos the position
 	 * @return whether the player can walk on the block at the given position. This does not check the surrounding blocks.
 	 */
-	public static boolean canWalkOn(BlockPos pos) {
+	public static boolean canWalkOn(BaseBlockPos pos) {
 		final Block block = Stevebot.get().getBlockProvider().getBlockAt(pos);
+		return canWalkOn(block);
+	}
+
+
+
+
+	/**
+	 * @param block the block
+	 * @return whether the player can walk on the given block. This does not check the surrounding blocks.
+	 */
+	public static boolean canWalkOn(Block block) {
 		if (isLiquid(block) || isDangerous(block)) {
 			return false;
 		} else {
@@ -188,7 +210,7 @@ public class BlockUtils {
 	 * @param pos the position
 	 * @return whether the player should avoid touching the block at the given position
 	 */
-	public static boolean avoidTouching(BlockPos pos) {
+	public static boolean avoidTouching(BaseBlockPos pos) {
 		return avoidTouching(Stevebot.get().getBlockProvider().getBlockAt(pos));
 	}
 
@@ -200,7 +222,7 @@ public class BlockUtils {
 	 * @return the distance of the nearest block-center to the given position on one axis
 	 */
 	public static double distToCenter(Vector3d pos) {
-		final BlockPos blockPos = toBlockPos(pos);
+		final BaseBlockPos blockPos = toBaseBlockPos(pos);
 		final double dx = Math.abs((blockPos.getX() + 0.5) - pos.x);
 		final double dy = Math.abs((blockPos.getZ() + 0.5) - pos.z);
 		return Math.max(dx, dy);
@@ -255,10 +277,70 @@ public class BlockUtils {
 
 	/**
 	 * @param pos the position as a {@link Vector3d}
+	 * @return the position as a {@link FastBlockPos}
+	 */
+	public static FastBlockPos toFastBlockPos(Vector3d pos) {
+		return toFastBlockPos(pos.x, pos.y, pos.z);
+	}
+
+
+
+
+	/**
+	 * @param x the x-position
+	 * @param y the x-position
+	 * @param z the x-position
+	 * @return the position as a {@link BaseBlockPos}
+	 */
+	public static FastBlockPos toFastBlockPos(double x, double y, double z) {
+		final boolean isNegativeX = x < 0;
+		final boolean isNegativeY = y < 0;
+		final boolean isNegativeZ = z < 0;
+		int bpx = ((int) x) - (isNegativeX ? 1 : 0);
+		int bpy = ((int) y) - (isNegativeY ? 1 : 0);
+		int bpz = ((int) z) - (isNegativeZ ? 1 : 0);
+		return new FastBlockPos(bpx, bpy, bpz);
+	}
+
+
+
+
+	/**
+	 * @param pos the position as a {@link Vector3d}
+	 * @return the position as a {@link FastBlockPos}
+	 */
+	public static BaseBlockPos toBaseBlockPos(Vector3d pos) {
+		return toBaseBlockPos(pos.x, pos.y, pos.z);
+	}
+
+
+
+
+	/**
+	 * @param x the x-position
+	 * @param y the x-position
+	 * @param z the x-position
+	 * @return the position as a {@link BaseBlockPos}
+	 */
+	public static BaseBlockPos toBaseBlockPos(double x, double y, double z) {
+		final boolean isNegativeX = x < 0;
+		final boolean isNegativeY = y < 0;
+		final boolean isNegativeZ = z < 0;
+		int bpx = ((int) x) - (isNegativeX ? 1 : 0);
+		int bpy = ((int) y) - (isNegativeY ? 1 : 0);
+		int bpz = ((int) z) - (isNegativeZ ? 1 : 0);
+		return new BaseBlockPos(bpx, bpy, bpz);
+	}
+
+
+
+
+	/**
+	 * @param pos the position as a {@link Vector3d}
 	 * @return the position as a {@link BlockPos}
 	 */
-	public static BlockPos toBlockPos(Vector3d pos) {
-		return toBlockPos(pos.x, pos.y, pos.z);
+	public static BlockPos toMCBlockPos(Vector3d pos) {
+		return toMCBlockPos(pos.x, pos.y, pos.z);
 	}
 
 
@@ -270,7 +352,7 @@ public class BlockUtils {
 	 * @param z the x-position
 	 * @return the position as a {@link BlockPos}
 	 */
-	public static BlockPos toBlockPos(double x, double y, double z) {
+	public static BlockPos toMCBlockPos(double x, double y, double z) {
 		final boolean isNegativeX = x < 0;
 		final boolean isNegativeY = y < 0;
 		final boolean isNegativeZ = z < 0;
@@ -279,5 +361,6 @@ public class BlockUtils {
 		int bpz = ((int) z) - (isNegativeZ ? 1 : 0);
 		return new BlockPos(bpx, bpy, bpz);
 	}
+
 
 }

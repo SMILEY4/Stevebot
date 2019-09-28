@@ -1,9 +1,10 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import net.minecraft.util.math.BlockPos;
+import stevebot.BlockUtils;
 import stevebot.Direction;
 import stevebot.Stevebot;
-import stevebot.pathfinding.BlockUtils;
+import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blockpos.FastBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
@@ -36,7 +37,7 @@ public class ActionJump extends StatefulAction {
 
 		switch (getCurrentState()) {
 			case STATE_PREPARE: {
-				controller.camera().setLookAt(getTo().pos, true);
+				controller.camera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
 				boolean slowEnough = controller.movement().slowDown(0.055);
 				if (slowEnough) {
 					nextState();
@@ -45,19 +46,19 @@ public class ActionJump extends StatefulAction {
 			}
 
 			case STATE_JUMP: {
-				controller.movement().moveTowards(getTo().pos, true);
+				controller.movement().moveTowards(getTo().getPos(), true);
 				final double distToEdge = BlockUtils.distToCenter(controller.utils().getPlayerPosition());
 				if (distToEdge > 0.4) {
 					controller.input().setJump(false);
 				}
-				if (controller.getPlayer().onGround && controller.utils().getPlayerBlockPos().equals(getTo().pos)) {
+				if (controller.getPlayer().onGround && controller.utils().getPlayerBlockPos().equals(getTo().getPos())) {
 					nextState();
 				}
 				return PathExecutor.StateFollow.EXEC;
 			}
 
 			case STATE_LAND: {
-				if (controller.movement().moveTowards(getTo().pos, true)) {
+				if (controller.movement().moveTowards(getTo().getPos(), true)) {
 					return PathExecutor.StateFollow.DONE;
 				} else {
 					return PathExecutor.StateFollow.EXEC;
@@ -100,7 +101,7 @@ public class ActionJump extends StatefulAction {
 		Result checkStraight(Node node, Direction direction) {
 
 			// check to-position
-			final BlockPos to = node.pos.add(direction.dx * 2, 0, direction.dz * 2);
+			final BaseBlockPos to = node.getPosCopy().add(direction.dx * 2, 0, direction.dz * 2);
 			if (!BlockUtils.isLoaded(to)) {
 				return Result.unloaded();
 			}
@@ -109,13 +110,12 @@ public class ActionJump extends StatefulAction {
 			}
 
 			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canJumpAt(from)) {
+			if (!ActionUtils.canJumpAt(node.getPos())) {
 				return Result.invalid();
 			}
 
 			// check gap
-			if (!ActionUtils.canJumpThrough(from.add(direction.dx, 0, direction.dy))) {
+			if (!ActionUtils.canJumpThrough(node.getPosCopy().add(direction.dx, 0, direction.dy))) {
 				return Result.invalid();
 			}
 
@@ -128,7 +128,7 @@ public class ActionJump extends StatefulAction {
 		Result checkDiagonal(Node node, Direction direction) {
 
 			// check to-position
-			final BlockPos to = node.pos.add(direction.dx * 2, 0, direction.dz * 2);
+			final BaseBlockPos to = node.getPosCopy().add(direction.dx * 2, 0, direction.dz * 2);
 			if (!BlockUtils.isLoaded(to)) {
 				return Result.unloaded();
 			}
@@ -137,20 +137,20 @@ public class ActionJump extends StatefulAction {
 			}
 
 			// check from-position
-			final BlockPos from = node.pos;
-			if (!ActionUtils.canJumpAt(from)) {
+			if (!ActionUtils.canJumpAt(node.getPos())) {
 				return Result.invalid();
 			}
 
 			// check gap
+			final FastBlockPos from = node.getPosCopy();
 			if (!ActionUtils.canJumpThrough(from.add(direction.dx, 0, direction.dz))) {
 				return Result.invalid();
 			}
 
 			// check diagonal
 			Direction[] splitDirection = direction.split();
-			final BlockPos p0 = node.pos.add(splitDirection[0].dx, 0, splitDirection[0].dz);
-			final BlockPos p1 = node.pos.add(splitDirection[1].dx, 0, splitDirection[1].dz);
+			final FastBlockPos p0 = node.getPosCopy().add(splitDirection[0].dx, 0, splitDirection[0].dz);
+			final FastBlockPos p1 = node.getPosCopy().add(splitDirection[1].dx, 0, splitDirection[1].dz);
 			if (!ActionUtils.canJump(p0, p1)) {
 				return Result.invalid();
 			}
