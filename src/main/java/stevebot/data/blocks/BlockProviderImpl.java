@@ -14,7 +14,7 @@ public class BlockProviderImpl implements BlockProvider {
 	private final BlockCache cache;
 	private final BlockLibrary library;
 
-	public final Map<BlockPos, BlockChange> blockChanges = new HashMap<>();
+	private final Map<BlockPos, BlockChange> blockChanges = new HashMap<>();
 
 
 

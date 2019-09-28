@@ -17,7 +17,10 @@ import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.PartialPath;
 import stevebot.pathfinding.path.Path;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.PriorityQueue;
 
 public class Pathfinding {
 
@@ -43,7 +46,14 @@ public class Pathfinding {
 		nodeStart.gcost = 0;
 
 		// prepare open set
-		final Set<Node> openSet = new HashSet<>();
+		final PriorityQueue<Node> openSet = new PriorityQueue<>((o1, o2) -> {
+			final int fcostResult = Double.compare(o1.fcost(), o2.fcost());
+			if (fcostResult == 0) {
+				return Double.compare(o1.hcost, o2.hcost);
+			} else {
+				return fcostResult;
+			}
+		});
 		openSet.add(nodeStart);
 
 		// prepare misc
@@ -143,6 +153,8 @@ public class Pathfinding {
 
 		}
 
+		Stevebot.get().logNonCritical("Pathfinding completed in " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size() + " nodes.");
+
 		if (bestPath.reachedGoal()) {
 			return bestPath;
 		} else {
@@ -177,17 +189,8 @@ public class Pathfinding {
 	 * @param set the set
 	 * @return the removed node
 	 */
-	private Node removeLowest(Set<Node> set) {
-		Node bestNode = null;
-		for (Node node : set) {
-			if (bestNode == null
-					|| bestNode.fcost() > node.fcost()
-					|| (bestNode.fcost() == node.fcost() && bestNode.hcost > node.hcost)) {
-				bestNode = node;
-			}
-		}
-		set.remove(bestNode);
-		return bestNode;
+	private Node removeLowest(PriorityQueue<Node> set) {
+		return set.poll();
 	}
 
 
@@ -203,7 +206,7 @@ public class Pathfinding {
 		Node current = node;
 		while (current.prev != null) {
 			Action action = current.action;
-			if(action.changedBlocks()) {
+			if (action.changedBlocks()) {
 				BlockChange[] changes = action.getBlockChanges();
 				for (int i = 0; i < changes.length; i++) {
 					blockProvider.addBlockChange(changes[i], false);

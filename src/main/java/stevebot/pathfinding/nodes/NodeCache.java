@@ -8,7 +8,7 @@ import java.util.Map;
 public class NodeCache {
 
 
-	public static Map<BlockPos, Node> nodes = new HashMap<>();
+	private static Map<BlockPos, Node> nodes = new HashMap<>();
 
 
 
