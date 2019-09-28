@@ -2,8 +2,8 @@ package stevebot.pathfinding.actions.playeractions;
 
 import stevebot.BlockUtils;
 import stevebot.Direction;
-import stevebot.data.blockpos.FastBlockPos;
 import stevebot.Stevebot;
+import stevebot.data.blockpos.FastBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
@@ -11,6 +11,11 @@ import stevebot.pathfinding.execution.PathExecutor;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerController;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ActionStepUp extends StatefulAction {
 
@@ -74,6 +79,51 @@ public class ActionStepUp extends StatefulAction {
 	private static abstract class StepUpActionFactory implements ActionFactory {
 
 
+		private static final Map<Direction, List<Class<? extends ActionFactory>>> IMPOSSIBLE_ACTIONS = new HashMap<>();
+
+
+
+
+		static {
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH, new ArrayList<>()).add(ActionDropDown.DropDownFactoryNorth.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_EAST, new ArrayList<>()).add(ActionDropDown.DropDownFactoryNorthEast.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.EAST, new ArrayList<>()).add(ActionDropDown.DropDownFactoryEast.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_EAST, new ArrayList<>()).add(ActionDropDown.DropDownFactorySouthEast.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH, new ArrayList<>()).add(ActionDropDown.DropDownFactorySouth.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_WEST, new ArrayList<>()).add(ActionDropDown.DropDownFactorySouthWest.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.WEST, new ArrayList<>()).add(ActionDropDown.DropDownFactoryWest.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_WEST, new ArrayList<>()).add(ActionDropDown.DropDownFactoryNorthWest.class);
+
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH, new ArrayList<>()).add(ActionStepDown.StepDownFactoryNorth.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_EAST, new ArrayList<>()).add(ActionStepDown.StepDownFactoryNorthEast.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.EAST, new ArrayList<>()).add(ActionStepDown.StepDownFactoryEast.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_EAST, new ArrayList<>()).add(ActionStepDown.StepDownFactorySouthEast.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH, new ArrayList<>()).add(ActionStepDown.StepDownFactorySouth.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_WEST, new ArrayList<>()).add(ActionStepDown.StepDownFactorySouthWest.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.WEST, new ArrayList<>()).add(ActionStepDown.StepDownFactoryWest.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_WEST, new ArrayList<>()).add(ActionStepDown.StepDownFactoryNorthWest.class);
+
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH, new ArrayList<>()).add(ActionWalk.WalkFactoryNorth.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_EAST, new ArrayList<>()).add(ActionWalk.WalkFactoryNorthEast.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.EAST, new ArrayList<>()).add(ActionWalk.WalkFactoryEast.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_EAST, new ArrayList<>()).add(ActionWalk.WalkFactorySouthEast.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH, new ArrayList<>()).add(ActionWalk.WalkFactorySouth.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_WEST, new ArrayList<>()).add(ActionWalk.WalkFactorySouthWest.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.WEST, new ArrayList<>()).add(ActionWalk.WalkFactoryWest.class);
+			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_WEST, new ArrayList<>()).add(ActionWalk.WalkFactoryNorthWest.class);
+		}
+
+
+
+
+		@Override
+		public List<Class<? extends ActionFactory>> makesImpossible(Direction direction) {
+			return IMPOSSIBLE_ACTIONS.get(direction);
+		}
+
+
+
+
 		ActionStepUp create(Node node, Direction direction, Result result) {
 			// final Result result = direction.diagonal ? checkDiagonal(node, direction) : checkStraight(node, direction);
 			return new ActionStepUp(node, result.to, result.estimatedCost);
@@ -109,7 +159,7 @@ public class ActionStepUp extends StatefulAction {
 				return Result.invalid();
 			}
 
-			return Result.valid(NodeCache.get(to), ActionCosts.COST_STEP_UP);
+			return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_STEP_UP);
 		}
 
 
@@ -140,7 +190,7 @@ public class ActionStepUp extends StatefulAction {
 			boolean traversable1 = ActionUtils.canMoveThrough(p1, 3) && BlockUtils.isLoaded(p1);
 
 			if (ActionUtils.canStandAt(to) && traversable0 && traversable1) {
-				return Result.valid(NodeCache.get(to), ActionCosts.COST_STEP_UP * ActionCosts.COST_MULT_DIAGONAL);
+				return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_STEP_UP * ActionCosts.COST_MULT_DIAGONAL);
 			} else {
 				return Result.invalid();
 			}

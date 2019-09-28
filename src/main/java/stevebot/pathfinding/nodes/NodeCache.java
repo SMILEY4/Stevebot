@@ -1,6 +1,7 @@
 package stevebot.pathfinding.nodes;
 
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.pathfinding.actions.ActionCosts;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class NodeCache {
 	 * @return the created node
 	 */
 	private static Node create(BaseBlockPos pos, Node prev) {
-		return create(pos, prev, 1000000);
+		return create(pos, prev, ActionCosts.COST_INFINITE);
 	}
 
 
@@ -80,7 +81,7 @@ public class NodeCache {
 			node.setPos(pos);
 			node.setPrev(prev);
 			node.setGCost(cost);
-			node.open();
+			node.open(null);
 			nodes.put(pos, node);
 		}
 		return node;

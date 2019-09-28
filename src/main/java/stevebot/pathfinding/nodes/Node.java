@@ -4,10 +4,13 @@ import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.pathfinding.actions.playeractions.Action;
 
+import java.util.PriorityQueue;
+
 public class Node {
 
 
 	private boolean open;
+
 	private FastBlockPos pos;
 	private Node prev;
 	private Action action; // action required to reach this node
@@ -81,9 +84,14 @@ public class Node {
 
 	/**
 	 * Opens this node
+	 *
+	 * @param openSet
 	 */
-	public void open() {
+	public void open(PriorityQueue<Node> openSet) {
 		this.open = true;
+		if (openSet != null) {
+			openSet.add(this);
+		}
 	}
 
 

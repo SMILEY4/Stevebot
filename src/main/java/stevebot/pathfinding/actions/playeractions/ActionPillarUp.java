@@ -2,6 +2,7 @@ package stevebot.pathfinding.actions.playeractions;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
+import stevebot.Direction;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.Stevebot;
 import stevebot.pathfinding.actions.ActionCosts;
@@ -123,7 +124,7 @@ public class ActionPillarUp extends StatefulAction {
 				return Result.invalid();
 			}
 
-			return Result.valid(NodeCache.get(to), ActionCosts.COST_PILLAR_UP);
+			return Result.valid(Direction.UP, NodeCache.get(to), ActionCosts.COST_PILLAR_UP);
 		}
 
 

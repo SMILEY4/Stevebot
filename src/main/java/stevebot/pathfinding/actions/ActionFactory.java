@@ -1,7 +1,11 @@
 package stevebot.pathfinding.actions;
 
-import stevebot.pathfinding.nodes.Node;
+import stevebot.Direction;
 import stevebot.pathfinding.actions.playeractions.Action;
+import stevebot.pathfinding.nodes.Node;
+
+import java.util.Collections;
+import java.util.List;
 
 public interface ActionFactory {
 
@@ -46,11 +50,12 @@ public interface ActionFactory {
 
 
 
-		public static Result valid(Node to, double cost) {
+		public static Result valid(Direction direction, Node to, double cost) {
 			Result result = new Result();
 			result.type = ResultType.VALID;
 			result.estimatedCost = cost;
 			result.to = to;
+			result.direction = direction;
 			return result;
 		}
 
@@ -60,6 +65,7 @@ public interface ActionFactory {
 		public ResultType type = ResultType.INVALID;
 		public double estimatedCost = ActionCosts.COST_INFINITE;
 		public Node to = null;
+		public Direction direction = Direction.NONE;
 
 	}
 
@@ -79,5 +85,13 @@ public interface ActionFactory {
 	 * @return the created action
 	 */
 	Action createAction(Node node, Result result);
+
+
+	/**
+	 * @return a list of other {@link ActionFactory}s that are not possible for the same node when this factory creates a valid action.
+	 */
+	default List<Class<? extends ActionFactory>> makesImpossible(Direction direction) {
+		return Collections.emptyList();
+	}
 
 }

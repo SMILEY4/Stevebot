@@ -1,6 +1,7 @@
 package stevebot.pathfinding.actions.playeractions;
 
 import stevebot.BlockUtils;
+import stevebot.Direction;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
@@ -62,7 +63,7 @@ public class ActionFall extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(NodeCache.get(fallTo), ActionCosts.COST_FALL_N(from.getY() - fallTo.getY()));
+			return Result.valid(Direction.NONE, NodeCache.get(fallTo), ActionCosts.COST_FALL_N(from.getY() - fallTo.getY()));
 		}
 
 
@@ -73,6 +74,7 @@ public class ActionFall extends Action {
 			// final Result result = check(node);
 			return new ActionFall(node, result.to, result.estimatedCost);
 		}
+
 
 	}
 

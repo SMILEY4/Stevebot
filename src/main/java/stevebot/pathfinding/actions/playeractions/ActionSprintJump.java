@@ -122,7 +122,7 @@ public class ActionSprintJump extends StatefulAction {
 				}
 			}
 
-			return Result.valid(NodeCache.get(to), ActionCosts.COST_SPRINT_JUMP);
+			return Result.valid(Direction.NONE, NodeCache.get(to), ActionCosts.COST_SPRINT_JUMP);
 		}
 
 

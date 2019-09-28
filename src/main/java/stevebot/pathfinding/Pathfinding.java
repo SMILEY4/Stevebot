@@ -4,6 +4,7 @@ import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.Config;
 import stevebot.Stevebot;
 import stevebot.data.blocks.BlockProvider;
+import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionFactoryProvider;
 import stevebot.pathfinding.actions.playeractions.Action;
@@ -17,10 +18,7 @@ import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.PartialPath;
 import stevebot.pathfinding.path.Path;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class Pathfinding {
 
@@ -65,6 +63,8 @@ public class Pathfinding {
 
 		long timeLast = System.currentTimeMillis();
 
+		int nFactorieCalls = 0;
+
 		// calculate path
 		while (!openSet.isEmpty() && nUnloadedHits < 400) {
 
@@ -90,7 +90,6 @@ public class Pathfinding {
 
 			// get next node
 			Node current = removeLowest(openSet);
-			current.close();
 
 			// check if reached goal
 			if (goal.reached(current.getPos())) {
@@ -111,7 +110,8 @@ public class Pathfinding {
 				nWorseThanBest = 0;
 			}
 
-			if (!bestPath.reachedGoal() && nWorseThanBest > 1000) {
+			// detects if goal is not reachable
+			if (!bestPath.reachedGoal() && nWorseThanBest > 500) {
 				break;
 			}
 
@@ -121,10 +121,17 @@ public class Pathfinding {
 
 			// process actions
 			boolean hitUnloaded = false;
+			Set<Class<? extends ActionFactory>> impossibleFactories = new HashSet<>();
 			List<ActionFactory> factories = actionFactoryProvider.getAllFactories();
+
 			for (int i = 0, n = factories.size(); i < n; i++) {
 				ActionFactory factory = factories.get(i);
 
+				if (impossibleFactories.contains(factory.getClass())) {
+					continue;
+				}
+
+				nFactorieCalls++;
 				ActionFactory.Result result = factory.check(current);
 				if (result.type == ActionFactory.ResultType.INVALID) {
 					continue;
@@ -134,20 +141,30 @@ public class Pathfinding {
 					continue;
 				}
 				if (result.type == ActionFactory.ResultType.VALID) {
+					List<Class<? extends ActionFactory>> impList = factory.makesImpossible(result.direction);
+					if(impList != null) {
+						impossibleFactories.addAll(impList);
+					}
+
 					final Node next = result.to;
 
 					final double newCost = current.gcost() + result.estimatedCost;
 					if (!next.isOpen() && newCost >= next.gcost()) {
 						continue;
 					}
-					if (newCost < next.gcost() || !openSet.contains(next)) {
+					if (newCost < next.gcost() || !next.isOpen()) {
+						if (next.gcost() < ActionCosts.COST_INFINITE - 10 && !next.isOpen()) {
+							double improvement = next.gcost() - newCost;
+							if (improvement < 1) {
+								continue;
+							}
+						}
 						Action action = factory.createAction(current, result);
 						next.setGCost(newCost);
 						next.setHCost(goal.calcHCost(next.getPos()));
 						next.setPrev(current);
 						next.setAction(action);
-						next.open();
-						openSet.add(next);
+						next.open(openSet);
 						bestNodes.update(next, goal);
 					}
 				}
@@ -160,7 +177,7 @@ public class Pathfinding {
 
 		}
 
-		Stevebot.get().logNonCritical("Pathfinding completed in " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size() + " nodes.");
+		Stevebot.get().logNonCritical("Pathfinding completed in " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size() + " nodes and " + nFactorieCalls + " actions.");
 
 		if (bestPath.reachedGoal()) {
 			return bestPath;
@@ -197,7 +214,9 @@ public class Pathfinding {
 	 * @return the removed node
 	 */
 	private Node removeLowest(PriorityQueue<Node> set) {
-		return set.poll();
+		Node node = set.poll();
+		node.close();
+		return node;
 	}
 
 
