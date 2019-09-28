@@ -38,9 +38,9 @@ public class ActionPillarUp extends StatefulAction {
 
 		final PlayerController controller = Stevebot.get().getPlayerController();
 
-		if (controller.utils().getMotionVector().mul(1, 0, 1).length() < 0.075) {
-			setState(STATE_JUMP);
-		}
+//		if (controller.utils().getMotionVector().mul(1, 0, 1).length() < 0.075) {
+//			setState(STATE_JUMP);
+//		}
 
 		switch (getCurrentState()) {
 
@@ -59,7 +59,7 @@ public class ActionPillarUp extends StatefulAction {
 					controller.input().setJump(false);
 				}
 				if (controller.utils().getPlayerBlockPos().equals(getTo().pos)) {
-					Minecraft.getMinecraft().world.setBlockState(getTo().pos, Blocks.GOLD_BLOCK.getDefaultState());
+					Minecraft.getMinecraft().world.setBlockState(getFrom().pos, Blocks.GOLD_BLOCK.getDefaultState());
 					setState(STATE_LAND);
 				}
 				return PathExecutor.StateFollow.EXEC;

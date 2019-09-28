@@ -3,6 +3,7 @@ package stevebot.pathfinding;
 import net.minecraft.util.math.BlockPos;
 import stevebot.Config;
 import stevebot.Stevebot;
+import stevebot.data.blocks.BlockProvider;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionFactoryProvider;
 import stevebot.pathfinding.actions.playeractions.Action;
@@ -97,6 +98,10 @@ public class Pathfinding {
 				break;
 			}
 
+			// get block changes
+			Stevebot.get().getBlockProvider().clearBlockChanges();
+			collectBlockChanges(current, Stevebot.get().getBlockProvider());
+
 			// process actions
 			boolean hitUnloaded = false;
 			List<ActionFactory> factories = actionFactoryProvider.getAllFactories();
@@ -189,20 +194,23 @@ public class Pathfinding {
 
 
 	/**
-	 * Collects all block changes that are neccessary to get from the starting node to the given node.
+	 * Collects all {@link BlockChange}s that are necessary to get from the starting node to the given node and adds them to the given {@link BlockProvider}.
 	 *
-	 * @param node the target node
-	 * @return a list of all {@link BlockChange}s
+	 * @param node          the target node
+	 * @param blockProvider the block provider
 	 */
-	private List<BlockChange> collectBlockChanges(Node node) {
-		List<BlockChange> list = new ArrayList<>();
+	private void collectBlockChanges(Node node, BlockProvider blockProvider) {
 		Node current = node;
 		while (current.prev != null) {
 			Action action = current.action;
-			list.addAll(Arrays.asList(action.getBlockChanges()));
+			if(action.changedBlocks()) {
+				BlockChange[] changes = action.getBlockChanges();
+				for (int i = 0; i < changes.length; i++) {
+					blockProvider.addBlockChange(changes[i], false);
+				}
+			}
 			current = current.prev;
 		}
-		return list;
 	}
 
 

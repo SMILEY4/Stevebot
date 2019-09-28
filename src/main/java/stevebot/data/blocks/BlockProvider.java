@@ -2,6 +2,7 @@ package stevebot.data.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
+import stevebot.pathfinding.actions.playeractions.BlockChange;
 
 public interface BlockProvider {
 
@@ -32,8 +33,22 @@ public interface BlockProvider {
 	int getBlockIdAt(int x, int y, int z);
 
 	/**
+	 * Temporarily changes a block at a specified position without placing/breaking it in the world.
+	 *
+	 * @param change           the change to add.
+	 * @param overrideExisting true, to override any existing block change at that same position.
+	 */
+	void addBlockChange(BlockChange change, boolean overrideExisting);
+
+	/**
+	 * Removes/Resets all temporary block changes.
+	 */
+	void clearBlockChanges();
+
+	/**
 	 * @return the underlying {@link BlockCache}.
 	 */
 	BlockCache getBlockCache();
+
 
 }

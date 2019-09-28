@@ -166,7 +166,7 @@ public class BlockUtils {
 		if (isLiquid(block) || isDangerous(block)) {
 			return false;
 		} else {
-			return block.isNormalCube(Minecraft.getMinecraft().world.getBlockState(pos), Minecraft.getMinecraft().world, pos);
+			return block.getDefaultState().isNormalCube();
 		}
 	}
 
