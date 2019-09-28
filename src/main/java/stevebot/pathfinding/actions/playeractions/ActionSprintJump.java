@@ -80,8 +80,8 @@ public class ActionSprintJump extends StatefulAction {
 	private static abstract class SprintJumpActionFactory implements ActionFactory {
 
 
-		ActionSprintJump create(Node node, Direction direction) {
-			final Result result = check(node, direction);
+		ActionSprintJump create(Node node, Direction direction, Result result) {
+			// final Result result = check(node, direction);
 			return new ActionSprintJump(node, result.to, result.estimatedCost);
 		}
 
@@ -146,8 +146,8 @@ public class ActionSprintJump extends StatefulAction {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.NORTH);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.NORTH, result);
 		}
 
 	}
@@ -169,8 +169,8 @@ public class ActionSprintJump extends StatefulAction {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.EAST);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.EAST, result);
 		}
 
 	}
@@ -192,8 +192,8 @@ public class ActionSprintJump extends StatefulAction {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.SOUTH);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.SOUTH, result);
 		}
 
 	}
@@ -215,8 +215,8 @@ public class ActionSprintJump extends StatefulAction {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.WEST);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.WEST, result);
 		}
 
 	}

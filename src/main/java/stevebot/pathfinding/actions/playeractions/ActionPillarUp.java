@@ -101,8 +101,8 @@ public class ActionPillarUp extends StatefulAction {
 
 
 		@Override
-		public Action createAction(Node node) {
-			final Result result = check(node);
+		public Action createAction(Node node, Result result) {
+			// final Result result = check(node);
 			return new ActionPillarUp(node, result.to, result.estimatedCost, new BlockChange(node.pos, Blocks.GOLD_BLOCK));
 		}
 

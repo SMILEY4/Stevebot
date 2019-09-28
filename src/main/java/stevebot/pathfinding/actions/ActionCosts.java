@@ -18,7 +18,7 @@ public class ActionCosts {
 	public static final double COST_STEP_UP = COST_WALKING * 0.5 + COST_FALL_N(1); // 7.556
 	public static final double COST_WALK_JUMP = COST_WALKING * 2 + 3;
 	public static final double COST_SPRINT_JUMP = COST_SPRINTING * 3 + 3;
-	public static final double COST_PILLAR_UP = COST_FALL_N(1) + 3;
+	public static final double COST_PILLAR_UP = COST_FALL_N(1) + 10;
 
 	public static final double COST_LADDER_UP = 20.0 / 2.35; // 8.510
 	public static final double COST_SNEAKING = 20.0 / 1.3; // 15.384

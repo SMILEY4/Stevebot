@@ -95,9 +95,10 @@ public class ActionDropDown extends StatefulAction {
 
 
 
-		ActionDropDown create(Node node, Direction direction) {
-			final Result result = direction.diagonal ? checkDiagonal(node, direction) : checkStraight(node, direction);
-			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(NodeCache.get(node.pos.add(direction.dx, 0, direction.dz)));
+		ActionDropDown create(Node node, Direction direction, Result result) {
+			//final Result result = direction.diagonal ? checkDiagonal(node, direction) : checkStraight(node, direction);
+			final Node nodeFall = NodeCache.get(node.pos.add(direction.dx, 0, direction.dz));
+			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(nodeFall, fallActionFactory.check(nodeFall));
 			return new ActionDropDown(node, result.to, result.estimatedCost, actionFall, direction);
 
 		}
@@ -134,7 +135,8 @@ public class ActionDropDown extends StatefulAction {
 			}
 
 			// check fall
-			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(NodeCache.get(node.pos.add(direction.dx, 0, direction.dz)));
+			final Node nodeFall = NodeCache.get(node.pos.add(direction.dx, 0, direction.dz));
+			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(nodeFall, fallActionFactory.check(nodeFall));
 			if (actionFall == null) {
 				return Result.invalid();
 			}
@@ -171,7 +173,8 @@ public class ActionDropDown extends StatefulAction {
 			}
 
 			// check+create fall
-			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(NodeCache.get(node.pos.add(direction.dx, 0, direction.dz)));
+			final Node nodeFall = NodeCache.get(node.pos.add(direction.dx, 0, direction.dz));
+			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(nodeFall, fallActionFactory.check(nodeFall));
 			if (actionFall == null) {
 				return Result.invalid();
 			}
@@ -199,8 +202,8 @@ public class ActionDropDown extends StatefulAction {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.NORTH);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.NORTH, result);
 		}
 
 	}
@@ -222,8 +225,8 @@ public class ActionDropDown extends StatefulAction {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.NORTH_EAST);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.NORTH_EAST, result);
 		}
 
 	}
@@ -245,8 +248,8 @@ public class ActionDropDown extends StatefulAction {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.EAST);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.EAST, result);
 		}
 
 	}
@@ -268,8 +271,8 @@ public class ActionDropDown extends StatefulAction {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.SOUTH_EAST);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.SOUTH_EAST, result);
 		}
 
 	}
@@ -291,8 +294,8 @@ public class ActionDropDown extends StatefulAction {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.SOUTH);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.SOUTH, result);
 		}
 
 	}
@@ -314,8 +317,8 @@ public class ActionDropDown extends StatefulAction {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.SOUTH_WEST);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.SOUTH_WEST, result);
 		}
 
 	}
@@ -337,8 +340,8 @@ public class ActionDropDown extends StatefulAction {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.WEST);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.WEST, result);
 		}
 
 	}
@@ -360,8 +363,8 @@ public class ActionDropDown extends StatefulAction {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.NORTH_WEST);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.NORTH_WEST, result);
 		}
 
 	}

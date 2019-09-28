@@ -68,7 +68,7 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionJump.JumpFactoryWest());
 		registerFactory(new ActionJump.JumpFactoryNorthWest());
 
-		// spring-jump-factories
+		// sprint-jump-factories
 		registerFactory(new ActionSprintJump.SprintJumpFactoryNorth());
 		registerFactory(new ActionSprintJump.SprintJumpFactoryEast());
 		registerFactory(new ActionSprintJump.SprintJumpFactorySouth());

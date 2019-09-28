@@ -134,7 +134,7 @@ public class Pathfinding {
 						continue;
 					}
 					if (newCost < next.gcost || !openSet.contains(next)) {
-						Action action = factory.createAction(current);
+						Action action = factory.createAction(current, result);
 						next.gcost = newCost;
 						next.hcost = goal.calcHCost(next.pos);
 						next.prev = current;
@@ -203,6 +203,11 @@ public class Pathfinding {
 	 * @param blockProvider the block provider
 	 */
 	private void collectBlockChanges(Node node, BlockProvider blockProvider) {
+		// TODO optimize this
+		// idea ???
+		// when opening node n -> check if prev node has changes in history or if action to reach n changed blocks
+		// 							-> if true -> set flag "changesInHistory"
+		// when collecting changes -> check for flag -> if false, do nothing
 		Node current = node;
 		while (current.prev != null) {
 			Action action = current.action;

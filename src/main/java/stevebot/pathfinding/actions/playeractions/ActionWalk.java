@@ -45,8 +45,8 @@ public class ActionWalk extends Action {
 	private static abstract class WalkActionFactory implements ActionFactory {
 
 
-		ActionWalk create(Node node, Direction direction) {
-			final Result result = direction.diagonal ? checkDiagonal(node, direction) : checkStraight(node, direction);
+		ActionWalk create(Node node, Direction direction, Result result) {
+			// final Result result = direction.diagonal ? checkDiagonal(node, direction) : checkStraight(node, direction);
 			return new ActionWalk(node, result.to, result.estimatedCost);
 		}
 
@@ -147,8 +147,8 @@ public class ActionWalk extends Action {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.NORTH);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.NORTH, result);
 		}
 
 	}
@@ -170,8 +170,8 @@ public class ActionWalk extends Action {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.NORTH_EAST);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.NORTH_EAST, result);
 		}
 
 	}
@@ -193,8 +193,8 @@ public class ActionWalk extends Action {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.EAST);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.EAST, result);
 		}
 
 	}
@@ -216,8 +216,8 @@ public class ActionWalk extends Action {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.SOUTH_EAST);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.SOUTH_EAST, result);
 		}
 
 	}
@@ -239,8 +239,8 @@ public class ActionWalk extends Action {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.SOUTH);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.SOUTH, result);
 		}
 
 	}
@@ -262,8 +262,8 @@ public class ActionWalk extends Action {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.SOUTH_WEST);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.SOUTH_WEST, result);
 		}
 
 	}
@@ -285,8 +285,8 @@ public class ActionWalk extends Action {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.WEST);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.WEST, result);
 		}
 
 	}
@@ -308,8 +308,8 @@ public class ActionWalk extends Action {
 
 
 		@Override
-		public Action createAction(Node node) {
-			return create(node, Direction.NORTH_WEST);
+		public Action createAction(Node node, Result result) {
+			return create(node, Direction.NORTH_WEST, result);
 		}
 
 	}

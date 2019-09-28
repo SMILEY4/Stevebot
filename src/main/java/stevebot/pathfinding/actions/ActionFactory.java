@@ -74,9 +74,10 @@ public interface ActionFactory {
 	/**
 	 * Creates an action starting from the given node
 	 *
-	 * @param node the node
+	 * @param node   the node
+	 * @param result the result of a previous valid check of the same node in the same step.
 	 * @return the created action
 	 */
-	Action createAction(Node node);
+	Action createAction(Node node, Result result);
 
 }
