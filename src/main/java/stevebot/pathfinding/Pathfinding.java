@@ -56,24 +56,24 @@ public class Pathfinding {
 
 		// prepare misc
 		Path bestPath = new EmptyPath();
+		BestNodesContainer bestNodes = new BestNodesContainer(20);
 		long timeStart = System.currentTimeMillis();
 		int nUnloadedHits = 0;
-		BestNodesContainer bestNodes = new BestNodesContainer(20);
 		int nWorseThanBest = 0;
-
+		int nBetterPathFound = 0;
 		long timeLast = System.currentTimeMillis();
 
-		int nFactorieCalls = 0;
 
 		// calculate path
-		while (!openSet.isEmpty() && nUnloadedHits < 400) {
-
+		while (!openSet.isEmpty() && nUnloadedHits < 400 && nBetterPathFound < 2) {
+:
 			// timeout
 			if (checkForTimeout(timeStart, timeoutInMs)) {
 				Stevebot.get().getPlayerController().utils().sendMessage("Timeout");
 				break;
 			}
 
+			// status report
 			if (System.currentTimeMillis() - timeLast > 1000 * 2) {
 				timeLast = System.currentTimeMillis();
 				Stevebot.get().logNonCritical("Searching... " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size() + " nodes.");
@@ -95,6 +95,8 @@ public class Pathfinding {
 			if (goal.reached(current.getPos())) {
 				Path currentPath = buildPath(nodeStart, current, true);
 				if (currentPath.getCost() < bestPath.getCost()) {
+					Stevebot.get().logNonCritical("Found possible path: " + ((System.currentTimeMillis() - timeStart)) + "ms, cost: " + currentPath.getCost());
+					nBetterPathFound++;
 					bestPath = currentPath;
 				}
 				continue;
@@ -131,7 +133,6 @@ public class Pathfinding {
 					continue;
 				}
 
-				nFactorieCalls++;
 				ActionFactory.Result result = factory.check(current);
 				if (result.type == ActionFactory.ResultType.INVALID) {
 					continue;
@@ -142,7 +143,7 @@ public class Pathfinding {
 				}
 				if (result.type == ActionFactory.ResultType.VALID) {
 					List<Class<? extends ActionFactory>> impList = factory.makesImpossible(result.direction);
-					if(impList != null) {
+					if (impList != null) {
 						impossibleFactories.addAll(impList);
 					}
 
@@ -177,7 +178,7 @@ public class Pathfinding {
 
 		}
 
-		Stevebot.get().logNonCritical("Pathfinding completed in " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size() + " nodes and " + nFactorieCalls + " actions.");
+		Stevebot.get().logNonCritical("Pathfinding completed in " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size());
 
 		if (bestPath.reachedGoal()) {
 			return bestPath;
@@ -259,6 +260,8 @@ public class Pathfinding {
 	 * @return
 	 */
 	private Path buildPath(Node start, Node end, boolean reachedGoal) {
+
+		System.out.println("Found possible path " + "cost = " + end.gcost());
 
 		List<Node> nodes = new ArrayList<>();
 		Node current = end;
