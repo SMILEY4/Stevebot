@@ -3,8 +3,9 @@ package stevebot.pathfinding.actions.playeractions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import stevebot.Direction;
-import stevebot.data.blockpos.FastBlockPos;
+import stevebot.StateMachine;
 import stevebot.Stevebot;
+import stevebot.data.blockpos.FastBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
@@ -13,22 +14,46 @@ import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerController;
 
-public class ActionPillarUp extends StatefulAction {
+public class ActionPillarUp extends Action {
 
 
-	private static final String STATE_SLOW_DOWN = "SLOW_DOWN";
-	private static final String STATE_JUMP = "JUMP";
-	private static final String STATE_LAND = "LAND";
+	private enum State {
+		SLOWING_DOWN, JUMPING, LANDING;
+	}
 
+
+
+
+
+
+	private enum Transition {
+		SLOW_ENOUGH, PLACED_BLOCK;
+	}
+
+
+
+
+
+
+	private StateMachine<State, Transition> stateMachine = new StateMachine<>();
 	private final BlockChange[] change;
 
 
 
 
 	private ActionPillarUp(Node from, Node to, double cost, BlockChange change) {
-		super(from, to, cost, STATE_SLOW_DOWN, STATE_JUMP, STATE_LAND);
-		this.setState(STATE_JUMP);
+		super(from, to, cost);
 		this.change = new BlockChange[]{change};
+		stateMachine.defineTransition(State.SLOWING_DOWN, Transition.SLOW_ENOUGH, State.JUMPING);
+		stateMachine.defineTransition(State.JUMPING, Transition.PLACED_BLOCK, State.LANDING);
+	}
+
+
+
+
+	@Override
+	public void resetAction() {
+		stateMachine.setState(State.SLOWING_DOWN);
 	}
 
 
@@ -39,35 +64,31 @@ public class ActionPillarUp extends StatefulAction {
 
 		final PlayerController controller = Stevebot.get().getPlayerController();
 
-//		if (controller.utils().getMotionVector().mul(1, 0, 1).length() < 0.075) {
-//			setState(STATE_JUMP);
-//		}
+		switch (stateMachine.getState()) {
 
-		switch (getCurrentState()) {
-
-			case STATE_SLOW_DOWN: {
+			case SLOWING_DOWN: {
 				boolean slowEnough = controller.movement().slowDown(0.075);
 				if (slowEnough) {
-					setState(STATE_JUMP);
+					stateMachine.fireTransition(Transition.SLOW_ENOUGH);
 				} else {
 					controller.camera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
 				}
 				return PathExecutor.StateFollow.EXEC;
 			}
 
-			case STATE_JUMP: {
+			case JUMPING: {
 				if (controller.utils().getPlayerBlockPos().equals(getFrom().getPos())) {
 					controller.input().setJump(false);
 				}
 				if (controller.utils().getPlayerBlockPos().equals(getTo().getPos())) {
 					Minecraft.getMinecraft().world.setBlockState(getFrom().getPos().copyAsMCBlockPos(), Blocks.GOLD_BLOCK.getDefaultState());
-					setState(STATE_LAND);
+					stateMachine.fireTransition(Transition.PLACED_BLOCK);
 				}
 				return PathExecutor.StateFollow.EXEC;
 			}
 
 
-			case STATE_LAND: {
+			case LANDING: {
 				if (controller.getPlayer().onGround && controller.utils().getPlayerBlockPos().equals(getTo().getPos())) {
 					return PathExecutor.StateFollow.DONE;
 				} else {

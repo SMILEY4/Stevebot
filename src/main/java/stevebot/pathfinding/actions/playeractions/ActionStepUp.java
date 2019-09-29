@@ -2,6 +2,7 @@ package stevebot.pathfinding.actions.playeractions;
 
 import stevebot.BlockUtils;
 import stevebot.Direction;
+import stevebot.StateMachine;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
@@ -17,17 +18,43 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ActionStepUp extends StatefulAction {
+public class ActionStepUp extends Action {
 
 
-	private static final String STATE_SLOW_DOWN = "SLOW_DOWN";
-	private static final String STATE_JUMP = "JUMP";
+	private enum State {
+		SLOWING_DOWN, JUMPING;
+	}
+
+
+
+
+
+
+	private enum Transition {
+		SLOW_ENOUGH;
+	}
+
+
+
+
+
+
+	private StateMachine<State, Transition> stateMachine = new StateMachine<>();
 
 
 
 
 	private ActionStepUp(Node from, Node to, double cost) {
-		super(from, to, cost, STATE_SLOW_DOWN, STATE_JUMP);
+		super(from, to, cost);
+		stateMachine.defineTransition(State.SLOWING_DOWN, Transition.SLOW_ENOUGH, State.JUMPING);
+	}
+
+
+
+
+	@Override
+	public void resetAction() {
+		stateMachine.setState(State.SLOWING_DOWN);
 	}
 
 
@@ -39,22 +66,22 @@ public class ActionStepUp extends StatefulAction {
 		final PlayerController controller = Stevebot.get().getPlayerController();
 
 		if (controller.utils().getMotionVector().mul(1, 0, 1).length() < 0.075) {
-			setState(STATE_JUMP);
+			stateMachine.fireTransition(Transition.SLOW_ENOUGH);
 		}
 
-		switch (getCurrentState()) {
+		switch (stateMachine.getState()) {
 
-			case STATE_SLOW_DOWN: {
+			case SLOWING_DOWN: {
 				boolean slowEnough = controller.movement().slowDown(0.075);
 				if (slowEnough) {
-					setState(STATE_JUMP);
+					stateMachine.fireTransition(Transition.SLOW_ENOUGH);
 				} else {
 					controller.camera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
 				}
 				return PathExecutor.StateFollow.EXEC;
 			}
 
-			case STATE_JUMP: {
+			case JUMPING: {
 				if (controller.utils().getPlayerBlockPos().equals(getFrom().getPos())) {
 					controller.input().setJump(false);
 				}

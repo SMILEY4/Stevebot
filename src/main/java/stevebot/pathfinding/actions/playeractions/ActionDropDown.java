@@ -2,6 +2,7 @@ package stevebot.pathfinding.actions.playeractions;
 
 import stevebot.BlockUtils;
 import stevebot.Direction;
+import stevebot.StateMachine;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
@@ -17,13 +18,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ActionDropDown extends StatefulAction {
+public class ActionDropDown extends Action {
 
 
-	private static final String STATE_PREPARE_1 = "PREPARE 1";
-	private static final String STATE_PREPARE_2 = "PREPARE 2";
-	private static final String STATE_FALL = "FALL";
-	private static final String STATE_FINISH = "FINISH";
+	private enum State {
+		PREPARING_1, PREPARING_2, FALLING, FINISHING;
+	}
+
+
+
+
+
+
+	private enum Transition {
+		PREPARATION_1_DONE, PREPARATION_2_DONE, TOUCHED_GROUND
+	}
+
+
+
+
+
+
+	private StateMachine<State, Transition> stateMachine = new StateMachine<>();
+
 
 	private final ActionFall fall;
 	private final Direction direction;
@@ -32,9 +49,20 @@ public class ActionDropDown extends StatefulAction {
 
 
 	private ActionDropDown(Node from, Node to, double cost, ActionFall fall, Direction direction) {
-		super(from, to, cost, STATE_PREPARE_1, STATE_PREPARE_2, STATE_FALL, STATE_FINISH);
+		super(from, to, cost);
 		this.fall = fall;
 		this.direction = direction;
+		stateMachine.defineTransition(State.PREPARING_1, Transition.PREPARATION_1_DONE, State.PREPARING_2);
+		stateMachine.defineTransition(State.PREPARING_2, Transition.PREPARATION_2_DONE, State.FALLING);
+		stateMachine.defineTransition(State.FALLING, Transition.TOUCHED_GROUND, State.FINISHING);
+	}
+
+
+
+
+	@Override
+	public void resetAction() {
+		stateMachine.setState(State.PREPARING_1);
 	}
 
 
@@ -45,36 +73,36 @@ public class ActionDropDown extends StatefulAction {
 		final PlayerController controller = Stevebot.get().getPlayerController();
 
 
-		switch (getCurrentState()) {
+		switch (stateMachine.getState()) {
 
-			case STATE_PREPARE_1: {
+			case PREPARING_1: {
 				final double distToEdge = BlockUtils.distToEdge(controller.utils().getPlayerPosition(), direction);
 				if (distToEdge <= 0.4) {
-					nextState();
+					stateMachine.fireTransition(Transition.PREPARATION_1_DONE);
 				} else {
 					controller.movement().moveTowards(getTo().getPos(), true);
 				}
 				return PathExecutor.StateFollow.EXEC;
 			}
 
-			case STATE_PREPARE_2: {
+			case PREPARING_2: {
 				if (controller.getPlayer().onGround && !controller.utils().isPlayerMoving(0.0001, false)) {
 					controller.movement().moveTowards(getTo().getPos(), true);
 				}
 				if (!controller.getPlayer().onGround) {
-					nextState();
+					stateMachine.fireTransition(Transition.PREPARATION_2_DONE);
 				}
 				return PathExecutor.StateFollow.EXEC;
 			}
 
-			case STATE_FALL: {
+			case FALLING: {
 				if (controller.getPlayer().onGround) {
-					nextState();
+					stateMachine.fireTransition(Transition.TOUCHED_GROUND);
 				}
 				return PathExecutor.StateFollow.EXEC;
 			}
 
-			case STATE_FINISH: {
+			case FINISHING: {
 				if (controller.movement().moveTowards(getTo().getPos(), true)) {
 					return PathExecutor.StateFollow.DONE;
 				} else {

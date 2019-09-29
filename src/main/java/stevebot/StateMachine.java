@@ -14,6 +14,22 @@ public class StateMachine<S extends Enum, T extends Enum> {
 
 
 
+	public StateMachine() {
+	}
+
+
+
+
+	/**
+	 * @param startState the starting state
+	 */
+	public StateMachine(S startState) {
+		setState(startState);
+	}
+
+
+
+
 	/**
 	 * Adds the given listener
 	 *

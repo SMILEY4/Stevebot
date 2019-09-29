@@ -2,6 +2,7 @@ package stevebot.pathfinding.actions.playeractions;
 
 import stevebot.BlockUtils;
 import stevebot.Direction;
+import stevebot.StateMachine;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
@@ -13,18 +14,44 @@ import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerController;
 
-public class ActionJump extends StatefulAction {
+public class ActionJump extends Action {
 
 
-	private static final String STATE_PREPARE = "PREPARE";
-	private static final String STATE_JUMP = "JUMP";
-	private static final String STATE_LAND = "LAND";
+	private enum State {
+		PREPARING, JUMPING, LANDING;
+	}
+
+
+
+
+
+
+	private enum Transition {
+		PREPARATION_DONE, TOUCHED_GROUND
+	}
+
+
+
+
+
+
+	private StateMachine<State, Transition> stateMachine = new StateMachine<>();
 
 
 
 
 	private ActionJump(Node from, Node to, double cost) {
-		super(from, to, cost, STATE_PREPARE, STATE_JUMP, STATE_LAND);
+		super(from, to, cost);
+		stateMachine.defineTransition(State.PREPARING, Transition.PREPARATION_DONE, State.JUMPING);
+		stateMachine.defineTransition(State.JUMPING, Transition.TOUCHED_GROUND, State.LANDING);
+	}
+
+
+
+
+	@Override
+	public void resetAction() {
+		stateMachine.setState(State.PREPARING);
 	}
 
 
@@ -35,29 +62,29 @@ public class ActionJump extends StatefulAction {
 
 		PlayerController controller = Stevebot.get().getPlayerController();
 
-		switch (getCurrentState()) {
-			case STATE_PREPARE: {
+		switch (stateMachine.getState()) {
+			case PREPARING: {
 				controller.camera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
 				boolean slowEnough = controller.movement().slowDown(0.055);
 				if (slowEnough) {
-					nextState();
+					stateMachine.fireTransition(Transition.PREPARATION_DONE);
 				}
 				return PathExecutor.StateFollow.EXEC;
 			}
 
-			case STATE_JUMP: {
+			case JUMPING: {
 				controller.movement().moveTowards(getTo().getPos(), true);
 				final double distToEdge = BlockUtils.distToCenter(controller.utils().getPlayerPosition());
 				if (distToEdge > 0.4) {
 					controller.input().setJump(false);
 				}
 				if (controller.getPlayer().onGround && controller.utils().getPlayerBlockPos().equals(getTo().getPos())) {
-					nextState();
+					stateMachine.fireTransition(Transition.TOUCHED_GROUND);
 				}
 				return PathExecutor.StateFollow.EXEC;
 			}
 
-			case STATE_LAND: {
+			case LANDING: {
 				if (controller.movement().moveTowards(getTo().getPos(), true)) {
 					return PathExecutor.StateFollow.DONE;
 				} else {
