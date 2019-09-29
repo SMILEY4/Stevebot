@@ -2,6 +2,7 @@ package stevebot.player;
 
 import com.ruegnerlukas.simplemath.MathUtils;
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
+import stevebot.BlockUtils;
 import stevebot.data.blockpos.BaseBlockPos;
 
 public class Movement {
@@ -69,7 +70,7 @@ public class Movement {
 		if (controller.utils().isAtLocation(x, z)) {
 			return true;
 		} else {
-			controller.camera().setLookAt((int) x, (int) controller.utils().getPlayerPosition().y, (int) z, true);
+			controller.camera().setLookAt(BlockUtils.toBaseBlockPos(new Vector3d(x, controller.utils().getPlayerPosition().y, z)), true);
 			controller.input().setMoveForward();
 			return false;
 		}

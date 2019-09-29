@@ -9,7 +9,10 @@ import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.Path;
 import stevebot.pathfinding.path.PathFactory;
+import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
+import stevebot.rendering.renderables.BoxRenderObject;
+import stevebot.rendering.renderables.DynPointCollectionRenderObject;
 
 import static stevebot.pathfinding.execution.PathExecutionStateMachine.ExecutionState;
 import static stevebot.pathfinding.execution.PathExecutionStateMachine.ExecutionTransition;
@@ -35,7 +38,9 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 	private boolean fistTick = true;
 
 	private Renderable pathRenderable;
+	private Renderable startRenderable;
 	private Renderable goalRenderable;
+	private DynPointCollectionRenderObject pathTraceRenderable = new DynPointCollectionRenderObject(3);
 
 
 
@@ -44,7 +49,10 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 		this.pathFactory = new PathFactory(posStart, goal);
 		this.stateMachine.addListener(this);
 		this.goalRenderable = goal.createRenderable();
+		this.startRenderable = new BoxRenderObject(posStart.copyAsMCBlockPos(), 3, Color.YELLOW);
 		Stevebot.get().getRenderer().addRenderable(goalRenderable);
+		Stevebot.get().getRenderer().addRenderable(startRenderable);
+		Stevebot.get().getRenderer().addRenderable(pathTraceRenderable);
 		Stevebot.get().getEventHandler().addListener(this);
 	}
 
@@ -69,7 +77,9 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 		isExecuting = false;
 		Stevebot.get().getEventHandler().removeListener(this);
 		Stevebot.get().getRenderer().removeRenderable(goalRenderable);
+		Stevebot.get().getRenderer().removeRenderable(startRenderable);
 		Stevebot.get().getRenderer().removeRenderable(pathRenderable);
+		Stevebot.get().getRenderer().removeRenderable(pathTraceRenderable);
 		onFinished();
 	}
 
@@ -189,6 +199,7 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 	 */
 	private StateFollow tick() {
 
+		pathTraceRenderable.addPoint(Stevebot.get().getPlayerController().utils().getPlayerPosition(), Color.MAGENTA);
 
 		Stevebot.get().getPlayerController().input().stopAll();
 

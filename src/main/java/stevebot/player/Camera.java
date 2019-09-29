@@ -276,7 +276,20 @@ public class Camera implements GameTickListener {
 	 * @param pos the position to look at
 	 */
 	public void setLookAt(BaseBlockPos pos) {
-		setLookAt(pos.getX(), pos.getY(), pos.getZ(), false);
+		setLookAt(pos, false);
+	}
+
+
+
+
+	/**
+	 * Sets the view-direction of the player.
+	 *
+	 * @param pos       the position to look at
+	 * @param keepPitch set to true to keep the pitch of the current view-direction
+	 */
+	public void setLookAt(BaseBlockPos pos, boolean keepPitch) {
+		setLookAt(pos.getX(), pos.getY(), pos.getZ(), keepPitch);
 	}
 
 
