@@ -55,6 +55,36 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionDropDown.DropDownFactoryWest());
 		registerFactory(new ActionDropDown.DropDownFactoryNorthWest());
 
+		// enter water
+		registerFactory(new ActionEnterWater.EnterWaterFactoryNorth());
+		registerFactory(new ActionEnterWater.EnterWaterFactoryNorthEast());
+		registerFactory(new ActionEnterWater.EnterWaterFactoryEast());
+		registerFactory(new ActionEnterWater.EnterWaterFactorySouthEast());
+		registerFactory(new ActionEnterWater.EnterWaterFactorySouth());
+		registerFactory(new ActionEnterWater.EnterWaterFactorySouthWest());
+		registerFactory(new ActionEnterWater.EnterWaterFactoryWest());
+		registerFactory(new ActionEnterWater.EnterWaterFactoryNorthWest());
+
+		// exit water
+		registerFactory(new ActionExitWater.ExitWaterFactoryNorth());
+		registerFactory(new ActionExitWater.ExitWaterFactoryNorthEast());
+		registerFactory(new ActionExitWater.ExitWaterFactoryEast());
+		registerFactory(new ActionExitWater.ExitWaterFactorySouthEast());
+		registerFactory(new ActionExitWater.ExitWaterFactorySouth());
+		registerFactory(new ActionExitWater.ExitWaterFactorySouthWest());
+		registerFactory(new ActionExitWater.ExitWaterFactoryWest());
+		registerFactory(new ActionExitWater.ExitWaterFactoryNorthWest());
+
+		// swim
+		registerFactory(new ActionSwim.SwimFactoryNorth());
+		registerFactory(new ActionSwim.SwimFactoryNorthEast());
+		registerFactory(new ActionSwim.SwimFactoryEast());
+		registerFactory(new ActionSwim.SwimFactorySouthEast());
+		registerFactory(new ActionSwim.SwimFactorySouth());
+		registerFactory(new ActionSwim.SwimFactorySouthWest());
+		registerFactory(new ActionSwim.SwimFactoryWest());
+		registerFactory(new ActionSwim.SwimFactoryNorthWest());
+
 		// fall-factory
 		registerFactory(new ActionFall.FallActionFactory());
 

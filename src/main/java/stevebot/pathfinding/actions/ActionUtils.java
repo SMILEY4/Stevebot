@@ -127,4 +127,17 @@ public class ActionUtils {
 	}
 
 
+
+
+	/**
+	 * Block below must be non-flowing water and there must be a 2-block high space.
+	 */
+	public static boolean canSwimAt(BaseBlockPos pos) {
+		if (!BlockUtils.isWater(fastPos1.set(pos).add(0, -1, 0))) {
+			return false;
+		}
+		return canMoveThrough(pos);
+	}
+
+
 }
