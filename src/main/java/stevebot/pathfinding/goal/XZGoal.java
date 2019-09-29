@@ -24,7 +24,7 @@ public class XZGoal extends Goal {
 
 	@Override
 	public boolean reached(BaseBlockPos pos) {
-		return x == pos.getY() && z == pos.getY();
+		return x == pos.getX() && z == pos.getZ();
 	}
 
 
