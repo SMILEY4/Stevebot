@@ -74,7 +74,7 @@ public class Pathfinding {
 				break;
 			}
 
-			if (System.currentTimeMillis() - timeLast > 1000 * 10) {
+			if (System.currentTimeMillis() - timeLast > 1000 * 2) {
 				timeLast = System.currentTimeMillis();
 				Stevebot.get().logNonCritical("Searching... " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size() + " nodes.");
 			}

@@ -146,7 +146,7 @@ public class BlockUtils {
 	 */
 	public static boolean canWalkThrough(BaseBlockPos pos) {
 		final Block block = Stevebot.get().getBlockProvider().getBlockAt(pos);
-		return canWalkThrough(block);
+		return canWalkThrough(block, pos.copyAsMCBlockPos());
 	}
 
 
@@ -156,12 +156,12 @@ public class BlockUtils {
 	 * @param block the block
 	 * @return whether the player can walk through the given block. This does not check the surrounding blocks.
 	 */
-	public static boolean canWalkThrough(Block block) {
+	public static boolean canWalkThrough(Block block, BlockPos pos) {
 		if (isLiquid(block) || Blocks.WATERLILY.equals(block) || isDangerous(block)
 				|| Blocks.ICE.equals(block) || Blocks.FROSTED_ICE.equals(block) || Blocks.PACKED_ICE.equals(block)) {
 			return false;
 		} else {
-			return block.isPassable(Minecraft.getMinecraft().world, null);
+			return block.isPassable(Minecraft.getMinecraft().world, pos);
 		}
 	}
 
