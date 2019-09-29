@@ -189,6 +189,7 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 	 */
 	private StateFollow tick() {
 
+
 		Stevebot.get().getPlayerController().input().stopAll();
 
 		StateFollow actionState = crawler.getCurrentNodeTo().getAction().tick(fistTick);

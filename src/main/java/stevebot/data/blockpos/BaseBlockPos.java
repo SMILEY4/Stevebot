@@ -61,6 +61,27 @@ public class BaseBlockPos {
 
 
 
+	public double getCenterX() {
+		return x + 0.5;
+	}
+
+
+
+
+	public double getCenterY() {
+		return y + 0.5;
+	}
+
+
+
+
+	public double getCenterZ() {
+		return z + 0.5;
+	}
+
+
+
+
 	public BlockPos copyAsMCBlockPos() {
 		return new BlockPos(x, y, z);
 	}

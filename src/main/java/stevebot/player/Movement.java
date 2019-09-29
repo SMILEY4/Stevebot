@@ -28,9 +28,9 @@ public class Movement {
 	 */
 	public boolean moveTowards(BaseBlockPos pos, boolean ignoreY) {
 		if (ignoreY) {
-			return moveTowards(pos.getX(), pos.getZ());
+			return moveTowards(pos.getCenterX(), pos.getCenterZ());
 		} else {
-			return moveTowards(pos.getX(), pos.getY(), pos.getZ());
+			return moveTowards(pos.getCenterX(), pos.getY(), pos.getCenterZ());
 		}
 	}
 
@@ -66,12 +66,12 @@ public class Movement {
 	 * @return true, if the player reached the given coordinates
 	 */
 	public boolean moveTowards(double x, double z) {
-		if (!controller.utils().isAtLocation(x, z)) {
+		if (controller.utils().isAtLocation(x, z)) {
+			return true;
+		} else {
 			controller.camera().setLookAt((int) x, (int) controller.utils().getPlayerPosition().y, (int) z, true);
 			controller.input().setMoveForward();
 			return false;
-		} else {
-			return true;
 		}
 	}
 

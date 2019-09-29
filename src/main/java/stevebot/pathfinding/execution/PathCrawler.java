@@ -33,8 +33,9 @@ public class PathCrawler {
 	 * @return false, if the action is the last action in the current path(-segment)
 	 */
 	public boolean nextAction() {
+		System.out.println("next action");
 		currentIndexFrom++;
-		if (currentIndexFrom == path.getNodes().size() - 1) { // next is last node
+		if (currentIndexFrom == path.getNodes().size() - 1) { // next from is last node
 			currentNodeTo = null;
 			return false;
 		} else {
