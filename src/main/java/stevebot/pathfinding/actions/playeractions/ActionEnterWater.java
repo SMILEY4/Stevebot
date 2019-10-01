@@ -10,6 +10,7 @@ import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.execution.PathExecutor;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
+import stevebot.player.PlayerController;
 
 public class ActionEnterWater extends Action {
 
@@ -23,9 +24,15 @@ public class ActionEnterWater extends Action {
 
 	@Override
 	public PathExecutor.StateFollow tick(boolean fistTick) {
-		if (Stevebot.get().getPlayerController().movement().moveTowards(getTo().getPos(), true)) {
+		final PlayerController controller = Stevebot.get().getPlayerController();
+		if (controller.movement().moveTowards(getTo().getPos(), true)) {
+			controller.input().releaseJump();
 			return PathExecutor.StateFollow.DONE;
 		} else {
+			final boolean isInWater = BlockUtils.isWater(controller.utils().getPlayerBlockPos());
+			if (isInWater) {
+				controller.input().holdJump();
+			}
 			return PathExecutor.StateFollow.EXEC;
 		}
 	}
