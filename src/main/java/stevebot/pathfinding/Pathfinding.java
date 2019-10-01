@@ -261,8 +261,6 @@ public class Pathfinding {
 	 */
 	private Path buildPath(Node start, Node end, boolean reachedGoal) {
 
-		System.out.println("Found possible path " + "cost = " + end.gcost());
-
 		List<Node> nodes = new ArrayList<>();
 		Node current = end;
 		while (current != start) {
