@@ -118,8 +118,8 @@ public class Pathfinding {
 			}
 
 			// get block changes
-			Stevebot.get().getBlockProvider().clearBlockChanges();
-			collectBlockChanges(current, Stevebot.get().getBlockProvider());
+//			Stevebot.get().getBlockProvider().clearBlockChanges();
+//			collectBlockChanges(current, Stevebot.get().getBlockProvider());
 
 			// process actions
 			boolean hitUnloaded = false;
