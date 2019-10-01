@@ -15,6 +15,8 @@ public class PlayerInput {
 	private PlayerInputConfig inputConfig = null;
 	private boolean muteUserInput = false;
 
+	private boolean isHoldingJump = false;
+
 
 
 
@@ -172,6 +174,39 @@ public class PlayerInput {
 
 
 	/**
+	 * Start to hold down jump. Until {@link PlayerInput#releaseJump()} is called, the jump button will be held down.
+	 * {@link PlayerInput#stopAll()} will not reset affect the jump-button anymore
+	 */
+	public void holdJump() {
+		isHoldingJump = true;
+		setJump(true);
+	}
+
+
+
+
+	/**
+	 * Stop holding down the jump button. The "jump" will end and {@link PlayerInput#stopAll()} has an effect again.
+	 */
+	public void releaseJump() {
+		isHoldingJump = false;
+		setJump(false);
+	}
+
+
+
+
+	/**
+	 * @return whether the jump button is continuously held down.
+	 */
+	public boolean isHoldingJump() {
+		return isHoldingJump;
+	}
+
+
+
+
+	/**
 	 * Sprint until stopped.
 	 */
 	public void setSprint() {
@@ -296,7 +331,9 @@ public class PlayerInput {
 		setMoveBackward(false);
 		setMoveLeft(false);
 		setMoveRight(false);
-		setJump(false, true);
+		if (!isHoldingJump()) {
+			setJump(false, true);
+		}
 		setSprint(false);
 		setSneak(false);
 //		setPlaceBlock(false);

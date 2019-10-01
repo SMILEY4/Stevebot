@@ -10,6 +10,7 @@ import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.execution.PathExecutor;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
+import stevebot.player.PlayerController;
 
 public class ActionExitWater extends Action {
 
@@ -23,10 +24,15 @@ public class ActionExitWater extends Action {
 
 	@Override
 	public PathExecutor.StateFollow tick(boolean fistTick) {
-		if (Stevebot.get().getPlayerController().movement().moveTowards(getTo().getPos(), true)) {
-			Stevebot.get().getPlayerController().input().setJump(true);
+		final PlayerController controller = Stevebot.get().getPlayerController();
+		if (controller.movement().moveTowards(getTo().getPos(), true)) {
+			controller.input().releaseJump();
 			return PathExecutor.StateFollow.DONE;
 		} else {
+			final boolean isInWater = BlockUtils.isWater(controller.utils().getPlayerBlockPos());
+			if (isInWater) {
+				controller.input().holdJump();
+			}
 			return PathExecutor.StateFollow.EXEC;
 		}
 	}
@@ -62,16 +68,16 @@ public class ActionExitWater extends Action {
 			if (!BlockUtils.isLoaded(to)) {
 				return Result.unloaded();
 			}
-			if (!ActionUtils.canSwimAt(to)) {
+			if (ActionUtils.canSwimAt(to)) {
 				return Result.invalid();
 			}
 
 			// check from-position
-			if (!ActionUtils.canStandAt(node.getPos())) {
+			if (!ActionUtils.canSwimAt(node.getPos())) {
 				return Result.invalid();
 			}
 
-			return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_ENTER_WATER);
+			return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_EXIST_WATER);
 		}
 
 

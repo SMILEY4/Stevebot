@@ -30,9 +30,10 @@ public class ActionSwim extends Action {
 	@Override
 	public PathExecutor.StateFollow tick(boolean fistTick) {
 		if (Stevebot.get().getPlayerController().movement().moveTowards(getTo().getPos(), true)) {
-			Stevebot.get().getPlayerController().input().setJump(true);
+			Stevebot.get().getPlayerController().input().releaseJump();
 			return PathExecutor.StateFollow.DONE;
 		} else {
+			Stevebot.get().getPlayerController().input().holdJump();
 			return PathExecutor.StateFollow.EXEC;
 		}
 	}
