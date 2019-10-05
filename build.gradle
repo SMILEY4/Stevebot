@@ -1,5 +1,5 @@
 group = "stevebot"
-version = "1.0"
+version = "0.1"
 
 buildscript {
     repositories {
@@ -36,9 +36,13 @@ minecraft {
 
 dependencies {
     compile 'com.github.SMILEY4:SimpleMath:master-SNAPSHOT'
-    testImplementation('org.junit.jupiter:junit-jupiter-api:5.4.2')
     testImplementation("org.assertj:assertj-core:3.11.1")
-    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.2')
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.2"
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.5.2')
+}
+
+test {
+    useJUnitPlatform()
 }
 
 processResources {
@@ -47,9 +51,9 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
-        
+
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
