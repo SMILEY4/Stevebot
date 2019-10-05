@@ -1,6 +1,5 @@
 package stevebot;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,15 +52,14 @@ public class DirectionTest {
 
 	@Test
 	void testOpposite() {
-		Assertions.fail("Nonesense method signature of Direction.opposite");
-//		assertThat(Direction.NORTH.opposite()).isEqualTo(Direction.SOUTH);
-//		assertThat(Direction.EAST.opposite()).isEqualTo(Direction.WEST);
-//		assertThat(Direction.SOUTH.opposite()).isEqualTo(Direction.NONE);
-//		assertThat(Direction.WEST.opposite()).isEqualTo(Direction.EAST);
-//		assertThat(Direction.NORTH_EAST.opposite()).isEqualTo(Direction.SOUTH_WEST);
-//		assertThat(Direction.SOUTH_WEST.opposite()).isEqualTo(Direction.NORTH_EAST);
-//		assertThat(Direction.NORTH_WEST.opposite()).isEqualTo(Direction.SOUTH_EAST);
-//		assertThat(Direction.SOUTH_EAST.opposite()).isEqualTo(Direction.NORTH_WEST);
+		assertThat(Direction.NORTH.opposite()).isEqualTo(Direction.SOUTH);
+		assertThat(Direction.EAST.opposite()).isEqualTo(Direction.WEST);
+		assertThat(Direction.SOUTH.opposite()).isEqualTo(Direction.NORTH);
+		assertThat(Direction.WEST.opposite()).isEqualTo(Direction.EAST);
+		assertThat(Direction.NORTH_EAST.opposite()).isEqualTo(Direction.SOUTH_WEST);
+		assertThat(Direction.SOUTH_WEST.opposite()).isEqualTo(Direction.NORTH_EAST);
+		assertThat(Direction.NORTH_WEST.opposite()).isEqualTo(Direction.SOUTH_EAST);
+		assertThat(Direction.SOUTH_EAST.opposite()).isEqualTo(Direction.NORTH_WEST);
 	}
 
 
