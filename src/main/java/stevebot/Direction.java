@@ -169,10 +169,20 @@ public enum Direction {
 
 
 	/***
+	 * @return the opposite direction of this direction
+	 */
+	public Direction opposite() {
+		return opposite(this);
+	}
+
+
+
+
+	/***
 	 * @param direction the direction
 	 * @return the opposite direction of the given direction
 	 */
-	public Direction opposite(Direction direction) {
+	public static Direction opposite(Direction direction) {
 		switch (direction) {
 			case NORTH:
 				return SOUTH;
