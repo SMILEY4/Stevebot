@@ -100,10 +100,10 @@ public class BaseBlockPos {
 	public boolean equals(Object other) {
 		if (this == other) {
 			return true;
-		} else if (!(other instanceof FastBlockPos)) {
+		} else if (!(other instanceof BaseBlockPos)) {
 			return false;
 		} else {
-			final FastBlockPos otherBlockPos = (FastBlockPos) other;
+			final BaseBlockPos otherBlockPos = (BaseBlockPos) other;
 			return otherBlockPos.x == x && otherBlockPos.y == y && otherBlockPos.z == z;
 		}
 	}
