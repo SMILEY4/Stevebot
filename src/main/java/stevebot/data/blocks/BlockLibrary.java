@@ -5,6 +5,8 @@ import net.minecraft.block.Block;
 public interface BlockLibrary {
 
 
+	BlockWrapper INVALID_BLOCK = new BlockWrapper(BlockLibrary.ID_INVALID_BLOCK, "null", null);
+
 	int ID_UNLOADED_BOCK = -1;
 	int ID_INVALID_BLOCK = -2;
 
@@ -14,14 +16,19 @@ public interface BlockLibrary {
 	void initialize();
 
 	/**
+	 * @return the {@link BlockWrapper} representing the given {@link Block}
+	 */
+	BlockWrapper getBlockByMCBlock(Block block);
+
+	/**
 	 * @return the block with the given id or null.
 	 */
-	Block getBlockById(int id);
+	BlockWrapper getBlockById(int id);
 
 	/**
 	 * @return the block with the given name or null.
 	 */
-	Block getBlockByName(String name);
+	BlockWrapper getBlockByName(String name);
 
 	/**
 	 * @return the id of the given block

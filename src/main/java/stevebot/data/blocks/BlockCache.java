@@ -70,14 +70,8 @@ public class BlockCache {
 		BaseBlockPos blockPos = new BaseBlockPos(blockX, blockY, blockZ);
 		int blockId;
 
-
 		if (Stevebot.get().getBlockProvider().isLoaded(blockPos)) {
-			Block block = getBlockFromMinecraft(blockPos);
-			if (block == null) {
-				blockId = BlockLibrary.ID_INVALID_BLOCK;
-			} else {
-				blockId = library.getIdOfBlock(block);
-			}
+			blockId = getBlockFromMinecraft(blockPos).id;
 		} else {
 			blockId = BlockLibrary.ID_UNLOADED_BOCK;
 		}
@@ -93,8 +87,13 @@ public class BlockCache {
 	 * @param pos the position of the block
 	 * @return the block at the given position from the minecraft world (never from the cache).
 	 */
-	private Block getBlockFromMinecraft(BaseBlockPos pos) {
-		return Minecraft.getMinecraft().world.getBlockState(pos.copyAsMCBlockPos()).getBlock();
+	private BlockWrapper getBlockFromMinecraft(BaseBlockPos pos) {
+		final Block block = Minecraft.getMinecraft().world.getBlockState(pos.copyAsMCBlockPos()).getBlock();
+		if (block == null) {
+			return BlockLibrary.INVALID_BLOCK;
+		} else {
+			return library.getBlockByMCBlock(block);
+		}
 	}
 
 

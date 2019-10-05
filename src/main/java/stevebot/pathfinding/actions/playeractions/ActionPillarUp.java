@@ -6,6 +6,7 @@ import stevebot.Direction;
 import stevebot.StateMachine;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.FastBlockPos;
+import stevebot.data.blocks.BlockWrapper;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
@@ -125,7 +126,8 @@ public class ActionPillarUp extends Action {
 		@Override
 		public Action createAction(Node node, Result result) {
 			// final Result result = check(node);
-			return new ActionPillarUp(node, result.to, result.estimatedCost, new BlockChange(node.getPos(), Blocks.GOLD_BLOCK));
+			final BlockWrapper blockGold = Stevebot.get().getBlockLibrary().getBlockByName("minecraft:gold_block");
+			return new ActionPillarUp(node, result.to, result.estimatedCost, new BlockChange(node.getPos(), blockGold));
 		}
 
 

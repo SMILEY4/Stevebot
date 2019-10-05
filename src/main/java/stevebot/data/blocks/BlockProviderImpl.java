@@ -1,6 +1,5 @@
 package stevebot.data.blocks;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
@@ -40,7 +39,7 @@ public class BlockProviderImpl implements BlockProvider {
 
 
 	@Override
-	public Block getBlockAt(BaseBlockPos pos) {
+	public BlockWrapper getBlockAt(BaseBlockPos pos) {
 		return getBlockAt(pos.getX(), pos.getY(), pos.getZ());
 	}
 
@@ -48,7 +47,7 @@ public class BlockProviderImpl implements BlockProvider {
 
 
 	@Override
-	public Block getBlockAt(int x, int y, int z) {
+	public BlockWrapper getBlockAt(int x, int y, int z) {
 		BlockChange blockChange = getBlockChangeAt(x, y, z);
 		if (blockChange != null) {
 			return blockChange.newBlock;
@@ -71,7 +70,7 @@ public class BlockProviderImpl implements BlockProvider {
 	public int getBlockIdAt(int x, int y, int z) {
 		BlockChange blockChange = getBlockChangeAt(x, y, z);
 		if (blockChange != null) {
-			return library.getIdOfBlock(blockChange.newBlock);
+			return blockChange.newBlock.id;
 		}
 		return cache.getBlockIdAt(x, y, z);
 	}
