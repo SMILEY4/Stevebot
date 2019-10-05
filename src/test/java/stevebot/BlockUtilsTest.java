@@ -1,60 +1,11 @@
 package stevebot;
 
-import net.minecraft.init.Blocks;
 import org.junit.jupiter.api.Test;
 import stevebot.data.blocks.BlockUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BlockUtilsTest {
-
-
-	@Test
-	void testIsWater() {
-		assertThat(BlockUtils.isWater(Blocks.WATER)).isTrue();
-		assertThat(BlockUtils.isWater(Blocks.FLOWING_WATER)).isTrue();
-		assertThat(BlockUtils.isWater(Blocks.LAVA)).isFalse();
-		assertThat(BlockUtils.isWater(Blocks.FLOWING_LAVA)).isFalse();
-		assertThat(BlockUtils.isWater(Blocks.STONE)).isFalse();
-	}
-
-
-
-
-	@Test
-	void testIsLava() {
-		assertThat(BlockUtils.isWater(Blocks.LAVA)).isTrue();
-		assertThat(BlockUtils.isWater(Blocks.FLOWING_LAVA)).isTrue();
-		assertThat(BlockUtils.isWater(Blocks.WATER)).isFalse();
-		assertThat(BlockUtils.isWater(Blocks.FLOWING_WATER)).isFalse();
-		assertThat(BlockUtils.isWater(Blocks.STONE)).isFalse();
-	}
-
-
-
-
-	@Test
-	void testIsFlowingLiquid() {
-		assertThat(BlockUtils.isWater(Blocks.FLOWING_WATER)).isTrue();
-		assertThat(BlockUtils.isWater(Blocks.FLOWING_LAVA)).isTrue();
-		assertThat(BlockUtils.isWater(Blocks.WATER)).isFalse();
-		assertThat(BlockUtils.isWater(Blocks.LAVA)).isFalse();
-		assertThat(BlockUtils.isWater(Blocks.STONE)).isFalse();
-	}
-
-
-
-
-	@Test
-	void testIsLiquid() {
-		assertThat(BlockUtils.isWater(Blocks.FLOWING_WATER)).isTrue();
-		assertThat(BlockUtils.isWater(Blocks.FLOWING_LAVA)).isTrue();
-		assertThat(BlockUtils.isWater(Blocks.WATER)).isTrue();
-		assertThat(BlockUtils.isWater(Blocks.LAVA)).isTrue();
-		assertThat(BlockUtils.isWater(Blocks.STONE)).isFalse();
-	}
-
-
 
 
 	@Test
