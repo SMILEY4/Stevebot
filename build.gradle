@@ -1,5 +1,4 @@
-group = "com.smiley4.stevebot"
-archivesBaseName = "stevebot"
+group = "stevebot"
 version = "1.0"
 
 buildscript {
