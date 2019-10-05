@@ -1,3 +1,7 @@
+group = "com.smiley4.stevebot"
+archivesBaseName = "stevebot"
+version = "1.0"
+
 buildscript {
     repositories {
         jcenter()
@@ -7,6 +11,8 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
+
+apply plugin: 'java'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 allprojects {
@@ -17,10 +23,6 @@ allprojects {
         }
     }
 }
-
-group = "com.smiley4.stevebot"
-archivesBaseName = "stevebot"
-version = "1.0"
 
 sourceCompatibility = targetCompatibility = '1.8'
 compileJava {
