@@ -2,7 +2,7 @@ package stevebot.player;
 
 import com.ruegnerlukas.simplemath.MathUtils;
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import stevebot.BlockUtils;
+import stevebot.data.blocks.BlockUtils;
 import stevebot.data.blockpos.BaseBlockPos;
 
 public class Movement {

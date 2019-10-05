@@ -4,7 +4,7 @@ import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.text.TextComponentString;
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.BlockUtils;
+import stevebot.data.blocks.BlockUtils;
 
 public class PlayerUtils {
 

@@ -2,6 +2,7 @@ package stevebot;
 
 import net.minecraft.init.Blocks;
 import org.junit.jupiter.api.Test;
+import stevebot.data.blocks.BlockUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
