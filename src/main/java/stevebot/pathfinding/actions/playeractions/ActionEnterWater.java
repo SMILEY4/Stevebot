@@ -1,6 +1,6 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import stevebot.BlockUtils;
+import stevebot.data.blocks.BlockUtils;
 import stevebot.Direction;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;

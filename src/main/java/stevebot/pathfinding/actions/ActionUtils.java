@@ -1,6 +1,6 @@
 package stevebot.pathfinding.actions;
 
-import stevebot.BlockUtils;
+import stevebot.data.blocks.BlockUtils;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 

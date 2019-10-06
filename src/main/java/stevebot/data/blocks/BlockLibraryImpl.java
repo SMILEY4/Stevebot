@@ -10,8 +10,7 @@ import java.util.List;
 public class BlockLibraryImpl implements BlockLibrary {
 
 
-	private static final BlockEntry NULL_ENTRY = new BlockEntry(BlockLibrary.ID_INVALID_BLOCK, "null", null);
-	private BlockEntry[] entries;
+	private BlockWrapper[] blocks;
 
 
 
@@ -19,19 +18,19 @@ public class BlockLibraryImpl implements BlockLibrary {
 	@Override
 	public void initialize() {
 
-		List<BlockEntry> entryList = new ArrayList<>();
+		List<BlockWrapper> blockList = new ArrayList<>();
 		int maxID = 0;
 		for (Block block : Block.REGISTRY) {
 			final int id = getIdOfBlock(block);
 			final String name = getNameOfBlock(block);
-			entryList.add(new BlockEntry(id, name, block));
+			blockList.add(new BlockWrapper(id, name, block));
 			maxID = Math.max(maxID, id);
 		}
 
-		entries = new BlockEntry[maxID + 1];
-		Arrays.fill(entries, NULL_ENTRY);
-		for (BlockEntry entry : entryList) {
-			entries[entry.id] = entry;
+		blocks = new BlockWrapper[maxID + 1];
+		Arrays.fill(blocks, INVALID_BLOCK);
+		for (BlockWrapper block : blockList) {
+			blocks[block.id] = block;
 		}
 
 	}
@@ -40,16 +39,24 @@ public class BlockLibraryImpl implements BlockLibrary {
 
 
 	@Override
-	public Block getBlockById(int id) {
-		return getEntryByIndex(id).block;
+	public BlockWrapper getBlockByMCBlock(Block block) {
+		return getBlockByIndex(getIdOfBlock(block));
 	}
 
 
 
 
 	@Override
-	public Block getBlockByName(String name) {
-		return getEntryByIndex(getIdFromName(name)).block;
+	public BlockWrapper getBlockById(int id) {
+		return getBlockByIndex(id);
+	}
+
+
+
+
+	@Override
+	public BlockWrapper getBlockByName(String name) {
+		return getBlockByIndex(getIdFromName(name));
 	}
 
 
@@ -65,8 +72,8 @@ public class BlockLibraryImpl implements BlockLibrary {
 
 	@Override
 	public int getIdFromName(String name) {
-		for (int i = 0, n = entries.length; i < n; i++) {
-			BlockEntry entry = entries[i];
+		for (int i = 0, n = blocks.length; i < n; i++) {
+			BlockWrapper entry = blocks[i];
 			if (entry.name.equalsIgnoreCase(name)) {
 				return entry.id;
 			}
@@ -87,45 +94,21 @@ public class BlockLibraryImpl implements BlockLibrary {
 
 	@Override
 	public String getNameFromId(int id) {
-		return getEntryByIndex(id).name;
+		return getBlockByIndex(id).name;
 	}
 
 
 
 
 	/**
-	 * @return the BlockEntry at the given index or the {@code NULL_ENTRY}.
+	 * @return the BlockWrapper at the given index or the {@code NULL_ENTRY}.
 	 */
-	private BlockEntry getEntryByIndex(int index) {
-		if (MathUtils.inRange(index, 0, entries.length)) {
-			return entries[index];
+	private BlockWrapper getBlockByIndex(int index) {
+		if (MathUtils.inRange(index, 0, blocks.length)) {
+			return blocks[index];
 		} else {
-			return NULL_ENTRY;
+			return INVALID_BLOCK;
 		}
-	}
-
-
-
-
-	/**
-	 * An entry for one block containing its id, name and object representation.
-	 */
-	static class BlockEntry {
-
-
-		final int id;
-		final String name;
-		final Block block;
-
-
-
-
-		BlockEntry(int id, String name, Block block) {
-			this.id = id;
-			this.name = name;
-			this.block = block;
-		}
-
 	}
 
 

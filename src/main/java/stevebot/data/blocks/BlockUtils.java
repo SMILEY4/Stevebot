@@ -1,20 +1,27 @@
-package stevebot;
+package stevebot.data.blocks;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import stevebot.Direction;
+import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 
 public class BlockUtils {
 
 
-	static final Block WATER_FLOWING = Block.getBlockById(8);
-	static final Block WATER_STILL = Block.getBlockById(9);
-	static final Block LAVAL_FLOWING = Block.getBlockById(10);
-	static final Block LAVA_STILL = Block.getBlockById(11);
+	static final int WATER_FLOWING = 8;
+	static final int WATER_STILL = 9;
+	static final int LAVAL_FLOWING = 10;
+	static final int LAVA_STILL = 11;
+	static final int FIRE = 51;
+	static final int CACTUS = 81;
+	static final int WEB = 30;
+	static final int WATERLILY = 111;
+	static final int ICE = 79;
+	static final int FROSTED_ICE = 212;
+	static final int PACKED_ICE = 174;
 
 
 
@@ -34,8 +41,8 @@ public class BlockUtils {
 	 * @param block the block
 	 * @return whether the given block is water (flowing or still)
 	 */
-	public static boolean isWater(Block block) {
-		return WATER_FLOWING.equals(block) || WATER_STILL.equals(block);
+	public static boolean isWater(BlockWrapper block) {
+		return WATER_FLOWING == block.id || WATER_STILL == block.id;
 	}
 
 
@@ -56,8 +63,8 @@ public class BlockUtils {
 	 * @param block the block
 	 * @return whether the given block is lava (flowing or still)
 	 */
-	public static boolean isLava(Block block) {
-		return LAVAL_FLOWING.equals(block) || LAVA_STILL.equals(block);
+	public static boolean isLava(BlockWrapper block) {
+		return LAVAL_FLOWING == block.id || LAVA_STILL == block.id;
 	}
 
 
@@ -78,8 +85,8 @@ public class BlockUtils {
 	 * @param block the block
 	 * @return whether the given block is flowing water or lava.
 	 */
-	public static boolean isFlowingLiquid(Block block) {
-		return WATER_FLOWING.equals(block) || LAVAL_FLOWING.equals(block);
+	public static boolean isFlowingLiquid(BlockWrapper block) {
+		return WATER_FLOWING == block.id || LAVAL_FLOWING == block.id;
 	}
 
 
@@ -100,7 +107,7 @@ public class BlockUtils {
 	 * @param block the block
 	 * @return whether the given block is water or lava (flowing or still)
 	 */
-	public static boolean isLiquid(Block block) {
+	public static boolean isLiquid(BlockWrapper block) {
 		return isLava(block) || isWater(block);
 	}
 
@@ -122,8 +129,8 @@ public class BlockUtils {
 	 * @param block the block
 	 * @return whether the given block can be dangerous to the player and should be avoided.
 	 */
-	public static boolean isDangerous(Block block) {
-		return isLava(block) || block == Blocks.FIRE || block == Blocks.CACTUS || block == Blocks.WEB;
+	public static boolean isDangerous(BlockWrapper block) {
+		return isLava(block) || block.id == FIRE || block.id == CACTUS || block.id == WEB;
 	}
 
 
@@ -145,7 +152,7 @@ public class BlockUtils {
 	 * @return whether the player can walk through the block at the given position. This does not check the surrounding blocks.
 	 */
 	public static boolean canWalkThrough(BaseBlockPos pos) {
-		final Block block = Stevebot.get().getBlockProvider().getBlockAt(pos);
+		final BlockWrapper block = Stevebot.get().getBlockProvider().getBlockAt(pos);
 		return canWalkThrough(block, pos.copyAsMCBlockPos());
 	}
 
@@ -156,12 +163,12 @@ public class BlockUtils {
 	 * @param block the block
 	 * @return whether the player can walk through the given block. This does not check the surrounding blocks.
 	 */
-	public static boolean canWalkThrough(Block block, BlockPos pos) {
-		if (isLiquid(block) || Blocks.WATERLILY.equals(block) || isDangerous(block)
-				|| Blocks.ICE.equals(block) || Blocks.FROSTED_ICE.equals(block) || Blocks.PACKED_ICE.equals(block)) {
+	public static boolean canWalkThrough(BlockWrapper block, BlockPos pos) {
+		if (isLiquid(block) || WATERLILY == block.id || isDangerous(block)
+				|| ICE == block.id || FROSTED_ICE == block.id || PACKED_ICE == block.id) {
 			return false;
 		} else {
-			return block.isPassable(Minecraft.getMinecraft().world, pos);
+			return block.mcBlock.isPassable(Minecraft.getMinecraft().world, pos);
 		}
 	}
 
@@ -173,7 +180,7 @@ public class BlockUtils {
 	 * @return whether the player can walk on the block at the given position. This does not check the surrounding blocks.
 	 */
 	public static boolean canWalkOn(BaseBlockPos pos) {
-		final Block block = Stevebot.get().getBlockProvider().getBlockAt(pos);
+		final BlockWrapper block = Stevebot.get().getBlockProvider().getBlockAt(pos);
 		return canWalkOn(block);
 	}
 
@@ -184,11 +191,11 @@ public class BlockUtils {
 	 * @param block the block
 	 * @return whether the player can walk on the given block. This does not check the surrounding blocks.
 	 */
-	public static boolean canWalkOn(Block block) {
+	public static boolean canWalkOn(BlockWrapper block) {
 		if (isLiquid(block) || isDangerous(block)) {
 			return false;
 		} else {
-			return block.getDefaultState().isNormalCube();
+			return block.mcBlock.getDefaultState().isNormalCube();
 		}
 	}
 
@@ -199,7 +206,7 @@ public class BlockUtils {
 	 * @param block the block
 	 * @return whether the player should avoid touching the given block
 	 */
-	public static boolean avoidTouching(Block block) {
+	public static boolean avoidTouching(BlockWrapper block) {
 		return BlockUtils.isDangerous(block) || BlockUtils.isFlowingLiquid(block);
 	}
 

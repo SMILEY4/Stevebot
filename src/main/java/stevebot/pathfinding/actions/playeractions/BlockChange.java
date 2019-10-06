@@ -1,7 +1,7 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import net.minecraft.block.Block;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blocks.BlockWrapper;
 
 public class BlockChange {
 
@@ -10,12 +10,12 @@ public class BlockChange {
 
 
 	public final BaseBlockPos pos;
-	public final Block newBlock;
+	public final BlockWrapper newBlock;
 
 
 
 
-	public BlockChange(BaseBlockPos pos, Block newBlock) {
+	public BlockChange(BaseBlockPos pos, BlockWrapper newBlock) {
 		this.pos = pos;
 		this.newBlock = newBlock;
 	}

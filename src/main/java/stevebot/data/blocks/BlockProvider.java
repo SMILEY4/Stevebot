@@ -1,6 +1,5 @@
 package stevebot.data.blocks;
 
-import net.minecraft.block.Block;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.actions.playeractions.BlockChange;
 
@@ -14,14 +13,14 @@ public interface BlockProvider {
 
 
 	/**
-	 * @return the {@link Block} at the given position.
+	 * @return the {@link BlockWrapper} at the given position.
 	 */
-	Block getBlockAt(BaseBlockPos pos);
+	BlockWrapper getBlockAt(BaseBlockPos pos);
 
 	/**
-	 * @return the {@link Block} at the given position.
+	 * @return the {@link BlockWrapper} at the given position.
 	 */
-	Block getBlockAt(int x, int y, int z);
+	BlockWrapper getBlockAt(int x, int y, int z);
 
 
 	/**
