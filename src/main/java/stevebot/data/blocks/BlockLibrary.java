@@ -12,6 +12,7 @@ public interface BlockLibrary {
 	int ID_UNLOADED_BOCK = -1;
 	int ID_INVALID_BLOCK = -2;
 
+
 	/**
 	 * The given listener listens for a {@link PostInitEvent} and initializes the library on this event.
 	 *
