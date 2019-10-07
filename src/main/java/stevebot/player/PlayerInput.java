@@ -4,8 +4,8 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import stevebot.eventsOLD.GameTickListener;
-import stevebot.eventsOLD.ModEventHandler;
+import stevebot.events.EventListener;
+import stevebot.events.EventManager;
 
 public class PlayerInput {
 
@@ -20,19 +20,27 @@ public class PlayerInput {
 
 
 
-	PlayerInput(PlayerController controller, ModEventHandler eventHandler) {
+	PlayerInput(PlayerController controller, EventManager eventManager) {
 		this.controller = controller;
-		GameTickListener tickListener = new GameTickListener() {
+		eventManager.addListener(new EventListener<TickEvent.PlayerTickEvent>() {
 			@Override
-			public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
+			public Class<TickEvent.PlayerTickEvent> getEventClass() {
+				return TickEvent.PlayerTickEvent.class;
+			}
+
+
+
+
+			@Override
+			public void onEvent(TickEvent.PlayerTickEvent event) {
 				if (event.phase == TickEvent.Phase.START) {
 					if (muteUserInput) {
 						stopAll();
 					}
 				}
 			}
-		};
-		eventHandler.addListener(tickListener);
+		});
+
 		reloadConfig();
 	}
 

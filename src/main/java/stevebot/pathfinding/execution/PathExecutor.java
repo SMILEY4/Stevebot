@@ -4,7 +4,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.StateMachineListener;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.eventsOLD.GameTickListener;
+import stevebot.events.EventListener;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.Path;
@@ -17,7 +17,7 @@ import stevebot.rendering.renderables.DynPointCollectionRenderObject;
 import static stevebot.pathfinding.execution.PathExecutionStateMachine.ExecutionState;
 import static stevebot.pathfinding.execution.PathExecutionStateMachine.ExecutionTransition;
 
-public abstract class PathExecutor implements GameTickListener, StateMachineListener<ExecutionState, ExecutionTransition> {
+public abstract class PathExecutor implements StateMachineListener<ExecutionState, ExecutionTransition> {
 
 
 	public enum StateFollow {
@@ -42,6 +42,22 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 	private Renderable goalRenderable;
 	private DynPointCollectionRenderObject pathTraceRenderable = new DynPointCollectionRenderObject(3);
 
+	private final EventListener<TickEvent.ClientTickEvent> clientTickListener = new EventListener<TickEvent.ClientTickEvent>() {
+		@Override
+		public Class<TickEvent.ClientTickEvent> getEventClass() {
+			return TickEvent.ClientTickEvent.class;
+		}
+
+
+
+
+		@Override
+		public void onEvent(TickEvent.ClientTickEvent event) {
+			onClientTick();
+		}
+
+	};
+
 
 
 
@@ -53,7 +69,7 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 		Stevebot.get().getRenderer().addRenderable(goalRenderable);
 		Stevebot.get().getRenderer().addRenderable(startRenderable);
 		Stevebot.get().getRenderer().addRenderable(pathTraceRenderable);
-		Stevebot.get().getEventHandler().addListener(this);
+		Stevebot.get().getEventHandler().addListener(clientTickListener);
 	}
 
 
@@ -75,7 +91,7 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 	 */
 	public void stop() {
 		isExecuting = false;
-		Stevebot.get().getEventHandler().removeListener(this);
+		Stevebot.get().getEventHandler().removeListener(clientTickListener);
 		Stevebot.get().getRenderer().removeRenderable(goalRenderable);
 		Stevebot.get().getRenderer().removeRenderable(startRenderable);
 		Stevebot.get().getRenderer().removeRenderable(pathRenderable);
@@ -104,8 +120,7 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 
 
 
-	@Override
-	public void onClientTick(TickEvent.ClientTickEvent event) {
+	public void onClientTick() {
 		if (!isExecuting) {
 			return;
 		}
@@ -114,14 +129,14 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 			case PREPARE_EXECUTION: {
 				pathFactory.prepareNextPath();
 				stateMachine.fireTransition(ExecutionTransition.START);
-				onClientTick(event);
+				onClientTick();
 				break;
 			}
 
 			case WAITING_TO_START: {
 				if (follow) {
 					stateMachine.fireTransition(ExecutionTransition.START_FOLLOW);
-					onClientTick(event);
+					onClientTick();
 				}
 				break;
 			}
@@ -134,7 +149,7 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 						crawler.startPath(pathFactory.getCurrentPath());
 						stateMachine.fireTransition(ExecutionTransition.SEGMENT_CALCULATED);
 					}
-					onClientTick(event);
+					onClientTick();
 				} else {
 					Stevebot.get().getPlayerController().input().stopAll();
 				}
@@ -145,7 +160,7 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 				final StateFollow state = tick();
 				if (state == StateFollow.FAILED) {
 					stateMachine.fireError();
-					onClientTick(event);
+					onClientTick();
 				}
 				if (state == StateFollow.DONE) {
 					Path path = pathFactory.getCurrentPath();
@@ -157,7 +172,7 @@ public abstract class PathExecutor implements GameTickListener, StateMachineList
 						pathFactory.removeCurrentPath();
 						stateMachine.fireTransition(ExecutionTransition.REACHED_END_OF_SEGMENT);
 					}
-					onClientTick(event);
+					onClientTick();
 				}
 				break;
 			}

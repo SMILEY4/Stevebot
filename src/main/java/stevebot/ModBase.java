@@ -7,7 +7,9 @@ import stevebot.data.blocks.BlockLibrary;
 import stevebot.data.blocks.BlockLibraryImpl;
 import stevebot.data.blocks.BlockProvider;
 import stevebot.data.blocks.BlockProviderImpl;
-import stevebot.eventsOLD.ModEventHandler;
+import stevebot.events.EventManager;
+import stevebot.events.EventManagerImpl;
+import stevebot.events.ModEventProvider;
 import stevebot.pathfinding.PathHandler;
 import stevebot.player.PlayerController;
 import stevebot.rendering.Renderer;
@@ -29,7 +31,8 @@ public class ModBase {
 
 
 	private Logger logger = LogManager.getLogger(Config.MODID);
-	private ModEventHandler eventHandler;
+	private EventManager eventHandler;
+	private ModEventProvider modEventProvider;
 	private PlayerController playerController;
 	private CustomCommandHandler commandHandler;
 	private RendererImpl renderer;
@@ -45,14 +48,15 @@ public class ModBase {
 	 */
 	void onPreInit() {
 		ModBase.instance = this;
-		eventHandler = new ModEventHandler();
+		eventHandler = new EventManagerImpl();
+		modEventProvider = new ModEventProvider(eventHandler);
 		commandHandler = new CustomCommandHandler(eventHandler);
 		playerController = new PlayerController(eventHandler);
 		pathHandler = new PathHandler();
 		blockLibrary = new BlockLibraryImpl();
 		blockProvider = new BlockProviderImpl(blockLibrary);
 		renderer = new RendererImpl(eventHandler);
-		eventHandler.onPreInit();
+		modEventProvider.onPreInit();
 	}
 
 
@@ -62,7 +66,7 @@ public class ModBase {
 	 * Called in the init-stage
 	 */
 	void onInit() {
-		eventHandler.onInit();
+		modEventProvider.onInit();
 	}
 
 
@@ -72,7 +76,7 @@ public class ModBase {
 	 * Called in the post-init-stage
 	 */
 	void onPostInit() {
-		eventHandler.onPostInit();
+		modEventProvider.onPostInit();
 		blockLibrary.initialize();
 	}
 
@@ -124,9 +128,9 @@ public class ModBase {
 
 
 	/**
-	 * @return the {@link ModEventHandler}
+	 * @return the {@link EventManager}
 	 */
-	public ModEventHandler getEventHandler() {
+	public EventManager getEventHandler() {
 		return eventHandler;
 	}
 

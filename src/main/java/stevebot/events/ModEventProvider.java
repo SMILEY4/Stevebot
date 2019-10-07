@@ -9,12 +9,12 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 public class ModEventProvider {
 
 
-	private final EventManagerImpl eventManager;
+	private final EventManager eventManager;
 
 
 
 
-	public ModEventProvider(EventManagerImpl eventManager) {
+	public ModEventProvider(EventManager eventManager) {
 		this.eventManager = eventManager;
 	}
 

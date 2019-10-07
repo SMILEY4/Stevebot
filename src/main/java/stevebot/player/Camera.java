@@ -11,10 +11,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.eventsOLD.GameTickListener;
-import stevebot.eventsOLD.ModEventHandler;
+import stevebot.events.EventListener;
+import stevebot.events.EventManager;
 
-public class Camera implements GameTickListener {
+public class Camera {
 
 
 	public enum CameraState {
@@ -36,9 +36,22 @@ public class Camera implements GameTickListener {
 
 
 
-	Camera(PlayerController controller, ModEventHandler eventHandler) {
+	Camera(PlayerController controller, EventManager eventManager) {
 		this.controller = controller;
-		eventHandler.addListener(this);
+		eventManager.addListener(new EventListener<TickEvent.RenderTickEvent>() {
+			@Override
+			public Class<TickEvent.RenderTickEvent> getEventClass() {
+				return TickEvent.RenderTickEvent.class;
+			}
+
+
+
+
+			@Override
+			public void onEvent(TickEvent.RenderTickEvent event) {
+				onRenderTickEvent(event);
+			}
+		});
 		setupLock();
 	}
 
@@ -84,7 +97,6 @@ public class Camera implements GameTickListener {
 
 
 
-	@Override
 	public void onRenderTickEvent(TickEvent.RenderTickEvent event) {
 
 		EntityPlayerSP player = controller.getPlayer();

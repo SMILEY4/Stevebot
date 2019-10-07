@@ -2,7 +2,7 @@ package stevebot.player;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import stevebot.eventsOLD.ModEventHandler;
+import stevebot.events.EventManager;
 
 public class PlayerController {
 
@@ -16,9 +16,9 @@ public class PlayerController {
 
 
 
-	public PlayerController(ModEventHandler eventHandler) {
-		camera = new Camera(this, eventHandler);
-		input = new PlayerInput(this, eventHandler);
+	public PlayerController(EventManager eventManager) {
+		camera = new Camera(this, eventManager);
+		input = new PlayerInput(this, eventManager);
 		movement = new Movement(this);
 		utils = new PlayerUtils(this);
 	}
