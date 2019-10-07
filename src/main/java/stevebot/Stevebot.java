@@ -13,10 +13,10 @@ import stevebot.data.blocks.BlockProvider;
 import stevebot.data.blocks.BlockProviderImpl;
 import stevebot.events.EventManager;
 import stevebot.events.EventManagerImpl;
-import stevebot.events.ModEventProvider;
+import stevebot.events.ModEventProducer;
 import stevebot.misc.Config;
 import stevebot.pathfinding.PathHandler;
-import stevebot.player.PlayerController;
+import stevebot.player.*;
 import stevebot.rendering.Renderer;
 import stevebot.rendering.RendererImpl;
 
@@ -32,11 +32,17 @@ public class Stevebot {
 	private static Logger logger = LogManager.getLogger(Config.MODID);
 
 	private static EventManager eventManager;
-	private static ModEventProvider eventProvider;
+	private static ModEventProducer eventProducer;
+
 	private static BlockLibrary blockLibrary;
 	private static BlockProvider blockProvider;
+
+	private static PlayerCamera playerCamera;
+	private static PlayerMovement playerMovement;
+	private static PlayerInput playerInput;
+
 	private static Renderer renderer;
-	private static PlayerController playerController;
+
 	private static PathHandler pathHandler;
 
 
@@ -44,14 +50,36 @@ public class Stevebot {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		setup();
+		Stevebot.eventProducer.onPreInit();
+	}
+
+
+
+
+	private void setup() {
+
 		Stevebot.eventManager = new EventManagerImpl();
-		Stevebot.eventProvider = new ModEventProvider(Stevebot.eventManager);
-		Stevebot.blockLibrary = new BlockLibraryImpl(Stevebot.eventManager);
+		Stevebot.eventProducer = new ModEventProducer(Stevebot.eventManager);
+
+		Stevebot.blockLibrary = new BlockLibraryImpl();
+		eventManager.addListener(Stevebot.blockLibrary.getListener());
+
 		Stevebot.blockProvider = new BlockProviderImpl(Stevebot.blockLibrary);
-		Stevebot.renderer = new RendererImpl(Stevebot.eventManager, Stevebot.blockProvider);
-		Stevebot.playerController = new PlayerController(Stevebot.eventManager);
-		Stevebot.pathHandler = new PathHandler(Stevebot.eventManager, Stevebot.renderer, Stevebot.playerController);
-		Stevebot.eventProvider.onPreInit();
+
+		Stevebot.renderer = new RendererImpl();
+		eventManager.addListener(Stevebot.renderer.getListener());
+
+		Stevebot.playerCamera = new PlayerCameraImpl();
+		eventManager.addListener(Stevebot.playerCamera.getListener());
+
+		Stevebot.playerInput = new PlayerInputImpl();
+		eventManager.addListener(Stevebot.playerInput.getPlayerTickListener());
+		eventManager.addListener(Stevebot.playerInput.getConfigChangedListener());
+
+		Stevebot.playerMovement = new PlayerMovementImpl(Stevebot.playerInput, Stevebot.playerCamera);
+
+		Stevebot.pathHandler = new PathHandler(Stevebot.eventManager, Stevebot.renderer);
 	}
 
 
@@ -59,7 +87,7 @@ public class Stevebot {
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
-		Stevebot.eventProvider.onInit();
+		Stevebot.eventProducer.onInit();
 	}
 
 
@@ -67,7 +95,7 @@ public class Stevebot {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		Stevebot.eventProvider.onPostInit();
+		Stevebot.eventProducer.onPostInit();
 	}
 
 
@@ -107,10 +135,10 @@ public class Stevebot {
 		if (!Config.isVerboseMode() && !critical) {
 			return;
 		}
-		if (playerController.getPlayer() == null) {
+		if (PlayerUtils.getPlayer() == null) {
 			getLogger().info(message);
 		} else {
-			playerController.utils().sendMessage(message);
+			PlayerUtils.sendMessage(message);
 		}
 	}
 
