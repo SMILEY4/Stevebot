@@ -7,7 +7,7 @@ import stevebot.data.blocks.BlockLibrary;
 import stevebot.data.blocks.BlockLibraryImpl;
 import stevebot.data.blocks.BlockProvider;
 import stevebot.data.blocks.BlockProviderImpl;
-import stevebot.events.ModEventHandler;
+import stevebot.eventsOLD.ModEventHandler;
 import stevebot.pathfinding.PathHandler;
 import stevebot.player.PlayerController;
 import stevebot.rendering.Renderer;

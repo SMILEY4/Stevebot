@@ -4,7 +4,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.StateMachineListener;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.events.GameTickListener;
+import stevebot.eventsOLD.GameTickListener;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.Path;

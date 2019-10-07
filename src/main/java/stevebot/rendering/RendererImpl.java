@@ -14,8 +14,8 @@ import org.lwjgl.opengl.GL11;
 import stevebot.Config;
 import stevebot.Stevebot;
 import stevebot.data.blocks.ChunkCache;
-import stevebot.events.GameRenderListener;
-import stevebot.events.ModEventHandler;
+import stevebot.eventsOLD.GameRenderListener;
+import stevebot.eventsOLD.ModEventHandler;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.pathfinding.nodes.NodeRenderable;
 

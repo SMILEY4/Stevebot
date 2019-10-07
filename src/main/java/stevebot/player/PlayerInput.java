@@ -4,8 +4,8 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import stevebot.events.GameTickListener;
-import stevebot.events.ModEventHandler;
+import stevebot.eventsOLD.GameTickListener;
+import stevebot.eventsOLD.ModEventHandler;
 
 public class PlayerInput {
 

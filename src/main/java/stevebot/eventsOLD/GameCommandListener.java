@@ -1,4 +1,4 @@
-package stevebot.events;
+package stevebot.eventsOLD;
 
 import net.minecraftforge.event.CommandEvent;
 

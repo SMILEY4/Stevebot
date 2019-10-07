@@ -11,8 +11,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.events.GameTickListener;
-import stevebot.events.ModEventHandler;
+import stevebot.eventsOLD.GameTickListener;
+import stevebot.eventsOLD.ModEventHandler;
 
 public class Camera implements GameTickListener {
 

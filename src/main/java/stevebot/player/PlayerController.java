@@ -2,7 +2,7 @@ package stevebot.player;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import stevebot.events.ModEventHandler;
+import stevebot.eventsOLD.ModEventHandler;
 
 public class PlayerController {
 

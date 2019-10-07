@@ -1,8 +1,8 @@
 package stevebot.commands;
 
 import net.minecraftforge.client.ClientCommandHandler;
-import stevebot.events.GameInitListener;
-import stevebot.events.ModEventHandler;
+import stevebot.eventsOLD.GameInitListener;
+import stevebot.eventsOLD.ModEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
