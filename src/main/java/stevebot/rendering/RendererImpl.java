@@ -14,8 +14,8 @@ import org.lwjgl.opengl.GL11;
 import stevebot.Config;
 import stevebot.Stevebot;
 import stevebot.data.blocks.ChunkCache;
-import stevebot.events.GameRenderListener;
-import stevebot.events.ModEventHandler;
+import stevebot.events.EventListener;
+import stevebot.events.EventManager;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.pathfinding.nodes.NodeRenderable;
 
@@ -32,10 +32,18 @@ public class RendererImpl implements Renderer {
 
 
 
-	public RendererImpl(ModEventHandler eventHandler) {
-		eventHandler.addListener(new GameRenderListener() {
+	public RendererImpl(EventManager eventManager) {
+		eventManager.addListener(new EventListener<RenderWorldLastEvent>() {
 			@Override
-			public void onRenderWorldLast(RenderWorldLastEvent event) {
+			public Class<RenderWorldLastEvent> getEventClass() {
+				return RenderWorldLastEvent.class;
+			}
+
+
+
+
+			@Override
+			public void onEvent(RenderWorldLastEvent event) {
 				EntityPlayerSP player = Minecraft.getMinecraft().player;
 				if (player != null) {
 
