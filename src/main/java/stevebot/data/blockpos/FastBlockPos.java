@@ -1,6 +1,6 @@
 package stevebot.data.blockpos;
 
-import stevebot.Direction;
+import stevebot.misc.Direction;
 
 public class FastBlockPos extends BaseBlockPos {
 

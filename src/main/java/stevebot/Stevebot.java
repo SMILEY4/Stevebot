@@ -14,6 +14,7 @@ import stevebot.data.blocks.BlockProviderImpl;
 import stevebot.events.EventManager;
 import stevebot.events.EventManagerImpl;
 import stevebot.events.ModEventProvider;
+import stevebot.misc.Config;
 import stevebot.pathfinding.PathHandler;
 import stevebot.player.PlayerController;
 import stevebot.rendering.Renderer;

@@ -4,6 +4,7 @@ import net.minecraft.util.math.BlockPos;
 import org.junit.jupiter.api.Test;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
+import stevebot.misc.Direction;
 
 import java.util.Random;
 

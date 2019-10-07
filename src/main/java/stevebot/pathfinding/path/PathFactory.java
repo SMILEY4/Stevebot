@@ -1,6 +1,6 @@
 package stevebot.pathfinding.path;
 
-import stevebot.Config;
+import stevebot.misc.Config;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.Pathfinding;

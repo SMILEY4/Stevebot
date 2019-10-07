@@ -1,5 +1,6 @@
-package stevebot;
+package stevebot.misc;
 
+import stevebot.Stevebot;
 import stevebot.pathfinding.path.PathRenderable;
 
 public class Config {

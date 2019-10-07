@@ -1,8 +1,8 @@
 package stevebot.pathfinding.actions.playeractions;
 
 import stevebot.data.blocks.BlockUtils;
-import stevebot.Direction;
-import stevebot.StateMachine;
+import stevebot.misc.Direction;
+import stevebot.misc.StateMachine;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;

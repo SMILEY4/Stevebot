@@ -1,6 +1,6 @@
 package stevebot.pathfinding.actions;
 
-import stevebot.Direction;
+import stevebot.misc.Direction;
 import stevebot.pathfinding.actions.playeractions.Action;
 import stevebot.pathfinding.nodes.Node;
 

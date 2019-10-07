@@ -3,7 +3,7 @@ package stevebot.commands;
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.math.BlockPos;
-import stevebot.Config;
+import stevebot.misc.Config;
 import stevebot.Stevebot;
 import stevebot.commands.tokens.MultiCommandToken;
 import stevebot.commands.tokens.ValueToken;

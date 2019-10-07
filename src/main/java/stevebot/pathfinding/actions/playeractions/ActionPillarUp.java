@@ -2,8 +2,8 @@ package stevebot.pathfinding.actions.playeractions;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
-import stevebot.Direction;
-import stevebot.StateMachine;
+import stevebot.misc.Direction;
+import stevebot.misc.StateMachine;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.blocks.BlockWrapper;

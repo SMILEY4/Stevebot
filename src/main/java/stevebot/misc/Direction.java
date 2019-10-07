@@ -1,4 +1,4 @@
-package stevebot;
+package stevebot.misc;
 
 import stevebot.data.blockpos.BaseBlockPos;
 

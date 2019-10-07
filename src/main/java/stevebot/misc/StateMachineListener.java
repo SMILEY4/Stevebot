@@ -1,4 +1,4 @@
-package stevebot;
+package stevebot.misc;
 
 public interface StateMachineListener<S extends Enum, T extends Enum> {
 

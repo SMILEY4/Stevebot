@@ -1,7 +1,7 @@
 package stevebot.pathfinding;
 
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.Config;
+import stevebot.misc.Config;
 import stevebot.Stevebot;
 import stevebot.data.blocks.BlockProvider;
 import stevebot.pathfinding.actions.ActionCosts;

@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.opengl.GL11;
-import stevebot.Config;
+import stevebot.misc.Config;
 import stevebot.data.blocks.ChunkCache;
 import stevebot.events.EventListener;
 import stevebot.pathfinding.nodes.NodeRenderable;
