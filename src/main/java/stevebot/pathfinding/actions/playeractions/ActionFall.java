@@ -1,16 +1,15 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import stevebot.data.blocks.BlockUtils;
-import stevebot.misc.Direction;
-import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
+import stevebot.data.blocks.BlockUtils;
+import stevebot.misc.Direction;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
-import stevebot.pathfinding.execution.PathExecutor;
+import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
-import stevebot.player.PlayerController;
+import stevebot.player.PlayerUtils;
 
 public class ActionFall extends Action {
 
@@ -23,16 +22,15 @@ public class ActionFall extends Action {
 
 
 	@Override
-	public PathExecutor.StateFollow tick(boolean fistTick) {
-		final PlayerController controller = Stevebot.get().getPlayerController();
-		if (controller.getPlayer().onGround) {
-			if (controller.movement().moveTowards(getTo().getPos(), false)) {
-				return PathExecutor.StateFollow.DONE;
+	public PathExecutorImpl.StateFollow tick(boolean fistTick) {
+		if (PlayerUtils.getPlayer().onGround) {
+			if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), false)) {
+				return PathExecutorImpl.StateFollow.DONE;
 			} else {
-				return PathExecutor.StateFollow.EXEC;
+				return PathExecutorImpl.StateFollow.EXEC;
 			}
 		} else {
-			return PathExecutor.StateFollow.EXEC;
+			return PathExecutorImpl.StateFollow.EXEC;
 		}
 	}
 

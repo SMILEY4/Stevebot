@@ -1,16 +1,16 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import stevebot.data.blocks.BlockUtils;
-import stevebot.misc.Direction;
-import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
+import stevebot.data.blocks.BlockUtils;
+import stevebot.misc.Direction;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
-import stevebot.pathfinding.execution.PathExecutor;
+import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
+import stevebot.player.PlayerUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,11 +28,11 @@ public class ActionStepDown extends Action {
 
 
 	@Override
-	public PathExecutor.StateFollow tick(boolean firstTick) {
-		if (Stevebot.get().getPlayerController().movement().moveTowards(getTo().getPos(), true)) {
-			return PathExecutor.StateFollow.DONE;
+	public PathExecutorImpl.StateFollow tick(boolean firstTick) {
+		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
+			return PathExecutorImpl.StateFollow.DONE;
 		} else {
-			return PathExecutor.StateFollow.EXEC;
+			return PathExecutorImpl.StateFollow.EXEC;
 		}
 	}
 

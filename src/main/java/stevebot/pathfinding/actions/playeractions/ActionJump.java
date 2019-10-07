@@ -1,18 +1,17 @@
 package stevebot.pathfinding.actions.playeractions;
 
+import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.blocks.BlockUtils;
 import stevebot.misc.Direction;
 import stevebot.misc.StateMachine;
-import stevebot.Stevebot;
-import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.data.blockpos.FastBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
-import stevebot.pathfinding.execution.PathExecutor;
+import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
-import stevebot.player.PlayerController;
+import stevebot.player.PlayerUtils;
 
 public class ActionJump extends Action {
 
@@ -58,42 +57,40 @@ public class ActionJump extends Action {
 
 
 	@Override
-	public PathExecutor.StateFollow tick(boolean firstTick) {
-
-		PlayerController controller = Stevebot.get().getPlayerController();
+	public PathExecutorImpl.StateFollow tick(boolean firstTick) {
 
 		switch (stateMachine.getState()) {
 			case PREPARING: {
-				controller.camera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
-				boolean slowEnough = controller.movement().slowDown(0.055);
+				PlayerUtils.getCamera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
+				boolean slowEnough = PlayerUtils.getMovement().slowDown(0.055);
 				if (slowEnough) {
 					stateMachine.fireTransition(Transition.PREPARATION_DONE);
 				}
-				return PathExecutor.StateFollow.EXEC;
+				return PathExecutorImpl.StateFollow.EXEC;
 			}
 
 			case JUMPING: {
-				controller.movement().moveTowards(getTo().getPos(), true);
-				final double distToEdge = BlockUtils.distToCenter(controller.utils().getPlayerPosition());
+				PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
+				final double distToEdge = BlockUtils.distToCenter(PlayerUtils.getPlayerPosition());
 				if (distToEdge > 0.4) {
-					controller.input().setJump(false);
+					PlayerUtils.getInput().setJump(false);
 				}
-				if (controller.getPlayer().onGround && controller.utils().getPlayerBlockPos().equals(getTo().getPos())) {
+				if (PlayerUtils.getPlayer().onGround && PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
 					stateMachine.fireTransition(Transition.TOUCHED_GROUND);
 				}
-				return PathExecutor.StateFollow.EXEC;
+				return PathExecutorImpl.StateFollow.EXEC;
 			}
 
 			case LANDING: {
-				if (controller.movement().moveTowards(getTo().getPos(), true)) {
-					return PathExecutor.StateFollow.DONE;
+				if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
+					return PathExecutorImpl.StateFollow.DONE;
 				} else {
-					return PathExecutor.StateFollow.EXEC;
+					return PathExecutorImpl.StateFollow.EXEC;
 				}
 			}
 
 			default: {
-				return PathExecutor.StateFollow.FAILED;
+				return PathExecutorImpl.StateFollow.FAILED;
 			}
 
 		}

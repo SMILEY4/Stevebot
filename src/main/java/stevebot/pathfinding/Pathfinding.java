@@ -69,14 +69,14 @@ public class Pathfinding {
 
 			// timeout
 			if (checkForTimeout(timeStart, timeoutInMs)) {
-				Stevebot.get().getPlayerController().utils().sendMessage("Timeout");
+				Stevebot.logNonCritical("Timeout");
 				break;
 			}
 
 			// status report
 			if (System.currentTimeMillis() - timeLast > 1000 * 2) {
 				timeLast = System.currentTimeMillis();
-				Stevebot.get().logNonCritical("Searching... " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size() + " nodes.");
+				Stevebot.logNonCritical("Searching... " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size() + " nodes.");
 			}
 
 			// slowdown
@@ -95,7 +95,7 @@ public class Pathfinding {
 			if (goal.reached(current.getPos())) {
 				Path currentPath = buildPath(nodeStart, current, true);
 				if (currentPath.getCost() < bestPath.getCost()) {
-					Stevebot.get().logNonCritical("Found possible path: " + ((System.currentTimeMillis() - timeStart)) + "ms, cost: " + currentPath.getCost());
+					Stevebot.logNonCritical("Found possible path: " + ((System.currentTimeMillis() - timeStart)) + "ms, cost: " + currentPath.getCost());
 					nBetterPathFound++;
 					bestPath = currentPath;
 				}
@@ -178,7 +178,7 @@ public class Pathfinding {
 
 		}
 
-		Stevebot.get().logNonCritical("Pathfinding completed in " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size());
+		Stevebot.logNonCritical("Pathfinding completed in " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size());
 
 		if (bestPath.reachedGoal()) {
 			return bestPath;

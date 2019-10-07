@@ -12,6 +12,40 @@ public class PlayerUtils {
 
 	public static final double AT_LOC_DIST_ERROR = 0.05;
 
+	private static PlayerInput playerInput;
+	private static PlayerCamera playerCamera;
+	private static PlayerMovement playerMovement;
+
+
+
+
+	public static void initialize(PlayerInput playerInput, PlayerCamera playerCamera, PlayerMovement playerMovement) {
+		PlayerUtils.playerInput = playerInput;
+		PlayerUtils.playerCamera = playerCamera;
+		PlayerUtils.playerMovement = playerMovement;
+	}
+
+
+
+
+	public static PlayerInput getInput() {
+		return playerInput;
+	}
+
+
+
+
+	public static PlayerCamera getCamera() {
+		return playerCamera;
+	}
+
+
+
+
+	public static PlayerMovement getMovement() {
+		return playerMovement;
+	}
+
 
 
 

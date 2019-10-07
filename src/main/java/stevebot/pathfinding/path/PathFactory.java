@@ -92,7 +92,7 @@ public class PathFactory {
 			return;
 		}
 		preparingPath = true;
-		Stevebot.get().getLogger().info("Preparing path segment");
+		Stevebot.getLogger().info("Preparing path segment");
 		if (hasPath()) {
 			if (getCurrentPath().reachedGoal()) {
 				preparingPath = false;

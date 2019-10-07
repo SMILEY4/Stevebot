@@ -1,17 +1,16 @@
 package stevebot.pathfinding.actions.playeractions;
 
+import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.blocks.BlockUtils;
 import stevebot.misc.Direction;
 import stevebot.misc.StateMachine;
-import stevebot.Stevebot;
-import stevebot.data.blockpos.FastBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
-import stevebot.pathfinding.execution.PathExecutor;
+import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
-import stevebot.player.PlayerController;
+import stevebot.player.PlayerUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,39 +60,37 @@ public class ActionStepUp extends Action {
 
 
 	@Override
-	public PathExecutor.StateFollow tick(boolean firstTick) {
+	public PathExecutorImpl.StateFollow tick(boolean firstTick) {
 
-		final PlayerController controller = Stevebot.get().getPlayerController();
-
-		if (controller.utils().getMotionVector().mul(1, 0, 1).length() < 0.075) {
+		if (PlayerUtils.getMotionVector().mul(1, 0, 1).length() < 0.075) {
 			stateMachine.fireTransition(Transition.SLOW_ENOUGH);
 		}
 
 		switch (stateMachine.getState()) {
 
 			case SLOWING_DOWN: {
-				boolean slowEnough = controller.movement().slowDown(0.075);
+				boolean slowEnough = PlayerUtils.getMovement().slowDown(0.075);
 				if (slowEnough) {
 					stateMachine.fireTransition(Transition.SLOW_ENOUGH);
 				} else {
-					controller.camera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
+					PlayerUtils.getCamera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
 				}
-				return PathExecutor.StateFollow.EXEC;
+				return PathExecutorImpl.StateFollow.EXEC;
 			}
 
 			case JUMPING: {
-				if (controller.utils().getPlayerBlockPos().equals(getFrom().getPos())) {
-					controller.input().setJump(false);
+				if (PlayerUtils.getPlayerBlockPos().equals(getFrom().getPos())) {
+					PlayerUtils.getInput().setJump(false);
 				}
-				if (controller.movement().moveTowards(getTo().getPos(), true)) {
-					return PathExecutor.StateFollow.DONE;
+				if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
+					return PathExecutorImpl.StateFollow.DONE;
 				} else {
-					return PathExecutor.StateFollow.EXEC;
+					return PathExecutorImpl.StateFollow.EXEC;
 				}
 			}
 
 			default: {
-				return PathExecutor.StateFollow.FAILED;
+				return PathExecutorImpl.StateFollow.FAILED;
 			}
 
 		}

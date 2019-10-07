@@ -1,7 +1,7 @@
 package stevebot.pathfinding.actions.playeractions;
 
 import stevebot.pathfinding.nodes.Node;
-import stevebot.pathfinding.execution.PathExecutor;
+import stevebot.pathfinding.execution.PathExecutorImpl;
 
 public abstract class Action {
 
@@ -84,9 +84,9 @@ public abstract class Action {
 	 * Updates this action.
 	 *
 	 * @param fistTick true on the first update of this action
-	 * @return the resulting {@link PathExecutor.StateFollow} of the update
+	 * @return the resulting {@link PathExecutorImpl.StateFollow} of the update
 	 */
-	public abstract PathExecutor.StateFollow tick(boolean fistTick);
+	public abstract PathExecutorImpl.StateFollow tick(boolean fistTick);
 
 
 }

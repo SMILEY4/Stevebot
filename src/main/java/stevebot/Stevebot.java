@@ -7,10 +7,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import stevebot.data.blocks.BlockLibrary;
-import stevebot.data.blocks.BlockLibraryImpl;
-import stevebot.data.blocks.BlockProvider;
-import stevebot.data.blocks.BlockProviderImpl;
+import stevebot.commands.Commands;
+import stevebot.data.blocks.*;
 import stevebot.events.EventManager;
 import stevebot.events.EventManagerImpl;
 import stevebot.events.ModEventProducer;
@@ -33,16 +31,12 @@ public class Stevebot {
 
 	private static EventManager eventManager;
 	private static ModEventProducer eventProducer;
-
 	private static BlockLibrary blockLibrary;
 	private static BlockProvider blockProvider;
-
 	private static PlayerCamera playerCamera;
 	private static PlayerMovement playerMovement;
 	private static PlayerInput playerInput;
-
 	private static Renderer renderer;
-
 	private static PathHandler pathHandler;
 
 
@@ -59,27 +53,44 @@ public class Stevebot {
 
 	private void setup() {
 
+		// events
 		Stevebot.eventManager = new EventManagerImpl();
 		Stevebot.eventProducer = new ModEventProducer(Stevebot.eventManager);
 
+		// block library
 		Stevebot.blockLibrary = new BlockLibraryImpl();
 		eventManager.addListener(Stevebot.blockLibrary.getListener());
 
+		// block provider
 		Stevebot.blockProvider = new BlockProviderImpl(Stevebot.blockLibrary);
 
+		// block utils
+		BlockUtils.initialize(blockProvider);
+
+		// renderer
 		Stevebot.renderer = new RendererImpl();
 		eventManager.addListener(Stevebot.renderer.getListener());
 
+		// player camera
 		Stevebot.playerCamera = new PlayerCameraImpl();
 		eventManager.addListener(Stevebot.playerCamera.getListener());
 
+		// player input
 		Stevebot.playerInput = new PlayerInputImpl();
 		eventManager.addListener(Stevebot.playerInput.getPlayerTickListener());
 		eventManager.addListener(Stevebot.playerInput.getConfigChangedListener());
 
+		// player movement
 		Stevebot.playerMovement = new PlayerMovementImpl(Stevebot.playerInput, Stevebot.playerCamera);
 
+		// player utils
+		PlayerUtils.initialize(playerInput, playerCamera, playerMovement);
+
+		// path handler
 		Stevebot.pathHandler = new PathHandler(Stevebot.eventManager, Stevebot.renderer);
+
+		// commands
+		Commands.initialize(Stevebot.pathHandler);
 	}
 
 
