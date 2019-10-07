@@ -3,22 +3,22 @@ package stevebot.data.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.Stevebot;
 
 public class BlockCache {
 
 
 	private final ChunkCache chunkCache = new ChunkCache();
 	private final BlockLibrary library;
-
+	private final BlockProvider blockProvider;
 
 
 
 	/**
 	 * @param library the {@link BlockLibrary} used by this cache
 	 */
-	public BlockCache(BlockLibrary library) {
+	public BlockCache(BlockLibrary library, BlockProvider blockProvider) {
 		this.library = library;
+		this.blockProvider = blockProvider;
 	}
 
 
@@ -70,7 +70,7 @@ public class BlockCache {
 		BaseBlockPos blockPos = new BaseBlockPos(blockX, blockY, blockZ);
 		int blockId;
 
-		if (Stevebot.get().getBlockProvider().isLoaded(blockPos)) {
+		if (blockProvider.isLoaded(blockPos)) {
 			blockId = getBlockFromMinecraft(blockPos).id;
 		} else {
 			blockId = BlockLibrary.ID_UNLOADED_BOCK;

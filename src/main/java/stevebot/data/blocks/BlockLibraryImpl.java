@@ -2,6 +2,9 @@ package stevebot.data.blocks;
 
 import com.ruegnerlukas.simplemath.MathUtils;
 import net.minecraft.block.Block;
+import stevebot.events.EventListener;
+import stevebot.events.EventManager;
+import stevebot.events.PostInitEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +14,26 @@ public class BlockLibraryImpl implements BlockLibrary {
 
 
 	private BlockWrapper[] blocks;
+
+
+
+
+	public BlockLibraryImpl(EventManager eventManager) {
+		eventManager.addListener(new EventListener<PostInitEvent>() {
+			@Override
+			public Class<PostInitEvent> getEventClass() {
+				return PostInitEvent.class;
+			}
+
+
+
+
+			@Override
+			public void onEvent(PostInitEvent event) {
+				initialize();
+			}
+		});
+	}
 
 
 

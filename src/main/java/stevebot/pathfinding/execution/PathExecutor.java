@@ -5,12 +5,15 @@ import stevebot.StateMachineListener;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventListener;
+import stevebot.events.EventManager;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.Path;
 import stevebot.pathfinding.path.PathFactory;
+import stevebot.player.PlayerController;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
+import stevebot.rendering.Renderer;
 import stevebot.rendering.renderables.BoxRenderObject;
 import stevebot.rendering.renderables.DynPointCollectionRenderObject;
 
@@ -28,6 +31,9 @@ public abstract class PathExecutor implements StateMachineListener<ExecutionStat
 
 
 
+	private EventManager eventManager;
+	private Renderer renderer;
+	private PlayerController playerController;
 
 	private PathFactory pathFactory;
 	private PathExecutionStateMachine stateMachine = new PathExecutionStateMachine();
@@ -61,15 +67,18 @@ public abstract class PathExecutor implements StateMachineListener<ExecutionStat
 
 
 
-	public PathExecutor(BaseBlockPos posStart, Goal goal) {
+	public PathExecutor(BaseBlockPos posStart, Goal goal, EventManager eventManager, Renderer renderer, PlayerController playerController) {
 		this.pathFactory = new PathFactory(posStart, goal);
 		this.stateMachine.addListener(this);
 		this.goalRenderable = goal.createRenderable();
 		this.startRenderable = new BoxRenderObject(posStart.copyAsMCBlockPos(), 3, Color.YELLOW);
-		Stevebot.get().getRenderer().addRenderable(goalRenderable);
-		Stevebot.get().getRenderer().addRenderable(startRenderable);
-		Stevebot.get().getRenderer().addRenderable(pathTraceRenderable);
-		Stevebot.get().getEventHandler().addListener(clientTickListener);
+		this.renderer = renderer;
+		this.eventManager = eventManager;
+		this.playerController = playerController;
+		renderer.addRenderable(goalRenderable);
+		renderer.addRenderable(startRenderable);
+		renderer.addRenderable(pathTraceRenderable);
+		eventManager.addListener(clientTickListener);
 	}
 
 
@@ -79,7 +88,7 @@ public abstract class PathExecutor implements StateMachineListener<ExecutionStat
 	 * Starts execution the specified path.
 	 */
 	public void start() {
-		Stevebot.get().log("Starting Path from " + pathFactory.getPosStart().getX() + " " + pathFactory.getPosStart().getY() + " " + pathFactory.getPosStart().getZ() + " to " + pathFactory.getGoal().goalString());
+		Stevebot.log("Starting Path from " + pathFactory.getPosStart().getX() + " " + pathFactory.getPosStart().getY() + " " + pathFactory.getPosStart().getZ() + " to " + pathFactory.getGoal().goalString());
 		isExecuting = true;
 	}
 
@@ -91,11 +100,11 @@ public abstract class PathExecutor implements StateMachineListener<ExecutionStat
 	 */
 	public void stop() {
 		isExecuting = false;
-		Stevebot.get().getEventHandler().removeListener(clientTickListener);
-		Stevebot.get().getRenderer().removeRenderable(goalRenderable);
-		Stevebot.get().getRenderer().removeRenderable(startRenderable);
-		Stevebot.get().getRenderer().removeRenderable(pathRenderable);
-		Stevebot.get().getRenderer().removeRenderable(pathTraceRenderable);
+		eventManager.removeListener(clientTickListener);
+		renderer.removeRenderable(goalRenderable);
+		renderer.removeRenderable(startRenderable);
+		renderer.removeRenderable(pathRenderable);
+		renderer.removeRenderable(pathTraceRenderable);
 		onFinished();
 	}
 
@@ -151,7 +160,7 @@ public abstract class PathExecutor implements StateMachineListener<ExecutionStat
 					}
 					onClientTick();
 				} else {
-					Stevebot.get().getPlayerController().input().stopAll();
+					playerController.input().stopAll();
 				}
 				break;
 			}
@@ -178,13 +187,13 @@ public abstract class PathExecutor implements StateMachineListener<ExecutionStat
 			}
 
 			case DONE: {
-				Stevebot.get().log("Done following path.");
+				Stevebot.log("Done following path.");
 				stop();
 				break;
 			}
 
 			case ERROR: {
-				Stevebot.get().log("Failed to follow path.");
+				Stevebot.log("Failed to follow path.");
 				stop();
 				break;
 			}
@@ -197,10 +206,10 @@ public abstract class PathExecutor implements StateMachineListener<ExecutionStat
 	@Override
 	public void onTransition(ExecutionState start, ExecutionState target, ExecutionTransition transition) {
 		if (transition == ExecutionTransition.SEGMENT_CALCULATED) {
-			Stevebot.get().getRenderer().removeRenderable(pathRenderable);
+			renderer.removeRenderable(pathRenderable);
 			Path path = pathFactory.getLastPath();
 			pathRenderable = Path.toRenderable(path);
-			Stevebot.get().getRenderer().addRenderable(pathRenderable);
+			renderer.addRenderable(pathRenderable);
 		}
 	}
 
@@ -214,9 +223,9 @@ public abstract class PathExecutor implements StateMachineListener<ExecutionStat
 	 */
 	private StateFollow tick() {
 
-		pathTraceRenderable.addPoint(Stevebot.get().getPlayerController().utils().getPlayerPosition(), Color.MAGENTA);
+		pathTraceRenderable.addPoint(playerController.utils().getPlayerPosition(), Color.MAGENTA);
 
-		Stevebot.get().getPlayerController().input().stopAll();
+		playerController.input().stopAll();
 
 		StateFollow actionState = crawler.getCurrentNodeTo().getAction().tick(fistTick);
 		fistTick = false;

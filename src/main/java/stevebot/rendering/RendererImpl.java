@@ -12,7 +12,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.opengl.GL11;
 import stevebot.Config;
-import stevebot.Stevebot;
+import stevebot.data.blocks.BlockProvider;
 import stevebot.data.blocks.ChunkCache;
 import stevebot.events.EventListener;
 import stevebot.events.EventManager;
@@ -32,7 +32,7 @@ public class RendererImpl implements Renderer {
 
 
 
-	public RendererImpl(EventManager eventManager) {
+	public RendererImpl(EventManager eventManager, BlockProvider blockProvider) {
 		eventManager.addListener(new EventListener<RenderWorldLastEvent>() {
 			@Override
 			public Class<RenderWorldLastEvent> getEventClass() {
@@ -70,7 +70,7 @@ public class RendererImpl implements Renderer {
 		});
 
 
-		addRenderable(Stevebot.get().getBlockProvider().getBlockCache().getChunkCache().getChunkCacheRenderable());
+		addRenderable(blockProvider.getBlockCache().getChunkCache().getChunkCacheRenderable());
 		addRenderable(new NodeRenderable(NodeCache.getNodes()));
 	}
 

@@ -24,7 +24,7 @@ public class BlockProviderImpl implements BlockProvider {
 	 */
 	public BlockProviderImpl(BlockLibrary library) {
 		this.library = library;
-		this.cache = new BlockCache(library);
+		this.cache = new BlockCache(library, this);
 	}
 
 
