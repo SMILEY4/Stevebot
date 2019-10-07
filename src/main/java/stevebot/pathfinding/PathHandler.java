@@ -5,7 +5,7 @@ import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventManager;
 import stevebot.pathfinding.execution.PathExecutor;
 import stevebot.pathfinding.goal.Goal;
-import stevebot.player.Camera;
+import stevebot.player.PlayerCameraImpl;
 import stevebot.player.PlayerController;
 import stevebot.rendering.Renderer;
 
@@ -50,7 +50,7 @@ public class PathHandler {
 			if (startFollowing) {
 				excecutor.startFollowing();
 				if (enableFreelook) {
-					playerController.camera().setState(Camera.CameraState.FREELOOK);
+					playerController.camera().setState(PlayerCameraImpl.CameraState.FREELOOK);
 				}
 			}
 		} else {

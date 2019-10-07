@@ -12,46 +12,32 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventListener;
-import stevebot.events.EventManager;
 
-public class Camera {
+public class PlayerCameraImpl implements PlayerCamera {
 
-
-	public enum CameraState {
-		LOCKED,
-		FREELOOK,
-		DEFAULT
-	}
-
-
-
-
-
-
-	private final PlayerController controller;
 
 	private CameraState state = CameraState.DEFAULT;
 	private boolean isFreelook = false;
 
-
-
-
-	Camera(PlayerController controller, EventManager eventManager) {
-		this.controller = controller;
-		eventManager.addListener(new EventListener<TickEvent.RenderTickEvent>() {
-			@Override
-			public Class<TickEvent.RenderTickEvent> getEventClass() {
-				return TickEvent.RenderTickEvent.class;
-			}
+	private final EventListener listener = new EventListener<TickEvent.RenderTickEvent>() {
+		@Override
+		public Class<TickEvent.RenderTickEvent> getEventClass() {
+			return TickEvent.RenderTickEvent.class;
+		}
 
 
 
 
-			@Override
-			public void onEvent(TickEvent.RenderTickEvent event) {
-				onRenderTickEvent(event);
-			}
-		});
+		@Override
+		public void onEvent(TickEvent.RenderTickEvent event) {
+			onRenderTickEvent(event);
+		}
+	};
+
+
+
+
+	public PlayerCameraImpl() {
 		setupLock();
 	}
 
@@ -75,11 +61,15 @@ public class Camera {
 
 
 
-	/**
-	 * Sets the state of the player-camera
-	 *
-	 * @param state the new state of the camera
-	 */
+	@Override
+	public EventListener getListener() {
+		return listener;
+	}
+
+
+
+
+	@Override
 	public void setState(CameraState state) {
 		this.state = state;
 	}
@@ -87,9 +77,7 @@ public class Camera {
 
 
 
-	/**
-	 * @return the {@link CameraState} of the player-camera
-	 */
+	@Override
 	public CameraState getState() {
 		return state;
 	}
@@ -99,7 +87,7 @@ public class Camera {
 
 	public void onRenderTickEvent(TickEvent.RenderTickEvent event) {
 
-		EntityPlayerSP player = controller.getPlayer();
+		EntityPlayerSP player = PlayerUtils.getPlayer();
 		if (player == null) {
 			return;
 		}
@@ -133,7 +121,7 @@ public class Camera {
 	 * Starts the {@code CameraState.FREELOOK}-mode
 	 */
 	private void startFreelook() {
-		final EntityPlayerSP player = controller.getPlayer();
+		final EntityPlayerSP player = PlayerUtils.getPlayer();
 		playerYaw = player.rotationYaw;
 		playerPitch = player.rotationPitch;
 		originalYaw = playerYaw;
@@ -166,7 +154,7 @@ public class Camera {
 	private void updateFreelook(TickEvent.Phase phase) {
 
 		final Entity player = Minecraft.getMinecraft().getRenderViewEntity();
-		final EntityPlayerSP playerSP = controller.getPlayer();
+		final EntityPlayerSP playerSP = PlayerUtils.getPlayer();
 
 
 		final float f = Minecraft.getMinecraft().gameSettings.mouseSensitivity * 0.6f + 0.2f;
@@ -197,14 +185,7 @@ public class Camera {
 
 
 
-	/**
-	 * Checks if the player is looking at the given position
-	 *
-	 * @param pos           the position
-	 * @param ignorePitch   set to true to ignore the pitch / up-down-axis
-	 * @param rangeAngleDeg the threshold of the angle in degrees
-	 * @return
-	 */
+	@Override
 	public boolean isLookingAt(BaseBlockPos pos, boolean ignorePitch, double rangeAngleDeg) {
 		return isLookingAt(pos.getX(), pos.getY(), pos.getZ(), ignorePitch, rangeAngleDeg);
 	}
@@ -212,19 +193,10 @@ public class Camera {
 
 
 
-	/**
-	 * Checks if the player is looking at the given position
-	 *
-	 * @param x             the x position
-	 * @param y             the y position
-	 * @param y             the y position
-	 * @param ignorePitch   set to true to ignore the pitch / up-down-axis
-	 * @param rangeAngleDeg the threshold of the angle in degrees
-	 * @return
-	 */
+	@Override
 	public boolean isLookingAt(int x, int y, int z, boolean ignorePitch, double rangeAngleDeg) {
 
-		EntityPlayerSP player = controller.getPlayer();
+		EntityPlayerSP player = PlayerUtils.getPlayer();
 		if (player != null) {
 
 			if (ignorePitch) {
@@ -252,9 +224,7 @@ public class Camera {
 
 
 
-	/**
-	 * @return the direction the player is looking as a {@link Vector3d}
-	 */
+	@Override
 	public Vector3d getLookDir() {
 		Vec3d v = getLookDirMC();
 		if (v != null) {
@@ -271,7 +241,7 @@ public class Camera {
 	 * @return the direction the player is looking as a {@link Vec3d}
 	 */
 	private Vec3d getLookDirMC() {
-		EntityPlayerSP player = controller.getPlayer();
+		EntityPlayerSP player = PlayerUtils.getPlayer();
 		if (player != null) {
 			return player.getLook(0f);
 		} else {
@@ -282,11 +252,7 @@ public class Camera {
 
 
 
-	/**
-	 * Sets the view-direction of the player.
-	 *
-	 * @param pos the position to look at
-	 */
+	@Override
 	public void setLookAt(BaseBlockPos pos) {
 		setLookAt(pos, false);
 	}
@@ -294,12 +260,7 @@ public class Camera {
 
 
 
-	/**
-	 * Sets the view-direction of the player.
-	 *
-	 * @param pos       the position to look at
-	 * @param keepPitch set to true to keep the pitch of the current view-direction
-	 */
+	@Override
 	public void setLookAt(BaseBlockPos pos, boolean keepPitch) {
 		setLookAt(pos.getX(), pos.getY(), pos.getZ(), keepPitch);
 	}
@@ -307,16 +268,9 @@ public class Camera {
 
 
 
-	/**
-	 * Sets the view-direction of the player.
-	 *
-	 * @param x         the x position to look at
-	 * @param y         the y position to look at
-	 * @param z         the z position to look at
-	 * @param keepPitch set to true to keep the pitch of the current view-direction
-	 */
+	@Override
 	public void setLookAt(int x, int y, int z, boolean keepPitch) {
-		EntityPlayerSP player = controller.getPlayer();
+		EntityPlayerSP player = PlayerUtils.getPlayer();
 		if (player != null) {
 			final Vector3d posBlock = new Vector3d(x + 0.5, y + 0.5, z + 0.5);
 			final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
@@ -331,11 +285,7 @@ public class Camera {
 
 
 
-	/**
-	 * Sets the view-direction of the player.
-	 *
-	 * @param dir the new view-direction
-	 */
+	@Override
 	public void setLook(Vector3d dir) {
 		double pitch = Math.asin(dir.y);
 		double yaw = Math.atan2(dir.z, dir.x);
@@ -348,14 +298,9 @@ public class Camera {
 
 
 
-	/**
-	 * Sets the view-direction of the player.
-	 *
-	 * @param pitch the new pitch
-	 * @param yaw   the new yaw
-	 */
+	@Override
 	public void setLook(double pitch, double yaw) {
-		EntityPlayerSP player = controller.getPlayer();
+		EntityPlayerSP player = PlayerUtils.getPlayer();
 		if (player != null) {
 			player.rotationPitch = (float) pitch;
 			player.rotationYaw = (float) yaw;

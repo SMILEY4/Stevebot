@@ -13,7 +13,7 @@ import stevebot.pathfinding.goal.ExactGoal;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.goal.XZGoal;
 import stevebot.pathfinding.path.PathRenderable;
-import stevebot.player.Camera;
+import stevebot.player.PlayerCameraImpl;
 
 import java.util.Map;
 
@@ -165,11 +165,11 @@ public class Commands {
 
 
 	private static void onFreelook(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
-		if (Stevebot.get().getPlayerController().camera().getState() == Camera.CameraState.FREELOOK) {
-			Stevebot.get().getPlayerController().camera().setState(Camera.CameraState.DEFAULT);
+		if (Stevebot.get().getPlayerController().camera().getState() == PlayerCameraImpl.CameraState.FREELOOK) {
+			Stevebot.get().getPlayerController().camera().setState(PlayerCameraImpl.CameraState.DEFAULT);
 			Stevebot.get().getPlayerController().utils().sendMessage("Disable Freelook.");
 		} else {
-			Stevebot.get().getPlayerController().camera().setState(Camera.CameraState.FREELOOK);
+			Stevebot.get().getPlayerController().camera().setState(PlayerCameraImpl.CameraState.FREELOOK);
 			Stevebot.get().getPlayerController().utils().sendMessage("Enable Freelook.");
 		}
 	}
