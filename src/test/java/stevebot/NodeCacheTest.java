@@ -42,7 +42,7 @@ public class NodeCacheTest {
 		assertThat(NodeCache.getNodes().size()).isEqualTo(2);
 
 		NodeCache.clear();
-		assertThat(NodeCache.getNodes().size()).isEqualTo(2);
+		assertThat(NodeCache.getNodes().size()).isEqualTo(0);
 	}
 
 

@@ -38,16 +38,16 @@ public class EventManagerImpl implements EventManager {
 	public void event(Event event) {
 		final Class classEvent = event.getClass();
 		synchronized (listeners) {
+			synchronized (listenersToRemove) {
+				listeners.removeAll(listenersToRemove);
+				listenersToRemove.clear();
+			}
 			for (int i = 0; i < listeners.size(); i++) {
 				final EventListener listener = listeners.get(i);
 				final Class classListener = listener.getEventClass();
 				if (classEvent == classListener) {
 					listener.onEvent(event);
 				}
-			}
-			synchronized (listenersToRemove) {
-				listeners.removeAll(listenersToRemove);
-				listenersToRemove.clear();
 			}
 		}
 	}

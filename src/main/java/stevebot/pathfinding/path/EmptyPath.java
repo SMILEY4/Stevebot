@@ -1,5 +1,6 @@
 package stevebot.pathfinding.path;
 
+import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.nodes.Node;
 
 import java.util.Collections;
@@ -13,7 +14,7 @@ public class EmptyPath implements Path {
 
 	@Override
 	public double getCost() {
-		return Integer.MAX_VALUE;
+		return ActionCosts.COST_INFINITE;
 	}
 
 
