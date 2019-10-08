@@ -37,12 +37,12 @@ public class PathHandler {
 	 */
 	public void createPath(BaseBlockPos from, Goal goal, boolean startFollowing, boolean enableFreelook) {
 		if (excecutor == null) {
-			excecutor = new PathExecutorImpl(from, goal, renderer) {
-				@Override
-				public void onFinished() {
-					excecutor = null;
-				}
-			};
+			excecutor = new PathExecutorImpl(from, goal, renderer);
+			eventManager.addListener(excecutor.getTickListener());
+			excecutor.setPathListener(() -> {
+				eventManager.removeListener(excecutor.getTickListener());
+				excecutor = null;
+			});
 			excecutor.start();
 			if (startFollowing) {
 				excecutor.startFollowing(enableFreelook);
