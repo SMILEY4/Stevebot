@@ -6,7 +6,7 @@ import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-public class ModEventProvider {
+public class ModEventProducer {
 
 
 	private final EventManager eventManager;
@@ -14,7 +14,7 @@ public class ModEventProvider {
 
 
 
-	public ModEventProvider(EventManager eventManager) {
+	public ModEventProducer(EventManager eventManager) {
 		this.eventManager = eventManager;
 	}
 

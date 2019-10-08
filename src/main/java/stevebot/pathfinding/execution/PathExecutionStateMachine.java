@@ -1,6 +1,6 @@
 package stevebot.pathfinding.execution;
 
-import stevebot.StateMachine;
+import stevebot.misc.StateMachine;
 
 public class PathExecutionStateMachine extends StateMachine<PathExecutionStateMachine.ExecutionState, PathExecutionStateMachine.ExecutionTransition> {
 

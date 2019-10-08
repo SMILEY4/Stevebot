@@ -3,31 +3,36 @@ package stevebot.commands;
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.math.BlockPos;
-import stevebot.Config;
+import net.minecraftforge.client.ClientCommandHandler;
 import stevebot.Stevebot;
 import stevebot.commands.tokens.MultiCommandToken;
 import stevebot.commands.tokens.ValueToken;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
+import stevebot.misc.Config;
+import stevebot.pathfinding.PathHandler;
 import stevebot.pathfinding.goal.ExactGoal;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.goal.XZGoal;
 import stevebot.pathfinding.path.PathRenderable;
-import stevebot.player.Camera;
+import stevebot.player.PlayerCameraImpl;
+import stevebot.player.PlayerUtils;
 
 import java.util.Map;
 
 public class Commands {
 
 
-	/**
-	 * Creates all commands and registers them in the given {@link CustomCommandHandler}.
-	 */
-	public static void create(CustomCommandHandler commandHandler) {
+	private static PathHandler pathHandler;
 
+
+
+
+	public static void initialize(PathHandler pathHandler) {
+		Commands.pathHandler = pathHandler;
 
 		// /path ...
-		commandHandler.registerCommand(new CommandBuilder("path")
+		registerCommand(new CommandBuilder("path")
 				.addToken(new MultiCommandToken("pathMulti")
 
 						// /path <from> <to>
@@ -57,14 +62,14 @@ public class Commands {
 				.build());
 
 		// /freelook
-		commandHandler.registerCommand(
+		registerCommand(
 				new CommandBuilder("freelook")
 						.setListener(Commands::onFreelook)
 						.build()
 		);
 
 		// /follow <start|stop>
-		commandHandler.registerCommand(
+		registerCommand(
 				new CommandBuilder("follow")
 						.addToken(new ValueToken.EnumToken("state", "start", "stop"))
 						.setListener(Commands::onFollow)
@@ -73,7 +78,7 @@ public class Commands {
 
 
 		// /setvar...
-		commandHandler.registerCommand(new CommandBuilder("setvar")
+		registerCommand(new CommandBuilder("setvar")
 				.addToken(new MultiCommandToken("setvarMulti")
 
 						// /setvar <variablename> <integer>
@@ -106,12 +111,19 @@ public class Commands {
 
 
 
+	private static void registerCommand(CustomCommand command) {
+		ClientCommandHandler.instance.registerCommand(command.getCommandBase());
+	}
+
+
+
+
 	private static void onPathFromTo(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
 		final BlockPos from = (BlockPos) args.get("from").getValue();
 		final BlockPos to = (BlockPos) args.get("to").getValue();
 
-		if (Stevebot.get().getPlayerController().getPlayer() != null) {
-			Stevebot.get().getPathHandler().createPath(new BaseBlockPos(from), new ExactGoal(new BaseBlockPos(to)), false, false);
+		if (PlayerUtils.getPlayer() != null) {
+			pathHandler.createPath(new BaseBlockPos(from), new ExactGoal(new BaseBlockPos(to)), false, false);
 		}
 	}
 
@@ -119,13 +131,13 @@ public class Commands {
 
 
 	private static void onPathTo(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
-		final BaseBlockPos from = Stevebot.get().getPlayerController().utils().getPlayerBlockPos();
+		final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
 		final BlockPos to = (BlockPos) args.get("to").getValue();
 		final boolean follow = (Boolean) args.getOrDefault("follow", new CommandArgument<>(true)).getValue();
 		final boolean freelook = (Boolean) args.getOrDefault("freelook", new CommandArgument<>(false)).getValue();
 
-		if (Stevebot.get().getPlayerController().getPlayer() != null) {
-			Stevebot.get().getPathHandler().createPath(new FastBlockPos(from), new ExactGoal(new BaseBlockPos(to)), follow, freelook);
+		if (PlayerUtils.getPlayer() != null) {
+			pathHandler.createPath(new FastBlockPos(from), new ExactGoal(new BaseBlockPos(to)), follow, freelook);
 		}
 	}
 
@@ -137,11 +149,11 @@ public class Commands {
 		final boolean follow = (Boolean) args.getOrDefault("follow", new CommandArgument<>(true)).getValue();
 		final boolean freelook = (Boolean) args.getOrDefault("freelook", new CommandArgument<>(false)).getValue();
 
-		if (Stevebot.get().getPlayerController().getPlayer() != null) {
-			final BaseBlockPos from = Stevebot.get().getPlayerController().utils().getPlayerBlockPos();
-			final Vector3d dir = Stevebot.get().getPlayerController().camera().getLookDir().setLength(distance);
+		if (PlayerUtils.getPlayer() != null) {
+			final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
+			final Vector3d dir = PlayerUtils.getCamera().getLookDir().setLength(distance);
 			Goal goal = new XZGoal(from.getX() + dir.getIntX(), from.getZ() + dir.getIntZ());
-			Stevebot.get().getPathHandler().createPath(new BaseBlockPos(from), goal, follow, freelook);
+			pathHandler.createPath(new BaseBlockPos(from), goal, follow, freelook);
 		}
 	}
 
@@ -150,13 +162,13 @@ public class Commands {
 
 	private static void onFollow(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
 		final String state = (String) args.get("state").getValue();
-		if (Stevebot.get().getPlayerController().getPlayer() != null) {
+		if (PlayerUtils.getPlayer() != null) {
 			if ("start".equalsIgnoreCase(state)) {
-				Stevebot.get().getPathHandler().startFollowing();
+				pathHandler.startFollowing();
 			} else if ("stop".equalsIgnoreCase(state)) {
-				Stevebot.get().getPathHandler().cancelPath();
+				pathHandler.cancelPath();
 			} else {
-				Stevebot.get().getPlayerController().utils().sendMessage("Unknown state: " + state + ". Must be 'start' or 'stop'.");
+				PlayerUtils.sendMessage("Unknown state: " + state + ". Must be 'start' or 'stop'.");
 			}
 		}
 	}
@@ -165,12 +177,12 @@ public class Commands {
 
 
 	private static void onFreelook(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
-		if (Stevebot.get().getPlayerController().camera().getState() == Camera.CameraState.FREELOOK) {
-			Stevebot.get().getPlayerController().camera().setState(Camera.CameraState.DEFAULT);
-			Stevebot.get().getPlayerController().utils().sendMessage("Disable Freelook.");
+		if (PlayerUtils.getCamera().getState() == PlayerCameraImpl.CameraState.FREELOOK) {
+			PlayerUtils.getCamera().setState(PlayerCameraImpl.CameraState.DEFAULT);
+			PlayerUtils.sendMessage("Disable Freelook.");
 		} else {
-			Stevebot.get().getPlayerController().camera().setState(Camera.CameraState.FREELOOK);
-			Stevebot.get().getPlayerController().utils().sendMessage("Enable Freelook.");
+			PlayerUtils.getCamera().setState(PlayerCameraImpl.CameraState.FREELOOK);
+			PlayerUtils.sendMessage("Enable Freelook.");
 		}
 	}
 
@@ -191,7 +203,7 @@ public class Commands {
 				break;
 			}
 			default: {
-				Stevebot.get().log("Invalid name '" + varname + "'.");
+				Stevebot.log("Invalid name '" + varname + "'.");
 				break;
 			}
 		}
@@ -218,7 +230,7 @@ public class Commands {
 				break;
 			}
 			default: {
-				Stevebot.get().log("Invalid name '" + varname + "'.");
+				Stevebot.log("Invalid name '" + varname + "'.");
 				break;
 			}
 		}
@@ -237,12 +249,12 @@ public class Commands {
 				if (style != null) {
 					Config.setPathStyle(style);
 				} else {
-					Stevebot.get().log("Invalid pathstyle: '" + value + "'.");
+					Stevebot.log("Invalid pathstyle: '" + value + "'.");
 				}
 				break;
 			}
 			default: {
-				Stevebot.get().log("Invalid name '" + varname + "'.");
+				Stevebot.log("Invalid name '" + varname + "'.");
 				break;
 			}
 		}

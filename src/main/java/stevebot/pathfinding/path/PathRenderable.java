@@ -1,7 +1,7 @@
 package stevebot.pathfinding.path;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import stevebot.Config;
+import stevebot.misc.Config;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.rendering.Color;

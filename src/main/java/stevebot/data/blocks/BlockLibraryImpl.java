@@ -2,6 +2,8 @@ package stevebot.data.blocks;
 
 import com.ruegnerlukas.simplemath.MathUtils;
 import net.minecraft.block.Block;
+import stevebot.events.EventListener;
+import stevebot.events.PostInitEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,11 +14,30 @@ public class BlockLibraryImpl implements BlockLibrary {
 
 	private BlockWrapper[] blocks;
 
+	private final EventListener listener = new EventListener<PostInitEvent>() {
+
+		@Override
+		public Class<PostInitEvent> getEventClass() {
+			return PostInitEvent.class;
+		}
 
 
 
-	@Override
-	public void initialize() {
+
+		@Override
+		public void onEvent(PostInitEvent event) {
+			initialize();
+		}
+
+	};
+
+
+
+
+	/**
+	 * Initializes this library. Fetches all blocks from the {@link Block#REGISTRY} and stores them.
+	 */
+	private void initialize() {
 
 		List<BlockWrapper> blockList = new ArrayList<>();
 		int maxID = 0;
@@ -33,6 +54,14 @@ public class BlockLibraryImpl implements BlockLibrary {
 			blocks[block.id] = block;
 		}
 
+	}
+
+
+
+
+	@Override
+	public EventListener getListener() {
+		return listener;
 	}
 
 

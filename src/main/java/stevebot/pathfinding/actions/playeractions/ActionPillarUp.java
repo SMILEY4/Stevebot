@@ -2,18 +2,17 @@ package stevebot.pathfinding.actions.playeractions;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
-import stevebot.Direction;
-import stevebot.StateMachine;
-import stevebot.Stevebot;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.blocks.BlockWrapper;
+import stevebot.misc.Direction;
+import stevebot.misc.StateMachine;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
-import stevebot.pathfinding.execution.PathExecutor;
+import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
-import stevebot.player.PlayerController;
+import stevebot.player.PlayerUtils;
 
 public class ActionPillarUp extends Action {
 
@@ -61,44 +60,42 @@ public class ActionPillarUp extends Action {
 
 
 	@Override
-	public PathExecutor.StateFollow tick(boolean fistTick) {
-
-		final PlayerController controller = Stevebot.get().getPlayerController();
+	public PathExecutorImpl.StateFollow tick(boolean fistTick) {
 
 		switch (stateMachine.getState()) {
 
 			case SLOWING_DOWN: {
-				boolean slowEnough = controller.movement().slowDown(0.075);
+				boolean slowEnough = PlayerUtils.getMovement().slowDown(0.075);
 				if (slowEnough) {
 					stateMachine.fireTransition(Transition.SLOW_ENOUGH);
 				} else {
-					controller.camera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
+					PlayerUtils.getCamera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
 				}
-				return PathExecutor.StateFollow.EXEC;
+				return PathExecutorImpl.StateFollow.EXEC;
 			}
 
 			case JUMPING: {
-				if (controller.utils().getPlayerBlockPos().equals(getFrom().getPos())) {
-					controller.input().setJump(false);
+				if (PlayerUtils.getPlayerBlockPos().equals(getFrom().getPos())) {
+					PlayerUtils.getInput().setJump(false);
 				}
-				if (controller.utils().getPlayerBlockPos().equals(getTo().getPos())) {
+				if (PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
 					Minecraft.getMinecraft().world.setBlockState(getFrom().getPos().copyAsMCBlockPos(), Blocks.GOLD_BLOCK.getDefaultState());
 					stateMachine.fireTransition(Transition.PLACED_BLOCK);
 				}
-				return PathExecutor.StateFollow.EXEC;
+				return PathExecutorImpl.StateFollow.EXEC;
 			}
 
 
 			case LANDING: {
-				if (controller.getPlayer().onGround && controller.utils().getPlayerBlockPos().equals(getTo().getPos())) {
-					return PathExecutor.StateFollow.DONE;
+				if (PlayerUtils.getPlayer().onGround && PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
+					return PathExecutorImpl.StateFollow.DONE;
 				} else {
-					return PathExecutor.StateFollow.EXEC;
+					return PathExecutorImpl.StateFollow.EXEC;
 				}
 			}
 
 			default: {
-				return PathExecutor.StateFollow.FAILED;
+				return PathExecutorImpl.StateFollow.FAILED;
 			}
 		}
 	}
@@ -123,11 +120,14 @@ public class ActionPillarUp extends Action {
 	public static class PillarUpFactory implements ActionFactory {
 
 
+		static final BlockWrapper BLOCK_GOLD = new BlockWrapper(41, "minecraft:gold_block", Blocks.GOLD_BLOCK); // Todo
+
+
+
+
 		@Override
 		public Action createAction(Node node, Result result) {
-			// final Result result = check(node);
-			final BlockWrapper blockGold = Stevebot.get().getBlockLibrary().getBlockByName("minecraft:gold_block");
-			return new ActionPillarUp(node, result.to, result.estimatedCost, new BlockChange(node.getPos(), blockGold));
+			return new ActionPillarUp(node, result.to, result.estimatedCost, new BlockChange(node.getPos(), BLOCK_GOLD));
 		}
 
 

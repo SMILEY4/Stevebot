@@ -1,5 +1,6 @@
-package stevebot;
+package stevebot.misc;
 
+import stevebot.Stevebot;
 import stevebot.pathfinding.path.PathRenderable;
 
 public class Config {
@@ -37,7 +38,7 @@ public class Config {
 	 */
 	public static void setPathfindingTimeout(int timeoutSeconds) {
 		Config.pathfindingTimeoutSeconds = timeoutSeconds;
-		Stevebot.get().log("Set pathfindingTimeoutSeconds: " + getPathfindingTimeout());
+		Stevebot.log("Set pathfindingTimeoutSeconds: " + getPathfindingTimeout());
 	}
 
 
@@ -60,7 +61,7 @@ public class Config {
 	 */
 	public static void setPathStyle(PathRenderable.PathStyle pathStyle) {
 		Config.pathStyle = pathStyle;
-		Stevebot.get().log("Set pathStyle: " + getPathStyle());
+		Stevebot.log("Set pathStyle: " + getPathStyle());
 	}
 
 
@@ -81,7 +82,7 @@ public class Config {
 	 */
 	public static void setVerboseMode(boolean verboseMode) {
 		Config.verboseMode = verboseMode;
-		Stevebot.get().log("Enable verboseMode: " + isVerboseMode());
+		Stevebot.log("Enable verboseMode: " + isVerboseMode());
 	}
 
 
@@ -102,7 +103,7 @@ public class Config {
 	 */
 	public static void setShowChunkCache(boolean showChunkCache) {
 		Config.showChunkCache = showChunkCache;
-		Stevebot.get().log("Show chunkCache: " + isShowChunkCache());
+		Stevebot.log("Show chunkCache: " + isShowChunkCache());
 	}
 
 
@@ -123,7 +124,7 @@ public class Config {
 	 */
 	public static void setShowNodeCache(boolean showNodeCache) {
 		Config.showNodeCache = showNodeCache;
-		Stevebot.get().log("Show nodeCache: " + isShowNodeCache());
+		Stevebot.log("Show nodeCache: " + isShowNodeCache());
 	}
 
 
@@ -144,7 +145,7 @@ public class Config {
 	 */
 	public static void setPathfindingSlowdown(int pathfindingSlowdown) {
 		Config.pathfindingSlowdown = pathfindingSlowdown;
-		Stevebot.get().log("Set pathfinding-slodown: " + getPathfindingSlowdown() + "ms");
+		Stevebot.log("Set pathfinding-slodown: " + getPathfindingSlowdown() + "ms");
 	}
 
 

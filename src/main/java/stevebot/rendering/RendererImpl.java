@@ -11,12 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.opengl.GL11;
-import stevebot.Config;
-import stevebot.Stevebot;
+import stevebot.misc.Config;
 import stevebot.data.blocks.ChunkCache;
 import stevebot.events.EventListener;
-import stevebot.events.EventManager;
-import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.pathfinding.nodes.NodeRenderable;
 
 import java.util.ArrayList;
@@ -29,49 +26,58 @@ public class RendererImpl implements Renderer {
 	private final BufferBuilder BUFFER = TESSELLATOR.getBuffer();
 	private final List<Renderable> renderables = new ArrayList<>();
 
-
-
-
-	public RendererImpl(EventManager eventManager) {
-		eventManager.addListener(new EventListener<RenderWorldLastEvent>() {
-			@Override
-			public Class<RenderWorldLastEvent> getEventClass() {
-				return RenderWorldLastEvent.class;
-			}
+	private final EventListener<RenderWorldLastEvent> renderListener = new EventListener<RenderWorldLastEvent>() {
+		@Override
+		public Class<RenderWorldLastEvent> getEventClass() {
+			return RenderWorldLastEvent.class;
+		}
 
 
 
 
-			@Override
-			public void onEvent(RenderWorldLastEvent event) {
-				EntityPlayerSP player = Minecraft.getMinecraft().player;
-				if (player != null) {
+		@Override
+		public void onEvent(RenderWorldLastEvent event) {
+			onRender();
+		}
+	};
 
-					// setup
-					Vec3d playerPos = player.getPositionVector();
-					setup(playerPos);
 
-					// draw
-					for (int i = 0, n = renderables.size(); i < n; i++) {
-						Renderable renderable = renderables.get(i);
-						if (renderable instanceof ChunkCache.ChunkCacheRenderable && !Config.isShowChunkCache()) {
-							continue;
-						}
-						if (renderable instanceof NodeRenderable && !Config.isShowNodeCache()) {
-							continue;
-						}
-						renderable.render(RendererImpl.this);
-					}
 
-					// reset
-					reset();
+
+	@Override
+	public EventListener getListener() {
+		return renderListener;
+	}
+
+
+
+
+	/**
+	 * Renders all {@link Renderable}s.
+	 */
+	private void onRender() {
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		if (player != null) {
+
+			// setup
+			Vec3d playerPos = player.getPositionVector();
+			setup(playerPos);
+
+			// draw
+			for (int i = 0, n = renderables.size(); i < n; i++) {
+				Renderable renderable = renderables.get(i);
+				if (renderable instanceof ChunkCache.ChunkCacheRenderable && !Config.isShowChunkCache()) {
+					continue;
 				}
+				if (renderable instanceof NodeRenderable && !Config.isShowNodeCache()) {
+					continue;
+				}
+				renderable.render(RendererImpl.this);
 			}
-		});
 
-
-		addRenderable(Stevebot.get().getBlockProvider().getBlockCache().getChunkCache().getChunkCacheRenderable());
-		addRenderable(new NodeRenderable(NodeCache.getNodes()));
+			// reset
+			reset();
+		}
 	}
 
 

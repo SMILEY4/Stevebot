@@ -1,320 +1,152 @@
 package stevebot.player;
 
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.events.EventListener;
-import stevebot.events.EventManager;
 
-public class PlayerInput {
-
-
-	private PlayerController controller;
-
-	private PlayerInputConfig inputConfig = null;
-	private boolean muteUserInput = false;
-
-	private boolean isHoldingJump = false;
-
-
-
-
-	PlayerInput(PlayerController controller, EventManager eventManager) {
-		this.controller = controller;
-		eventManager.addListener(new EventListener<TickEvent.PlayerTickEvent>() {
-			@Override
-			public Class<TickEvent.PlayerTickEvent> getEventClass() {
-				return TickEvent.PlayerTickEvent.class;
-			}
-
-
-
-
-			@Override
-			public void onEvent(TickEvent.PlayerTickEvent event) {
-				if (event.phase == TickEvent.Phase.START) {
-					if (muteUserInput) {
-						stopAll();
-					}
-				}
-			}
-		});
-
-		reloadConfig();
-	}
-
-
+public interface PlayerInput {
 
 
 	/**
-	 * @param mute set to true to ignore any input not coming from this {@link PlayerInput}.
+	 * The given listener listens for a {@link TickEvent.PlayerTickEvent}.
+	 *
+	 * @return the {@link EventListener} of this {@link PlayerInput} for the {@link TickEvent.PlayerTickEvent}.
 	 */
-	public void setMuteUserInput(boolean mute) {
-		this.muteUserInput = mute;
-	}
-
-
-
+	EventListener getPlayerTickListener();
 
 	/**
-	 * @return true, if any input not coming from this {@link PlayerInput} is ignored.
+	 * The given listener listens for a {@link ConfigChangedEvent.PostConfigChangedEvent}.
+	 *
+	 * @return the {@link EventListener} of this {@link PlayerInput} for the {@link ConfigChangedEvent.PostConfigChangedEvent}.
 	 */
-	public boolean isUserMuted() {
-		return this.muteUserInput;
-	}
+	EventListener getConfigChangedListener();
 
+	/**
+	 * @param mute set to true to ignore any input not coming from this {@link PlayerInputImpl}.
+	 */
+	void setMuteUserInput(boolean mute);
 
-
+	/**
+	 * @return true, if any input not coming from this {@link PlayerInputImpl} is ignored.
+	 */
+	boolean isUserMuted();
 
 	/**
 	 * Move forward until stopped (same as pressing 'w')
 	 */
-	public void setMoveForward() {
-		setMoveForward(true);
-	}
-
-
-
+	void setMoveForward();
 
 	/**
 	 * @param move true to move forward (same as pressing 'w'), false to stop moving forward.
 	 */
-	public void setMoveForward(boolean move) {
-		setInput(PlayerInputConfig.InputType.WALK_FORWARD, move);
-	}
-
-
-
+	void setMoveForward(boolean move);
 
 	/**
 	 * Move backward until stopped (same as pressing 's').
 	 */
-	public void setMoveBackward() {
-		setMoveBackward(true);
-	}
-
-
-
+	void setMoveBackward();
 
 	/**
 	 * @param move true to move backward (same as pressing 's'), false to stop moving backward.
 	 */
-	public void setMoveBackward(boolean move) {
-		setInput(PlayerInputConfig.InputType.WALK_BACKWARD, move);
-	}
-
-
-
+	void setMoveBackward(boolean move);
 
 	/**
 	 * Move left until stopped (same as pressing 'a').
 	 */
-	public void setMoveLeft() {
-		setMoveLeft(true);
-	}
-
-
-
+	void setMoveLeft();
 
 	/**
 	 * @param move true to move left same as pressing 'a'), false to stop moving backward.
 	 */
-	public void setMoveLeft(boolean move) {
-		setInput(PlayerInputConfig.InputType.WALK_LEFT, move);
-	}
-
-
-
+	void setMoveLeft(boolean move);
 
 	/**
 	 * Move right until stopped (same as pressing 'd').
 	 */
-	public void setMoveRight() {
-		setMoveRight(true);
-	}
-
-
-
+	void setMoveRight();
 
 	/**
 	 * @param move true to move right same as pressing 'd'), false to stop moving backward.
 	 */
-	public void setMoveRight(boolean move) {
-		setInput(PlayerInputConfig.InputType.WALK_RIGHT, move);
-	}
-
-
-
+	void setMoveRight(boolean move);
 
 	/**
 	 * Jump until stopped (same as pressing 'space').
 	 */
-	public void setJump(boolean allowInAir) {
-		setJump(true, allowInAir);
-	}
-
-
-
+	void setJump(boolean allowInAir);
 
 	/**
 	 * @param jump       true to jump same as pressing 'space'), false to stop jumping.
 	 * @param allowInAir whether or not to jump when the player is already in the air.
 	 */
-	public void setJump(boolean jump, boolean allowInAir) {
-		if (jump) {
-			if (controller.getPlayer() == null) {
-				return;
-			}
-			if (controller.getPlayer().onGround) {
-				setInput(PlayerInputConfig.InputType.JUMP, true);
-			} else {
-				if (allowInAir) {
-					setInput(PlayerInputConfig.InputType.JUMP, true);
-				}
-			}
-		} else {
-			setInput(PlayerInputConfig.InputType.JUMP, false);
-		}
-	}
-
-
-
+	void setJump(boolean jump, boolean allowInAir);
 
 	/**
-	 * Start to hold down jump. Until {@link PlayerInput#releaseJump()} is called, the jump button will be held down.
-	 * {@link PlayerInput#stopAll()} will not reset affect the jump-button anymore
+	 * Start to hold down jump. Until {@link PlayerInputImpl#releaseJump()} is called, the jump button will be held down.
+	 * {@link PlayerInputImpl#stopAll()} will not reset affect the jump-button anymore
 	 */
-	public void holdJump() {
-		isHoldingJump = true;
-		setJump(true);
-	}
-
-
-
+	void holdJump();
 
 	/**
-	 * Stop holding down the jump button. The "jump" will end and {@link PlayerInput#stopAll()} has an effect again.
+	 * Stop holding down the jump button. The "jump" will end and {@link PlayerInputImpl#stopAll()} has an effect again.
 	 */
-	public void releaseJump() {
-		isHoldingJump = false;
-		setJump(false);
-	}
-
-
-
+	void releaseJump();
 
 	/**
 	 * @return whether the jump button is continuously held down.
 	 */
-	public boolean isHoldingJump() {
-		return isHoldingJump;
-	}
-
-
-
+	boolean isHoldingJump();
 
 	/**
 	 * Sprint until stopped.
 	 */
-	public void setSprint() {
-		controller.getPlayer().setSprinting(true);
-	}
-
-
-
+	void setSprint();
 
 	/**
 	 * @param sprint true to sprint, false to stop sprinting.
 	 */
-	public void setSprint(boolean sprint) {
-		if (controller.getPlayer() != null) {
-			controller.getPlayer().setSprinting(sprint);
-		}
-	}
-
-
-
+	void setSprint(boolean sprint);
 
 	/**
 	 * Sneak until stopped.
 	 */
-	public void setSneak() {
-		setSneak(true);
-	}
-
-
-
+	void setSneak();
 
 	/**
 	 * @param sneak true to sneak, false to stop sneaking.
 	 */
-	public void setSneak(boolean sneak) {
-		setInput(PlayerInputConfig.InputType.SNEAK, sneak);
-	}
-
-
-
+	void setSneak(boolean sneak);
 
 	/**
 	 * Place blocks until stopped (same as pressing 'right mouse').
 	 */
-	public void setPlaceBlock() {
-		setPlaceBlock(true);
-	}
-
-
-
+	void setPlaceBlock();
 
 	/**
 	 * @param placeBlock true to place blocks (same as pressing 'right mouse'), false to stop placing blocks.
 	 */
-	public void setPlaceBlock(boolean placeBlock) {
-		setInput(PlayerInputConfig.InputType.PLACE_BLOCK, placeBlock);
-	}
-
-
-
+	void setPlaceBlock(boolean placeBlock);
 
 	/**
 	 * Break blocks until stopped (same as pressing 'left mouse').
 	 */
-	public void setBreakBlock() {
-		setBreakBlock(true);
-	}
-
-
-
+	void setBreakBlock();
 
 	/**
 	 * @param breakBlock true to break blocks (same as pressing 'left mouse'), false to stop break blocks.
 	 */
-	public void setBreakBlock(boolean breakBlock) {
-		setInput(PlayerInputConfig.InputType.BREAK_BLOCK, breakBlock);
-	}
-
-
-
+	void setBreakBlock(boolean breakBlock);
 
 	/**
 	 * Interact with blocks/entities/... until stopped (same as pressing 'right mouse').
 	 */
-	public void setInteract() {
-		setInteract(true);
-	}
-
-
-
+	void setInteract();
 
 	/**
 	 * @param interact true to interact with blocks/entities/... (same as pressing 'left mouse'), false to stop interacting.
 	 */
-	public void setInteract(boolean interact) {
-		setInput(PlayerInputConfig.InputType.INTERACT, interact);
-	}
-
-
-
+	void setInteract(boolean interact);
 
 	/**
 	 * Set given input down to the given state.
@@ -322,50 +154,11 @@ public class PlayerInput {
 	 * @param type the {@link PlayerInputConfig.InputType}
 	 * @param down whether or not the corresponding button is pressed down or not.
 	 */
-	public void setInput(PlayerInputConfig.InputType type, boolean down) {
-		KeyBinding binding = inputConfig.getBinding(type);
-		KeyBinding.setKeyBindState(binding.getKeyCode(), down);
-		KeyBinding.onTick(binding.getKeyCode());
-	}
-
-
-
+	void setInput(PlayerInputConfig.InputType type, boolean down);
 
 	/**
 	 * Stops all inputs.
 	 */
-	public void stopAll() {
-		setMoveForward(false);
-		setMoveBackward(false);
-		setMoveLeft(false);
-		setMoveRight(false);
-		if (!isHoldingJump()) {
-			setJump(false, true);
-		}
-		setSprint(false);
-		setSneak(false);
-//		setPlaceBlock(false);
-//		setBreakBlock(false);
-//		setInteract(false);
-	}
-
-
-
-
-	/**
-	 * Reloads the {@link PlayerInputConfig} of this {@link PlayerInput}.
-	 */
-	private void reloadConfig() {
-		inputConfig = new PlayerInputConfig();
-	}
-
-
-
-
-	@SubscribeEvent
-	public void onConfigChanged(ConfigChangedEvent.PostConfigChangedEvent event) {
-		reloadConfig();
-	}
-
+	void stopAll();
 
 }

@@ -2,14 +2,27 @@ package stevebot.pathfinding;
 
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.events.EventManager;
 import stevebot.pathfinding.execution.PathExecutor;
+import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.goal.Goal;
-import stevebot.player.Camera;
+import stevebot.rendering.Renderer;
 
 public class PathHandler {
 
 
 	private PathExecutor excecutor = null;
+
+	private EventManager eventManager;
+	private Renderer renderer;
+
+
+
+
+	public PathHandler(EventManager eventManager, Renderer renderer) {
+		this.renderer = renderer;
+		this.eventManager = eventManager;
+	}
 
 
 
@@ -24,7 +37,7 @@ public class PathHandler {
 	 */
 	public void createPath(BaseBlockPos from, Goal goal, boolean startFollowing, boolean enableFreelook) {
 		if (excecutor == null) {
-			excecutor = new PathExecutor(from, goal) {
+			excecutor = new PathExecutorImpl(from, goal, renderer) {
 				@Override
 				public void onFinished() {
 					excecutor = null;
@@ -32,13 +45,10 @@ public class PathHandler {
 			};
 			excecutor.start();
 			if (startFollowing) {
-				excecutor.startFollowing();
-				if (enableFreelook) {
-					Stevebot.get().getPlayerController().camera().setState(Camera.CameraState.FREELOOK);
-				}
+				excecutor.startFollowing(enableFreelook);
 			}
 		} else {
-			Stevebot.get().log("Can not start new path. Another path is already in progress.");
+			Stevebot.log("Can not start new path. Another path is already in progress.");
 		}
 	}
 
@@ -50,7 +60,7 @@ public class PathHandler {
 	 */
 	public void startFollowing() {
 		if (excecutor != null) {
-			excecutor.startFollowing();
+			excecutor.startFollowing(false);
 		}
 	}
 

@@ -1,15 +1,15 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import stevebot.data.blocks.BlockUtils;
-import stevebot.Direction;
-import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blocks.BlockUtils;
+import stevebot.misc.Direction;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
-import stevebot.pathfinding.execution.PathExecutor;
+import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
+import stevebot.player.PlayerUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,14 +33,14 @@ public class ActionWalk extends Action {
 
 
 	@Override
-	public PathExecutor.StateFollow tick(boolean fistTick) {
-		if (Stevebot.get().getPlayerController().movement().moveTowards(getTo().getPos(), true)) {
-			return PathExecutor.StateFollow.DONE;
+	public PathExecutorImpl.StateFollow tick(boolean fistTick) {
+		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
+			return PathExecutorImpl.StateFollow.DONE;
 		} else {
 			if (sprint) {
-				Stevebot.get().getPlayerController().input().setSprint();
+				PlayerUtils.getInput().setSprint();
 			}
-			return PathExecutor.StateFollow.EXEC;
+			return PathExecutorImpl.StateFollow.EXEC;
 		}
 	}
 

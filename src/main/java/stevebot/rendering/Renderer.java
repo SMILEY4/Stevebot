@@ -2,9 +2,18 @@ package stevebot.rendering;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import stevebot.events.EventListener;
 
 public interface Renderer {
 
+
+	/**
+	 * The given listener listens for a {@link RenderWorldLastEvent} and triggers the rendering of all {@link Renderable}s.
+	 *
+	 * @return the {@link EventListener} of this {@link Renderer}.
+	 */
+	EventListener getListener();
 
 	/**
 	 * Adds the given {@link Renderable} to this renderer.

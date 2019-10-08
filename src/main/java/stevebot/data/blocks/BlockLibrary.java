@@ -1,6 +1,8 @@
 package stevebot.data.blocks;
 
 import net.minecraft.block.Block;
+import stevebot.events.EventListener;
+import stevebot.events.PostInitEvent;
 
 public interface BlockLibrary {
 
@@ -10,10 +12,13 @@ public interface BlockLibrary {
 	int ID_UNLOADED_BOCK = -1;
 	int ID_INVALID_BLOCK = -2;
 
+
 	/**
-	 * Initialize this library.
+	 * The given listener listens for a {@link PostInitEvent} and initializes the library on this event.
+	 *
+	 * @return the {@link EventListener} of this {@link BlockLibrary}.
 	 */
-	void initialize();
+	EventListener getListener();
 
 	/**
 	 * @return the {@link BlockWrapper} representing the given {@link Block}

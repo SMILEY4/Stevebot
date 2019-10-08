@@ -1,17 +1,16 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import stevebot.data.blocks.BlockUtils;
-import stevebot.Direction;
-import stevebot.StateMachine;
-import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blocks.BlockUtils;
+import stevebot.misc.Direction;
+import stevebot.misc.StateMachine;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
-import stevebot.pathfinding.execution.PathExecutor;
+import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
-import stevebot.player.PlayerController;
+import stevebot.player.PlayerUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,49 +68,47 @@ public class ActionDropDown extends Action {
 
 
 	@Override
-	public PathExecutor.StateFollow tick(boolean firstTick) {
-		final PlayerController controller = Stevebot.get().getPlayerController();
-
+	public PathExecutorImpl.StateFollow tick(boolean firstTick) {
 
 		switch (stateMachine.getState()) {
 
 			case PREPARING_1: {
-				final double distToEdge = BlockUtils.distToEdge(controller.utils().getPlayerPosition(), direction);
+				final double distToEdge = BlockUtils.distToEdge(PlayerUtils.getPlayerPosition(), direction);
 				if (distToEdge <= 0.4) {
 					stateMachine.fireTransition(Transition.PREPARATION_1_DONE);
 				} else {
-					controller.movement().moveTowards(getTo().getPos(), true);
+					PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
 				}
-				return PathExecutor.StateFollow.EXEC;
+				return PathExecutorImpl.StateFollow.EXEC;
 			}
 
 			case PREPARING_2: {
-				if (controller.getPlayer().onGround && !controller.utils().isPlayerMoving(0.0001, false)) {
-					controller.movement().moveTowards(getTo().getPos(), true);
+				if (PlayerUtils.getPlayer().onGround && !PlayerUtils.isPlayerMoving(0.0001, false)) {
+					PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
 				}
-				if (!controller.getPlayer().onGround) {
+				if (!PlayerUtils.getPlayer().onGround) {
 					stateMachine.fireTransition(Transition.PREPARATION_2_DONE);
 				}
-				return PathExecutor.StateFollow.EXEC;
+				return PathExecutorImpl.StateFollow.EXEC;
 			}
 
 			case FALLING: {
-				if (controller.getPlayer().onGround) {
+				if (PlayerUtils.getPlayer().onGround) {
 					stateMachine.fireTransition(Transition.TOUCHED_GROUND);
 				}
-				return PathExecutor.StateFollow.EXEC;
+				return PathExecutorImpl.StateFollow.EXEC;
 			}
 
 			case FINISHING: {
-				if (controller.movement().moveTowards(getTo().getPos(), true)) {
-					return PathExecutor.StateFollow.DONE;
+				if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
+					return PathExecutorImpl.StateFollow.DONE;
 				} else {
-					return PathExecutor.StateFollow.EXEC;
+					return PathExecutorImpl.StateFollow.EXEC;
 				}
 			}
 
 			default: {
-				return PathExecutor.StateFollow.FAILED;
+				return PathExecutorImpl.StateFollow.FAILED;
 			}
 		}
 

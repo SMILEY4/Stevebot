@@ -2,7 +2,6 @@ package stevebot.commands;
 
 import net.minecraftforge.client.ClientCommandHandler;
 import stevebot.events.EventListener;
-import stevebot.events.EventManager;
 import stevebot.events.PreInitEvent;
 
 import java.util.ArrayList;
@@ -13,34 +12,32 @@ public class CustomCommandHandler {
 
 	private List<CustomCommand> commandList = new ArrayList<>();
 
-
-
-
-	/**
-	 * @param eventHandler the {@link EventManager}
-	 */
-	public CustomCommandHandler(EventManager eventHandler) {
-		eventHandler.addListener(new EventListener<PreInitEvent>() {
-			@Override
-			public Class<PreInitEvent> getEventClass() {
-				return PreInitEvent.class;
-			}
+	private final EventListener listener = new EventListener<PreInitEvent>() {
+		@Override
+		public Class<PreInitEvent> getEventClass() {
+			return PreInitEvent.class;
+		}
 
 
 
 
-			@Override
-			public void onEvent(PreInitEvent event) {
-				onPreInit();
-			}
-		});
-		Commands.create(this);
+		@Override
+		public void onEvent(PreInitEvent event) {
+			onPreInit();
+		}
+	};
+
+
+
+
+	public EventListener getListener() {
+		return listener;
 	}
 
 
 
 
-	public void onPreInit() {
+	private void onPreInit() {
 		for (CustomCommand command : commandList) {
 			ClientCommandHandler.instance.registerCommand(command.getCommandBase());
 		}

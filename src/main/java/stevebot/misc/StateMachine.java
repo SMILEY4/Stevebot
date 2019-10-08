@@ -1,4 +1,4 @@
-package stevebot;
+package stevebot.misc;
 
 import java.util.ArrayList;
 import java.util.List;

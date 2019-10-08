@@ -1,6 +1,6 @@
 package stevebot.pathfinding.path;
 
-import stevebot.Config;
+import stevebot.misc.Config;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.Pathfinding;
@@ -92,7 +92,7 @@ public class PathFactory {
 			return;
 		}
 		preparingPath = true;
-		Stevebot.get().getLogger().info("Preparing path segment");
+		Stevebot.getLogger().info("Preparing path segment");
 		if (hasPath()) {
 			if (getCurrentPath().reachedGoal()) {
 				preparingPath = false;

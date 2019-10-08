@@ -12,7 +12,7 @@ public class BlockWrapper {
 
 
 
-	BlockWrapper(int id, String name, Block block) {
+	public BlockWrapper(int id, String name, Block block) {
 		this.id = id;
 		this.name = name;
 		this.mcBlock = block;
