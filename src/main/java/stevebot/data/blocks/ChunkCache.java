@@ -156,17 +156,17 @@ public class ChunkCache {
 
 
 
-	static class ChunkPos {
+	public static class ChunkPos {
 
 
-		final int x;
-		final int y;
-		final int z;
+		public final int x;
+		public final int y;
+		public final int z;
 
 
 
 
-		ChunkPos(int x, int y, int z) {
+		public ChunkPos(int x, int y, int z) {
 			this.x = x;
 			this.y = y;
 			this.z = z;
@@ -209,10 +209,10 @@ public class ChunkCache {
 	/**
 	 * Represents a 16x16x16 part of the world in the cache.
 	 */
-	static class CachedChunk {
+	public static class CachedChunk {
 
 
-		final ChunkPos pos;
+		public final ChunkPos pos;
 		final int[][][] blockIds;
 
 
