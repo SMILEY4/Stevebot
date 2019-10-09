@@ -85,6 +85,11 @@ public class PlayerCameraImpl implements PlayerCamera {
 
 
 
+	/**
+	 * Updates this camera
+	 *
+	 * @param event the {@link TickEvent.RenderTickEvent}
+	 */
 	public void onRenderTickEvent(TickEvent.RenderTickEvent event) {
 
 		EntityPlayerSP player = PlayerUtils.getPlayer();

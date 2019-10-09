@@ -37,6 +37,7 @@ public class Color extends Vector3f {
 
 
 	/**
+	 * @param seed the seed for the rng
 	 * @return a random color with the given seed
 	 */
 	public static Color random(long seed) {

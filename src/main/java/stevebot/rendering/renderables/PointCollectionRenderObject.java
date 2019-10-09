@@ -86,6 +86,7 @@ public class PointCollectionRenderObject implements Renderable {
 
 	/**
 	 * @param positions the positions of the points
+	 * @param size      the size of the points in pixels
 	 * @param color     the color of all points
 	 */
 	public PointCollectionRenderObject(Vector3d[] positions, float size, Color color) {

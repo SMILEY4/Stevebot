@@ -170,6 +170,7 @@ public class BlockUtils {
 
 	/**
 	 * @param block the block
+	 * @param pos the position
 	 * @return whether the player can walk through the given block. This does not check the surrounding blocks.
 	 */
 	public static boolean canWalkThrough(BlockWrapper block, BlockPos pos) {

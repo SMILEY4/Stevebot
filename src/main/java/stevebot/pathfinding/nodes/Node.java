@@ -20,6 +20,9 @@ public class Node {
 
 
 
+	/**
+	 * @return the {@link BaseBlockPos} of this node
+	 */
 	public BaseBlockPos getPos() {
 		return this.pos;
 	}
@@ -27,6 +30,10 @@ public class Node {
 
 
 
+	/**
+	 *
+	 * @return a copy of the position of this node
+	 */
 	public FastBlockPos getPosCopy() {
 		return this.pos.copy();
 	}
@@ -34,6 +41,9 @@ public class Node {
 
 
 
+	/**
+	 * @param pos the new position of this node
+	 */
 	public void setPos(BaseBlockPos pos) {
 		if (this.pos == null) {
 			this.pos = new FastBlockPos();
@@ -44,6 +54,9 @@ public class Node {
 
 
 
+	/**
+	 * @return the previous node of this node
+	 */
 	public Node getPrev() {
 		return this.prev;
 	}
@@ -51,6 +64,10 @@ public class Node {
 
 
 
+	/**
+	 *
+	 * @param node the new previous node
+	 */
 	public void setPrev(Node node) {
 		this.prev = node;
 	}
@@ -58,6 +75,10 @@ public class Node {
 
 
 
+	/**
+	 *
+	 * @return the action required to get from the previous node to this node
+	 */
 	public Action getAction() {
 		return this.action;
 	}
@@ -65,6 +86,10 @@ public class Node {
 
 
 
+	/**
+	 * Set the action required to get from the previous node to this node.
+	 * @param action the {@link Action}
+	 */
 	public void setAction(Action action) {
 		this.action = action;
 	}
@@ -83,9 +108,9 @@ public class Node {
 
 
 	/**
-	 * Opens this node
+	 * Opens this node and adds it to the given set.
 	 *
-	 * @param openSet
+	 * @param openSet the set (of open nodes).
 	 */
 	public void open(PriorityQueue<Node> openSet) {
 		this.open = true;

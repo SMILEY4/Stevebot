@@ -203,6 +203,7 @@ public abstract class ValueToken implements CommandToken {
 
 
 		/**
+		 * @param valueID the id/name of this token
 		 * @param joinAll false to use only one word, true to use all remaining words for this value.
 		 */
 		public TextToken(String valueID, boolean joinAll) {
@@ -253,6 +254,7 @@ public abstract class ValueToken implements CommandToken {
 
 
 		/**
+		 * @param valueID the id/name of this token
 		 * @param values the valid values/words for this token.
 		 */
 		public EnumToken(String valueID, String... values) {
@@ -309,6 +311,7 @@ public abstract class ValueToken implements CommandToken {
 
 
 		/**
+		 * @param valueID the id/name of this token
 		 * @param center whether or not the result should be the exact coordinate or the center of the block.
 		 */
 		public BlockPosToken(String valueID, boolean center) {

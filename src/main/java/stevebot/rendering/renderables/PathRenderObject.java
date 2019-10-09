@@ -15,6 +15,8 @@ public class PathRenderObject implements Renderable {
 	private final Color color;
 
 
+
+
 	/**
 	 * @param positions the positions of the vertices of this path
 	 * @param color     the color of this path
@@ -22,6 +24,9 @@ public class PathRenderObject implements Renderable {
 	public PathRenderObject(BaseBlockPos[] positions, Color color) {
 		this(Renderable.toVecArray(positions), DEFAULT_LINE_WIDTH, color);
 	}
+
+
+
 
 	/**
 	 * @param positions the positions of the vertices of this path
@@ -116,7 +121,9 @@ public class PathRenderObject implements Renderable {
 
 
 	/**
-	 * @return the new with of this path in pixels
+	 * Sets the width of this path in pixels
+	 *
+	 * @param width the width in pixels
 	 */
 	public void setWidth(float width) {
 		this.width = width;

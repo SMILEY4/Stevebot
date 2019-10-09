@@ -14,6 +14,9 @@ public class ModEventProducer {
 
 
 
+	/**
+	 * @param eventManager All events will be send to this {@link EventManager}.
+	 */
 	public ModEventProducer(EventManager eventManager) {
 		this.eventManager = eventManager;
 	}

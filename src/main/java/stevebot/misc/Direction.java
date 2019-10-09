@@ -40,6 +40,9 @@ public enum Direction {
 
 
 
+	/**
+	 * @param dy the vertical direction. -1, 0 or +1
+	 */
 	Direction(int dy) {
 		this(0, dy, 0);
 	}
@@ -47,6 +50,10 @@ public enum Direction {
 
 
 
+	/**
+	 * @param dx the x direction. -1, 0 or +1
+	 * @param dz the z direction. -1, 0 or +1
+	 */
 	Direction(int dx, int dz) {
 		this(dx, 0, dz);
 	}
@@ -54,6 +61,11 @@ public enum Direction {
 
 
 
+	/**
+	 * @param dx the x direction. -1, 0 or +1
+	 * @param dy the vertical direction. -1, 0 or +1
+	 * @param dz the z direction. -1, 0 or +1
+	 */
 	Direction(int dx, int dy, int dz) {
 		this.dx = dx;
 		this.dy = dy;
@@ -212,8 +224,9 @@ public enum Direction {
 
 
 
-	/***
-	 *
+	/**
+	 * @param from the start position
+	 * @param to   the target position
 	 * @return the closest direction to get from the given "from" block to the other given "to" block
 	 */
 	public static Direction get(BaseBlockPos from, BaseBlockPos to) {
@@ -223,8 +236,9 @@ public enum Direction {
 
 
 
-	/***
-	 *
+	/**
+	 * @param from    the start position
+	 * @param to      the target position
 	 * @param ignoreY set to true to ignore the y-components of the positions
 	 * @return the closest direction to get from the given "from" block to the other given "to" block
 	 */

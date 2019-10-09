@@ -15,6 +15,9 @@ public class ActionUtils {
 
 	/**
 	 * There must be a 3-block high space. The block below does not matter.
+	 *
+	 * @param pos the {@link BaseBlockPos}
+	 * @return whether the player can jump at the given position
 	 */
 	public static boolean canJump(BaseBlockPos pos) {
 		fastPos1.set(pos).add(0, 1, 0);
@@ -27,6 +30,9 @@ public class ActionUtils {
 
 	/**
 	 * There must be a 3-block high space. The block below does not matter. This must be true for all given positions
+	 *
+	 * @param positions the {@link BaseBlockPos}s
+	 * @return whether the player can jump at the given positions.
 	 */
 	public static boolean canJump(BaseBlockPos... positions) {
 		for (int i = 0; i < positions.length; i++) {
@@ -42,6 +48,9 @@ public class ActionUtils {
 
 	/**
 	 * Block below can not be walkable and there must be a 3-block high space.
+	 *
+	 * @param pos the {@link BaseBlockPos}
+	 * @return whether the player can jump through the given position.
 	 */
 	public static boolean canJumpThrough(BaseBlockPos pos) {
 		if (BlockUtils.canWalkOn(fastPos1.set(pos).add(0, -1, 0))) {
@@ -55,6 +64,9 @@ public class ActionUtils {
 
 	/**
 	 * Block below must be walkable and there must be a 3-block high space.
+	 *
+	 * @param pos the {@link BaseBlockPos}
+	 * @return whether the player can jump at the given position
 	 */
 	public static boolean canJumpAt(BaseBlockPos pos) {
 		if (!BlockUtils.canWalkOn(fastPos1.set(pos).add(0, -1, 0))) {
@@ -68,6 +80,10 @@ public class ActionUtils {
 
 	/**
 	 * There must be space of the given height. The block below does not matter.
+	 *
+	 * @param pos    the {@link BaseBlockPos}
+	 * @param height the number of blocks to check above
+	 * @return whether the player can move through the given position
 	 */
 	public static boolean canMoveThrough(BaseBlockPos pos, int height) {
 		for (int i = 0; i < height; i++) {
@@ -83,6 +99,9 @@ public class ActionUtils {
 
 	/**
 	 * There must be a 2-block high space. The block below does not matter.
+	 *
+	 * @param pos the {@link BaseBlockPos}
+	 * @return whether the player can move through the given position
 	 */
 	public static boolean canMoveThrough(BaseBlockPos pos) {
 		return BlockUtils.canWalkThrough(pos) && BlockUtils.canWalkThrough(fastPos1.set(pos).add(0, 1, 0));
@@ -93,6 +112,9 @@ public class ActionUtils {
 
 	/**
 	 * There must be a 2-block high space. The block below does not matter. This must be valid for all given positions.
+	 *
+	 * @param positions the {@link BaseBlockPos}
+	 * @return whether the player can move through the given positions
 	 */
 	public static boolean canMoveThroughAll(BaseBlockPos... positions) {
 		for (int i = 0; i < positions.length; i++) {
@@ -108,6 +130,9 @@ public class ActionUtils {
 
 	/**
 	 * Block below must be walkable and there must be a 2-block high space.
+	 *
+	 * @param pos the {@link BaseBlockPos}
+	 * @return whether the player can stand at the given position.
 	 */
 	public static boolean canStandAt(BaseBlockPos pos) {
 		return canStandAt(pos, 2);
@@ -118,6 +143,10 @@ public class ActionUtils {
 
 	/**
 	 * Block below must be walkable and there must be a space with the given height.
+	 *
+	 * @param pos    the {@link BaseBlockPos}
+	 * @param height the number of blocks to check above
+	 * @return whether the player can stand at the given position
 	 */
 	public static boolean canStandAt(BaseBlockPos pos, int height) {
 		if (!BlockUtils.canWalkOn(fastPos1.set(pos).add(0, -1, 0))) {
@@ -131,6 +160,9 @@ public class ActionUtils {
 
 	/**
 	 * Block below must be non-flowing water and there must be a 2-block high space.
+	 *
+	 * @param pos the {@link BaseBlockPos}
+	 * @return whether the player can swim at the given position
 	 */
 	public static boolean canSwimAt(BaseBlockPos pos) {
 		if (!BlockUtils.isWater(fastPos1.set(pos).add(0, -1, 0))) {

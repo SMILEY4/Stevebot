@@ -84,8 +84,6 @@ public class PathFactory {
 
 	/**
 	 * Start calculating the next path-segment
-	 *
-	 * @return
 	 */
 	public void prepareNextPath() {
 		if (preparingPath) {

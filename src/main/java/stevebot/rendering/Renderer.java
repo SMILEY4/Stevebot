@@ -135,7 +135,7 @@ public interface Renderer {
 	 * Draws a box.  {@code Renderer.beginBoxes(width)}/{@code Renderer.stop} must be called before/after.
 	 *
 	 * @param posMin the position of the first corner of the box
-	 * @param posMin the position of the second/opposite corner of the box
+	 * @param posMax the position of the second/opposite corner of the box
 	 * @param color  the color of the box
 	 */
 	void drawBoxOpen(Vector3d posMin, Vector3d posMax, Color color);

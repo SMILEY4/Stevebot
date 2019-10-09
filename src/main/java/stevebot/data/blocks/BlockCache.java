@@ -13,8 +13,10 @@ public class BlockCache {
 
 
 
+
 	/**
-	 * @param library the {@link BlockLibrary} used by this cache
+	 * @param library       the {@link BlockLibrary} used by this cache
+	 * @param blockProvider the {@link BlockProvider} used by this cache
 	 */
 	public BlockCache(BlockLibrary library, BlockProvider blockProvider) {
 		this.library = library;
@@ -25,6 +27,7 @@ public class BlockCache {
 
 
 	/**
+	 * @param pos the {@link BaseBlockPos} of the block
 	 * @return the id of the block at the given position
 	 */
 	public int getBlockIdAt(BaseBlockPos pos) {
@@ -35,6 +38,9 @@ public class BlockCache {
 
 
 	/**
+	 * @param blockX the x-position of the block
+	 * @param blockY the y-position of the block
+	 * @param blockZ the z-position of the block
 	 * @return the id of the block at the given coordinate
 	 */
 	public int getBlockIdAt(int blockX, int blockY, int blockZ) {

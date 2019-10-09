@@ -32,6 +32,7 @@ public class MultiCommandToken implements CommandToken {
 	 * Add the given {@link CustomCommand} to this command.
 	 *
 	 * @param command the command to add.
+	 * @return this token for chaining
 	 */
 	public MultiCommandToken addCommand(CustomCommand command) {
 		this.commands.add(command);

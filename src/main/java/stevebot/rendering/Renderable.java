@@ -48,6 +48,9 @@ public interface Renderable {
 	/***
 	 * Converts the array of {@link BlockPos} into an array of {@link Vector3d}. The given offsets will be added to the {@link BlockPos}.
 	 * @param bpArray the {@link BlockPos} array
+	 * @param offX the x offset added to all {@link BlockPos}s
+	 * @param offY the y offset added to all {@link BlockPos}s
+	 * @param offZ the z offset added to all {@link BlockPos}s
 	 * @return the {@link Vector3d} array
 	 */
 	static Vector3d[] toVecArray(BlockPos[] bpArray, double offX, double offY, double offZ) {
@@ -73,6 +76,9 @@ public interface Renderable {
 	/***
 	 * Converts the array of {@link BaseBlockPos} into an array of {@link Vector3d}. The given offsets will be added to the {@link BaseBlockPos}.
 	 * @param bpArray the {@link BaseBlockPos} array
+	 * @param offX the x offset added to all {@link BaseBlockPos}s
+	 * @param offY the y offset added to all {@link BaseBlockPos}s
+	 * @param offZ the z offset added to all {@link BaseBlockPos}s
 	 * @return the {@link Vector3d} array
 	 */
 	static Vector3d[] toVecArray(BaseBlockPos[] bpArray, double offX, double offY, double offZ) {

@@ -11,8 +11,20 @@ public interface ActionFactory {
 
 
 	enum ResultType {
+
+		/**
+		 * The action is a valid action.
+		 */
 		VALID,
+
+		/**
+		 * The action is NOT a valid action.
+		 */
 		INVALID,
+
+		/**
+		 * The action is in a unloaded area and not valid.
+		 */
 		UNLOADED
 	}
 
@@ -30,6 +42,9 @@ public interface ActionFactory {
 
 
 
+		/**
+		 * @return a new {@link Result} of the type {@link ResultType#INVALID}.
+		 */
 		public static Result invalid() {
 			if (invalid.type != ResultType.INVALID) {
 				invalid.type = ResultType.INVALID;
@@ -40,6 +55,9 @@ public interface ActionFactory {
 
 
 
+		/**
+		 * @return a new {@link Result} of the type {@link ResultType#UNLOADED}.
+		 */
 		public static Result unloaded() {
 			if (unloaded.type != ResultType.UNLOADED) {
 				unloaded.type = ResultType.UNLOADED;
@@ -50,6 +68,12 @@ public interface ActionFactory {
 
 
 
+		/**
+		 * @param direction the direction of the action
+		 * @param to        the target node of the action
+		 * @param cost      the cost of the action
+		 * @return a new {@link Result} of the type {@link ResultType#VALID}.
+		 */
 		public static Result valid(Direction direction, Node to, double cost) {
 			Result result = new Result();
 			result.type = ResultType.VALID;
@@ -88,6 +112,7 @@ public interface ActionFactory {
 
 
 	/**
+	 * @param direction the direction
 	 * @return a list of other {@link ActionFactory}s that are not possible for the same node when this factory creates a valid action.
 	 */
 	default List<Class<? extends ActionFactory>> makesImpossible(Direction direction) {
