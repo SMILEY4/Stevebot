@@ -22,6 +22,8 @@ public interface CommandToken {
 	int requiredArguments(int nRemaining);
 
 	/**
+	 * @param sender the {@link ICommandSender} of the command
+	 * @param args   the list of arguments
 	 * @return the result of parsing the given args.
 	 */
 	TokenParseResult parse(ICommandSender sender, String[] args);

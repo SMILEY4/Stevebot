@@ -73,6 +73,7 @@ public interface PlayerInput {
 
 	/**
 	 * Jump until stopped (same as pressing 'space').
+	 * @param allowInAir true, to allow jumping while the player is in mid-air
 	 */
 	void setJump(boolean allowInAir);
 

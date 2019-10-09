@@ -110,7 +110,7 @@ public class SegmentedPathRenderObject implements Renderable {
 
 
 	/**
-	 * @@param width the new with in pixels of this path
+	 * @param width the new with in pixels of this path
 	 */
 	public void setWidth(float width) {
 		this.width = width;

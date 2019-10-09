@@ -34,6 +34,8 @@ public interface PathExecutor {
 
 	/**
 	 * Start following the path.
+	 *
+	 * @param enableFreelook if freelook should be enabled automatically
 	 */
 	void startFollowing(boolean enableFreelook);
 

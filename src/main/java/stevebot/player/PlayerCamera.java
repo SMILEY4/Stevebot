@@ -39,7 +39,7 @@ public interface PlayerCamera {
 	 * @param pos           the position
 	 * @param ignorePitch   set to true to ignore the pitch / up-down-axis
 	 * @param rangeAngleDeg the threshold of the angle in degrees
-	 * @return
+	 * @return whether the player is looking at the given position
 	 */
 	boolean isLookingAt(BaseBlockPos pos, boolean ignorePitch, double rangeAngleDeg);
 
@@ -48,10 +48,10 @@ public interface PlayerCamera {
 	 *
 	 * @param x             the x position
 	 * @param y             the y position
-	 * @param y             the y position
+	 * @param z             the z position
 	 * @param ignorePitch   set to true to ignore the pitch / up-down-axis
 	 * @param rangeAngleDeg the threshold of the angle in degrees
-	 * @return
+	 * @return whether the player is looking at the given position
 	 */
 	boolean isLookingAt(int x, int y, int z, boolean ignorePitch, double rangeAngleDeg);
 

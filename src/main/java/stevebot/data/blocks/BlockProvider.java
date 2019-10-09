@@ -7,28 +7,38 @@ public interface BlockProvider {
 
 
 	/**
+	 * @param pos the position of the block
 	 * @return true, if the given position is in a loaded chunk.
 	 */
 	boolean isLoaded(BaseBlockPos pos);
 
 
 	/**
+	 * @param pos the position of the block
 	 * @return the {@link BlockWrapper} at the given position.
 	 */
 	BlockWrapper getBlockAt(BaseBlockPos pos);
 
+
 	/**
+	 * @param x the x-position of the block
+	 * @param y the y-position of the block
+	 * @param z the z-position of the block
 	 * @return the {@link BlockWrapper} at the given position.
 	 */
 	BlockWrapper getBlockAt(int x, int y, int z);
 
 
 	/**
+	 * @param pos the position of the block
 	 * @return the id of the block at the given position.
 	 */
 	int getBlockIdAt(BaseBlockPos pos);
 
 	/**
+	 * @param x the x-position of the block
+	 * @param y the y-position of the block
+	 * @param z the z-position of the block
 	 * @return the id of the block at the given position.
 	 */
 	int getBlockIdAt(int x, int y, int z);

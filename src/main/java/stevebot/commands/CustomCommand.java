@@ -42,6 +42,7 @@ public class CustomCommand {
 	 *
 	 * @param sender the sender of the command.
 	 * @param args   the command arguments
+	 * @throws WrongUsageException if the command could not be parsed/executed
 	 */
 	public void execute(ICommandSender sender, String[] args) throws WrongUsageException {
 
