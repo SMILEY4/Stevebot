@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.MouseHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -36,6 +37,14 @@ public class MinecraftAdapterImpl extends MinecraftAdapter {
 	@Override
 	public EntityPlayerSP getPlayer() {
 		return getMinecraft().player;
+	}
+
+
+
+
+	@Override
+	public InventoryPlayer getPlayerInventory() {
+		return getPlayer().inventory;
 	}
 
 

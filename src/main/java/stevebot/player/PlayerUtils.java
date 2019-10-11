@@ -15,14 +15,16 @@ public class PlayerUtils {
 	private static PlayerInput playerInput;
 	private static PlayerCamera playerCamera;
 	private static PlayerMovement playerMovement;
+	private static PlayerInventory playerInventory;
 
 
 
 
-	public static void initialize(PlayerInput playerInput, PlayerCamera playerCamera, PlayerMovement playerMovement) {
+	public static void initialize(PlayerInput playerInput, PlayerCamera playerCamera, PlayerMovement playerMovement, PlayerInventory playerInventory) {
 		PlayerUtils.playerInput = playerInput;
 		PlayerUtils.playerCamera = playerCamera;
 		PlayerUtils.playerMovement = playerMovement;
+		PlayerUtils.playerInventory = playerInventory;
 	}
 
 
@@ -44,6 +46,13 @@ public class PlayerUtils {
 
 	public static PlayerMovement getMovement() {
 		return playerMovement;
+	}
+
+
+
+
+	public static PlayerInventory getInventory() {
+		return playerInventory;
 	}
 
 
