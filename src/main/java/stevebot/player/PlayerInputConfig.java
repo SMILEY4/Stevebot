@@ -1,8 +1,8 @@
 package stevebot.player;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
+import stevebot.minecraft.MinecraftAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +35,7 @@ class PlayerInputConfig {
 
 	PlayerInputConfig() {
 
-		GameSettings settings = Minecraft.getMinecraft().gameSettings;
+		GameSettings settings = MinecraftAdapter.get().getGameSettings();
 
 		bindingMap.put(InputType.WALK_FORWARD, settings.keyBindForward);
 		bindingMap.put(InputType.WALK_BACKWARD, settings.keyBindBack);

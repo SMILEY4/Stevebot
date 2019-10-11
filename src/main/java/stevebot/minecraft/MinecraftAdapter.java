@@ -1,0 +1,90 @@
+package stevebot.minecraft;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.MouseHelper;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+public abstract class MinecraftAdapter {
+
+
+	private static MinecraftAdapter adapter;
+
+
+
+
+	/**
+	 * Initializes the adapter with the given {@link MinecraftAdapter}-instance
+	 *
+	 * @param adapter the adapter-instance
+	 */
+	public static void initialize(MinecraftAdapter adapter) {
+		MinecraftAdapter.adapter = adapter;
+	}
+
+
+
+
+	/**
+	 * @return the singleton {@link MinecraftAdapter}-instance
+	 */
+	public static MinecraftAdapter get() {
+		return adapter;
+	}
+
+
+
+
+	/**
+	 * @return the minecraft world
+	 */
+	public abstract World getWorld();
+
+	/**
+	 * @return the entity representing the player in singleplayer
+	 */
+	public abstract EntityPlayerSP getPlayer();
+
+	/**
+	 * @param pos the position of the block
+	 * @return the block at the given position
+	 */
+	public abstract Block getBlock(BlockPos pos);
+
+	/**
+	 * Sets the block at the given position to the given blocks default {@link IBlockState}
+	 *
+	 * @param pos   the position
+	 * @param block the block
+	 */
+	public abstract void setBlock(BlockPos pos, Block block);
+
+	/**
+	 * @param chunkX the x position of the chunk
+	 * @param chunkZ the x position of the chunk
+	 * @return whether the chunk is currently loaded
+	 */
+	public abstract boolean isChunkLoaded(int chunkX, int chunkZ);
+
+	/**
+	 * @return the render view entity
+	 */
+	public abstract Entity getRenderViewEntity();
+
+	/**
+	 * @return the games settings
+	 */
+	public abstract GameSettings getGameSettings();
+
+	/**
+	 * Sets the games mouse-helper to the given helper
+	 *
+	 * @param mouseHelper the {@link MouseHelper}
+	 */
+	public abstract void setMouseHelper(MouseHelper mouseHelper);
+
+}

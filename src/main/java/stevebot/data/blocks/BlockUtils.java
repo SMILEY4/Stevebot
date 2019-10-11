@@ -1,11 +1,11 @@
 package stevebot.data.blocks;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
-import stevebot.misc.Direction;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
+import stevebot.minecraft.MinecraftAdapter;
+import stevebot.misc.Direction;
 
 public class BlockUtils {
 
@@ -178,7 +178,7 @@ public class BlockUtils {
 				|| ICE == block.id || FROSTED_ICE == block.id || PACKED_ICE == block.id) {
 			return false;
 		} else {
-			return block.mcBlock.isPassable(Minecraft.getMinecraft().world, pos);
+			return block.mcBlock.isPassable(MinecraftAdapter.get().getWorld(), pos);
 		}
 	}
 

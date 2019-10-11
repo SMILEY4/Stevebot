@@ -1,7 +1,6 @@
 package stevebot.rendering;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -11,9 +10,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.opengl.GL11;
-import stevebot.misc.Config;
 import stevebot.data.blocks.ChunkCache;
 import stevebot.events.EventListener;
+import stevebot.minecraft.MinecraftAdapter;
+import stevebot.misc.Config;
 import stevebot.pathfinding.nodes.NodeRenderable;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class RendererImpl implements Renderer {
 	 * Renders all {@link Renderable}s.
 	 */
 	private void onRender() {
-		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		EntityPlayerSP player = MinecraftAdapter.get().getPlayer();
 		if (player != null) {
 
 			// setup

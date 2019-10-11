@@ -1,9 +1,9 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.blocks.BlockWrapper;
+import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Direction;
 import stevebot.misc.StateMachine;
 import stevebot.pathfinding.actions.ActionCosts;
@@ -79,7 +79,7 @@ public class ActionPillarUp extends Action {
 					PlayerUtils.getInput().setJump(false);
 				}
 				if (PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
-					Minecraft.getMinecraft().world.setBlockState(getFrom().getPos().copyAsMCBlockPos(), Blocks.GOLD_BLOCK.getDefaultState());
+					MinecraftAdapter.get().setBlock(getFrom().getPos().copyAsMCBlockPos(), Blocks.GOLD_BLOCK);
 					stateMachine.fireTransition(Transition.PLACED_BLOCK);
 				}
 				return PathExecutorImpl.StateFollow.EXEC;

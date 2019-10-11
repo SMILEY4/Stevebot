@@ -2,7 +2,6 @@ package stevebot.player;
 
 import com.ruegnerlukas.simplemath.vectors.vec2.Vector2d;
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MouseHelper;
@@ -12,6 +11,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventListener;
+import stevebot.minecraft.MinecraftAdapter;
 
 public class PlayerCameraImpl implements PlayerCamera {
 
@@ -48,14 +48,14 @@ public class PlayerCameraImpl implements PlayerCamera {
 	 * Setup for the {@code  CameraState.LOCKED} mode.
 	 */
 	private void setupLock() {
-		Minecraft.getMinecraft().mouseHelper = new MouseHelper() {
+		MinecraftAdapter.get().setMouseHelper(new MouseHelper() {
 			@Override
 			public void mouseXYChange() {
 				if (getState() != CameraState.LOCKED) {
 					super.mouseXYChange();
 				}
 			}
-		};
+		});
 	}
 
 
@@ -158,11 +158,11 @@ public class PlayerCameraImpl implements PlayerCamera {
 	 */
 	private void updateFreelook(TickEvent.Phase phase) {
 
-		final Entity player = Minecraft.getMinecraft().getRenderViewEntity();
+		final Entity player = MinecraftAdapter.get().getRenderViewEntity();
 		final EntityPlayerSP playerSP = PlayerUtils.getPlayer();
 
 
-		final float f = Minecraft.getMinecraft().gameSettings.mouseSensitivity * 0.6f + 0.2f;
+		final float f = MinecraftAdapter.get().getGameSettings().mouseSensitivity * 0.6f + 0.2f;
 		final float f1 = f * f * f * 8f;
 
 		final double dx = Mouse.getDX() * f1 * 0.15;

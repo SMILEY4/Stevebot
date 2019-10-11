@@ -1,8 +1,8 @@
 package stevebot.data.blocks;
 
-import net.minecraft.client.Minecraft;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
+import stevebot.minecraft.MinecraftAdapter;
 import stevebot.pathfinding.actions.playeractions.BlockChange;
 
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class BlockProviderImpl implements BlockProvider {
 
 	@Override
 	public boolean isLoaded(BaseBlockPos pos) {
-		return Minecraft.getMinecraft().world.getChunkFromChunkCoords(pos.getX() >> 4, pos.getZ() >> 4).isLoaded();
+		return MinecraftAdapter.get().isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4);
 	}
 
 
