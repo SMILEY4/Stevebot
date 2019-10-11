@@ -9,10 +9,12 @@ import net.minecraft.util.MouseHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public abstract class MinecraftAdapter {
 
 
-	private static MinecraftAdapter adapter;
+	private static MinecraftAdapter adapter = new UnsupportedMinecraftAdapter();
 
 
 
@@ -86,5 +88,11 @@ public abstract class MinecraftAdapter {
 	 * @param mouseHelper the {@link MouseHelper}
 	 */
 	public abstract void setMouseHelper(MouseHelper mouseHelper);
+
+	/**
+	 *
+	 * @return a list of all registered blocks
+	 */
+	public abstract List<Block> getRegisteredBlocks();
 
 }

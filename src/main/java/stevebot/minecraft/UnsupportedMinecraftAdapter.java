@@ -1,7 +1,6 @@
 package stevebot.minecraft;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
@@ -9,25 +8,14 @@ import net.minecraft.util.MouseHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MinecraftAdapterImpl extends MinecraftAdapter {
-
-
-	/**
-	 * Return the singleton {@link Minecraft} instance
-	 */
-	private Minecraft getMinecraft() {
-		return Minecraft.getMinecraft();
-	}
-
-
+public class UnsupportedMinecraftAdapter extends MinecraftAdapter {
 
 
 	@Override
 	public World getWorld() {
-		return getMinecraft().world;
+		throw new UnsupportedOperationException();
 	}
 
 
@@ -35,7 +23,7 @@ public class MinecraftAdapterImpl extends MinecraftAdapter {
 
 	@Override
 	public EntityPlayerSP getPlayer() {
-		return getMinecraft().player;
+		throw new UnsupportedOperationException();
 	}
 
 
@@ -43,7 +31,7 @@ public class MinecraftAdapterImpl extends MinecraftAdapter {
 
 	@Override
 	public Block getBlock(BlockPos pos) {
-		return getWorld().getBlockState(pos).getBlock();
+		throw new UnsupportedOperationException();
 	}
 
 
@@ -51,7 +39,7 @@ public class MinecraftAdapterImpl extends MinecraftAdapter {
 
 	@Override
 	public void setBlock(BlockPos pos, Block block) {
-		getWorld().setBlockState(pos, block.getDefaultState());
+		throw new UnsupportedOperationException();
 	}
 
 
@@ -59,7 +47,7 @@ public class MinecraftAdapterImpl extends MinecraftAdapter {
 
 	@Override
 	public boolean isChunkLoaded(int chunkX, int chunkZ) {
-		return getWorld().getChunkFromChunkCoords(chunkX, chunkZ).isLoaded();
+		throw new UnsupportedOperationException();
 	}
 
 
@@ -67,7 +55,7 @@ public class MinecraftAdapterImpl extends MinecraftAdapter {
 
 	@Override
 	public Entity getRenderViewEntity() {
-		return getMinecraft().getRenderViewEntity();
+		throw new UnsupportedOperationException();
 	}
 
 
@@ -75,7 +63,7 @@ public class MinecraftAdapterImpl extends MinecraftAdapter {
 
 	@Override
 	public GameSettings getGameSettings() {
-		return getMinecraft().gameSettings;
+		throw new UnsupportedOperationException();
 	}
 
 
@@ -83,7 +71,7 @@ public class MinecraftAdapterImpl extends MinecraftAdapter {
 
 	@Override
 	public void setMouseHelper(MouseHelper mouseHelper) {
-		getMinecraft().mouseHelper = mouseHelper;
+		throw new UnsupportedOperationException();
 	}
 
 
@@ -91,9 +79,7 @@ public class MinecraftAdapterImpl extends MinecraftAdapter {
 
 	@Override
 	public List<Block> getRegisteredBlocks() {
-		List<Block> blocks = new ArrayList<>();
-		Block.REGISTRY.forEach(blocks::add);
-		return blocks;
+		throw new UnsupportedOperationException();
 	}
 
 }

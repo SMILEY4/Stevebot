@@ -4,6 +4,7 @@ import com.ruegnerlukas.simplemath.MathUtils;
 import net.minecraft.block.Block;
 import stevebot.events.EventListener;
 import stevebot.events.PostInitEvent;
+import stevebot.minecraft.MinecraftAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,7 +42,7 @@ public class BlockLibraryImpl implements BlockLibrary {
 
 		List<BlockWrapper> blockList = new ArrayList<>();
 		int maxID = 0;
-		for (Block block : Block.REGISTRY) {
+		for (Block block : MinecraftAdapter.get().getRegisteredBlocks()) {
 			final int id = getIdOfBlock(block);
 			final String name = getNameOfBlock(block);
 			blockList.add(new BlockWrapper(id, name, block));
