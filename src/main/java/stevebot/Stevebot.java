@@ -12,6 +12,8 @@ import stevebot.data.blocks.*;
 import stevebot.events.EventManager;
 import stevebot.events.EventManagerImpl;
 import stevebot.events.ModEventProducer;
+import stevebot.minecraft.MinecraftAdapter;
+import stevebot.minecraft.MinecraftAdapterImpl;
 import stevebot.misc.Config;
 import stevebot.pathfinding.PathHandler;
 import stevebot.player.*;
@@ -52,6 +54,9 @@ public class Stevebot {
 
 
 	private void setup() {
+
+		// minecraft
+		MinecraftAdapter.initialize(new MinecraftAdapterImpl());
 
 		// events
 		Stevebot.eventManager = new EventManagerImpl();

@@ -1,11 +1,11 @@
 package stevebot.player;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.text.TextComponentString;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockUtils;
+import stevebot.minecraft.MinecraftAdapter;
 
 public class PlayerUtils {
 
@@ -50,7 +50,7 @@ public class PlayerUtils {
 
 
 	public static EntityPlayerSP getPlayer() {
-		return Minecraft.getMinecraft().player;
+		return MinecraftAdapter.get().getPlayer();
 	}
 
 

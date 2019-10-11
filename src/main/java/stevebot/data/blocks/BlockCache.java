@@ -1,8 +1,8 @@
 package stevebot.data.blocks;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.minecraft.MinecraftAdapter;
 
 public class BlockCache {
 
@@ -94,7 +94,7 @@ public class BlockCache {
 	 * @return the block at the given position from the minecraft world (never from the cache).
 	 */
 	private BlockWrapper getBlockFromMinecraft(BaseBlockPos pos) {
-		final Block block = Minecraft.getMinecraft().world.getBlockState(pos.copyAsMCBlockPos()).getBlock();
+		final Block block = MinecraftAdapter.get().getBlock(pos.copyAsMCBlockPos());
 		if (block == null) {
 			return BlockLibrary.INVALID_BLOCK;
 		} else {
