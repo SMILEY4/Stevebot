@@ -96,6 +96,22 @@ public class UnsupportedMinecraftAdapter extends MinecraftAdapter {
 
 
 	@Override
+	public int getBlockId(Block block) {
+		throw new UnsupportedOperationException();
+	}
+
+
+
+
+	@Override
+	public String getBlockName(Block block) {
+		throw new UnsupportedOperationException();
+	}
+
+
+
+
+	@Override
 	public List<Item> getRegisteredItems() {
 		throw new UnsupportedOperationException();
 	}
@@ -115,5 +131,6 @@ public class UnsupportedMinecraftAdapter extends MinecraftAdapter {
 	public String getItemName(Item item) {
 		throw new UnsupportedOperationException();
 	}
+
 
 }

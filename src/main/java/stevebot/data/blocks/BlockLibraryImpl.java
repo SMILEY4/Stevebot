@@ -8,9 +8,7 @@ import stevebot.events.EventListener;
 import stevebot.events.PostInitEvent;
 import stevebot.minecraft.MinecraftAdapter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class BlockLibraryImpl implements BlockLibrary {
 
@@ -38,15 +36,15 @@ public class BlockLibraryImpl implements BlockLibrary {
 
 
 	/**
-	 * Initializes this library. Fetches all blocks from the {@link Block#REGISTRY} and stores them.
+	 * Initializes this library. Collects all blocks and stores them.
 	 */
 	private void initialize() {
 
 		List<BlockWrapper> blockList = new ArrayList<>();
 		int maxID = 0;
 		for (Block block : MinecraftAdapter.get().getRegisteredBlocks()) {
-			final int id = getIdOfBlock(block);
-			final String name = getNameOfBlock(block);
+			final int id = getId(block);
+			final String name = getName(block);
 			blockList.add(new BlockWrapper(id, name, block));
 			maxID = Math.max(maxID, id);
 		}
@@ -73,7 +71,7 @@ public class BlockLibraryImpl implements BlockLibrary {
 
 	@Override
 	public BlockWrapper getBlockByMCBlock(Block block) {
-		return getBlockByIndex(getIdOfBlock(block));
+		return getBlockByIndex(getId(block));
 	}
 
 
@@ -95,39 +93,40 @@ public class BlockLibraryImpl implements BlockLibrary {
 
 
 
-	@Override
-	public int getIdOfBlock(Block block) {
-		return Block.REGISTRY.getIDForObject(block);
-	}
-
-
-
-
-	@Override
-	public int getIdFromName(String name) {
+	/**
+	 * @param name the name of the block in the format "minecraft:name-of-the-block"
+	 * @return the id of the block with the given name or {@link BlockLibrary#ID_INVALID_BLOCK}.
+	 */
+	private int getIdFromName(String name) {
 		for (int i = 0, n = blocks.length; i < n; i++) {
-			BlockWrapper entry = blocks[i];
+			final BlockWrapper entry = blocks[i];
 			if (entry.name.equalsIgnoreCase(name)) {
 				return entry.id;
 			}
 		}
-		return -1;
+		return BlockLibrary.ID_INVALID_BLOCK;
 	}
 
 
 
 
-	@Override
-	public String getNameOfBlock(Block block) {
-		return Block.REGISTRY.getNameForObject(block).toString();
+	/**
+	 * @param block the {@link Block}
+	 * @return the name of the given block.
+	 */
+	private String getName(Block block) {
+		return MinecraftAdapter.get().getBlockName(block);
 	}
 
 
 
 
-	@Override
-	public String getNameFromId(int id) {
-		return getBlockByIndex(id).name;
+	/**
+	 * @param block the {@link Block}
+	 * @return the id of the given block
+	 */
+	private int getId(Block block) {
+		return MinecraftAdapter.get().getBlockId(block);
 	}
 
 
