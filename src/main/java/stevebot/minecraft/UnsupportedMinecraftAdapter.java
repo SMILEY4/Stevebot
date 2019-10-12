@@ -82,4 +82,20 @@ public class UnsupportedMinecraftAdapter extends MinecraftAdapter {
 		throw new UnsupportedOperationException();
 	}
 
+
+
+
+	@Override
+	public int getBlockId(Block block) {
+		throw new UnsupportedOperationException();
+	}
+
+
+
+
+	@Override
+	public String getBlockName(Block block) {
+		throw new UnsupportedOperationException();
+	}
+
 }
