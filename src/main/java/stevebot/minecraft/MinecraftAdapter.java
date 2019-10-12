@@ -90,9 +90,20 @@ public abstract class MinecraftAdapter {
 	public abstract void setMouseHelper(MouseHelper mouseHelper);
 
 	/**
-	 *
 	 * @return a list of all registered blocks
 	 */
 	public abstract List<Block> getRegisteredBlocks();
+
+	/**
+	 * @param block the block
+	 * @return the id of the block
+	 */
+	public abstract int getBlockId(Block block);
+
+	/**
+	 * @param block the block
+	 * @return the name of the block
+	 */
+	public abstract String getBlockName(Block block);
 
 }

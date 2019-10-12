@@ -96,4 +96,20 @@ public class MinecraftAdapterImpl extends MinecraftAdapter {
 		return blocks;
 	}
 
+
+
+
+	@Override
+	public int getBlockId(Block block) {
+		return Block.REGISTRY.getIDForObject(block);
+	}
+
+
+
+
+	@Override
+	public String getBlockName(Block block) {
+		return Block.REGISTRY.getNameForObject(block).toString();
+	}
+
 }
