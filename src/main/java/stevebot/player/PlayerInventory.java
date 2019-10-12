@@ -1,14 +1,18 @@
 package stevebot.player;
 
 import net.minecraft.item.ItemStack;
+import stevebot.player.inventory.InventoryChange;
+import stevebot.player.inventory.InventorySlot;
+
+import java.util.List;
 
 public interface PlayerInventory {
 
 
 	/**
-	 * @return the current {@link ItemStack} or {@link ItemStack#EMPTY}.
+	 * @return a list of all {@link InventorySlot}s in the hotbar containing items
 	 */
-	ItemStack getCurrentItem();
+	List<InventorySlot> getHotbarItems();
 
 	/**
 	 * @param index the index
@@ -23,5 +27,16 @@ public interface PlayerInventory {
 	 */
 	void selectSlot(int index);
 
+	/**
+	 * Removes/Resets all temporary inventory changes.
+	 */
+	void clearInventoryChanges();
+
+	/**
+	 * Temporarily changes an slot in the inventory without changing it in the real world.
+	 *
+	 * @param change the change to add.
+	 */
+	void addInventoryChange(InventoryChange change);
 
 }

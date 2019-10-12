@@ -2,6 +2,7 @@ package stevebot.pathfinding.actions.playeractions;
 
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.execution.PathExecutorImpl;
+import stevebot.player.inventory.InventoryChange;
 
 public abstract class Action {
 
@@ -75,6 +76,20 @@ public abstract class Action {
 
 	public BlockChange[] getBlockChanges() {
 		return BlockChange.EMPTY;
+	}
+
+
+
+
+	public boolean changedInventory() {
+		return false;
+	}
+
+
+
+
+	public InventoryChange[] getInventoryChanges() {
+		return InventoryChange.EMPTY;
 	}
 
 

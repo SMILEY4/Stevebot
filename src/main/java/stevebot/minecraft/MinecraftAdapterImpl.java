@@ -6,6 +6,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.util.MouseHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -103,6 +104,32 @@ public class MinecraftAdapterImpl extends MinecraftAdapter {
 		List<Block> blocks = new ArrayList<>();
 		Block.REGISTRY.forEach(blocks::add);
 		return blocks;
+	}
+
+
+
+
+	@Override
+	public List<Item> getRegisteredItems() {
+		List<Item> items = new ArrayList<>();
+		Item.REGISTRY.forEach(items::add);
+		return items;
+	}
+
+
+
+
+	@Override
+	public int getItemId(Item item) {
+		return Item.REGISTRY.getIDForObject(item);
+	}
+
+
+
+
+	@Override
+	public String getItemName(Item item) {
+		return Item.REGISTRY.getNameForObject(item).toString();
 	}
 
 }

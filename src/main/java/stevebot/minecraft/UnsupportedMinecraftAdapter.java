@@ -5,6 +5,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.util.MouseHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -88,6 +89,30 @@ public class UnsupportedMinecraftAdapter extends MinecraftAdapter {
 
 	@Override
 	public List<Block> getRegisteredBlocks() {
+		throw new UnsupportedOperationException();
+	}
+
+
+
+
+	@Override
+	public List<Item> getRegisteredItems() {
+		throw new UnsupportedOperationException();
+	}
+
+
+
+
+	@Override
+	public int getItemId(Item item) {
+		throw new UnsupportedOperationException();
+	}
+
+
+
+
+	@Override
+	public String getItemName(Item item) {
 		throw new UnsupportedOperationException();
 	}
 

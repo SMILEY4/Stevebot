@@ -51,7 +51,7 @@ public interface BlockLibrary {
 	int getIdFromName(String name);
 
 	/**
-	 *  @param block the {@link Block}
+	 * @param block the {@link Block}
 	 * @return the name of the given block.
 	 */
 	String getNameOfBlock(Block block);

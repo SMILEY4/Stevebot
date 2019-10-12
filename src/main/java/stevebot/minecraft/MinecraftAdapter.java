@@ -6,6 +6,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.util.MouseHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -100,6 +101,23 @@ public abstract class MinecraftAdapter {
 	 * @return a list of all registered blocks
 	 */
 	public abstract List<Block> getRegisteredBlocks();
+
+	/**
+	 * @return a list of all registered items
+	 */
+	public abstract List<Item> getRegisteredItems();
+
+	/**
+	 * @param item the item
+	 * @return the id of the item
+	 */
+	public abstract int getItemId(Item item);
+
+	/**
+	 * @param item the item
+	 * @return the name of the item
+	 */
+	public abstract String getItemName(Item item);
 
 
 }

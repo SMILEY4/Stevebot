@@ -1,8 +1,11 @@
 package stevebot.pathfinding.actions;
 
-import stevebot.data.blocks.BlockUtils;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
+import stevebot.data.blocks.BlockUtils;
+import stevebot.data.blocks.BlockWrapper;
+import stevebot.player.PlayerUtils;
+import stevebot.player.inventory.InventorySlot;
 
 public class ActionUtils {
 
@@ -171,5 +174,21 @@ public class ActionUtils {
 		return canMoveThrough(pos);
 	}
 
+
+
+
+	/**
+	 * @return an {@link InventorySlot} containing a placable block from the players hotbar or null
+	 */
+	public static InventorySlot getPlacableBlock() {
+	}
+
+
+
+
+	public boolean isThrowawayBlock(BlockWrapper block) {
+
+
+	}
 
 }

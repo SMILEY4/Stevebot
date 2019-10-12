@@ -1,6 +1,7 @@
 package stevebot.pathfinding.actions.playeractions;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.blocks.BlockWrapper;
 import stevebot.minecraft.MinecraftAdapter;
@@ -13,6 +14,9 @@ import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerUtils;
+import stevebot.player.inventory.InventoryChange;
+import stevebot.player.inventory.InventorySlot;
+import stevebot.player.inventory.ItemWrapper;
 
 public class ActionPillarUp extends Action {
 
@@ -36,14 +40,14 @@ public class ActionPillarUp extends Action {
 
 
 	private StateMachine<State, Transition> stateMachine = new StateMachine<>();
-	private final BlockChange[] change;
+	private final BlockChange[] blockChanges;
 
 
 
 
-	private ActionPillarUp(Node from, Node to, double cost, BlockChange change) {
+	private ActionPillarUp(Node from, Node to, double cost, BlockChange[] blockChanges) {
 		super(from, to, cost);
-		this.change = new BlockChange[]{change};
+		this.blockChanges = blockChanges;
 		stateMachine.defineTransition(State.SLOWING_DOWN, Transition.SLOW_ENOUGH, State.JUMPING);
 		stateMachine.defineTransition(State.JUMPING, Transition.PLACED_BLOCK, State.LANDING);
 	}
@@ -103,6 +107,7 @@ public class ActionPillarUp extends Action {
 
 
 
+	@Override
 	public boolean changedBlocks() {
 		return true;
 	}
@@ -110,8 +115,9 @@ public class ActionPillarUp extends Action {
 
 
 
+	@Override
 	public BlockChange[] getBlockChanges() {
-		return this.change;
+		return this.blockChanges;
 	}
 
 
@@ -127,7 +133,7 @@ public class ActionPillarUp extends Action {
 
 		@Override
 		public Action createAction(Node node, Result result) {
-			return new ActionPillarUp(node, result.to, result.estimatedCost, new BlockChange(node.getPos(), BLOCK_GOLD));
+			return new ActionPillarUp(node, result.to, result.estimatedCost, result.blockCaches);
 		}
 
 
@@ -135,6 +141,12 @@ public class ActionPillarUp extends Action {
 
 		@Override
 		public Result check(Node node) {
+
+			// check inventory
+			final InventorySlot placableBlock = ActionUtils.getPlacableBlock();
+			if (placableBlock == null) {
+				return Result.invalid();
+			}
 
 			// check to-position
 			final FastBlockPos to = node.getPosCopy().add(0, 1, 0);
@@ -147,7 +159,10 @@ public class ActionPillarUp extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(Direction.UP, NodeCache.get(to), ActionCosts.COST_PILLAR_UP);
+			return Result.valid(Direction.UP, NodeCache.get(to), ActionCosts.COST_PILLAR_UP,
+					new BlockChange[]{new BlockChange(node.getPos(), placableBlock.getCurrentAsBlock())},
+					new InventoryChange[]{ new InventoryChange(placableBlock, new ItemWrapper(new ItemStack(placableBlock.getItem().itemStack.getItem(), placableBlock.getItem().itemStack.getCount()-1)))}
+			);
 		}
 
 

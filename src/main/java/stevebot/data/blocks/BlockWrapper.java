@@ -7,15 +7,14 @@ public class BlockWrapper {
 
 	public final int id;
 	public final String name;
-	public final Block mcBlock;
-
+	public final Block block;
 
 
 
 	public BlockWrapper(int id, String name, Block block) {
 		this.id = id;
 		this.name = name;
-		this.mcBlock = block;
+		this.block = block;
 	}
 
 

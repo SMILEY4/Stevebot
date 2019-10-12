@@ -93,7 +93,7 @@ public class Stevebot {
 		Stevebot.playerInventory = new PlayerInventoryImpl();
 
 		// player utils
-		PlayerUtils.initialize(playerInput, playerCamera, playerMovement);
+		PlayerUtils.initialize(playerInput, playerCamera, playerMovement, playerInventory);
 
 		// path handler
 		Stevebot.pathHandler = new PathHandler(Stevebot.eventManager, Stevebot.renderer);
