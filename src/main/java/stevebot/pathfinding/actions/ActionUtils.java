@@ -1,8 +1,8 @@
 package stevebot.pathfinding.actions;
 
-import stevebot.data.blocks.BlockUtils;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
+import stevebot.data.blocks.BlockUtils;
 
 public class ActionUtils {
 
@@ -170,6 +170,5 @@ public class ActionUtils {
 		}
 		return canMoveThrough(pos);
 	}
-
 
 }

@@ -35,6 +35,13 @@ public class BlockUtils {
 
 
 
+	public static BlockProvider getBlockProvider() {
+		return blockProvider;
+	}
+
+
+
+
 	/**
 	 * @param pos the position of the block
 	 * @return whether the position is currently in a loaded chunk.
@@ -170,7 +177,7 @@ public class BlockUtils {
 
 	/**
 	 * @param block the block
-	 * @param pos the position
+	 * @param pos   the position
 	 * @return whether the player can walk through the given block. This does not check the surrounding blocks.
 	 */
 	public static boolean canWalkThrough(BlockWrapper block, BlockPos pos) {
@@ -178,7 +185,7 @@ public class BlockUtils {
 				|| ICE == block.id || FROSTED_ICE == block.id || PACKED_ICE == block.id) {
 			return false;
 		} else {
-			return block.mcBlock.isPassable(MinecraftAdapter.get().getWorld(), pos);
+			return block.block.isPassable(MinecraftAdapter.get().getWorld(), pos);
 		}
 	}
 
@@ -205,7 +212,7 @@ public class BlockUtils {
 		if (isLiquid(block) || isDangerous(block)) {
 			return false;
 		} else {
-			return block.mcBlock.getDefaultState().isNormalCube();
+			return block.block.getDefaultState().isNormalCube();
 		}
 	}
 

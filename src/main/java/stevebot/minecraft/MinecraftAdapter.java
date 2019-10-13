@@ -5,6 +5,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.util.MouseHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -51,6 +53,12 @@ public abstract class MinecraftAdapter {
 	 */
 	public abstract EntityPlayerSP getPlayer();
 
+
+	/**
+	 * @return the inventory of the player
+	 */
+	public abstract InventoryPlayer getPlayerInventory();
+
 	/**
 	 * @param pos the position of the block
 	 * @return the block at the given position
@@ -89,10 +97,29 @@ public abstract class MinecraftAdapter {
 	 */
 	public abstract void setMouseHelper(MouseHelper mouseHelper);
 
+
+	/**
+	 * @return a list of all registered items
+	 */
+	public abstract List<Item> getRegisteredItems();
+
+	/**
+	 * @param item the item
+	 * @return the id of the item
+	 */
+	public abstract int getItemId(Item item);
+
+	/**
+	 * @param item the item
+	 * @return the name of the item
+	 */
+	public abstract String getItemName(Item item);
+
 	/**
 	 * @return a list of all registered blocks
 	 */
 	public abstract List<Block> getRegisteredBlocks();
+
 
 	/**
 	 * @param block the block

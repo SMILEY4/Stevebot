@@ -9,6 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import stevebot.commands.Commands;
 import stevebot.data.blocks.*;
+import stevebot.data.items.ItemLibrary;
+import stevebot.data.items.ItemLibraryImpl;
 import stevebot.events.EventManager;
 import stevebot.events.EventManagerImpl;
 import stevebot.events.ModEventProducer;
@@ -35,9 +37,11 @@ public class Stevebot {
 	private static ModEventProducer eventProducer;
 	private static BlockLibrary blockLibrary;
 	private static BlockProvider blockProvider;
+	private static ItemLibrary itemLibrary;
 	private static PlayerCamera playerCamera;
 	private static PlayerMovement playerMovement;
 	private static PlayerInput playerInput;
+	private static PlayerInventory playerInventory;
 	private static Renderer renderer;
 	private static PathHandler pathHandler;
 
@@ -72,6 +76,10 @@ public class Stevebot {
 		// block utils
 		BlockUtils.initialize(blockProvider);
 
+		// item library
+		Stevebot.itemLibrary = new ItemLibraryImpl();
+		eventManager.addListener(Stevebot.itemLibrary.getListener());
+
 		// renderer
 		Stevebot.renderer = new RendererImpl();
 		eventManager.addListener(Stevebot.renderer.getListener());
@@ -88,8 +96,11 @@ public class Stevebot {
 		// player movement
 		Stevebot.playerMovement = new PlayerMovementImpl(Stevebot.playerInput, Stevebot.playerCamera);
 
+		// player inventory
+		Stevebot.playerInventory = new PlayerInventoryImpl();
+
 		// player utils
-		PlayerUtils.initialize(playerInput, playerCamera, playerMovement);
+		PlayerUtils.initialize(playerInput, playerCamera, playerMovement, playerInventory);
 
 		// path handler
 		Stevebot.pathHandler = new PathHandler(Stevebot.eventManager, Stevebot.renderer);
@@ -112,6 +123,8 @@ public class Stevebot {
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		Stevebot.eventProducer.onPostInit();
+		Stevebot.itemLibrary.insertBlocks(Stevebot.blockLibrary.getAllBlocks());
+		Stevebot.blockLibrary.insertItems(Stevebot.itemLibrary.getAllItems());
 	}
 
 

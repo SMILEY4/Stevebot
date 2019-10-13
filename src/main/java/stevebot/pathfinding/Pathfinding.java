@@ -1,14 +1,14 @@
 package stevebot.pathfinding;
 
-import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.misc.Config;
 import stevebot.Stevebot;
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockProvider;
+import stevebot.data.blocks.BlockUtils;
+import stevebot.misc.Config;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionFactoryProvider;
 import stevebot.pathfinding.actions.playeractions.Action;
-import stevebot.pathfinding.actions.playeractions.BlockChange;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.nodes.BestNodesContainer;
 import stevebot.pathfinding.nodes.Node;
@@ -117,9 +117,9 @@ public class Pathfinding {
 				break;
 			}
 
-			// get block changes
-//			Stevebot.get().getBlockProvider().clearBlockChanges();
-//			collectBlockChanges(current, Stevebot.get().getBlockProvider());
+			// collect changes
+			BlockUtils.getBlockProvider().clearBlockChanges();
+			collectChanges(current, BlockUtils.getBlockProvider());
 
 			// process actions
 			boolean hitUnloaded = false;
@@ -224,12 +224,13 @@ public class Pathfinding {
 
 
 	/**
-	 * Collects all {@link BlockChange}s that are necessary to get from the starting node to the given node and adds them to the given {@link BlockProvider}.
+	 * Collects all {@link BlockChange}s and InventoryChanges that are necessary to get from
+	 * the starting node to the given node and adds them to the given {@link BlockProvider}.
 	 *
 	 * @param node          the target node
 	 * @param blockProvider the block provider
 	 */
-	private void collectBlockChanges(Node node, BlockProvider blockProvider) {
+	private void collectChanges(Node node, BlockProvider blockProvider) {
 		// TODO optimize this
 		// idea ???
 		// when opening node n -> check if prev node has changes in history or if action to reach n changed blocks

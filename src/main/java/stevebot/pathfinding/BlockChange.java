@@ -1,4 +1,4 @@
-package stevebot.pathfinding.actions.playeractions;
+package stevebot.pathfinding;
 
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockWrapper;

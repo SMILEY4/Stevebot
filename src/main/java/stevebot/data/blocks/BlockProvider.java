@@ -1,7 +1,7 @@
 package stevebot.data.blocks;
 
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.pathfinding.actions.playeractions.BlockChange;
+import stevebot.pathfinding.BlockChange;
 
 public interface BlockProvider {
 
@@ -44,7 +44,7 @@ public interface BlockProvider {
 	int getBlockIdAt(int x, int y, int z);
 
 	/**
-	 * Temporarily changes a block at a specified position without placing/breaking it in the world.
+	 * Temporarily changes a block at a specified position without placing/breaking it in the real world.
 	 *
 	 * @param change           the change to add.
 	 * @param overrideExisting true, to override any existing block change at that same position.

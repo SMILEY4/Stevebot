@@ -6,6 +6,7 @@ import stevebot.data.blocks.BlockWrapper;
 import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Direction;
 import stevebot.misc.StateMachine;
+import stevebot.pathfinding.BlockChange;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
@@ -36,14 +37,14 @@ public class ActionPillarUp extends Action {
 
 
 	private StateMachine<State, Transition> stateMachine = new StateMachine<>();
-	private final BlockChange[] change;
+	private final BlockChange[] blockChanges;
 
 
 
 
-	private ActionPillarUp(Node from, Node to, double cost, BlockChange change) {
+	private ActionPillarUp(Node from, Node to, double cost, BlockChange[] blockChanges) {
 		super(from, to, cost);
-		this.change = new BlockChange[]{change};
+		this.blockChanges = blockChanges;
 		stateMachine.defineTransition(State.SLOWING_DOWN, Transition.SLOW_ENOUGH, State.JUMPING);
 		stateMachine.defineTransition(State.JUMPING, Transition.PLACED_BLOCK, State.LANDING);
 	}
@@ -79,6 +80,9 @@ public class ActionPillarUp extends Action {
 					PlayerUtils.getInput().setJump(false);
 				}
 				if (PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
+					if (!PlayerUtils.getInventory().selectThrowawayBlock()) {
+						return PathExecutorImpl.StateFollow.FAILED;
+					}
 					MinecraftAdapter.get().setBlock(getFrom().getPos().copyAsMCBlockPos(), Blocks.GOLD_BLOCK);
 					stateMachine.fireTransition(Transition.PLACED_BLOCK);
 				}
@@ -103,6 +107,7 @@ public class ActionPillarUp extends Action {
 
 
 
+	@Override
 	public boolean changedBlocks() {
 		return true;
 	}
@@ -110,8 +115,9 @@ public class ActionPillarUp extends Action {
 
 
 
+	@Override
 	public BlockChange[] getBlockChanges() {
-		return this.change;
+		return this.blockChanges;
 	}
 
 
@@ -127,7 +133,7 @@ public class ActionPillarUp extends Action {
 
 		@Override
 		public Action createAction(Node node, Result result) {
-			return new ActionPillarUp(node, result.to, result.estimatedCost, new BlockChange(node.getPos(), BLOCK_GOLD));
+			return new ActionPillarUp(node, result.to, result.estimatedCost, result.blockCaches);
 		}
 
 
@@ -135,6 +141,11 @@ public class ActionPillarUp extends Action {
 
 		@Override
 		public Result check(Node node) {
+
+			// check inventory
+			if (!PlayerUtils.getInventory().hasThrowawayBlockInHotbar()) {
+				return Result.invalid();
+			}
 
 			// check to-position
 			final FastBlockPos to = node.getPosCopy().add(0, 1, 0);
