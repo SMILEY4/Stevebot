@@ -3,7 +3,7 @@ package stevebot.data.blocks;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.minecraft.MinecraftAdapter;
-import stevebot.pathfinding.actions.playeractions.BlockChange;
+import stevebot.pathfinding.BlockChange;
 
 import java.util.HashMap;
 import java.util.Map;

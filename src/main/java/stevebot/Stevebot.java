@@ -41,6 +41,7 @@ public class Stevebot {
 	private static PlayerCamera playerCamera;
 	private static PlayerMovement playerMovement;
 	private static PlayerInput playerInput;
+	private static PlayerInventory playerInventory;
 	private static Renderer renderer;
 	private static PathHandler pathHandler;
 
@@ -95,8 +96,11 @@ public class Stevebot {
 		// player movement
 		Stevebot.playerMovement = new PlayerMovementImpl(Stevebot.playerInput, Stevebot.playerCamera);
 
+		// player inventory
+		Stevebot.playerInventory = new PlayerInventoryImpl();
+
 		// player utils
-		PlayerUtils.initialize(playerInput, playerCamera, playerMovement);
+		PlayerUtils.initialize(playerInput, playerCamera, playerMovement, playerInventory);
 
 		// path handler
 		Stevebot.pathHandler = new PathHandler(Stevebot.eventManager, Stevebot.renderer);

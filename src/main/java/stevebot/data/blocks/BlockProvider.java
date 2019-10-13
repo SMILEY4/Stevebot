@@ -1,7 +1,7 @@
 package stevebot.data.blocks;
 
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.pathfinding.actions.playeractions.BlockChange;
+import stevebot.pathfinding.BlockChange;
 
 public interface BlockProvider {
 

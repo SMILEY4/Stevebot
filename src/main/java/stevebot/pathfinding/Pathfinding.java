@@ -9,7 +9,6 @@ import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionFactoryProvider;
 import stevebot.pathfinding.actions.playeractions.Action;
-import stevebot.pathfinding.actions.playeractions.BlockChange;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.nodes.BestNodesContainer;
 import stevebot.pathfinding.nodes.Node;

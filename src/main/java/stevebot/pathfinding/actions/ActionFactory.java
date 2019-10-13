@@ -3,7 +3,7 @@ package stevebot.pathfinding.actions;
 import stevebot.data.blocks.BlockCache;
 import stevebot.misc.Direction;
 import stevebot.pathfinding.actions.playeractions.Action;
-import stevebot.pathfinding.actions.playeractions.BlockChange;
+import stevebot.pathfinding.BlockChange;
 import stevebot.pathfinding.nodes.Node;
 
 import java.util.Collections;
@@ -89,16 +89,15 @@ public interface ActionFactory {
 
 
 		/**
-		 * @param direction        the direction of the action
-		 * @param to               the target node of the action
-		 * @param cost             the cost of the action
-		 * @param blockCaches      the list of {@link BlockCache}s
+		 * @param direction   the direction of the action
+		 * @param to          the target node of the action
+		 * @param cost        the cost of the action
+		 * @param blockCaches the list of {@link BlockCache}s
 		 * @return a new {@link Result} of the type {@link ResultType#VALID}.
 		 */
 		public static Result valid(Direction direction, Node to, double cost, BlockChange[] blockCaches) {
 			Result result = valid(direction, to, cost);
 			result.blockCaches = blockCaches;
-//			result.inventoryChanges = inventoryChanges;
 			return result;
 		}
 
@@ -110,7 +109,6 @@ public interface ActionFactory {
 		public Node to = null;
 		public Direction direction = Direction.NONE;
 		public BlockChange[] blockCaches;
-//		public InventoryChange[] inventoryChanges;
 
 	}
 

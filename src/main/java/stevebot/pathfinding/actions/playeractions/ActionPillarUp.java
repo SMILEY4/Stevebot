@@ -6,6 +6,7 @@ import stevebot.data.blocks.BlockWrapper;
 import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Direction;
 import stevebot.misc.StateMachine;
+import stevebot.pathfinding.BlockChange;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
@@ -79,6 +80,9 @@ public class ActionPillarUp extends Action {
 					PlayerUtils.getInput().setJump(false);
 				}
 				if (PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
+					if (!PlayerUtils.getInventory().selectThrowawayBlock()) {
+						return PathExecutorImpl.StateFollow.FAILED;
+					}
 					MinecraftAdapter.get().setBlock(getFrom().getPos().copyAsMCBlockPos(), Blocks.GOLD_BLOCK);
 					stateMachine.fireTransition(Transition.PLACED_BLOCK);
 				}
@@ -139,10 +143,9 @@ public class ActionPillarUp extends Action {
 		public Result check(Node node) {
 
 			// check inventory
-//			final InventorySlot placableBlock = ActionUtils.getPlacableBlock();
-//			if (placableBlock == null) {
-//				return Result.invalid();
-//			}
+			if (!PlayerUtils.getInventory().hasThrowawayBlockInHotbar()) {
+				return Result.invalid();
+			}
 
 			// check to-position
 			final FastBlockPos to = node.getPosCopy().add(0, 1, 0);
@@ -156,11 +159,6 @@ public class ActionPillarUp extends Action {
 			}
 
 			return Result.valid(Direction.UP, NodeCache.get(to), ActionCosts.COST_PILLAR_UP);
-
-//			return Result.valid(Direction.UP, NodeCache.get(to), ActionCosts.COST_PILLAR_UP,
-//					new BlockChange[]{new BlockChange(node.getPos(), placableBlock.getCurrentAsBlock())},
-//					new InventoryChange[]{ new InventoryChange(placableBlock, new ItemWrapper(new ItemStack(placableBlock.getItem().itemStack.getItem(), placableBlock.getItem().itemStack.getCount()-1)))}
-//			);
 		}
 
 

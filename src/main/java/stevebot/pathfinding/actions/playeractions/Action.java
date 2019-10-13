@@ -1,5 +1,6 @@
 package stevebot.pathfinding.actions.playeractions;
 
+import stevebot.pathfinding.BlockChange;
 import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.nodes.Node;
 

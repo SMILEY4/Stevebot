@@ -171,21 +171,4 @@ public class ActionUtils {
 		return canMoveThrough(pos);
 	}
 
-
-
-//
-//	/**
-//	 * @return an {@link InventorySlot} containing a placable block from the players hotbar or null
-//	 */
-//	public static InventorySlot getPlacableBlock() {
-//	}
-
-
-//
-//
-//	public boolean isThrowawayBlock(BlockWrapper block) {
-//
-//
-//	}
-
 }
