@@ -3,12 +3,15 @@ package stevebot.data.blocks;
 import com.ruegnerlukas.simplemath.MathUtils;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.ItemWrapper;
 import stevebot.events.EventListener;
 import stevebot.events.PostInitEvent;
 import stevebot.minecraft.MinecraftAdapter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class BlockLibraryImpl implements BlockLibrary {
 
@@ -55,7 +58,34 @@ public class BlockLibraryImpl implements BlockLibrary {
 			blocks[block.id] = block;
 		}
 
+	}
 
+
+
+
+	@Override
+	public void insertItems(List<ItemWrapper> items) {
+		for (BlockWrapper block : blocks) {
+			block.setItem(ItemLibrary.INVALID_ITEM);
+			if (block.id != BlockLibrary.ID_INVALID_BLOCK) {
+				final Item itemFromBlock = Item.getItemFromBlock(block.block);
+				final int itemIdFromBlock = MinecraftAdapter.get().getItemId(itemFromBlock);
+				for (ItemWrapper item : items) {
+					if (item.id == itemIdFromBlock) {
+						block.setItem(item);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+
+
+
+	@Override
+	public List<BlockWrapper> getAllBlocks() {
+		return new ArrayList<>(Arrays.asList(blocks));
 	}
 
 

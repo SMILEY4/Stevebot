@@ -1,0 +1,411 @@
+0: minecraft:air     block: -
+1: minecraft:stone     block: 1: minecraft:stone
+2: minecraft:grass     block: 2: minecraft:grass
+3: minecraft:dirt     block: 3: minecraft:dirt
+4: minecraft:cobblestone     block: 4: minecraft:cobblestone
+5: minecraft:planks     block: 5: minecraft:planks
+6: minecraft:sapling     block: 6: minecraft:sapling
+7: minecraft:bedrock     block: 7: minecraft:bedrock
+12: minecraft:sand     block: 12: minecraft:sand
+13: minecraft:gravel     block: 13: minecraft:gravel
+14: minecraft:gold_ore     block: 14: minecraft:gold_ore
+15: minecraft:iron_ore     block: 15: minecraft:iron_ore
+16: minecraft:coal_ore     block: 16: minecraft:coal_ore
+17: minecraft:log     block: 17: minecraft:log
+18: minecraft:leaves     block: 18: minecraft:leaves
+19: minecraft:sponge     block: 19: minecraft:sponge
+20: minecraft:glass     block: 20: minecraft:glass
+21: minecraft:lapis_ore     block: 21: minecraft:lapis_ore
+22: minecraft:lapis_block     block: 22: minecraft:lapis_block
+23: minecraft:dispenser     block: 23: minecraft:dispenser
+24: minecraft:sandstone     block: 24: minecraft:sandstone
+25: minecraft:noteblock     block: 25: minecraft:noteblock
+27: minecraft:golden_rail     block: 27: minecraft:golden_rail
+28: minecraft:detector_rail     block: 28: minecraft:detector_rail
+29: minecraft:sticky_piston     block: 29: minecraft:sticky_piston
+30: minecraft:web     block: 30: minecraft:web
+31: minecraft:tallgrass     block: 31: minecraft:tallgrass
+32: minecraft:deadbush     block: 32: minecraft:deadbush
+33: minecraft:piston     block: 33: minecraft:piston
+35: minecraft:wool     block: 35: minecraft:wool
+37: minecraft:yellow_flower     block: 37: minecraft:yellow_flower
+38: minecraft:red_flower     block: 38: minecraft:red_flower
+39: minecraft:brown_mushroom     block: 39: minecraft:brown_mushroom
+40: minecraft:red_mushroom     block: 40: minecraft:red_mushroom
+41: minecraft:gold_block     block: 41: minecraft:gold_block
+42: minecraft:iron_block     block: 42: minecraft:iron_block
+44: minecraft:stone_slab     block: 44: minecraft:stone_slab
+45: minecraft:brick_block     block: 45: minecraft:brick_block
+46: minecraft:tnt     block: 46: minecraft:tnt
+47: minecraft:bookshelf     block: 47: minecraft:bookshelf
+48: minecraft:mossy_cobblestone     block: 48: minecraft:mossy_cobblestone
+49: minecraft:obsidian     block: 49: minecraft:obsidian
+50: minecraft:torch     block: 50: minecraft:torch
+52: minecraft:mob_spawner     block: 52: minecraft:mob_spawner
+53: minecraft:oak_stairs     block: 53: minecraft:oak_stairs
+54: minecraft:chest     block: 54: minecraft:chest
+56: minecraft:diamond_ore     block: 56: minecraft:diamond_ore
+57: minecraft:diamond_block     block: 57: minecraft:diamond_block
+58: minecraft:crafting_table     block: 58: minecraft:crafting_table
+60: minecraft:farmland     block: 60: minecraft:farmland
+61: minecraft:furnace     block: 61: minecraft:furnace
+65: minecraft:ladder     block: 65: minecraft:ladder
+66: minecraft:rail     block: 66: minecraft:rail
+67: minecraft:stone_stairs     block: 67: minecraft:stone_stairs
+69: minecraft:lever     block: 69: minecraft:lever
+70: minecraft:stone_pressure_plate     block: 70: minecraft:stone_pressure_plate
+72: minecraft:wooden_pressure_plate     block: 72: minecraft:wooden_pressure_plate
+73: minecraft:redstone_ore     block: 73: minecraft:redstone_ore
+76: minecraft:redstone_torch     block: 76: minecraft:redstone_torch
+77: minecraft:stone_button     block: 77: minecraft:stone_button
+78: minecraft:snow_layer     block: 78: minecraft:snow_layer
+79: minecraft:ice     block: 79: minecraft:ice
+80: minecraft:snow     block: 80: minecraft:snow
+81: minecraft:cactus     block: 81: minecraft:cactus
+82: minecraft:clay     block: 82: minecraft:clay
+84: minecraft:jukebox     block: 84: minecraft:jukebox
+85: minecraft:fence     block: 85: minecraft:fence
+86: minecraft:pumpkin     block: 86: minecraft:pumpkin
+87: minecraft:netherrack     block: 87: minecraft:netherrack
+88: minecraft:soul_sand     block: 88: minecraft:soul_sand
+89: minecraft:glowstone     block: 89: minecraft:glowstone
+91: minecraft:lit_pumpkin     block: 91: minecraft:lit_pumpkin
+95: minecraft:stained_glass     block: 95: minecraft:stained_glass
+96: minecraft:trapdoor     block: 96: minecraft:trapdoor
+97: minecraft:monster_egg     block: 97: minecraft:monster_egg
+98: minecraft:stonebrick     block: 98: minecraft:stonebrick
+99: minecraft:brown_mushroom_block     block: 99: minecraft:brown_mushroom_block
+100: minecraft:red_mushroom_block     block: 100: minecraft:red_mushroom_block
+101: minecraft:iron_bars     block: 101: minecraft:iron_bars
+102: minecraft:glass_pane     block: 102: minecraft:glass_pane
+103: minecraft:melon_block     block: 103: minecraft:melon_block
+106: minecraft:vine     block: 106: minecraft:vine
+107: minecraft:fence_gate     block: 107: minecraft:fence_gate
+108: minecraft:brick_stairs     block: 108: minecraft:brick_stairs
+109: minecraft:stone_brick_stairs     block: 109: minecraft:stone_brick_stairs
+110: minecraft:mycelium     block: 110: minecraft:mycelium
+111: minecraft:waterlily     block: 111: minecraft:waterlily
+112: minecraft:nether_brick     block: 112: minecraft:nether_brick
+113: minecraft:nether_brick_fence     block: 113: minecraft:nether_brick_fence
+114: minecraft:nether_brick_stairs     block: 114: minecraft:nether_brick_stairs
+116: minecraft:enchanting_table     block: 116: minecraft:enchanting_table
+120: minecraft:end_portal_frame     block: 120: minecraft:end_portal_frame
+121: minecraft:end_stone     block: 121: minecraft:end_stone
+122: minecraft:dragon_egg     block: 122: minecraft:dragon_egg
+123: minecraft:redstone_lamp     block: 123: minecraft:redstone_lamp
+126: minecraft:wooden_slab     block: 126: minecraft:wooden_slab
+128: minecraft:sandstone_stairs     block: 128: minecraft:sandstone_stairs
+129: minecraft:emerald_ore     block: 129: minecraft:emerald_ore
+130: minecraft:ender_chest     block: 130: minecraft:ender_chest
+131: minecraft:tripwire_hook     block: 131: minecraft:tripwire_hook
+133: minecraft:emerald_block     block: 133: minecraft:emerald_block
+134: minecraft:spruce_stairs     block: 134: minecraft:spruce_stairs
+135: minecraft:birch_stairs     block: 135: minecraft:birch_stairs
+136: minecraft:jungle_stairs     block: 136: minecraft:jungle_stairs
+137: minecraft:command_block     block: 137: minecraft:command_block
+138: minecraft:beacon     block: 138: minecraft:beacon
+139: minecraft:cobblestone_wall     block: 139: minecraft:cobblestone_wall
+143: minecraft:wooden_button     block: 143: minecraft:wooden_button
+145: minecraft:anvil     block: 145: minecraft:anvil
+146: minecraft:trapped_chest     block: 146: minecraft:trapped_chest
+147: minecraft:light_weighted_pressure_plate     block: 147: minecraft:light_weighted_pressure_plate
+148: minecraft:heavy_weighted_pressure_plate     block: 148: minecraft:heavy_weighted_pressure_plate
+151: minecraft:daylight_detector     block: 151: minecraft:daylight_detector
+152: minecraft:redstone_block     block: 152: minecraft:redstone_block
+153: minecraft:quartz_ore     block: 153: minecraft:quartz_ore
+154: minecraft:hopper     block: 154: minecraft:hopper
+155: minecraft:quartz_block     block: 155: minecraft:quartz_block
+156: minecraft:quartz_stairs     block: 156: minecraft:quartz_stairs
+157: minecraft:activator_rail     block: 157: minecraft:activator_rail
+158: minecraft:dropper     block: 158: minecraft:dropper
+159: minecraft:stained_hardened_clay     block: 159: minecraft:stained_hardened_clay
+160: minecraft:stained_glass_pane     block: 160: minecraft:stained_glass_pane
+161: minecraft:leaves2     block: 161: minecraft:leaves2
+162: minecraft:log2     block: 162: minecraft:log2
+163: minecraft:acacia_stairs     block: 163: minecraft:acacia_stairs
+164: minecraft:dark_oak_stairs     block: 164: minecraft:dark_oak_stairs
+165: minecraft:slime     block: 165: minecraft:slime
+166: minecraft:barrier     block: 166: minecraft:barrier
+167: minecraft:iron_trapdoor     block: 167: minecraft:iron_trapdoor
+168: minecraft:prismarine     block: 168: minecraft:prismarine
+169: minecraft:sea_lantern     block: 169: minecraft:sea_lantern
+170: minecraft:hay_block     block: 170: minecraft:hay_block
+171: minecraft:carpet     block: 171: minecraft:carpet
+172: minecraft:hardened_clay     block: 172: minecraft:hardened_clay
+173: minecraft:coal_block     block: 173: minecraft:coal_block
+174: minecraft:packed_ice     block: 174: minecraft:packed_ice
+175: minecraft:double_plant     block: 175: minecraft:double_plant
+179: minecraft:red_sandstone     block: 179: minecraft:red_sandstone
+180: minecraft:red_sandstone_stairs     block: 180: minecraft:red_sandstone_stairs
+182: minecraft:stone_slab2     block: 182: minecraft:stone_slab2
+183: minecraft:spruce_fence_gate     block: 183: minecraft:spruce_fence_gate
+184: minecraft:birch_fence_gate     block: 184: minecraft:birch_fence_gate
+185: minecraft:jungle_fence_gate     block: 185: minecraft:jungle_fence_gate
+186: minecraft:dark_oak_fence_gate     block: 186: minecraft:dark_oak_fence_gate
+187: minecraft:acacia_fence_gate     block: 187: minecraft:acacia_fence_gate
+188: minecraft:spruce_fence     block: 188: minecraft:spruce_fence
+189: minecraft:birch_fence     block: 189: minecraft:birch_fence
+190: minecraft:jungle_fence     block: 190: minecraft:jungle_fence
+191: minecraft:dark_oak_fence     block: 191: minecraft:dark_oak_fence
+192: minecraft:acacia_fence     block: 192: minecraft:acacia_fence
+198: minecraft:end_rod     block: 198: minecraft:end_rod
+199: minecraft:chorus_plant     block: 199: minecraft:chorus_plant
+200: minecraft:chorus_flower     block: 200: minecraft:chorus_flower
+201: minecraft:purpur_block     block: 201: minecraft:purpur_block
+202: minecraft:purpur_pillar     block: 202: minecraft:purpur_pillar
+203: minecraft:purpur_stairs     block: 203: minecraft:purpur_stairs
+205: minecraft:purpur_slab     block: 205: minecraft:purpur_slab
+206: minecraft:end_bricks     block: 206: minecraft:end_bricks
+208: minecraft:grass_path     block: 208: minecraft:grass_path
+210: minecraft:repeating_command_block     block: 210: minecraft:repeating_command_block
+211: minecraft:chain_command_block     block: 211: minecraft:chain_command_block
+213: minecraft:magma     block: 213: minecraft:magma
+214: minecraft:nether_wart_block     block: 214: minecraft:nether_wart_block
+215: minecraft:red_nether_brick     block: 215: minecraft:red_nether_brick
+216: minecraft:bone_block     block: 216: minecraft:bone_block
+217: minecraft:structure_void     block: 217: minecraft:structure_void
+218: minecraft:observer     block: 218: minecraft:observer
+219: minecraft:white_shulker_box     block: 219: minecraft:white_shulker_box
+220: minecraft:orange_shulker_box     block: 220: minecraft:orange_shulker_box
+221: minecraft:magenta_shulker_box     block: 221: minecraft:magenta_shulker_box
+222: minecraft:light_blue_shulker_box     block: 222: minecraft:light_blue_shulker_box
+223: minecraft:yellow_shulker_box     block: 223: minecraft:yellow_shulker_box
+224: minecraft:lime_shulker_box     block: 224: minecraft:lime_shulker_box
+225: minecraft:pink_shulker_box     block: 225: minecraft:pink_shulker_box
+226: minecraft:gray_shulker_box     block: 226: minecraft:gray_shulker_box
+227: minecraft:silver_shulker_box     block: 227: minecraft:silver_shulker_box
+228: minecraft:cyan_shulker_box     block: 228: minecraft:cyan_shulker_box
+229: minecraft:purple_shulker_box     block: 229: minecraft:purple_shulker_box
+230: minecraft:blue_shulker_box     block: 230: minecraft:blue_shulker_box
+231: minecraft:brown_shulker_box     block: 231: minecraft:brown_shulker_box
+232: minecraft:green_shulker_box     block: 232: minecraft:green_shulker_box
+233: minecraft:red_shulker_box     block: 233: minecraft:red_shulker_box
+234: minecraft:black_shulker_box     block: 234: minecraft:black_shulker_box
+235: minecraft:white_glazed_terracotta     block: 235: minecraft:white_glazed_terracotta
+236: minecraft:orange_glazed_terracotta     block: 236: minecraft:orange_glazed_terracotta
+237: minecraft:magenta_glazed_terracotta     block: 237: minecraft:magenta_glazed_terracotta
+238: minecraft:light_blue_glazed_terracotta     block: 238: minecraft:light_blue_glazed_terracotta
+239: minecraft:yellow_glazed_terracotta     block: 239: minecraft:yellow_glazed_terracotta
+240: minecraft:lime_glazed_terracotta     block: 240: minecraft:lime_glazed_terracotta
+241: minecraft:pink_glazed_terracotta     block: 241: minecraft:pink_glazed_terracotta
+242: minecraft:gray_glazed_terracotta     block: 242: minecraft:gray_glazed_terracotta
+243: minecraft:silver_glazed_terracotta     block: 243: minecraft:silver_glazed_terracotta
+244: minecraft:cyan_glazed_terracotta     block: 244: minecraft:cyan_glazed_terracotta
+245: minecraft:purple_glazed_terracotta     block: 245: minecraft:purple_glazed_terracotta
+246: minecraft:blue_glazed_terracotta     block: 246: minecraft:blue_glazed_terracotta
+247: minecraft:brown_glazed_terracotta     block: 247: minecraft:brown_glazed_terracotta
+248: minecraft:green_glazed_terracotta     block: 248: minecraft:green_glazed_terracotta
+249: minecraft:red_glazed_terracotta     block: 249: minecraft:red_glazed_terracotta
+250: minecraft:black_glazed_terracotta     block: 250: minecraft:black_glazed_terracotta
+251: minecraft:concrete     block: 251: minecraft:concrete
+252: minecraft:concrete_powder     block: 252: minecraft:concrete_powder
+255: minecraft:structure_block     block: 255: minecraft:structure_block
+256: minecraft:iron_shovel     block: -
+257: minecraft:iron_pickaxe     block: -
+258: minecraft:iron_axe     block: -
+259: minecraft:flint_and_steel     block: -
+260: minecraft:apple     block: -
+261: minecraft:bow     block: -
+262: minecraft:arrow     block: -
+263: minecraft:coal     block: -
+264: minecraft:diamond     block: -
+265: minecraft:iron_ingot     block: -
+266: minecraft:gold_ingot     block: -
+267: minecraft:iron_sword     block: -
+268: minecraft:wooden_sword     block: -
+269: minecraft:wooden_shovel     block: -
+270: minecraft:wooden_pickaxe     block: -
+271: minecraft:wooden_axe     block: -
+272: minecraft:stone_sword     block: -
+273: minecraft:stone_shovel     block: -
+274: minecraft:stone_pickaxe     block: -
+275: minecraft:stone_axe     block: -
+276: minecraft:diamond_sword     block: -
+277: minecraft:diamond_shovel     block: -
+278: minecraft:diamond_pickaxe     block: -
+279: minecraft:diamond_axe     block: -
+280: minecraft:stick     block: -
+281: minecraft:bowl     block: -
+282: minecraft:mushroom_stew     block: -
+283: minecraft:golden_sword     block: -
+284: minecraft:golden_shovel     block: -
+285: minecraft:golden_pickaxe     block: -
+286: minecraft:golden_axe     block: -
+287: minecraft:string     block: -
+288: minecraft:feather     block: -
+289: minecraft:gunpowder     block: -
+290: minecraft:wooden_hoe     block: -
+291: minecraft:stone_hoe     block: -
+292: minecraft:iron_hoe     block: -
+293: minecraft:diamond_hoe     block: -
+294: minecraft:golden_hoe     block: -
+295: minecraft:wheat_seeds     block: -
+296: minecraft:wheat     block: -
+297: minecraft:bread     block: -
+298: minecraft:leather_helmet     block: -
+299: minecraft:leather_chestplate     block: -
+300: minecraft:leather_leggings     block: -
+301: minecraft:leather_boots     block: -
+302: minecraft:chainmail_helmet     block: -
+303: minecraft:chainmail_chestplate     block: -
+304: minecraft:chainmail_leggings     block: -
+305: minecraft:chainmail_boots     block: -
+306: minecraft:iron_helmet     block: -
+307: minecraft:iron_chestplate     block: -
+308: minecraft:iron_leggings     block: -
+309: minecraft:iron_boots     block: -
+310: minecraft:diamond_helmet     block: -
+311: minecraft:diamond_chestplate     block: -
+312: minecraft:diamond_leggings     block: -
+313: minecraft:diamond_boots     block: -
+314: minecraft:golden_helmet     block: -
+315: minecraft:golden_chestplate     block: -
+316: minecraft:golden_leggings     block: -
+317: minecraft:golden_boots     block: -
+318: minecraft:flint     block: -
+319: minecraft:porkchop     block: -
+320: minecraft:cooked_porkchop     block: -
+321: minecraft:painting     block: -
+322: minecraft:golden_apple     block: -
+323: minecraft:sign     block: -
+324: minecraft:wooden_door     block: -
+325: minecraft:bucket     block: -
+326: minecraft:water_bucket     block: -
+327: minecraft:lava_bucket     block: -
+328: minecraft:minecart     block: -
+329: minecraft:saddle     block: -
+330: minecraft:iron_door     block: -
+331: minecraft:redstone     block: -
+332: minecraft:snowball     block: -
+333: minecraft:boat     block: -
+334: minecraft:leather     block: -
+335: minecraft:milk_bucket     block: -
+336: minecraft:brick     block: -
+337: minecraft:clay_ball     block: -
+338: minecraft:reeds     block: -
+339: minecraft:paper     block: -
+340: minecraft:book     block: -
+341: minecraft:slime_ball     block: -
+342: minecraft:chest_minecart     block: -
+343: minecraft:furnace_minecart     block: -
+344: minecraft:egg     block: -
+345: minecraft:compass     block: -
+346: minecraft:fishing_rod     block: -
+347: minecraft:clock     block: -
+348: minecraft:glowstone_dust     block: -
+349: minecraft:fish     block: -
+350: minecraft:cooked_fish     block: -
+351: minecraft:dye     block: -
+352: minecraft:bone     block: -
+353: minecraft:sugar     block: -
+354: minecraft:cake     block: -
+355: minecraft:bed     block: -
+356: minecraft:repeater     block: -
+357: minecraft:cookie     block: -
+358: minecraft:filled_map     block: -
+359: minecraft:shears     block: -
+360: minecraft:melon     block: -
+361: minecraft:pumpkin_seeds     block: -
+362: minecraft:melon_seeds     block: -
+363: minecraft:beef     block: -
+364: minecraft:cooked_beef     block: -
+365: minecraft:chicken     block: -
+366: minecraft:cooked_chicken     block: -
+367: minecraft:rotten_flesh     block: -
+368: minecraft:ender_pearl     block: -
+369: minecraft:blaze_rod     block: -
+370: minecraft:ghast_tear     block: -
+371: minecraft:gold_nugget     block: -
+372: minecraft:nether_wart     block: -
+373: minecraft:potion     block: -
+374: minecraft:glass_bottle     block: -
+375: minecraft:spider_eye     block: -
+376: minecraft:fermented_spider_eye     block: -
+377: minecraft:blaze_powder     block: -
+378: minecraft:magma_cream     block: -
+379: minecraft:brewing_stand     block: -
+380: minecraft:cauldron     block: -
+381: minecraft:ender_eye     block: -
+382: minecraft:speckled_melon     block: -
+383: minecraft:spawn_egg     block: -
+384: minecraft:experience_bottle     block: -
+385: minecraft:fire_charge     block: -
+386: minecraft:writable_book     block: -
+387: minecraft:written_book     block: -
+388: minecraft:emerald     block: -
+389: minecraft:item_frame     block: -
+390: minecraft:flower_pot     block: -
+391: minecraft:carrot     block: -
+392: minecraft:potato     block: -
+393: minecraft:baked_potato     block: -
+394: minecraft:poisonous_potato     block: -
+395: minecraft:map     block: -
+396: minecraft:golden_carrot     block: -
+397: minecraft:skull     block: -
+398: minecraft:carrot_on_a_stick     block: -
+399: minecraft:nether_star     block: -
+400: minecraft:pumpkin_pie     block: -
+401: minecraft:fireworks     block: -
+402: minecraft:firework_charge     block: -
+403: minecraft:enchanted_book     block: -
+404: minecraft:comparator     block: -
+405: minecraft:netherbrick     block: -
+406: minecraft:quartz     block: -
+407: minecraft:tnt_minecart     block: -
+408: minecraft:hopper_minecart     block: -
+409: minecraft:prismarine_shard     block: -
+410: minecraft:prismarine_crystals     block: -
+411: minecraft:rabbit     block: -
+412: minecraft:cooked_rabbit     block: -
+413: minecraft:rabbit_stew     block: -
+414: minecraft:rabbit_foot     block: -
+415: minecraft:rabbit_hide     block: -
+416: minecraft:armor_stand     block: -
+417: minecraft:iron_horse_armor     block: -
+418: minecraft:golden_horse_armor     block: -
+419: minecraft:diamond_horse_armor     block: -
+420: minecraft:lead     block: -
+421: minecraft:name_tag     block: -
+422: minecraft:command_block_minecart     block: -
+423: minecraft:mutton     block: -
+424: minecraft:cooked_mutton     block: -
+425: minecraft:banner     block: 176: minecraft:standing_banner
+426: minecraft:end_crystal     block: -
+427: minecraft:spruce_door     block: -
+428: minecraft:birch_door     block: -
+429: minecraft:jungle_door     block: -
+430: minecraft:acacia_door     block: -
+431: minecraft:dark_oak_door     block: -
+432: minecraft:chorus_fruit     block: -
+433: minecraft:chorus_fruit_popped     block: -
+434: minecraft:beetroot     block: -
+435: minecraft:beetroot_seeds     block: -
+436: minecraft:beetroot_soup     block: -
+437: minecraft:dragon_breath     block: -
+438: minecraft:splash_potion     block: -
+439: minecraft:spectral_arrow     block: -
+440: minecraft:tipped_arrow     block: -
+441: minecraft:lingering_potion     block: -
+442: minecraft:shield     block: -
+443: minecraft:elytra     block: -
+444: minecraft:spruce_boat     block: -
+445: minecraft:birch_boat     block: -
+446: minecraft:jungle_boat     block: -
+447: minecraft:acacia_boat     block: -
+448: minecraft:dark_oak_boat     block: -
+449: minecraft:totem_of_undying     block: -
+450: minecraft:shulker_shell     block: -
+452: minecraft:iron_nugget     block: -
+453: minecraft:knowledge_book     block: -
+2256: minecraft:record_13     block: -
+2257: minecraft:record_cat     block: -
+2258: minecraft:record_blocks     block: -
+2259: minecraft:record_chirp     block: -
+2260: minecraft:record_far     block: -
+2261: minecraft:record_mall     block: -
+2262: minecraft:record_mellohi     block: -
+2263: minecraft:record_stal     block: -
+2264: minecraft:record_strad     block: -
+2265: minecraft:record_ward     block: -
+2266: minecraft:record_11     block: -
+2267: minecraft:record_wait     block: -

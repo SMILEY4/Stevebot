@@ -15,21 +15,22 @@ public class PlayerUtils {
 	private static PlayerInput playerInput;
 	private static PlayerCamera playerCamera;
 	private static PlayerMovement playerMovement;
-	private static PlayerInventory playerInventory;
 
 
 
 
-	public static void initialize(PlayerInput playerInput, PlayerCamera playerCamera, PlayerMovement playerMovement, PlayerInventory playerInventory) {
+	public static void initialize(PlayerInput playerInput, PlayerCamera playerCamera, PlayerMovement playerMovement) {
 		PlayerUtils.playerInput = playerInput;
 		PlayerUtils.playerCamera = playerCamera;
 		PlayerUtils.playerMovement = playerMovement;
-		PlayerUtils.playerInventory = playerInventory;
 	}
 
 
 
 
+	/**
+	 * @return the {@link PlayerInput}-singleton
+	 */
 	public static PlayerInput getInput() {
 		return playerInput;
 	}
@@ -37,6 +38,9 @@ public class PlayerUtils {
 
 
 
+	/**
+	 * @return the {@link PlayerCamera}-singleton
+	 */
 	public static PlayerCamera getCamera() {
 		return playerCamera;
 	}
@@ -44,6 +48,9 @@ public class PlayerUtils {
 
 
 
+	/**
+	 * @return the {@link PlayerMovement}-singleton
+	 */
 	public static PlayerMovement getMovement() {
 		return playerMovement;
 	}
@@ -51,13 +58,9 @@ public class PlayerUtils {
 
 
 
-	public static PlayerInventory getInventory() {
-		return playerInventory;
-	}
-
-
-
-
+	/**
+	 * @return the {@link EntityPlayerSP}
+	 */
 	public static EntityPlayerSP getPlayer() {
 		return MinecraftAdapter.get().getPlayer();
 	}

@@ -2,6 +2,9 @@ package stevebot.data.items;
 
 import com.ruegnerlukas.simplemath.MathUtils;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import stevebot.data.blocks.BlockLibrary;
+import stevebot.data.blocks.BlockWrapper;
 import stevebot.events.EventListener;
 import stevebot.events.PostInitEvent;
 import stevebot.minecraft.MinecraftAdapter;
@@ -9,13 +12,11 @@ import stevebot.minecraft.MinecraftAdapter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class ItemLibraryImpl implements ItemLibrary {
 
 
 	private ItemWrapper[] items;
-	private Map<Integer, ItemWrapper> blockMap;
 
 	private final EventListener listener = new EventListener<PostInitEvent>() {
 
@@ -65,6 +66,36 @@ public class ItemLibraryImpl implements ItemLibrary {
 	@Override
 	public EventListener getListener() {
 		return listener;
+	}
+
+
+
+
+	@Override
+	public void insertBlocks(List<BlockWrapper> blocks) {
+		for (ItemWrapper item : items) {
+			item.setBlock(BlockLibrary.INVALID_BLOCK);
+			if (item.id != ItemLibrary.ID_INVALID_ITEM) {
+				if (item.item instanceof ItemBlock) {
+					final ItemBlock itemBlock = (ItemBlock) item.item;
+					final int blockIdFromItem = MinecraftAdapter.get().getBlockId(itemBlock.getBlock());
+					for (BlockWrapper block : blocks) {
+						if (block.id == blockIdFromItem) {
+							item.setBlock(block);
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
+
+	@Override
+	public List<ItemWrapper> getAllItems() {
+		return new ArrayList<>(Arrays.asList(items));
 	}
 
 

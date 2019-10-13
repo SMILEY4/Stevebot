@@ -18,9 +18,6 @@ import stevebot.pathfinding.path.CompletedPath;
 import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.PartialPath;
 import stevebot.pathfinding.path.Path;
-import stevebot.player.PlayerInventory;
-import stevebot.player.PlayerUtils;
-import stevebot.player.inventory.InventoryChange;
 
 import java.util.*;
 
@@ -123,8 +120,7 @@ public class Pathfinding {
 
 			// collect changes
 			BlockUtils.getBlockProvider().clearBlockChanges();
-			PlayerUtils.getInventory().clearInventoryChanges();
-			collectChanges(current, BlockUtils.getBlockProvider(), PlayerUtils.getInventory());
+			collectChanges(current, BlockUtils.getBlockProvider());
 
 			// process actions
 			boolean hitUnloaded = false;
@@ -229,14 +225,13 @@ public class Pathfinding {
 
 
 	/**
-	 * Collects all {@link BlockChange}s and {@link InventoryChange}s that are necessary to get from
-	 * the starting node to the given node and adds them to the given {@link BlockProvider} and {@link PlayerInventory}.
+	 * Collects all {@link BlockChange}s and InventoryChanges that are necessary to get from
+	 * the starting node to the given node and adds them to the given {@link BlockProvider}.
 	 *
 	 * @param node          the target node
 	 * @param blockProvider the block provider
-	 * @param inventory     the player inventory
 	 */
-	private void collectChanges(Node node, BlockProvider blockProvider, PlayerInventory inventory) {
+	private void collectChanges(Node node, BlockProvider blockProvider) {
 		// TODO optimize this
 		// idea ???
 		// when opening node n -> check if prev node has changes in history or if action to reach n changed blocks
@@ -249,12 +244,6 @@ public class Pathfinding {
 				BlockChange[] changes = action.getBlockChanges();
 				for (int i = 0; i < changes.length; i++) {
 					blockProvider.addBlockChange(changes[i], false);
-				}
-			}
-			if (action.changedInventory()) {
-				InventoryChange[] changes = action.getInventoryChanges();
-				for (int i = 0; i < changes.length; i++) {
-					inventory.addInventoryChange(changes[i]);
 				}
 			}
 			current = current.getPrev();

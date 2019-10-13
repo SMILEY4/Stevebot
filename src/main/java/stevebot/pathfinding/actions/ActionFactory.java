@@ -5,7 +5,6 @@ import stevebot.misc.Direction;
 import stevebot.pathfinding.actions.playeractions.Action;
 import stevebot.pathfinding.actions.playeractions.BlockChange;
 import stevebot.pathfinding.nodes.Node;
-import stevebot.player.inventory.InventoryChange;
 
 import java.util.Collections;
 import java.util.List;
@@ -94,13 +93,12 @@ public interface ActionFactory {
 		 * @param to               the target node of the action
 		 * @param cost             the cost of the action
 		 * @param blockCaches      the list of {@link BlockCache}s
-		 * @param inventoryChanges the list of {@link InventoryChange}s
 		 * @return a new {@link Result} of the type {@link ResultType#VALID}.
 		 */
-		public static Result valid(Direction direction, Node to, double cost, BlockChange[] blockCaches, InventoryChange[] inventoryChanges) {
+		public static Result valid(Direction direction, Node to, double cost, BlockChange[] blockCaches) {
 			Result result = valid(direction, to, cost);
 			result.blockCaches = blockCaches;
-			result.inventoryChanges = inventoryChanges;
+//			result.inventoryChanges = inventoryChanges;
 			return result;
 		}
 
@@ -112,7 +110,7 @@ public interface ActionFactory {
 		public Node to = null;
 		public Direction direction = Direction.NONE;
 		public BlockChange[] blockCaches;
-		public InventoryChange[] inventoryChanges;
+//		public InventoryChange[] inventoryChanges;
 
 	}
 

@@ -1,8 +1,11 @@
 package stevebot.data.blocks;
 
 import net.minecraft.block.Block;
+import stevebot.data.items.ItemWrapper;
 import stevebot.events.EventListener;
 import stevebot.events.PostInitEvent;
+
+import java.util.List;
 
 public interface BlockLibrary {
 
@@ -19,6 +22,18 @@ public interface BlockLibrary {
 	 * @return the {@link EventListener} of this {@link BlockLibrary}.
 	 */
 	EventListener getListener();
+
+	/**
+	 * Adds the given {@link ItemWrapper}s to the corresponding blocks
+	 *
+	 * @param blocks the items to add
+	 */
+	void insertItems(List<ItemWrapper> blocks);
+
+	/**
+	 * @return a list of all blocks
+	 */
+	List<BlockWrapper> getAllBlocks();
 
 	/**
 	 * @param block the minecraft-{@link Block}
