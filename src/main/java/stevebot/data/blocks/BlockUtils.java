@@ -24,12 +24,14 @@ public class BlockUtils {
 
 
 	private static BlockProvider blockProvider;
+	private static BlockLibrary blockLibrary;
 
 
 
 
-	public static void initialize(BlockProvider blockProvider) {
+	public static void initialize(BlockProvider blockProvider, BlockLibrary blockLibrary) {
 		BlockUtils.blockProvider = blockProvider;
+		BlockUtils.blockLibrary = blockLibrary;
 	}
 
 
@@ -37,6 +39,13 @@ public class BlockUtils {
 
 	public static BlockProvider getBlockProvider() {
 		return blockProvider;
+	}
+
+
+
+
+	public static BlockLibrary getBlockLibrary() {
+		return blockLibrary;
 	}
 
 
@@ -198,7 +207,8 @@ public class BlockUtils {
 	 */
 	public static boolean canWalkOn(BaseBlockPos pos) {
 		final BlockWrapper block = blockProvider.getBlockAt(pos);
-		return canWalkOn(block);
+		final boolean canWalkOn = canWalkOn(block);
+		return canWalkOn;
 	}
 
 

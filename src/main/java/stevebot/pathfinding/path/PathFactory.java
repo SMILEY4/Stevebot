@@ -14,6 +14,8 @@ import java.util.concurrent.Executors;
 public class PathFactory {
 
 
+	private static final boolean MULTITHREAD = true;
+
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private final Pathfinding pathfinding = new Pathfinding();
 
@@ -96,17 +98,35 @@ public class PathFactory {
 				preparingPath = false;
 			} else {
 				final Path prevPath = getLastPath();
-				executorService.submit(() -> {
+				if (MULTITHREAD) {
+					executorService.submit(() -> {
+						Path path = pathfinding.calculatePath(prevPath.getLastNode().getPos(), goal, Config.getPathfindingTimeout() * 1000);
+						synchronized (pathQueue) {
+							pathQueue.add(path);
+							preparingPath = false;
+						}
+					});
+				} else {
 					Path path = pathfinding.calculatePath(prevPath.getLastNode().getPos(), goal, Config.getPathfindingTimeout() * 1000);
 					synchronized (pathQueue) {
 						pathQueue.add(path);
 						preparingPath = false;
 					}
-				});
+				}
 			}
 
 		} else {
-			executorService.submit(() -> {
+			if (MULTITHREAD) {
+				executorService.submit(() -> {
+					Path path = pathfinding.calculatePath(posStart, goal, Config.getPathfindingTimeout() * 1000);
+					if (!(path instanceof EmptyPath)) {
+						synchronized (pathQueue) {
+							pathQueue.add(path);
+							preparingPath = false;
+						}
+					}
+				});
+			} else {
 				Path path = pathfinding.calculatePath(posStart, goal, Config.getPathfindingTimeout() * 1000);
 				if (!(path instanceof EmptyPath)) {
 					synchronized (pathQueue) {
@@ -114,7 +134,7 @@ public class PathFactory {
 						preparingPath = false;
 					}
 				}
-			});
+			}
 		}
 	}
 

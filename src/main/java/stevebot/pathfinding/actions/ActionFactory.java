@@ -89,15 +89,15 @@ public interface ActionFactory {
 
 
 		/**
-		 * @param direction   the direction of the action
-		 * @param to          the target node of the action
-		 * @param cost        the cost of the action
-		 * @param blockCaches the list of {@link BlockCache}s
+		 * @param direction    the direction of the action
+		 * @param to           the target node of the action
+		 * @param cost         the cost of the action
+		 * @param blockChanges the list of {@link BlockCache}s
 		 * @return a new {@link Result} of the type {@link ResultType#VALID}.
 		 */
-		public static Result valid(Direction direction, Node to, double cost, BlockChange[] blockCaches) {
+		public static Result valid(Direction direction, Node to, double cost, BlockChange[] blockChanges) {
 			Result result = valid(direction, to, cost);
-			result.blockCaches = blockCaches;
+			result.blockChanges = blockChanges;
 			return result;
 		}
 
@@ -108,7 +108,7 @@ public interface ActionFactory {
 		public double estimatedCost = ActionCosts.COST_INFINITE;
 		public Node to = null;
 		public Direction direction = Direction.NONE;
-		public BlockChange[] blockCaches;
+		public BlockChange[] blockChanges;
 
 	}
 

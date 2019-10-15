@@ -3,10 +3,10 @@ package stevebot.pathfinding.actions.playeractions;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockUtils;
 import stevebot.misc.Direction;
+import stevebot.misc.ProcState;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
-import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerUtils;
@@ -33,14 +33,14 @@ public class ActionWalk extends Action {
 
 
 	@Override
-	public PathExecutorImpl.StateFollow tick(boolean fistTick) {
+	public ProcState tick(boolean fistTick) {
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
-			return PathExecutorImpl.StateFollow.DONE;
+			return ProcState.DONE;
 		} else {
 			if (sprint) {
 				PlayerUtils.getInput().setSprint();
 			}
-			return PathExecutorImpl.StateFollow.EXEC;
+			return ProcState.EXECUTING;
 		}
 	}
 

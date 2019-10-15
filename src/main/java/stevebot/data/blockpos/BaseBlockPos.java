@@ -116,4 +116,9 @@ public class BaseBlockPos {
 		return (this.y + this.z * 31) * 31 + this.x;
 	}
 
+	@Override
+	public String toString() {
+		return "[" + getX() + ", " + getY() + ", " + getZ() + "]";
+	}
+
 }

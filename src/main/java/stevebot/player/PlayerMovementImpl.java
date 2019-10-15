@@ -63,6 +63,40 @@ public class PlayerMovementImpl implements PlayerMovement {
 
 
 	@Override
+	public boolean moveTowardsSpeed(double x, double y, double z, double maxHorSpeed) {
+		if (!PlayerUtils.isAtLocation(x, y, z)) {
+			final double currentSpeedSquared = PlayerUtils.getMotionVector().mul(1, 0, 1).length2();
+			if (currentSpeedSquared < maxHorSpeed * maxHorSpeed) {
+				camera.setLookAt((int) x, (int) PlayerUtils.getPlayerPosition().y, (int) z, true);
+				input.setMoveForward();
+			}
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+
+
+
+	@Override
+	public boolean moveTowardsSpeed(double x, double z, double maxHorSpeed) {
+		if (PlayerUtils.isAtLocation(x, z)) {
+			return true;
+		} else {
+			final double currentSpeedSquared = PlayerUtils.getMotionVector().mul(1, 0, 1).length2();
+			if (currentSpeedSquared < maxHorSpeed * maxHorSpeed) {
+				camera.setLookAt(BlockUtils.toBaseBlockPos(new Vector3d(x, PlayerUtils.getPlayerPosition().y, z)), true);
+				input.setMoveForward();
+			}
+			return false;
+		}
+	}
+
+
+
+
+	@Override
 	public boolean slowDown(double prefSpeed) {
 		Vector3d motion = PlayerUtils.getMotionVector().mul(1, 0, 1);
 		final double speed = motion.length();

@@ -4,6 +4,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventListener;
+import stevebot.misc.ProcState;
 import stevebot.misc.StateMachineListener;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.path.EmptyPath;
@@ -29,7 +30,7 @@ public class PathExecutorImpl implements StateMachineListener<ExecutionState, Ex
 
 	private boolean isExecuting = false;
 	private boolean follow = false;
-	private boolean fistTick = true;
+	private boolean firstTick = true;
 
 	private Renderer renderer;
 	private Renderable pathRenderable;
@@ -170,12 +171,12 @@ public class PathExecutorImpl implements StateMachineListener<ExecutionState, Ex
 			}
 
 			case FOLLOWING: {
-				final StateFollow state = tick();
-				if (state == StateFollow.FAILED) {
+				final ProcState state = tick();
+				if (state == ProcState.FAILED) {
 					stateMachine.fireError();
 					onClientTick();
 				}
-				if (state == StateFollow.DONE) {
+				if (state == ProcState.DONE) {
 					Path path = pathFactory.getCurrentPath();
 					if (path.reachedGoal() || path instanceof EmptyPath) {
 						pathFactory.removeCurrentPath();
@@ -223,30 +224,33 @@ public class PathExecutorImpl implements StateMachineListener<ExecutionState, Ex
 	/**
 	 * Update the current action. If the action is completed the {@link PathCrawler} will step to the next action.
 	 *
-	 * @return the resulting {@link StateFollow} of this tick
+	 * @return the resulting {@link ProcState} of this tick
 	 */
-	private StateFollow tick() {
+	private ProcState tick() {
 
 		pathTraceRenderable.addPoint(PlayerUtils.getPlayerPosition(), Color.MAGENTA);
 
 		PlayerUtils.getInput().stopAll();
 
-		StateFollow actionState = crawler.getCurrentNodeTo().getAction().tick(fistTick);
-		fistTick = false;
+		if (firstTick) {
+			crawler.getCurrentNodeTo().getAction().resetAction();
+		}
+		ProcState actionState = crawler.getCurrentNodeTo().getAction().tick(firstTick);
+		firstTick = false;
 
-		if (actionState == StateFollow.FAILED) {
-			return StateFollow.FAILED;
+		if (actionState == ProcState.FAILED) {
+			return ProcState.FAILED;
 		}
 
-		if (actionState == StateFollow.DONE) {
-			fistTick = true;
+		if (actionState == ProcState.DONE) {
+			firstTick = true;
 			boolean hasNext = crawler.nextAction();
 			if (!hasNext) {
-				return StateFollow.DONE;
+				return ProcState.DONE;
 			}
 		}
 
-		return StateFollow.EXEC;
+		return ProcState.EXECUTING;
 	}
 
 

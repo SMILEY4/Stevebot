@@ -51,6 +51,7 @@ public interface BlockProvider {
 	 */
 	void addBlockChange(BlockChange change, boolean overrideExisting);
 
+
 	/**
 	 * Removes/Resets all temporary block changes.
 	 */

@@ -63,7 +63,6 @@ public class Pathfinding {
 		int nBetterPathFound = 0;
 		long timeLast = System.currentTimeMillis();
 
-
 		// calculate path
 		while (!openSet.isEmpty() && nUnloadedHits < 400 && nBetterPathFound < 2) {
 

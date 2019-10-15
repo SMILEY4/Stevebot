@@ -105,7 +105,7 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionSprintJump.SprintJumpFactoryWest());
 
 		// pillar up
-//		registerFactory(new ActionPillarUp.PillarUpFactory());
+		registerFactory(new ActionPillarUp.PillarUpFactory());
 	}
 
 

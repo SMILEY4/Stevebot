@@ -3,11 +3,11 @@ package stevebot.pathfinding.actions.playeractions;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockUtils;
 import stevebot.misc.Direction;
+import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
-import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerUtils;
@@ -56,7 +56,7 @@ public class ActionSprintJump extends Action {
 
 
 	@Override
-	public PathExecutorImpl.StateFollow tick(boolean firstTick) {
+	public ProcState tick(boolean firstTick) {
 
 		switch (stateMachine.getState()) {
 			case PREPARING: {
@@ -65,7 +65,7 @@ public class ActionSprintJump extends Action {
 				if (slowEnough) {
 					stateMachine.fireTransition(Transition.PREPARATION_DONE);
 				}
-				return PathExecutorImpl.StateFollow.EXEC;
+				return ProcState.EXECUTING;
 			}
 
 			case JUMPING: {
@@ -78,20 +78,20 @@ public class ActionSprintJump extends Action {
 				if (PlayerUtils.getPlayer().onGround && PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
 					stateMachine.fireTransition(Transition.TOUCHED_GROUND);
 				}
-				return PathExecutorImpl.StateFollow.EXEC;
+				return ProcState.EXECUTING;
 			}
 
 
 			case LANDING: {
 				if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
-					return PathExecutorImpl.StateFollow.DONE;
+					return ProcState.DONE;
 				} else {
-					return PathExecutorImpl.StateFollow.EXEC;
+					return ProcState.EXECUTING;
 				}
 			}
 
 			default: {
-				return PathExecutorImpl.StateFollow.FAILED;
+				return ProcState.FAILED;
 			}
 
 		}

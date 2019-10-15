@@ -217,8 +217,21 @@ public class PlayerUtils {
 	 * @return true, if the player is currently at the given coordinates (within a threshold defined by {@code PlayerUtils.AT_LOC_DIST_ERROR}).
 	 */
 	public static boolean isAtLocation(double x, double z) {
+		return isAtLocationThreshold(x, z, AT_LOC_DIST_ERROR);
+	}
+
+
+
+
+	/**
+	 * @param x         the target x-coordinate
+	 * @param z         the target z-coordinate
+	 * @param threshold the threshold
+	 * @return true, if the player is currently at the given coordinates (within the given threshold).
+	 */
+	public static boolean isAtLocationThreshold(double x, double z, double threshold) {
 		final Vector3d current = getPlayerPosition();
-		if (current.dist2(x, current.y, z) > AT_LOC_DIST_ERROR) {
+		if (current.dist2(x, current.y, z) > threshold) {
 			return false;
 		} else {
 			return true;
