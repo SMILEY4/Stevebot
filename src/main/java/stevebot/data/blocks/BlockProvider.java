@@ -1,7 +1,7 @@
 package stevebot.data.blocks;
 
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.pathfinding.BlockChange;
+import stevebot.data.modification.Modification;
 
 public interface BlockProvider {
 
@@ -49,7 +49,7 @@ public interface BlockProvider {
 	 * @param change           the change to add.
 	 * @param overrideExisting true, to override any existing block change at that same position.
 	 */
-	void addBlockChange(BlockChange change, boolean overrideExisting);
+	void addModification(Modification change, boolean overrideExisting);
 
 
 	/**

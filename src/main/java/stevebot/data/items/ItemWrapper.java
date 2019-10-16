@@ -41,9 +41,9 @@ public class ItemWrapper {
 
 
 	/**
-	 * @return whether this item has an block associated with it
+	 * @return whether this item is a block
 	 */
-	public boolean hasBlock() {
+	public boolean isBlock() {
 		return block.id != BlockLibrary.ID_INVALID_BLOCK;
 	}
 

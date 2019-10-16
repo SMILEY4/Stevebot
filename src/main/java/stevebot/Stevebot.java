@@ -11,6 +11,7 @@ import stevebot.commands.Commands;
 import stevebot.data.blocks.*;
 import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.ItemLibraryImpl;
+import stevebot.data.items.ItemUtils;
 import stevebot.events.EventManager;
 import stevebot.events.EventManagerImpl;
 import stevebot.events.ModEventProducer;
@@ -81,6 +82,9 @@ public class Stevebot {
 		// item library
 		Stevebot.itemLibrary = new ItemLibraryImpl();
 		eventManager.addListener(Stevebot.itemLibrary.getListener());
+
+		// item utils
+		ItemUtils.initialize(Stevebot.itemLibrary);
 
 		// renderer
 		Stevebot.renderer = new RendererImpl(blockProvider);

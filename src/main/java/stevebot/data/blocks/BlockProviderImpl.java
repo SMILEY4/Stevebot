@@ -2,8 +2,10 @@ package stevebot.data.blocks;
 
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
+import stevebot.data.modification.BlockBreakModification;
+import stevebot.data.modification.BlockPlaceModification;
 import stevebot.minecraft.MinecraftAdapter;
-import stevebot.pathfinding.BlockChange;
+import stevebot.data.modification.Modification;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +16,7 @@ public class BlockProviderImpl implements BlockProvider {
 	private final BlockCache cache;
 	private final BlockLibrary library;
 
-	private final Map<BaseBlockPos, BlockChange> blockChanges = new HashMap<>();
+	private final Map<BaseBlockPos, Modification> blockModifications = new HashMap<>();
 
 
 
@@ -48,9 +50,15 @@ public class BlockProviderImpl implements BlockProvider {
 
 	@Override
 	public BlockWrapper getBlockAt(int x, int y, int z) {
-		BlockChange blockChange = getBlockChangeAt(x, y, z);
-		if (blockChange != null) {
-			return blockChange.newBlock;
+		Modification modification = getBlockChangeAt(x, y, z);
+		if (modification != null) {
+			if (modification instanceof BlockBreakModification) {
+				return BlockUtils.getBlockLibrary().getBlockById(0); // air
+			}
+			if (modification instanceof BlockPlaceModification) {
+				final BlockPlaceModification placeModification = (BlockPlaceModification) modification;
+				return placeModification.getBlock();
+			}
 		}
 		return library.getBlockById(cache.getBlockIdAt(x, y, z));
 	}
@@ -68,9 +76,15 @@ public class BlockProviderImpl implements BlockProvider {
 
 	@Override
 	public int getBlockIdAt(int x, int y, int z) {
-		BlockChange blockChange = getBlockChangeAt(x, y, z);
-		if (blockChange != null) {
-			return blockChange.newBlock.id;
+		Modification modification = getBlockChangeAt(x, y, z);
+		if (modification != null) {
+			if (modification instanceof BlockBreakModification) {
+				return 0; // air
+			}
+			if (modification instanceof BlockPlaceModification) {
+				final BlockPlaceModification placeModification = (BlockPlaceModification) modification;
+				return placeModification.getBlock().id;
+			}
 		}
 		return cache.getBlockIdAt(x, y, z);
 	}
@@ -85,9 +99,9 @@ public class BlockProviderImpl implements BlockProvider {
 
 	/**
 	 * @param pos the position
-	 * @return the temporary {@link BlockChange} at the given position or null.
+	 * @return the temporary {@link Modification} at the given position or null.
 	 */
-	public BlockChange getBlockChangeAt(BaseBlockPos pos) {
+	public Modification getBlockChangeAt(BaseBlockPos pos) {
 		return getBlockChangeAt(pos.getX(), pos.getY(), pos.getZ());
 	}
 
@@ -98,13 +112,13 @@ public class BlockProviderImpl implements BlockProvider {
 	 * @param x the x position
 	 * @param y the y position
 	 * @param z the z position
-	 * @return the temporary {@link BlockChange} at the given position or null.
+	 * @return the temporary {@link Modification} at the given position or null.
 	 */
-	public BlockChange getBlockChangeAt(int x, int y, int z) {
-		if (blockChanges.isEmpty()) {
+	public Modification getBlockChangeAt(int x, int y, int z) {
+		if (blockModifications.isEmpty()) {
 			return null;
 		} else {
-			return blockChanges.get(tempKey.set(x, y, z));
+			return blockModifications.get(tempKey.set(x, y, z));
 		}
 	}
 
@@ -112,9 +126,18 @@ public class BlockProviderImpl implements BlockProvider {
 
 
 	@Override
-	public void addBlockChange(BlockChange change, boolean overrideExisting) {
-		if (!blockChanges.containsKey(change.pos) || overrideExisting) {
-			blockChanges.put(change.pos, change);
+	public void addModification(Modification modification, boolean overrideExisting) {
+		if (modification instanceof BlockBreakModification) {
+			final BlockBreakModification breakModification = (BlockBreakModification) modification;
+			if (!blockModifications.containsKey(breakModification.getPosition()) || overrideExisting) {
+				blockModifications.put(breakModification.getPosition(), modification);
+			}
+		}
+		if (modification instanceof BlockPlaceModification) {
+			final BlockPlaceModification placeModification = (BlockPlaceModification) modification;
+			if (!blockModifications.containsKey(placeModification.getPosition()) || overrideExisting) {
+				blockModifications.put(placeModification.getPosition(), modification);
+			}
 		}
 	}
 
@@ -123,7 +146,7 @@ public class BlockProviderImpl implements BlockProvider {
 
 	@Override
 	public void clearBlockChanges() {
-		blockChanges.clear();
+		blockModifications.clear();
 	}
 
 

@@ -1,7 +1,7 @@
 package stevebot.pathfinding.actions.playeractions;
 
 import stevebot.misc.ProcState;
-import stevebot.pathfinding.BlockChange;
+import stevebot.data.modification.Modification;
 import stevebot.pathfinding.nodes.Node;
 
 public abstract class Action {
@@ -67,15 +67,15 @@ public abstract class Action {
 
 
 
-	public boolean changedBlocks() {
+	public boolean hasModifications() {
 		return false;
 	}
 
 
 
 
-	public BlockChange[] getBlockChanges() {
-		return BlockChange.EMPTY;
+	public Modification[] getModifications() {
+		return Modification.EMPTY;
 	}
 
 
