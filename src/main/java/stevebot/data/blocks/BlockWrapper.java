@@ -2,7 +2,7 @@ package stevebot.data.blocks;
 
 import net.minecraft.block.Block;
 import stevebot.data.items.ItemLibrary;
-import stevebot.data.items.ItemWrapper;
+import stevebot.data.items.wrapper.ItemWrapper;
 
 public class BlockWrapper {
 
@@ -43,7 +43,7 @@ public class BlockWrapper {
 	 * @return whether this block has an item associated with it
 	 */
 	public boolean hasItem() {
-		return this.item.id != ItemLibrary.ID_INVALID_ITEM;
+		return this.item.getId() != ItemLibrary.ID_INVALID_ITEM;
 	}
 
 

@@ -3,8 +3,11 @@ package stevebot.data.items;
 import com.ruegnerlukas.simplemath.MathUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import stevebot.data.blocks.BlockLibrary;
+import net.minecraft.item.ItemTool;
 import stevebot.data.blocks.BlockWrapper;
+import stevebot.data.items.wrapper.ItemBlockWrapper;
+import stevebot.data.items.wrapper.ItemToolWrapper;
+import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.events.EventListener;
 import stevebot.events.PostInitEvent;
 import stevebot.minecraft.MinecraftAdapter;
@@ -46,16 +49,24 @@ public class ItemLibraryImpl implements ItemLibrary {
 		List<ItemWrapper> itemList = new ArrayList<>();
 		int maxId = 0;
 		for (Item item : MinecraftAdapter.get().getRegisteredItems()) {
+
 			final int id = getId(item);
 			final String name = getName(item);
-			itemList.add(new ItemWrapper(id, name, item));
 			maxId = Math.max(maxId, id);
+
+			if (item instanceof ItemBlock) {
+				itemList.add(new ItemBlockWrapper(id, name, (ItemBlock) item));
+			} else if (item instanceof ItemTool) {
+				itemList.add(new ItemToolWrapper(id, name, (ItemTool) item));
+			} else {
+				itemList.add(new ItemWrapper(id, name, item));
+			}
 		}
 
 		items = new ItemWrapper[maxId + 1];
 		Arrays.fill(items, INVALID_ITEM);
 		for (ItemWrapper item : itemList) {
-			items[item.id] = item;
+			items[item.getId()] = item;
 		}
 
 	}
@@ -73,20 +84,19 @@ public class ItemLibraryImpl implements ItemLibrary {
 
 	@Override
 	public void insertBlocks(List<BlockWrapper> blocks) {
-		for (ItemWrapper item : items) {
-			item.setBlock(BlockLibrary.INVALID_BLOCK);
-			if (item.id != ItemLibrary.ID_INVALID_ITEM) {
-				if (item.item instanceof ItemBlock) {
-					final ItemBlock itemBlock = (ItemBlock) item.item;
-					final int blockIdFromItem = MinecraftAdapter.get().getBlockId(itemBlock.getBlock());
-					for (BlockWrapper block : blocks) {
-						if (block.id == blockIdFromItem) {
-							item.setBlock(block);
-							break;
-						}
+		for (ItemWrapper itemWrapper : items) {
+			if (itemWrapper.getId() != ItemLibrary.ID_INVALID_ITEM && itemWrapper instanceof ItemBlockWrapper) {
+				final ItemBlockWrapper item = (ItemBlockWrapper) itemWrapper;
+				final ItemBlock itemBlock = (ItemBlock) item.getItem();
+				final int blockIdFromItem = MinecraftAdapter.get().getBlockId(itemBlock.getBlock());
+				for (BlockWrapper block : blocks) {
+					if (block.id == blockIdFromItem) {
+						item.setBlockWrapper(block);
+						break;
 					}
 				}
 			}
+
 		}
 	}
 
@@ -154,8 +164,8 @@ public class ItemLibraryImpl implements ItemLibrary {
 	private int getIdFromName(String name) {
 		for (int i = 0, n = items.length; i < n; i++) {
 			final ItemWrapper entry = items[i];
-			if (entry.name.equalsIgnoreCase(name)) {
-				return entry.id;
+			if (entry.getName().equalsIgnoreCase(name)) {
+				return entry.getId();
 			}
 		}
 		return ItemLibrary.ID_INVALID_ITEM;

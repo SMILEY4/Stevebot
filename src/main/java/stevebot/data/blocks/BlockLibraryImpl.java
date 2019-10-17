@@ -4,7 +4,7 @@ import com.ruegnerlukas.simplemath.MathUtils;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import stevebot.data.items.ItemLibrary;
-import stevebot.data.items.ItemWrapper;
+import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.events.EventListener;
 import stevebot.events.PostInitEvent;
 import stevebot.minecraft.MinecraftAdapter;
@@ -71,7 +71,7 @@ public class BlockLibraryImpl implements BlockLibrary {
 				final Item itemFromBlock = Item.getItemFromBlock(block.block);
 				final int itemIdFromBlock = MinecraftAdapter.get().getItemId(itemFromBlock);
 				for (ItemWrapper item : items) {
-					if (item.id == itemIdFromBlock) {
+					if (item.getId() == itemIdFromBlock) {
 						block.setItem(item);
 						break;
 					}

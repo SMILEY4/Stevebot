@@ -12,14 +12,7 @@ public class BlockPlaceModification implements Modification {
 
 
 
-//	public BlockPlaceModification(BaseBlockPos position) {
-//		this(position, null);
-//	}
-
-
-
-
-	public BlockPlaceModification(BaseBlockPos position, BlockWrapper block) {
+	BlockPlaceModification(BaseBlockPos position, BlockWrapper block) {
 		this.position = position;
 		this.block = block;
 	}
@@ -29,13 +22,6 @@ public class BlockPlaceModification implements Modification {
 
 	public BaseBlockPos getPosition() {
 		return position;
-	}
-
-
-
-
-	public boolean usedThrowaway() {
-		return block == null;
 	}
 
 

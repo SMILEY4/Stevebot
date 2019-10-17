@@ -67,8 +67,6 @@ public class Pathfinding {
 		long timeLast = System.currentTimeMillis();
 		InventorySnapshot baseSnapshot = PlayerUtils.getInventory().createSnapshotFromPlayerEntity();
 
-		Stevebot.log("Starting pathfinding");
-
 		// calculate path
 		while (!openSet.isEmpty() && nUnloadedHits < 400 && nBetterPathFound < 2) {
 

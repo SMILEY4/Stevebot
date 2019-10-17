@@ -1,8 +1,8 @@
 package stevebot.data.modification;
 
-import net.minecraft.item.ItemTool;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockWrapper;
+import stevebot.data.items.wrapper.ItemToolWrapper;
 
 public interface Modification {
 
@@ -20,7 +20,7 @@ public interface Modification {
 	}
 
 
-	static Modification breakBlock(BaseBlockPos position, ItemTool tool) {
+	static Modification breakBlock(BaseBlockPos position, ItemToolWrapper tool) {
 		return new BlockBreakModification(position, tool);
 	}
 

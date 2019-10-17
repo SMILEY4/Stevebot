@@ -5,6 +5,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import stevebot.data.blocks.BlockLibrary;
 import stevebot.data.blocks.BlockWrapper;
+import stevebot.data.items.wrapper.ItemBlockWrapper;
+import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.data.modification.BlockBreakModification;
 import stevebot.data.modification.BlockPlaceModification;
 import stevebot.data.modification.Modification;
@@ -39,7 +41,7 @@ public class InventorySnapshot {
 
 	public void setHotbarItemStack(int slot, ItemStack itemStack) {
 		itemsHotbar[slot] = itemStack;
-		idsHotbar[slot] = ItemUtils.getItemLibrary().getItemByMCItem(itemStack.getItem()).id;
+		idsHotbar[slot] = ItemUtils.getItemLibrary().getItemByMCItem(itemStack.getItem()).getId();
 	}
 
 
@@ -49,31 +51,23 @@ public class InventorySnapshot {
 		if (modification instanceof BlockPlaceModification) {
 			final BlockPlaceModification placeModification = (BlockPlaceModification) modification;
 
-			if (placeModification.usedThrowaway()) {
-				final int slot = findThrowawayBlock();
-				if (slot != -1) {
-					if (itemsHotbar[slot].getCount() == 1) {
-						itemsHotbar[slot] = null;
-					} else {
-						itemsHotbar[slot] = new ItemStack(itemsHotbar[slot].getItem(), itemsHotbar[slot].getCount() - 1);
-					}
-				}
-
-			} else {
-				final int slot = findItem(placeModification.getBlock().getItem().item);
-				if (slot != -1) {
-					if (itemsHotbar[slot].getCount() == 1) {
-						itemsHotbar[slot] = null;
-					} else {
-						itemsHotbar[slot] = new ItemStack(itemsHotbar[slot].getItem(), itemsHotbar[slot].getCount() - 1);
-					}
+			final int slot = findItem(placeModification.getBlock().getItem().getItem());
+			if (slot != -1) {
+				if (itemsHotbar[slot].getCount() == 1) {
+					itemsHotbar[slot] = null;
+				} else {
+					itemsHotbar[slot] = new ItemStack(itemsHotbar[slot].getItem(), itemsHotbar[slot].getCount() - 1);
 				}
 			}
 		}
 
 		if (modification instanceof BlockBreakModification) {
 			final BlockBreakModification breakModification = (BlockBreakModification) modification;
-			// todo
+			if (breakModification.usedTool()) {
+				// todo
+			} else {
+				// todo
+			}
 		}
 	}
 
@@ -94,7 +88,7 @@ public class InventorySnapshot {
 
 
 	public int findItem(Item item) {
-		final int searchId = ItemUtils.getItemLibrary().getItemByMCItem(item).id;
+		final int searchId = ItemUtils.getItemLibrary().getItemByMCItem(item).getId();
 		for (int i = 0; i < 9; i++) {
 			final ItemStack stack = itemsHotbar[i];
 			if (stack != null && !stack.isEmpty() && searchId == idsHotbar[i]) {
@@ -118,10 +112,16 @@ public class InventorySnapshot {
 		final ItemStack item = itemsHotbar[slot];
 		if (item != null) {
 			final int id = idsHotbar[slot];
-			return ItemUtils.getItemLibrary().getItemById(id).getBlock();
+			final ItemWrapper itemWrapper = ItemUtils.getItemLibrary().getItemById(id);
+			if (itemWrapper instanceof ItemBlockWrapper) {
+				return ((ItemBlockWrapper) itemWrapper).getBlockWrapper();
+			} else {
+				return BlockLibrary.INVALID_BLOCK;
+			}
 		} else {
 			return BlockLibrary.INVALID_BLOCK;
 		}
 	}
+
 
 }

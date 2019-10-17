@@ -2,6 +2,7 @@ package stevebot.data.items;
 
 import net.minecraft.item.Item;
 import stevebot.data.blocks.BlockWrapper;
+import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.events.EventListener;
 import stevebot.events.PostInitEvent;
 

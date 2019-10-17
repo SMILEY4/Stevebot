@@ -1,25 +1,25 @@
 package stevebot.data.modification;
 
-import net.minecraft.item.ItemTool;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.items.wrapper.ItemToolWrapper;
 
 public class BlockBreakModification implements Modification {
 
 
 	private final BaseBlockPos position;
-	private final ItemTool tool;
+	private final ItemToolWrapper tool;
 
 
 
 
-	public BlockBreakModification(BaseBlockPos position) {
+	BlockBreakModification(BaseBlockPos position) {
 		this(position, null);
 	}
 
 
 
 
-	public BlockBreakModification(BaseBlockPos position, ItemTool tool) {
+	public BlockBreakModification(BaseBlockPos position, ItemToolWrapper tool) {
 		this.position = position;
 		this.tool = tool;
 	}
@@ -41,7 +41,7 @@ public class BlockBreakModification implements Modification {
 
 
 
-	public ItemTool getTool() {
+	public ItemToolWrapper getTool() {
 		return tool;
 	}
 

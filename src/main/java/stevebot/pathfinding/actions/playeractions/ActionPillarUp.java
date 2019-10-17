@@ -157,7 +157,9 @@ public class ActionPillarUp extends Action {
 
 			// build valid result
 			int indexThrowaway = PlayerUtils.getInventory().getCurrentSnapshot().findThrowawayBlock();
-			final Modification[] modifications = new Modification[]{Modification.placeBlock(node.getPos(), PlayerUtils.getInventory().getCurrentSnapshot().getAsBlock(indexThrowaway))};
+			final Modification[] modifications = new Modification[]{
+					Modification.placeBlock(node.getPos(), PlayerUtils.getInventory().getCurrentSnapshot().getAsBlock(indexThrowaway))
+			};
 			return Result.valid(Direction.UP, NodeCache.get(to), ActionCosts.COST_PILLAR_UP, modifications);
 		}
 
