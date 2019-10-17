@@ -3,6 +3,7 @@ package stevebot.events;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -80,6 +81,22 @@ public class ModEventProducer {
 
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event) {
+		eventManager.event(event);
+	}
+
+
+
+
+	@SubscribeEvent
+	public void onBreakBlock(BlockEvent.BreakEvent event) {
+		eventManager.event(event);
+	}
+
+
+
+
+	@SubscribeEvent
+	public void onPlaceBlock(BlockEvent.PlaceEvent event) {
 		eventManager.event(event);
 	}
 

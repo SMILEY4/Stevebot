@@ -6,10 +6,6 @@ import stevebot.events.EventListener;
 public interface PathExecutor {
 
 
-	enum StateFollow {
-		EXEC, DONE, FAILED;
-	}
-
 	/**
 	 * The given listener listens for a {@link TickEvent.ClientTickEvent}.
 	 *

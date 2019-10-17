@@ -4,6 +4,7 @@ import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventListener;
+import stevebot.misc.Direction;
 
 public interface PlayerCamera {
 
@@ -34,7 +35,7 @@ public interface PlayerCamera {
 	PlayerCameraImpl.CameraState getState();
 
 	/**
-	 * Checks if the player is looking at the given position
+	 * Checks if the player is looking at the given {@link BaseBlockPos}
 	 *
 	 * @param pos           the position
 	 * @param ignorePitch   set to true to ignore the pitch / up-down-axis
@@ -44,11 +45,11 @@ public interface PlayerCamera {
 	boolean isLookingAt(BaseBlockPos pos, boolean ignorePitch, double rangeAngleDeg);
 
 	/**
-	 * Checks if the player is looking at the given position
+	 * Checks if the player is looking at the block at the given position
 	 *
-	 * @param x             the x position
-	 * @param y             the y position
-	 * @param z             the z position
+	 * @param x             the x position of the block
+	 * @param y             the y position of the block
+	 * @param z             the z position of the block
 	 * @param ignorePitch   set to true to ignore the pitch / up-down-axis
 	 * @param rangeAngleDeg the threshold of the angle in degrees
 	 * @return whether the player is looking at the given position
@@ -61,29 +62,44 @@ public interface PlayerCamera {
 	Vector3d getLookDir();
 
 	/**
-	 * Sets the view-direction of the player.
+	 * Sets the view-direction of the player to look at the given {@link BaseBlockPos}.
 	 *
 	 * @param pos the position to look at
 	 */
 	void setLookAt(BaseBlockPos pos);
 
 	/**
-	 * Sets the view-direction of the player.
+	 * Sets the view-direction of the player to look at the given {@link BaseBlockPos}.
 	 *
-	 * @param pos       the position to look at
+	 * @param pos       the {@link BaseBlockPos} to look at
 	 * @param keepPitch set to true to keep the pitch of the current view-direction
 	 */
 	void setLookAt(BaseBlockPos pos, boolean keepPitch);
 
 	/**
-	 * Sets the view-direction of the player.
+	 * Sets the view-direction of the player to look at a block at the given position.
 	 *
-	 * @param x         the x position to look at
-	 * @param y         the y position to look at
-	 * @param z         the z position to look at
+	 * @param x         the x position of the block to look at
+	 * @param y         the y position of the block to look at
+	 * @param z         the z position of the block to look at
 	 * @param keepPitch set to true to keep the pitch of the current view-direction
 	 */
 	void setLookAt(int x, int y, int z, boolean keepPitch);
+
+	/**
+	 * Sets the view-direction of the player to look at the given point
+	 *
+	 * @param point the position of the point
+	 */
+	void setLookAtPoint(Vector3d point);
+
+	/**
+	 * Makes the player look at the given side of the block at the given {@link BaseBlockPos}.
+	 *
+	 * @param pos       the position
+	 * @param direction the direction of the side
+	 */
+	void setLookAtBlockSide(BaseBlockPos pos, Direction direction);
 
 	/**
 	 * Sets the view-direction of the player.

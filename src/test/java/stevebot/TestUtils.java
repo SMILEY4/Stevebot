@@ -2,10 +2,9 @@ package stevebot;
 
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.misc.Direction;
+import stevebot.misc.ProcState;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.playeractions.Action;
-import stevebot.pathfinding.execution.PathExecutor;
-import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.path.CompletedPath;
 import stevebot.pathfinding.path.EmptyPath;
@@ -86,8 +85,8 @@ public class TestUtils {
 	public static Action action(Node from, Node to, double cost) {
 		return new Action(from, to, cost) {
 			@Override
-			public PathExecutorImpl.StateFollow tick(boolean fistTick) {
-				return PathExecutor.StateFollow.DONE;
+			public ProcState tick(boolean fistTick) {
+				return ProcState.DONE;
 			}
 		};
 	}

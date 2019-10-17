@@ -293,7 +293,9 @@ public class PlayerInputImpl implements PlayerInput {
 	public void setInput(PlayerInputConfig.InputType type, boolean down) {
 		KeyBinding binding = inputConfig.getBinding(type);
 		KeyBinding.setKeyBindState(binding.getKeyCode(), down);
-		KeyBinding.onTick(binding.getKeyCode());
+		if(down) {
+			KeyBinding.onTick(binding.getKeyCode());
+		}
 	}
 
 
@@ -310,7 +312,7 @@ public class PlayerInputImpl implements PlayerInput {
 		}
 		setSprint(false);
 		setSneak(false);
-//		setPlaceBlock(false);
+		setPlaceBlock(false);
 //		setBreakBlock(false);
 //		setInteract(false);
 	}

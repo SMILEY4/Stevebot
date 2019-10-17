@@ -31,6 +31,8 @@ public enum Direction {
 	public static final Direction[] CARDINALS = new Direction[]{NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST};
 	public static final Direction[] CARDINALS_SIMPLE = new Direction[]{NORTH, EAST, SOUTH, WEST};
 	public static final Direction[] VERTICAL = new Direction[]{UP, DOWN};
+	public static final Direction[] AXIS = new Direction[]{UP, DOWN, NORTH, EAST, SOUTH, WEST};
+
 
 	public final int dx;
 	public final int dy;

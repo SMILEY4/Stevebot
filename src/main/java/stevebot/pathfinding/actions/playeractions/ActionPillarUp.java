@@ -1,16 +1,13 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import net.minecraft.init.Blocks;
 import stevebot.data.blockpos.FastBlockPos;
-import stevebot.data.blocks.BlockWrapper;
-import stevebot.minecraft.MinecraftAdapter;
+import stevebot.data.modification.Modification;
 import stevebot.misc.Direction;
+import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
-import stevebot.pathfinding.BlockChange;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
-import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerUtils;
@@ -37,14 +34,14 @@ public class ActionPillarUp extends Action {
 
 
 	private StateMachine<State, Transition> stateMachine = new StateMachine<>();
-	private final BlockChange[] blockChanges;
+	private final Modification[] modifications;
 
 
 
 
-	private ActionPillarUp(Node from, Node to, double cost, BlockChange[] blockChanges) {
+	private ActionPillarUp(Node from, Node to, double cost, Modification[] modifications) {
 		super(from, to, cost);
-		this.blockChanges = blockChanges;
+		this.modifications = modifications;
 		stateMachine.defineTransition(State.SLOWING_DOWN, Transition.SLOW_ENOUGH, State.JUMPING);
 		stateMachine.defineTransition(State.JUMPING, Transition.PLACED_BLOCK, State.LANDING);
 	}
@@ -61,45 +58,50 @@ public class ActionPillarUp extends Action {
 
 
 	@Override
-	public PathExecutorImpl.StateFollow tick(boolean fistTick) {
+	public ProcState tick(boolean fistTick) {
 
 		switch (stateMachine.getState()) {
 
 			case SLOWING_DOWN: {
+//				if (PlayerUtils.getMovement().moveTowardsSpeed(getTo().getPos().getX(), getTo().getPos().getZ(), 2)) {
+//					stateMachine.fireTransition(Transition.SLOW_ENOUGH);
+//				}
+//				return ProcState.EXECUTING;
 				boolean slowEnough = PlayerUtils.getMovement().slowDown(0.075);
 				if (slowEnough) {
 					stateMachine.fireTransition(Transition.SLOW_ENOUGH);
 				} else {
 					PlayerUtils.getCamera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
 				}
-				return PathExecutorImpl.StateFollow.EXEC;
+				return ProcState.EXECUTING;
 			}
 
 			case JUMPING: {
+				PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
 				if (PlayerUtils.getPlayerBlockPos().equals(getFrom().getPos())) {
 					PlayerUtils.getInput().setJump(false);
 				}
 				if (PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
 					if (!PlayerUtils.getInventory().selectThrowawayBlock()) {
-						return PathExecutorImpl.StateFollow.FAILED;
+						return ProcState.FAILED;
 					}
-					MinecraftAdapter.get().setBlock(getFrom().getPos().copyAsMCBlockPos(), Blocks.GOLD_BLOCK);
+					ActionUtils.placeBlockAgainst(getFrom().getPosCopy().add(0, -1, 0), Direction.UP);
 					stateMachine.fireTransition(Transition.PLACED_BLOCK);
 				}
-				return PathExecutorImpl.StateFollow.EXEC;
+				return ProcState.EXECUTING;
 			}
 
 
 			case LANDING: {
 				if (PlayerUtils.getPlayer().onGround && PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
-					return PathExecutorImpl.StateFollow.DONE;
+					return ProcState.DONE;
 				} else {
-					return PathExecutorImpl.StateFollow.EXEC;
+					return ProcState.EXECUTING;
 				}
 			}
 
 			default: {
-				return PathExecutorImpl.StateFollow.FAILED;
+				return ProcState.FAILED;
 			}
 		}
 	}
@@ -108,7 +110,7 @@ public class ActionPillarUp extends Action {
 
 
 	@Override
-	public boolean changedBlocks() {
+	public boolean hasModifications() {
 		return true;
 	}
 
@@ -116,8 +118,8 @@ public class ActionPillarUp extends Action {
 
 
 	@Override
-	public BlockChange[] getBlockChanges() {
-		return this.blockChanges;
+	public Modification[] getModifications() {
+		return this.modifications;
 	}
 
 
@@ -126,14 +128,9 @@ public class ActionPillarUp extends Action {
 	public static class PillarUpFactory implements ActionFactory {
 
 
-		static final BlockWrapper BLOCK_GOLD = new BlockWrapper(41, "minecraft:gold_block", Blocks.GOLD_BLOCK); // Todo
-
-
-
-
 		@Override
 		public Action createAction(Node node, Result result) {
-			return new ActionPillarUp(node, result.to, result.estimatedCost, result.blockCaches);
+			return new ActionPillarUp(node, result.to, result.estimatedCost, result.modifications);
 		}
 
 
@@ -143,7 +140,7 @@ public class ActionPillarUp extends Action {
 		public Result check(Node node) {
 
 			// check inventory
-			if (!PlayerUtils.getInventory().hasThrowawayBlockInHotbar()) {
+			if (!PlayerUtils.getInventory().getCurrentSnapshot().hasThrowawayBlockInHotbar()) {
 				return Result.invalid();
 			}
 
@@ -158,7 +155,12 @@ public class ActionPillarUp extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(Direction.UP, NodeCache.get(to), ActionCosts.COST_PILLAR_UP);
+			// build valid result
+			int indexThrowaway = PlayerUtils.getInventory().getCurrentSnapshot().findThrowawayBlock();
+			final Modification[] modifications = new Modification[]{
+					Modification.placeBlock(node.getPos(), PlayerUtils.getInventory().getCurrentSnapshot().getAsBlock(indexThrowaway))
+			};
+			return Result.valid(Direction.UP, NodeCache.get(to), ActionCosts.COST_PILLAR_UP, modifications);
 		}
 
 

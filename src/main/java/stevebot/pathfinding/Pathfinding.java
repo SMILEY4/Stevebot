@@ -4,6 +4,8 @@ import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockProvider;
 import stevebot.data.blocks.BlockUtils;
+import stevebot.data.items.InventorySnapshot;
+import stevebot.data.modification.Modification;
 import stevebot.misc.Config;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
@@ -17,6 +19,7 @@ import stevebot.pathfinding.path.CompletedPath;
 import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.PartialPath;
 import stevebot.pathfinding.path.Path;
+import stevebot.player.PlayerUtils;
 
 import java.util.*;
 
@@ -62,7 +65,7 @@ public class Pathfinding {
 		int nWorseThanBest = 0;
 		int nBetterPathFound = 0;
 		long timeLast = System.currentTimeMillis();
-
+		InventorySnapshot baseSnapshot = PlayerUtils.getInventory().createSnapshotFromPlayerEntity();
 
 		// calculate path
 		while (!openSet.isEmpty() && nUnloadedHits < 400 && nBetterPathFound < 2) {
@@ -74,7 +77,7 @@ public class Pathfinding {
 			}
 
 			// status report
-			if (System.currentTimeMillis() - timeLast > 1000 * 2) {
+			if (System.currentTimeMillis() - timeLast > 2000 * 2) {
 				timeLast = System.currentTimeMillis();
 				Stevebot.logNonCritical("Searching... " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size() + " nodes.");
 			}
@@ -119,7 +122,9 @@ public class Pathfinding {
 
 			// collect changes
 			BlockUtils.getBlockProvider().clearBlockChanges();
-			collectChanges(current, BlockUtils.getBlockProvider());
+			InventorySnapshot snapshot = new InventorySnapshot(baseSnapshot);
+			collectChanges(current, BlockUtils.getBlockProvider(), snapshot);
+			PlayerUtils.getInventory().setCurrentSnapshot(snapshot);
 
 			// process actions
 			boolean hitUnloaded = false;
@@ -224,13 +229,14 @@ public class Pathfinding {
 
 
 	/**
-	 * Collects all {@link BlockChange}s and InventoryChanges that are necessary to get from
+	 * Collects all {@link Modification}s that are necessary to get from
 	 * the starting node to the given node and adds them to the given {@link BlockProvider}.
 	 *
 	 * @param node          the target node
 	 * @param blockProvider the block provider
+	 * @param snapshot      the player inventory snapshot
 	 */
-	private void collectChanges(Node node, BlockProvider blockProvider) {
+	private void collectChanges(Node node, BlockProvider blockProvider, InventorySnapshot snapshot) {
 		// TODO optimize this
 		// idea ???
 		// when opening node n -> check if prev node has changes in history or if action to reach n changed blocks
@@ -239,10 +245,11 @@ public class Pathfinding {
 		Node current = node;
 		while (current.getPrev() != null) {
 			Action action = current.getAction();
-			if (action.changedBlocks()) {
-				BlockChange[] changes = action.getBlockChanges();
-				for (int i = 0; i < changes.length; i++) {
-					blockProvider.addBlockChange(changes[i], false);
+			if (action.hasModifications()) {
+				Modification[] modifications = action.getModifications();
+				for (int i = 0; i < modifications.length; i++) {
+					blockProvider.addModification(modifications[i], false);
+					snapshot.applyModification(modifications[i]);
 				}
 			}
 			current = current.getPrev();

@@ -10,10 +10,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.opengl.GL11;
+import stevebot.data.blocks.BlockProvider;
 import stevebot.data.blocks.ChunkCache;
 import stevebot.events.EventListener;
 import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Config;
+import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.pathfinding.nodes.NodeRenderable;
 
 import java.util.ArrayList;
@@ -40,6 +42,14 @@ public class RendererImpl implements Renderer {
 			onRender();
 		}
 	};
+
+
+
+
+	public RendererImpl(BlockProvider blockProvider) {
+		addRenderable(blockProvider.getBlockCache().getChunkCache().getChunkCacheRenderable());
+		addRenderable(new NodeRenderable(NodeCache.getNodes()));
+	}
 
 
 

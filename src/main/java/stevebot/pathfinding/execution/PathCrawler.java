@@ -39,7 +39,6 @@ public class PathCrawler {
 			return false;
 		} else {
 			currentNodeTo = path.getNodes().get(currentIndexFrom + 1);
-			currentNodeTo.getAction().resetAction();
 			return true;
 		}
 	}

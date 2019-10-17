@@ -1,8 +1,12 @@
 package stevebot.pathfinding.actions;
 
+import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
+import net.minecraft.client.entity.EntityPlayerSP;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.blocks.BlockUtils;
+import stevebot.misc.Direction;
+import stevebot.player.PlayerUtils;
 
 public class ActionUtils {
 
@@ -170,5 +174,56 @@ public class ActionUtils {
 		}
 		return canMoveThrough(pos);
 	}
+
+
+//	/**
+//	 * Places a block AT the given position
+//	 *
+//	 * @param pos the position to place the block at
+//	 * @return true, if the block was placed
+//	 */
+//	public static boolean placeBlockAt(BaseBlockPos pos) {
+//		// todo
+//		return false;
+//	}
+
+
+
+
+	/**
+	 * Places a block against a block at the given position
+	 *
+	 * @param pos       the position of a block to place the new block on
+	 * @param direction the side to place the block on
+	 * @return true, if the block was placed
+	 */
+	public static boolean placeBlockAgainst(BaseBlockPos pos, Direction direction) {
+		if (BlockUtils.canWalkOn(pos) && facesPlayer(pos, direction)) {
+			PlayerUtils.getCamera().setLookAtBlockSide(pos, direction);
+			PlayerUtils.getInput().setPlaceBlock();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+
+
+	/**
+	 * @param pos       the position of a block
+	 * @param direction the side
+	 * @return whether the given side of the block faces the player
+	 */
+	private static boolean facesPlayer(BaseBlockPos pos, Direction direction) {
+		final EntityPlayerSP player = PlayerUtils.getPlayer();
+		final Vector3d nFace = new Vector3d(direction.dx, direction.dy, direction.dz);
+		final Vector3d posLookAt = new Vector3d(pos.getCenterX(), pos.getCenterY(), pos.getCenterZ())
+				.add(direction.dx * 0.5, direction.dy * 0.5, direction.dz * 0.5);
+		final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
+		final Vector3d dirPlayer = posLookAt.sub(posHead).normalize();
+		return dirPlayer.dot(nFace) <= 0;
+	}
+
 
 }

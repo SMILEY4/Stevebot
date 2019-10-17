@@ -12,6 +12,7 @@ import org.lwjgl.input.Mouse;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventListener;
 import stevebot.minecraft.MinecraftAdapter;
+import stevebot.misc.Direction;
 
 public class PlayerCameraImpl implements PlayerCamera {
 
@@ -285,6 +286,30 @@ public class PlayerCameraImpl implements PlayerCamera {
 			}
 			setLook(dir);
 		}
+	}
+
+
+
+
+	@Override
+	public void setLookAtPoint(Vector3d point) {
+		EntityPlayerSP player = PlayerUtils.getPlayer();
+		if (player != null) {
+			final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
+			final Vector3d dir = point.copy().sub(posHead).normalize().scale(-1);
+			setLook(dir);
+		}
+	}
+
+
+
+
+	@Override
+	public void setLookAtBlockSide(BaseBlockPos pos, Direction direction) {
+		final PlayerCamera camera = PlayerUtils.getCamera();
+		final Vector3d posLookAt = new Vector3d(pos.getCenterX(), pos.getCenterY(), pos.getCenterZ())
+				.add(direction.dx * 0.5, direction.dy * 0.5, direction.dz * 0.5);
+		camera.setLookAtPoint(posLookAt);
 	}
 
 

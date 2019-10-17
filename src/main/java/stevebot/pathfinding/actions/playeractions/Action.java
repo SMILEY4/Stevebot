@@ -1,7 +1,7 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import stevebot.pathfinding.BlockChange;
-import stevebot.pathfinding.execution.PathExecutorImpl;
+import stevebot.misc.ProcState;
+import stevebot.data.modification.Modification;
 import stevebot.pathfinding.nodes.Node;
 
 public abstract class Action {
@@ -67,15 +67,15 @@ public abstract class Action {
 
 
 
-	public boolean changedBlocks() {
+	public boolean hasModifications() {
 		return false;
 	}
 
 
 
 
-	public BlockChange[] getBlockChanges() {
-		return BlockChange.EMPTY;
+	public Modification[] getModifications() {
+		return Modification.EMPTY;
 	}
 
 
@@ -88,20 +88,13 @@ public abstract class Action {
 
 
 
-//	public InventoryChange[] getInventoryChanges() {
-//		return InventoryChange.EMPTY;
-//	}
-
-
-
-
 	/**
 	 * Updates this action.
 	 *
 	 * @param fistTick true on the first update of this action
-	 * @return the resulting {@link PathExecutorImpl.StateFollow} of the update
+	 * @return the resulting {@link ProcState} of the update
 	 */
-	public abstract PathExecutorImpl.StateFollow tick(boolean fistTick);
+	public abstract ProcState tick(boolean fistTick);
 
 
 }

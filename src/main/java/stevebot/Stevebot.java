@@ -11,6 +11,7 @@ import stevebot.commands.Commands;
 import stevebot.data.blocks.*;
 import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.ItemLibraryImpl;
+import stevebot.data.items.ItemUtils;
 import stevebot.events.EventManager;
 import stevebot.events.EventManagerImpl;
 import stevebot.events.ModEventProducer;
@@ -72,16 +73,21 @@ public class Stevebot {
 
 		// block provider
 		Stevebot.blockProvider = new BlockProviderImpl(Stevebot.blockLibrary);
+		eventManager.addListener(Stevebot.blockProvider.getBlockCache().getListenerBreakBlock());
+		eventManager.addListener(Stevebot.blockProvider.getBlockCache().getListenerPlaceBlock());
 
 		// block utils
-		BlockUtils.initialize(blockProvider);
+		BlockUtils.initialize(blockProvider, blockLibrary);
 
 		// item library
 		Stevebot.itemLibrary = new ItemLibraryImpl();
 		eventManager.addListener(Stevebot.itemLibrary.getListener());
 
+		// item utils
+		ItemUtils.initialize(Stevebot.itemLibrary);
+
 		// renderer
-		Stevebot.renderer = new RendererImpl();
+		Stevebot.renderer = new RendererImpl(blockProvider);
 		eventManager.addListener(Stevebot.renderer.getListener());
 
 		// player camera

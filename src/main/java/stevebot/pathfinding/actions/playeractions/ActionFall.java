@@ -4,9 +4,9 @@ import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.blocks.BlockUtils;
 import stevebot.misc.Direction;
+import stevebot.misc.ProcState;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
-import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerUtils;
@@ -22,15 +22,15 @@ public class ActionFall extends Action {
 
 
 	@Override
-	public PathExecutorImpl.StateFollow tick(boolean fistTick) {
+	public ProcState tick(boolean fistTick) {
 		if (PlayerUtils.getPlayer().onGround) {
 			if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), false)) {
-				return PathExecutorImpl.StateFollow.DONE;
+				return ProcState.DONE;
 			} else {
-				return PathExecutorImpl.StateFollow.EXEC;
+				return ProcState.EXECUTING;
 			}
 		} else {
-			return PathExecutorImpl.StateFollow.EXEC;
+			return ProcState.EXECUTING;
 		}
 	}
 

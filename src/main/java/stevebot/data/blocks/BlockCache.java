@@ -1,8 +1,11 @@
 package stevebot.data.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraftforge.event.world.BlockEvent;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.events.EventListener;
 import stevebot.minecraft.MinecraftAdapter;
+
 
 public class BlockCache {
 
@@ -10,6 +13,36 @@ public class BlockCache {
 	private final ChunkCache chunkCache = new ChunkCache();
 	private final BlockLibrary library;
 	private final BlockProvider blockProvider;
+
+	private final EventListener listenerBreakBlock = new EventListener<BlockEvent.BreakEvent>() {
+		@Override
+		public Class<BlockEvent.BreakEvent> getEventClass() {
+			return BlockEvent.BreakEvent.class;
+		}
+
+
+
+
+		@Override
+		public void onEvent(BlockEvent.BreakEvent event) {
+			invalidateBlock(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
+		}
+	};
+
+	private final EventListener listenerPlaceBlock = new EventListener<BlockEvent.PlaceEvent>() {
+		@Override
+		public Class<BlockEvent.PlaceEvent> getEventClass() {
+			return BlockEvent.PlaceEvent.class;
+		}
+
+
+
+
+		@Override
+		public void onEvent(BlockEvent.PlaceEvent event) {
+			invalidateBlock(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
+		}
+	};
 
 
 
@@ -21,6 +54,20 @@ public class BlockCache {
 	public BlockCache(BlockLibrary library, BlockProvider blockProvider) {
 		this.library = library;
 		this.blockProvider = blockProvider;
+	}
+
+
+
+
+	public EventListener getListenerBreakBlock() {
+		return listenerBreakBlock;
+	}
+
+
+
+
+	public EventListener getListenerPlaceBlock() {
+		return listenerPlaceBlock;
 	}
 
 
@@ -100,6 +147,36 @@ public class BlockCache {
 		} else {
 			return library.getBlockByMCBlock(block);
 		}
+	}
+
+
+
+
+	/**
+	 * Invalidates the cached block at the given position
+	 *
+	 * @param pos the position of the block
+	 */
+	public void invalidateBlock(BaseBlockPos pos) {
+		invalidateBlock(pos.getX(), pos.getY(), pos.getZ());
+	}
+
+
+
+
+	/**
+	 * Invalidates the cached block at the given position
+	 *
+	 * @param blockX the x position of the block
+	 * @param blockY the y position of the block
+	 * @param blockZ the z position of the block
+	 */
+	public void invalidateBlock(int blockX, int blockY, int blockZ) {
+		final ChunkCache.CachedChunk chunk = chunkCache.getCachedChunk(blockX, blockY, blockZ);
+		final int chunkX = chunk.toLocalX(blockX);
+		final int chunkY = chunk.toLocalY(blockY);
+		final int chunkZ = chunk.toLocalZ(blockZ);
+		chunk.setId(chunkX, chunkY, chunkZ, BlockLibrary.ID_INVALID_BLOCK);
 	}
 
 
