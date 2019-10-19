@@ -59,13 +59,20 @@ public class BlockCache {
 
 
 
+	/**
+	 *
+	 * @return the listener of this cache that listens to {@link BlockEvent.BreakEvent}-events
+	 */
 	public EventListener getListenerBreakBlock() {
 		return listenerBreakBlock;
 	}
 
 
 
-
+	/**
+	 *
+	 * @return the listener of this cache that listens to {@link BlockEvent.PlaceEvent}-events
+	 */
 	public EventListener getListenerPlaceBlock() {
 		return listenerPlaceBlock;
 	}
