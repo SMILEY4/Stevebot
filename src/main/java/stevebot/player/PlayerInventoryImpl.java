@@ -22,7 +22,7 @@ public class PlayerInventoryImpl implements PlayerInventory {
 		for (int i = 0; i < 9; i++) {
 			final ItemStack item = inventory.getStackInSlot(i);
 			if (item != ItemStack.EMPTY) {
-				snapshot.setHotbarItemStack(i, item);
+				snapshot.setHotbarItemStack(i, ItemUtils.getItemLibrary().getItemByMCItem(item.getItem()), item.getCount());
 			}
 		}
 		return snapshot;
@@ -47,22 +47,6 @@ public class PlayerInventoryImpl implements PlayerInventory {
 
 
 
-	//
-//	@Override
-//	public boolean hasThrowawayBlockInHotbar() {
-//		final InventoryPlayer inventory = PlayerUtils.getPlayer().inventory;
-//		for (int i = 0; i < 9; i++) {
-//			final ItemStack stack = inventory.getStackInSlot(i);
-//			if (!stack.isEmpty() && stack.getItem() instanceof ItemBlock) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-//
-//
-//
-//
 	@Override
 	public boolean selectThrowawayBlock() {
 		final InventoryPlayer inventory = PlayerUtils.getPlayer().inventory;
@@ -85,13 +69,11 @@ public class PlayerInventoryImpl implements PlayerInventory {
 		for (int i = 0; i < 9; i++) {
 			final ItemStack stack = inventory.getStackInSlot(i);
 			if (stack.isEmpty()) {
-				System.out.println("  " + i + ": empty  vs  " + item.getName());
 				if (item == null) {
 					inventory.currentItem = i;
 					return true;
 				}
 			} else {
-				System.out.println("  " + i + ": " + ItemUtils.getItemLibrary().getItemByMCItem(stack.getItem()).getName() == item.getName());
 				if (ItemUtils.getItemLibrary().getItemByMCItem(stack.getItem()).getId() == item.getId()) {
 					inventory.currentItem = i;
 					return true;

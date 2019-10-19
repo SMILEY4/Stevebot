@@ -70,7 +70,6 @@ public class ActionDigDown extends Action {
 
 		switch (stateMachine.getState()) {
 			case PREPARING: {
-				System.out.println("SELECT " + ((BlockBreakModification) getModifications()[0]).getTool());
 				PlayerUtils.getInventory().selectItem(((BlockBreakModification) getModifications()[0]).getTool());
 				stateMachine.fireTransition(Transition.PREPARED);
 				return ProcState.EXECUTING;
@@ -146,7 +145,7 @@ public class ActionDigDown extends Action {
 
 			// check if block breakable
 			final BaseBlockPos posBreakBlock = node.getPosCopy().add(0, -1, 0);
-			final ItemWrapper bestTool = PlayerUtils.getInventory().getCurrentSnapshot().findBestTool(BlockUtils.getBlockProvider().getBlockAt(posBreakBlock));
+			final ItemWrapper bestTool = PlayerUtils.getInventory().getCurrentSnapshot().findBestToolForBlock(BlockUtils.getBlockProvider().getBlockAt(posBreakBlock));
 			if (bestTool == ItemLibrary.INVALID_ITEM) {
 				return Result.invalid();
 			}

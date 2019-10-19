@@ -1,6 +1,7 @@
 package stevebot.data.items.wrapper;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 public class ItemWrapper {
 
@@ -8,6 +9,7 @@ public class ItemWrapper {
 	private final int id;
 	private final String name;
 	private final Item item;
+	private final ItemStack stack;
 
 
 
@@ -21,6 +23,7 @@ public class ItemWrapper {
 		this.id = id;
 		this.name = name;
 		this.item = item;
+		this.stack = new ItemStack(item, 1);
 	}
 
 
@@ -42,6 +45,14 @@ public class ItemWrapper {
 
 	public Item getItem() {
 		return item;
+	}
+
+
+
+
+	public ItemStack getStack(int stackSize) {
+		stack.setCount(stackSize);
+		return stack;
 	}
 
 

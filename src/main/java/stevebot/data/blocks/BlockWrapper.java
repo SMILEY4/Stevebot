@@ -32,7 +32,7 @@ public class BlockWrapper {
 	/**
 	 * @param item sets the item corresponding to this block
 	 */
-	void setItem(ItemWrapper item) {
+	public void setItem(ItemWrapper item) {
 		this.item = item;
 	}
 
