@@ -209,10 +209,12 @@ public class ActionDropDown extends Action {
 
 			// check fall
 			final Node nodeFall = NodeCache.get(node.getPosCopy().add(direction.dx, 0, direction.dz));
-			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(nodeFall, fallActionFactory.check(nodeFall));
-			if (actionFall == null) {
+			final Result resultFall = fallActionFactory.check(nodeFall);
+			if (ResultType.VALID != resultFall.type) {
 				return Result.invalid();
 			}
+
+			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(nodeFall, resultFall);
 
 			return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_WALKING + actionFall.getCost());
 		}

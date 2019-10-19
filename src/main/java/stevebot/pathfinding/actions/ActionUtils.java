@@ -226,4 +226,16 @@ public class ActionUtils {
 	}
 
 
+
+
+	public static boolean breakBlock(BaseBlockPos pos) {
+		if (BlockUtils.isAir(pos)) {
+			return true;
+		} else {
+			PlayerUtils.getCamera().setLookAt(pos);
+			PlayerUtils.getInput().setBreakBlock();
+			return false;
+		}
+	}
+
 }

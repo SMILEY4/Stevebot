@@ -69,7 +69,6 @@ public class ActionFall extends Action {
 
 		@Override
 		public Action createAction(Node node, Result result) {
-			// final Result result = check(node);
 			return new ActionFall(node, result.to, result.estimatedCost);
 		}
 

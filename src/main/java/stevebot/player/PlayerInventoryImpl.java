@@ -4,11 +4,14 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import stevebot.data.items.InventorySnapshot;
+import stevebot.data.items.ItemUtils;
+import stevebot.data.items.wrapper.ItemWrapper;
 
 public class PlayerInventoryImpl implements PlayerInventory {
 
 
 	private InventorySnapshot currentSnapshot = null;
+
 
 
 
@@ -19,7 +22,7 @@ public class PlayerInventoryImpl implements PlayerInventory {
 		for (int i = 0; i < 9; i++) {
 			final ItemStack item = inventory.getStackInSlot(i);
 			if (item != ItemStack.EMPTY) {
-				snapshot.setHotbarItemStack(i, item);
+				snapshot.setHotbarItemStack(i, ItemUtils.getItemLibrary().getItemByMCItem(item.getItem()), item.getCount());
 			}
 		}
 		return snapshot;
@@ -44,22 +47,6 @@ public class PlayerInventoryImpl implements PlayerInventory {
 
 
 
-	//
-//	@Override
-//	public boolean hasThrowawayBlockInHotbar() {
-//		final InventoryPlayer inventory = PlayerUtils.getPlayer().inventory;
-//		for (int i = 0; i < 9; i++) {
-//			final ItemStack stack = inventory.getStackInSlot(i);
-//			if (!stack.isEmpty() && stack.getItem() instanceof ItemBlock) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-//
-//
-//
-//
 	@Override
 	public boolean selectThrowawayBlock() {
 		final InventoryPlayer inventory = PlayerUtils.getPlayer().inventory;
@@ -68,6 +55,29 @@ public class PlayerInventoryImpl implements PlayerInventory {
 			if (!stack.isEmpty() && stack.getItem() instanceof ItemBlock) {
 				inventory.currentItem = i;
 				return true;
+			}
+		}
+		return false;
+	}
+
+
+
+
+	@Override
+	public boolean selectItem(ItemWrapper item) {
+		final InventoryPlayer inventory = PlayerUtils.getPlayer().inventory;
+		for (int i = 0; i < 9; i++) {
+			final ItemStack stack = inventory.getStackInSlot(i);
+			if (stack.isEmpty()) {
+				if (item == null) {
+					inventory.currentItem = i;
+					return true;
+				}
+			} else {
+				if (ItemUtils.getItemLibrary().getItemByMCItem(stack.getItem()).getId() == item.getId()) {
+					inventory.currentItem = i;
+					return true;
+				}
 			}
 		}
 		return false;
