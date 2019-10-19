@@ -10,11 +10,6 @@ public interface Modification {
 	Modification[] EMPTY = new Modification[]{};
 
 
-//	static Modification placeBlock(BaseBlockPos position) {
-//		return new BlockPlaceModification(position);
-//	}
-
-
 	static Modification placeBlock(BaseBlockPos position, BlockWrapper block) {
 		return new BlockPlaceModification(position, block);
 	}

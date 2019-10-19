@@ -83,7 +83,7 @@ public class BlockProviderImpl implements BlockProvider {
 			}
 			if (modification instanceof BlockPlaceModification) {
 				final BlockPlaceModification placeModification = (BlockPlaceModification) modification;
-				return placeModification.getBlock().id;
+				return placeModification.getBlock().getId();
 			}
 		}
 		return cache.getBlockIdAt(x, y, z);

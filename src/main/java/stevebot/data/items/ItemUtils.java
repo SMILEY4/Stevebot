@@ -79,18 +79,22 @@ public class ItemUtils {
 		if (hasEffectMiningFatique) {
 			float f1;
 			switch (effectMiningFatiqueAmplifier) {
-				case 0:
+				case 0: {
 					f1 = 0.3F;
 					break;
-				case 1:
+				}
+				case 1: {
 					f1 = 0.09F;
 					break;
-				case 2:
+				}
+				case 2: {
 					f1 = 0.0027F;
 					break;
+				}
 				case 3:
-				default:
+				default: {
 					f1 = 8.1E-4F;
+				}
 			}
 			f *= f1;
 		}

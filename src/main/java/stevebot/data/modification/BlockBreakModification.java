@@ -12,6 +12,9 @@ public class BlockBreakModification implements Modification {
 
 
 
+	/**
+	 * @param position the position of the broken block
+	 */
 	BlockBreakModification(BaseBlockPos position) {
 		this(position, null);
 	}
@@ -19,6 +22,10 @@ public class BlockBreakModification implements Modification {
 
 
 
+	/**
+	 * @param position the position of the broken block
+	 * @param tool     the tool used to break the block
+	 */
 	public BlockBreakModification(BaseBlockPos position, ItemToolWrapper tool) {
 		this.position = position;
 		this.tool = tool;
@@ -27,6 +34,9 @@ public class BlockBreakModification implements Modification {
 
 
 
+	/**
+	 * @return the position of the broken block
+	 */
 	public BaseBlockPos getPosition() {
 		return position;
 	}
@@ -34,6 +44,9 @@ public class BlockBreakModification implements Modification {
 
 
 
+	/**
+	 * @return whether a specific tool was used
+	 */
 	public boolean usedTool() {
 		return tool != null;
 	}
@@ -41,6 +54,9 @@ public class BlockBreakModification implements Modification {
 
 
 
+	/**
+	 * @return the tool used to break the block or null
+	 */
 	public ItemToolWrapper getTool() {
 		return tool;
 	}

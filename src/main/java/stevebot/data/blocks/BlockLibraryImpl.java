@@ -55,7 +55,7 @@ public class BlockLibraryImpl implements BlockLibrary {
 		blocks = new BlockWrapper[maxID + 1];
 		Arrays.fill(blocks, INVALID_BLOCK);
 		for (BlockWrapper block : blockList) {
-			blocks[block.id] = block;
+			blocks[block.getId()] = block;
 		}
 
 	}
@@ -67,8 +67,8 @@ public class BlockLibraryImpl implements BlockLibrary {
 	public void insertItems(List<ItemWrapper> items) {
 		for (BlockWrapper block : blocks) {
 			block.setItem(ItemLibrary.INVALID_ITEM);
-			if (block.id != BlockLibrary.ID_INVALID_BLOCK) {
-				final Item itemFromBlock = Item.getItemFromBlock(block.block);
+			if (block.getId() != BlockLibrary.ID_INVALID_BLOCK) {
+				final Item itemFromBlock = Item.getItemFromBlock(block.getBlock());
 				final int itemIdFromBlock = MinecraftAdapter.get().getItemId(itemFromBlock);
 				for (ItemWrapper item : items) {
 					if (item.getId() == itemIdFromBlock) {
@@ -130,8 +130,8 @@ public class BlockLibraryImpl implements BlockLibrary {
 	private int getIdFromName(String name) {
 		for (int i = 0, n = blocks.length; i < n; i++) {
 			final BlockWrapper entry = blocks[i];
-			if (entry.name.equalsIgnoreCase(name)) {
-				return entry.id;
+			if (entry.getName().equalsIgnoreCase(name)) {
+				return entry.getId();
 			}
 		}
 		return BlockLibrary.ID_INVALID_BLOCK;

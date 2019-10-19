@@ -119,12 +119,12 @@ public class InventorySnapshotTest {
 		snapshot.setHotbarItemStack(6, ITEM_DIA_PICKAXE, 1);
 		snapshot.setHotbarItemStack(7, ITEM_STONE, 10);
 
-		assertThat(snapshot.getAsBlock(1).id).isEqualTo(BlockLibrary.INVALID_BLOCK.id);
-		assertThat(snapshot.getAsBlock(3).id).isEqualTo(BLOCK_DIRT.id);
-		assertThat(snapshot.getAsBlock(6).id).isEqualTo(BlockLibrary.INVALID_BLOCK.id);
-		assertThat(snapshot.getAsBlock(7).id).isEqualTo(BLOCK_STONE.id);
+		assertThat(snapshot.getAsBlock(1).getId()).isEqualTo(BlockLibrary.INVALID_BLOCK.getId());
+		assertThat(snapshot.getAsBlock(3).getId()).isEqualTo(BLOCK_DIRT.getId());
+		assertThat(snapshot.getAsBlock(6).getId()).isEqualTo(BlockLibrary.INVALID_BLOCK.getId());
+		assertThat(snapshot.getAsBlock(7).getId()).isEqualTo(BLOCK_STONE.getId());
 
-		assertThat(snapshot.getAsBlock(8).id).isEqualTo(BlockLibrary.INVALID_BLOCK.id);
+		assertThat(snapshot.getAsBlock(8).getId()).isEqualTo(BlockLibrary.INVALID_BLOCK.getId());
 
 	}
 
