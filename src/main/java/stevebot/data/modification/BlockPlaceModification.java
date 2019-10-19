@@ -12,6 +12,10 @@ public class BlockPlaceModification implements Modification {
 
 
 
+	/**
+	 * @param position the position of the placed block
+	 * @param block    the places block
+	 */
 	BlockPlaceModification(BaseBlockPos position, BlockWrapper block) {
 		this.position = position;
 		this.block = block;
@@ -20,6 +24,9 @@ public class BlockPlaceModification implements Modification {
 
 
 
+	/**
+	 * @return the position of the placed block
+	 */
 	public BaseBlockPos getPosition() {
 		return position;
 	}
@@ -27,6 +34,9 @@ public class BlockPlaceModification implements Modification {
 
 
 
+	/**
+	 * @return the placed block
+	 */
 	public BlockWrapper getBlock() {
 		return block;
 	}
