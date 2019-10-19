@@ -29,6 +29,9 @@ public class ItemWrapper {
 
 
 
+	/**
+	 * @return the id of the item
+	 */
 	public int getId() {
 		return id;
 	}
@@ -36,6 +39,9 @@ public class ItemWrapper {
 
 
 
+	/**
+	 * @return the name of the item ("minecraft:item_name")
+	 */
 	public String getName() {
 		return name;
 	}
@@ -43,6 +49,9 @@ public class ItemWrapper {
 
 
 
+	/**
+	 * @return the {@link Item} or null
+	 */
 	public Item getItem() {
 		return item;
 	}
@@ -50,6 +59,10 @@ public class ItemWrapper {
 
 
 
+	/**
+	 * @param stackSize the size of the stack
+	 * @return a {@link ItemStack} with the item of this wrapper and the given size
+	 */
 	public ItemStack getStack(int stackSize) {
 		stack.setCount(stackSize);
 		return stack;
