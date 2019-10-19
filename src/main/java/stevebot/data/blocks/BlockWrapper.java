@@ -7,10 +7,21 @@ import stevebot.data.items.wrapper.ItemWrapper;
 public class BlockWrapper {
 
 
-	public final int id;
-	public final String name;
-	public final Block block;
+	private final int id;
+	private final String name;
+	private final Block block;
 	private ItemWrapper item;
+
+
+
+
+	/**
+	 * @param id   the id of the block
+	 * @param name the name of the block
+	 */
+	public BlockWrapper(int id, String name) {
+		this(id, name, null);
+	}
 
 
 
@@ -24,6 +35,36 @@ public class BlockWrapper {
 		this.id = id;
 		this.name = name;
 		this.block = block;
+	}
+
+
+
+
+	/**
+	 * @return the id of the block
+	 */
+	public int getId() {
+		return id;
+	}
+
+
+
+
+	/**
+	 * @return the name of the block ("minecraft:block_name")
+	 */
+	public String getName() {
+		return name;
+	}
+
+
+
+
+	/**
+	 * @return {@link Block} of this wrapper or null
+	 */
+	public Block getBlock() {
+		return block;
 	}
 
 

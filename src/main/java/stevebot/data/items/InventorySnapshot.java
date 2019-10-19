@@ -169,7 +169,7 @@ public class InventorySnapshot {
 		for (int i = 0; i < 9; i++) {
 			final ItemWrapper stack = itemsHotbar[i];
 			if (stack != null && stackSizes[i] != 0 && stack.getItem() instanceof ItemTool) {
-				final float breakTime = ItemUtils.getBreakDuration(stack.getStack(1), block.block.getDefaultState());
+				final float breakTime = ItemUtils.getBreakDuration(stack.getStack(1), block.getBlock().getDefaultState());
 				if (bestSpeed > breakTime) {
 					bestSpeed = breakTime;
 					slotBest = i;

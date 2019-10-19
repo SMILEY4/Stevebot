@@ -90,7 +90,7 @@ public class ItemLibraryImpl implements ItemLibrary {
 				final ItemBlock itemBlock = (ItemBlock) item.getItem();
 				final int blockIdFromItem = MinecraftAdapter.get().getBlockId(itemBlock.getBlock());
 				for (BlockWrapper block : blocks) {
-					if (block.id == blockIdFromItem) {
+					if (block.getId() == blockIdFromItem) {
 						item.setBlockWrapper(block);
 						break;
 					}

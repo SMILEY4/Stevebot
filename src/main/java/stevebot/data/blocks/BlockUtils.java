@@ -67,7 +67,7 @@ public class BlockUtils {
 	 * @return whether the given block is air
 	 */
 	public static boolean isAir(BlockWrapper block) {
-		return AIR == block.id;
+		return AIR == block.getId();
 	}
 
 
@@ -89,7 +89,7 @@ public class BlockUtils {
 	 * @return whether the given block is water (flowing or still)
 	 */
 	public static boolean isWater(BlockWrapper block) {
-		return WATER_FLOWING == block.id || WATER_STILL == block.id;
+		return WATER_FLOWING == block.getId() || WATER_STILL == block.getId();
 	}
 
 
@@ -111,7 +111,7 @@ public class BlockUtils {
 	 * @return whether the given block is lava (flowing or still)
 	 */
 	public static boolean isLava(BlockWrapper block) {
-		return LAVAL_FLOWING == block.id || LAVA_STILL == block.id;
+		return LAVAL_FLOWING == block.getId() || LAVA_STILL == block.getId();
 	}
 
 
@@ -133,7 +133,7 @@ public class BlockUtils {
 	 * @return whether the given block is flowing water or lava.
 	 */
 	public static boolean isFlowingLiquid(BlockWrapper block) {
-		return WATER_FLOWING == block.id || LAVAL_FLOWING == block.id;
+		return WATER_FLOWING == block.getId() || LAVAL_FLOWING == block.getId();
 	}
 
 
@@ -177,7 +177,7 @@ public class BlockUtils {
 	 * @return whether the given block can be dangerous to the player and should be avoided.
 	 */
 	public static boolean isDangerous(BlockWrapper block) {
-		return isLava(block) || block.id == FIRE || block.id == CACTUS || block.id == WEB;
+		return isLava(block) || block.getId() == FIRE || block.getId() == CACTUS || block.getId() == WEB;
 	}
 
 
@@ -212,11 +212,11 @@ public class BlockUtils {
 	 * @return whether the player can walk through the given block. This does not check the surrounding blocks.
 	 */
 	public static boolean canWalkThrough(BlockWrapper block, BlockPos pos) {
-		if (isLiquid(block) || WATERLILY == block.id || isDangerous(block)
-				|| ICE == block.id || FROSTED_ICE == block.id || PACKED_ICE == block.id) {
+		if (isLiquid(block) || WATERLILY == block.getId() || isDangerous(block)
+				|| ICE == block.getId() || FROSTED_ICE == block.getId() || PACKED_ICE == block.getId()) {
 			return false;
 		} else {
-			return block.block.isPassable(MinecraftAdapter.get().getWorld(), pos);
+			return block.getBlock().isPassable(MinecraftAdapter.get().getWorld(), pos);
 		}
 	}
 
@@ -244,7 +244,7 @@ public class BlockUtils {
 		if (isLiquid(block) || isDangerous(block)) {
 			return false;
 		} else {
-			return block.block.getDefaultState().isNormalCube();
+			return block.getBlock().getDefaultState().isNormalCube();
 		}
 	}
 

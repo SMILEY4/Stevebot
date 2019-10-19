@@ -131,7 +131,7 @@ public class BlockCache {
 		int blockId;
 
 		if (blockProvider.isLoaded(blockPos)) {
-			blockId = getBlockFromMinecraft(blockPos).id;
+			blockId = getBlockFromMinecraft(blockPos).getId();
 		} else {
 			blockId = BlockLibrary.ID_UNLOADED_BOCK;
 		}
