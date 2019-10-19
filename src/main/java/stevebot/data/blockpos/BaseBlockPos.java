@@ -10,6 +10,9 @@ public class BaseBlockPos {
 
 
 
+	/**
+	 * Creates a position with the coordinates (0,0,0)
+	 */
 	public BaseBlockPos() {
 		this(0, 0, 0);
 	}
@@ -17,6 +20,9 @@ public class BaseBlockPos {
 
 
 
+	/**
+	 * Creates a position with the same coordinates as the given position
+	 */
 	public BaseBlockPos(BaseBlockPos pos) {
 		this(pos.getX(), pos.getY(), pos.getZ());
 	}
@@ -24,6 +30,9 @@ public class BaseBlockPos {
 
 
 
+	/**
+	 * Creates a position with the same coordinates as the given position
+	 */
 	public BaseBlockPos(BlockPos pos) {
 		this(pos.getX(), pos.getY(), pos.getZ());
 	}
@@ -31,6 +40,9 @@ public class BaseBlockPos {
 
 
 
+	/**
+	 * Creates a position with the coordinates (x,y.z)
+	 */
 	public BaseBlockPos(int x, int y, int z) {
 		this.x = x;
 		this.y = y;
@@ -40,6 +52,9 @@ public class BaseBlockPos {
 
 
 
+	/**
+	 * @return the (block) x coordinate
+	 */
 	public int getX() {
 		return this.x;
 	}
@@ -47,6 +62,9 @@ public class BaseBlockPos {
 
 
 
+	/**
+	 * @return the (block) y coordinate
+	 */
 	public int getY() {
 		return this.y;
 	}
@@ -54,6 +72,9 @@ public class BaseBlockPos {
 
 
 
+	/**
+	 * @return the (block) z coordinate
+	 */
 	public int getZ() {
 		return this.z;
 	}
@@ -61,6 +82,9 @@ public class BaseBlockPos {
 
 
 
+	/**
+	 * @return the x coordinate of the center of the block
+	 */
 	public double getCenterX() {
 		return x + 0.5;
 	}
@@ -68,6 +92,9 @@ public class BaseBlockPos {
 
 
 
+	/**
+	 * @return the y coordinate of the center of the block
+	 */
 	public double getCenterY() {
 		return y + 0.5;
 	}
@@ -75,6 +102,9 @@ public class BaseBlockPos {
 
 
 
+	/**
+	 * @return the z coordinate of the center of the block
+	 */
 	public double getCenterZ() {
 		return z + 0.5;
 	}
@@ -82,6 +112,9 @@ public class BaseBlockPos {
 
 
 
+	/**
+	 * @return a {@link BlockPos} with the same coordinates
+	 */
 	public BlockPos copyAsMCBlockPos() {
 		return new BlockPos(x, y, z);
 	}
@@ -89,6 +122,9 @@ public class BaseBlockPos {
 
 
 
+	/**
+	 * @return a {@link FastBlockPos} with the same coordinates
+	 */
 	public FastBlockPos copyAsFastBlockPos() {
 		return new FastBlockPos(x, y, z);
 	}
@@ -116,9 +152,12 @@ public class BaseBlockPos {
 		return (this.y + this.z * 31) * 31 + this.x;
 	}
 
+
+
+
 	@Override
 	public String toString() {
-		return "[" + getX() + ", " + getY() + ", " + getZ() + "]";
+		return "BaseBlockPos[" + getX() + "," + getY() + ", " + getZ() + "]";
 	}
 
 }
