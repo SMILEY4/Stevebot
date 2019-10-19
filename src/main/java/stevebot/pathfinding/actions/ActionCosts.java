@@ -3,6 +3,9 @@ package stevebot.pathfinding.actions;
 public class ActionCosts {
 
 
+	public static final double TMP_COST_BREAK_BLOCK = 3;
+
+
 	// https://minecraft.gamepedia.com/Transportation
 
 

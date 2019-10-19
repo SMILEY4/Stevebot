@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 public class PathFactory {
 
 
-	private static final boolean MULTITHREAD = false;
+	private static final boolean MULTITHREAD = true;
 
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private final Pathfinding pathfinding = new Pathfinding();

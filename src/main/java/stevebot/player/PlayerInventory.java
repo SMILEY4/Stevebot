@@ -1,6 +1,7 @@
 package stevebot.player;
 
 import stevebot.data.items.InventorySnapshot;
+import stevebot.data.items.wrapper.ItemWrapper;
 
 public interface PlayerInventory {
 
@@ -18,6 +19,7 @@ public interface PlayerInventory {
 	 */
 	boolean selectThrowawayBlock();
 
+	boolean selectItem(ItemWrapper item);
 
 
 }

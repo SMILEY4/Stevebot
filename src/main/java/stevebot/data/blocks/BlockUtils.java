@@ -21,7 +21,7 @@ public class BlockUtils {
 	static final int ICE = 79;
 	static final int FROSTED_ICE = 212;
 	static final int PACKED_ICE = 174;
-
+	static final int AIR = 0;
 
 	private static BlockProvider blockProvider;
 	private static BlockLibrary blockLibrary;
@@ -57,6 +57,28 @@ public class BlockUtils {
 	 */
 	public static boolean isLoaded(BaseBlockPos pos) {
 		return blockProvider.isLoaded(pos);
+	}
+
+
+
+
+	/**
+	 * @param block the block
+	 * @return whether the given block is air
+	 */
+	public static boolean isAir(BlockWrapper block) {
+		return AIR == block.id;
+	}
+
+
+
+
+	/**
+	 * @param pos the position
+	 * @return whether the block at the given position is air
+	 */
+	public static boolean isAir(BaseBlockPos pos) {
+		return isAir(blockProvider.getBlockAt(pos));
 	}
 
 

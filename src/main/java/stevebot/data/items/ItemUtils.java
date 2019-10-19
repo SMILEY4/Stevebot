@@ -36,7 +36,7 @@ public class ItemUtils {
 		// https://greyminecraftcoder.blogspot.com/2015/01/calculating-rate-of-damage-when-mining.html
 		// https://minecraft.gamepedia.com/Breaking
 		final float playerBreakSpeed = getDigSpeed(itemStack, state);
-		final int canHarvestMod = itemStack.canHarvestBlock(state) ? 30 : 100;
+		final int canHarvestMod = (itemStack != null && itemStack.canHarvestBlock(state)) ? 30 : 100;
 		final float dmgPerTick = ((playerBreakSpeed / state.getBlockHardness(null, null)) * (1f / canHarvestMod));
 		return 1f / dmgPerTick;
 	}
@@ -52,7 +52,8 @@ public class ItemUtils {
 
 
 	/**
-	 * see {@link net.minecraft.entity.player.EntityPlayer#getDigSpeed(IBlockState, BlockPos)}
+	 * @param itemStack the used tool or null for hand
+	 *                  see {@link net.minecraft.entity.player.EntityPlayer#getDigSpeed(IBlockState, BlockPos)}
 	 */
 	private static float getDigSpeed(ItemStack itemStack, IBlockState state,
 									 boolean hasEffectHaste, int effectHasteAmplifier,
@@ -66,7 +67,7 @@ public class ItemUtils {
 
 		if (f > 1.0F) {
 			int i = effeciencyModifier;
-			if (i > 0 && !itemStack.isEmpty()) {
+			if (i > 0 && (itemStack != null && !itemStack.isEmpty())) {
 				f += (float) (i * i + 1);
 			}
 		}
@@ -108,9 +109,13 @@ public class ItemUtils {
 
 
 
+	/**
+	 * @param itemStack the used tool or null for hand
+	 * @param state     the block
+	 */
 	private static float getDestroySpeed(ItemStack itemStack, IBlockState state) {
 		float f = 1.0F;
-		if (!itemStack.isEmpty()) {
+		if (itemStack != null && !itemStack.isEmpty()) {
 			f *= itemStack.getDestroySpeed(state);
 		}
 		return f;

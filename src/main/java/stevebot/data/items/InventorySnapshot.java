@@ -3,6 +3,7 @@ package stevebot.data.items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import stevebot.data.blocks.BlockLibrary;
 import stevebot.data.blocks.BlockWrapper;
 import stevebot.data.items.wrapper.ItemBlockWrapper;
@@ -123,5 +124,37 @@ public class InventorySnapshot {
 		}
 	}
 
+
+
+
+	public ItemWrapper findBestTool(BlockWrapper block) {
+		final int slot = findBestToolSlot(block);
+		if (slot == -1) {
+			return ItemLibrary.INVALID_ITEM;
+		} else {
+			return ItemUtils.getItemLibrary().getItemById(idsHotbar[slot]);
+		}
+	}
+
+
+
+
+	public int findBestToolSlot(BlockWrapper block) {
+
+		int slotBest = -1;
+		float bestSpeed = 999999;
+
+		for (int i = 0; i < 9; i++) {
+			final ItemStack stack = itemsHotbar[i];
+			if (stack != null && !stack.isEmpty() && stack.getItem() instanceof ItemTool) {
+				final float breakTime = ItemUtils.getBreakDuration(stack, block.block.getDefaultState());
+				if (bestSpeed > breakTime) {
+					bestSpeed = breakTime;
+					slotBest = i;
+				}
+			}
+		}
+		return slotBest;
+	}
 
 }
