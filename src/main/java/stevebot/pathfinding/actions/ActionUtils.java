@@ -1,10 +1,12 @@
 package stevebot.pathfinding.actions;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
+import net.minecraft.block.Block;
 import net.minecraft.client.entity.EntityPlayerSP;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.blocks.BlockUtils;
+import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Direction;
 import stevebot.player.PlayerUtils;
 
@@ -229,7 +231,8 @@ public class ActionUtils {
 
 
 	public static boolean breakBlock(BaseBlockPos pos) {
-		if (BlockUtils.isAir(pos)) {
+		final Block mcBlock = MinecraftAdapter.get().getBlock(pos.copyAsMCBlockPos());
+		if (BlockUtils.isAir(BlockUtils.getBlockLibrary().getBlockByMCBlock(mcBlock))) {
 			return true;
 		} else {
 			PlayerUtils.getCamera().setLookAt(pos);
