@@ -17,6 +17,8 @@ public class Config {
 	private static boolean showChunkCache = false;
 	private static boolean showNodeCache = false;
 	private static int pathfindingSlowdown = -1;
+	private static boolean keepPathRenderable = false;
+
 
 
 
@@ -147,5 +149,25 @@ public class Config {
 		Stevebot.log("Set pathfinding-slodown: " + getPathfindingSlowdown() + "ms");
 	}
 
+
+
+
+	/**
+	 * @return whether to keep the renderable of the path after the path was completed
+	 */
+	public static boolean isKeepPathRenderable() {
+		return keepPathRenderable;
+	}
+
+
+
+
+	/**
+	 * @param keepPathRenderable true, to keep the path renderable after the path was completed
+	 */
+	public static void setKeepPathRenderable(boolean keepPathRenderable) {
+		Config.keepPathRenderable = keepPathRenderable;
+		Stevebot.log("Set keepPathRenderable: " + isKeepPathRenderable());
+	}
 
 }
