@@ -20,7 +20,6 @@ public class Config {
 
 
 
-
 	/**
 	 * @return the timeout for the pathfinding in seconds
 	 */

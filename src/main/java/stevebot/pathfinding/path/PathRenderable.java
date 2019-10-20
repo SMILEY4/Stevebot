@@ -1,9 +1,12 @@
 package stevebot.pathfinding.path;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
+import stevebot.data.modification.BlockBreakModification;
+import stevebot.data.modification.BlockPlaceModification;
+import stevebot.data.modification.Modification;
 import stevebot.misc.Config;
-import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.actions.ActionCosts;
+import stevebot.pathfinding.nodes.Node;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
 import stevebot.rendering.Renderer;
@@ -78,6 +81,16 @@ public class PathRenderable implements Renderable {
 			p0.set(node0.getPos().getX() + 0.5, node0.getPos().getY() + 0.5, node0.getPos().getZ() + 0.5);
 			p1.set(node1.getPos().getX() + 0.5, node1.getPos().getY() + 0.5, node1.getPos().getZ() + 0.5);
 			renderer.drawLineOpen(p0, p1, getColor(node0, node1, node1.getAction().getCost(), minCost, maxCost));
+			for(Modification mod : node1.getAction().getModifications()) {
+				if(mod instanceof BlockBreakModification) {
+					BlockBreakModification breakMod = (BlockBreakModification)mod;
+					renderer.drawBoxOpen(new Vector3d(breakMod.getPosition().getX(), breakMod.getPosition().getY(), breakMod.getPosition().getZ()), Color.RED);
+				}
+				if(mod instanceof BlockPlaceModification) {
+					BlockPlaceModification placeMod = (BlockPlaceModification)mod;
+					renderer.drawBoxOpen(new Vector3d(placeMod.getPosition().getX(), placeMod.getPosition().getY(), placeMod.getPosition().getZ()), Color.YELLOW);
+				}
+			}
 		}
 
 		renderer.end();
