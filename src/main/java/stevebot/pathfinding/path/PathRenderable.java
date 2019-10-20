@@ -1,9 +1,12 @@
 package stevebot.pathfinding.path;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
+import stevebot.data.modification.BlockBreakModification;
+import stevebot.data.modification.BlockPlaceModification;
+import stevebot.data.modification.Modification;
 import stevebot.misc.Config;
-import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.actions.ActionCosts;
+import stevebot.pathfinding.nodes.Node;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
 import stevebot.rendering.Renderer;
@@ -59,6 +62,7 @@ public class PathRenderable implements Renderable {
 
 	@Override
 	public void render(Renderer renderer) {
+
 		renderer.beginLineStrip(DEFAULT_LINE_WIDTH);
 
 		double minCost = ActionCosts.COST_INFINITE;
@@ -73,14 +77,33 @@ public class PathRenderable implements Renderable {
 		final Vector3d p1 = new Vector3d();
 
 		for (int i = 0; i < path.getNodes().size() - 1; i++) {
-			final Node node0 = path.getNodes().get(i);
-			final Node node1 = path.getNodes().get(i + 1);
-			p0.set(node0.getPos().getX() + 0.5, node0.getPos().getY() + 0.5, node0.getPos().getZ() + 0.5);
-			p1.set(node1.getPos().getX() + 0.5, node1.getPos().getY() + 0.5, node1.getPos().getZ() + 0.5);
-			renderer.drawLineOpen(p0, p1, getColor(node0, node1, node1.getAction().getCost(), minCost, maxCost));
+			final Node from = path.getNodes().get(i);
+			final Node to = path.getNodes().get(i + 1);
+			p0.set(from.getPos().getX() + 0.5, from.getPos().getY() + 0.5, from.getPos().getZ() + 0.5);
+			p1.set(to.getPos().getX() + 0.5, to.getPos().getY() + 0.5, to.getPos().getZ() + 0.5);
+			renderer.drawLineOpen(p0, p1, getColor(from, to, to.getAction().getCost(), minCost, maxCost));
 		}
 
 		renderer.end();
+
+		renderer.beginBoxes(DEFAULT_LINE_WIDTH);
+
+		for (int i = 0; i < path.getNodes().size() - 1; i++) {
+			final Node to = path.getNodes().get(i + 1);
+			for (Modification mod : to.getAction().getModifications()) {
+				if (mod instanceof BlockBreakModification) {
+					BlockBreakModification breakMod = (BlockBreakModification) mod;
+					renderer.drawBoxOpen(new Vector3d(breakMod.getPosition().getX(), breakMod.getPosition().getY(), breakMod.getPosition().getZ()), Color.RED);
+				}
+				if (mod instanceof BlockPlaceModification) {
+					BlockPlaceModification placeMod = (BlockPlaceModification) mod;
+					renderer.drawBoxOpen(new Vector3d(placeMod.getPosition().getX(), placeMod.getPosition().getY(), placeMod.getPosition().getZ()), Color.YELLOW);
+				}
+			}
+		}
+
+		renderer.end();
+
 	}
 
 

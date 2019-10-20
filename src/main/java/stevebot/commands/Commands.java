@@ -90,7 +90,7 @@ public class Commands {
 
 						// /setvar <variablename> <boolean>
 						.addCommand(new CommandBuilder("setvar")
-								.addToken(new ValueToken.EnumToken("varname", "showchunkcache", "shownodecache", "verbose"))
+								.addToken(new ValueToken.EnumToken("varname", "showchunkcache", "shownodecache", "verbose", "keeppathrenderable"))
 								.addToken(new ValueToken.BooleanToken("value"))
 								.setListener(Commands::onSetVarBoolean)
 								.build())
@@ -227,6 +227,10 @@ public class Commands {
 			}
 			case "shownodecache": {
 				Config.setShowNodeCache(value);
+				break;
+			}
+			case "keeppathrenderable": {
+				Config.setKeepPathRenderable(value);
 				break;
 			}
 			default: {

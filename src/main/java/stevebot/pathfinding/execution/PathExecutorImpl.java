@@ -4,6 +4,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventListener;
+import stevebot.misc.Config;
 import stevebot.misc.ProcState;
 import stevebot.misc.StateMachineListener;
 import stevebot.pathfinding.goal.Goal;
@@ -101,10 +102,12 @@ public class PathExecutorImpl implements StateMachineListener<ExecutionState, Ex
 	@Override
 	public void stop() {
 		isExecuting = false;
-		renderer.removeRenderable(goalRenderable);
-		renderer.removeRenderable(startRenderable);
-		renderer.removeRenderable(pathRenderable);
-		renderer.removeRenderable(pathTraceRenderable);
+		if(!Config.isKeepPathRenderable()) {
+			renderer.removeRenderable(goalRenderable);
+			renderer.removeRenderable(startRenderable);
+			renderer.removeRenderable(pathRenderable);
+			renderer.removeRenderable(pathTraceRenderable);
+		}
 		onFinished();
 	}
 

@@ -1,10 +1,7 @@
 package stevebot.pathfinding.path;
 
-import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.nodes.Node;
-import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
-import stevebot.rendering.renderables.PathRenderObject;
 
 import java.util.List;
 
@@ -18,12 +15,7 @@ public interface Path {
 	 * @return the created renderable
 	 */
 	static Renderable toRenderable(Path path) {
-		BaseBlockPos[] positions = new BaseBlockPos[path.getNodes().size()];
-		for (int i = 0; i < path.getNodes().size(); i++) {
-			Node node = path.getNodes().get(i);
-			positions[i] = node.getPos();
-		}
-		return new PathRenderObject(positions, Color.RED);
+		return new PathRenderable(path);
 	}
 
 
