@@ -167,15 +167,23 @@ public class ActionJump extends Action {
 
 			// check gap
 			final FastBlockPos from = node.getPosCopy();
-			if (!ActionUtils.canJumpThrough(from.add(direction.dx, 0, direction.dz))) {
+			if (!ActionUtils.canJumpThrough(from.add(direction))) {
 				return Result.invalid();
 			}
 
-			// check diagonal
-			Direction[] splitDirection = direction.split();
-			final FastBlockPos p0 = node.getPosCopy().add(splitDirection[0].dx, 0, splitDirection[0].dz);
-			final FastBlockPos p1 = node.getPosCopy().add(splitDirection[1].dx, 0, splitDirection[1].dz);
+			// check diagonal 1
+			Direction[] splitDirection1 = direction.split();
+			final FastBlockPos p0 = node.getPosCopy().add(splitDirection1[0]);
+			final FastBlockPos p1 = node.getPosCopy().add(splitDirection1[1]);
 			if (!ActionUtils.canJump(p0, p1)) {
+				return Result.invalid();
+			}
+
+			// check diagonal 2
+			Direction[] splitDirection2 = direction.split();
+			final FastBlockPos p2 = node.getPosCopy().add(direction).add(splitDirection2[0]);
+			final FastBlockPos p3 = node.getPosCopy().add(direction).add(splitDirection2[1]);
+			if (!ActionUtils.canJump(p2, p3)) {
 				return Result.invalid();
 			}
 
