@@ -9,8 +9,12 @@ import stevebot.minecraft.MinecraftAdapter;
 
 public class PlayerUtils {
 
-
-	public static final double AT_LOC_DIST_ERROR = 0.05;
+	// player-radius p = 0.3; half block size = 0.5; wanted radius around center x = ?
+	// player is at/near the center of the block when
+	// =>    p + x < 0.5
+	// 	   0.3 + x < 0.5
+	//           x < 0.2  =>  0.2*0.2 = 0.04
+	public static final double AT_LOC_DIST_ERROR = 0.04;
 
 	private static PlayerInput playerInput;
 	private static PlayerCamera playerCamera;
