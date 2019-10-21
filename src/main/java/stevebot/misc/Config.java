@@ -11,7 +11,7 @@ public class Config {
 	public static final String VERSION = "0.1-dev";
 	public static final String MC_VERSION = "[1.12.2]";
 
-	private static int pathfindingTimeoutSeconds = 10;
+	private static float pathfindingTimeoutSeconds = 10;
 	private static PathRenderable.PathStyle pathStyle = PathRenderable.PathStyle.SOLID;
 	private static boolean verboseMode = true;
 	private static boolean showChunkCache = false;
@@ -25,7 +25,7 @@ public class Config {
 	/**
 	 * @return the timeout for the pathfinding in seconds
 	 */
-	public static int getPathfindingTimeout() {
+	public static float getPathfindingTimeout() {
 		return pathfindingTimeoutSeconds;
 	}
 
@@ -37,7 +37,7 @@ public class Config {
 	 *
 	 * @param timeoutSeconds the new timeout in seconds
 	 */
-	public static void setPathfindingTimeout(int timeoutSeconds) {
+	public static void setPathfindingTimeout(float timeoutSeconds) {
 		Config.pathfindingTimeoutSeconds = timeoutSeconds;
 		Stevebot.log("Set pathfindingTimeoutSeconds: " + getPathfindingTimeout());
 	}

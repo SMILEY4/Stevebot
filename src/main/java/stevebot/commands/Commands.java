@@ -81,11 +81,11 @@ public class Commands {
 		registerCommand(new CommandBuilder("setvar")
 				.addToken(new MultiCommandToken("setvarMulti")
 
-						// /setvar <variablename> <integer>
+						// /setvar <variablename> <number>
 						.addCommand(new CommandBuilder("setvar")
 								.addToken(new ValueToken.EnumToken("varname", "timeout", "pathfindingslowdown"))
-								.addToken(new ValueToken.IntegerToken("value"))
-								.setListener(Commands::onSetVarInteger)
+								.addToken(new ValueToken.FloatToken("value"))
+								.setListener(Commands::onSetVarNumber)
 								.build())
 
 						// /setvar <variablename> <boolean>
@@ -189,17 +189,18 @@ public class Commands {
 
 
 
-	private static void onSetVarInteger(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
+	private static void onSetVarNumber(ICommandSender sender, String name, Map<String, CommandArgument<?>> args) {
 		final String varname = (String) args.get("varname").getValue();
-		final int value = (Integer) args.get("value").getValue();
+		final Number value = (Number) args.get("value").getValue();
+
 
 		switch (varname.toLowerCase()) {
 			case "timeout": {
-				Config.setPathfindingTimeout(value);
+				Config.setPathfindingTimeout(value.floatValue());
 				break;
 			}
 			case "pathfindingslowdown": {
-				Config.setPathfindingSlowdown(value);
+				Config.setPathfindingSlowdown(value.intValue());
 				break;
 			}
 			default: {

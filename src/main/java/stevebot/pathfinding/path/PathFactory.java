@@ -100,14 +100,14 @@ public class PathFactory {
 				final Path prevPath = getLastPath();
 				if (MULTITHREAD) {
 					executorService.submit(() -> {
-						Path path = pathfinding.calculatePath(prevPath.getLastNode().getPos(), goal, Config.getPathfindingTimeout() * 1000);
+						Path path = pathfinding.calculatePath(prevPath.getLastNode().getPos(), goal, (long) (Config.getPathfindingTimeout() * 1000));
 						synchronized (pathQueue) {
 							pathQueue.add(path);
 							preparingPath = false;
 						}
 					});
 				} else {
-					Path path = pathfinding.calculatePath(prevPath.getLastNode().getPos(), goal, Config.getPathfindingTimeout() * 1000);
+					Path path = pathfinding.calculatePath(prevPath.getLastNode().getPos(), goal, (long) (Config.getPathfindingTimeout() * 1000));
 					synchronized (pathQueue) {
 						pathQueue.add(path);
 						preparingPath = false;
@@ -118,7 +118,7 @@ public class PathFactory {
 		} else {
 			if (MULTITHREAD) {
 				executorService.submit(() -> {
-					Path path = pathfinding.calculatePath(posStart, goal, Config.getPathfindingTimeout() * 1000);
+					Path path = pathfinding.calculatePath(posStart, goal, (long) (Config.getPathfindingTimeout() * 1000));
 					if (!(path instanceof EmptyPath)) {
 						synchronized (pathQueue) {
 							pathQueue.add(path);
@@ -127,7 +127,7 @@ public class PathFactory {
 					}
 				});
 			} else {
-				Path path = pathfinding.calculatePath(posStart, goal, Config.getPathfindingTimeout() * 1000);
+				Path path = pathfinding.calculatePath(posStart, goal, (long) (Config.getPathfindingTimeout() * 1000));
 				if (!(path instanceof EmptyPath)) {
 					synchronized (pathQueue) {
 						pathQueue.add(path);
