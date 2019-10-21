@@ -125,6 +125,25 @@ public class PlayerUtils {
 
 
 	/**
+	 * @return the exact current position of the player in the block as a {@link Vector3d}
+	 */
+	public static Vector3d getPlayerPositionInBlock() {
+		EntityPlayerSP player = getPlayer();
+		if (player != null) {
+			final Vector3d playerPos = getPlayerPosition();
+			playerPos.x = playerPos.x - Math.floor(playerPos.x);
+			playerPos.y = playerPos.y - Math.floor(playerPos.y);
+			playerPos.z = playerPos.z - Math.floor(playerPos.z);
+			return playerPos;
+		} else {
+			return null;
+		}
+	}
+
+
+
+
+	/**
 	 * @return the current movement of the player.
 	 */
 	public static Vector3d getMotionVector() {

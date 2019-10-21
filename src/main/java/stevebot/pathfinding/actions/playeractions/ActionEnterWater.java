@@ -32,13 +32,8 @@ public class ActionEnterWater extends Action {
 	@Override
 	public ProcState tick(boolean fistTick) {
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
-			PlayerUtils.getInput().releaseJump();
 			return ProcState.DONE;
 		} else {
-			final boolean isInWater = BlockUtils.isWater(PlayerUtils.getPlayerBlockPos());
-			if (isInWater) {
-				PlayerUtils.getInput().holdJump();
-			}
 			return ProcState.EXECUTING;
 		}
 	}

@@ -41,7 +41,12 @@ public class ActionSwim extends Action {
 			PlayerUtils.getInput().releaseJump();
 			return ProcState.DONE;
 		} else {
-			PlayerUtils.getInput().holdJump();
+			final boolean isInWater = BlockUtils.isWater(PlayerUtils.getPlayerBlockPos());
+			if (isInWater) {
+				PlayerUtils.getInput().holdJump();
+			} else {
+				PlayerUtils.getInput().releaseJump();
+			}
 			return ProcState.EXECUTING;
 		}
 	}

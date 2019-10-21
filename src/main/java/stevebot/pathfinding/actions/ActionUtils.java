@@ -171,7 +171,8 @@ public class ActionUtils {
 	 * @return whether the player can swim at the given position
 	 */
 	public static boolean canSwimAt(BaseBlockPos pos) {
-		if (!BlockUtils.isWater(fastPos1.set(pos).add(0, -1, 0))) {
+		fastPos1.set(pos).add(0, -1, 0);
+		if (!BlockUtils.isWater(fastPos1) || BlockUtils.isFlowingLiquid(fastPos1)) {
 			return false;
 		}
 		return canMoveThrough(pos);

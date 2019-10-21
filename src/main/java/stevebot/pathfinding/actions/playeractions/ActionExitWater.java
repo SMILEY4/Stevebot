@@ -38,6 +38,8 @@ public class ActionExitWater extends Action {
 			final boolean isInWater = BlockUtils.isWater(PlayerUtils.getPlayerBlockPos());
 			if (isInWater) {
 				PlayerUtils.getInput().holdJump();
+			} else {
+				PlayerUtils.getInput().releaseJump();
 			}
 			return ProcState.EXECUTING;
 		}
