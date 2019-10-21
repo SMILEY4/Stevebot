@@ -70,7 +70,7 @@ public class PathRenderable implements Renderable {
 
 		double minCost = ActionCosts.COST_INFINITE;
 		double maxCost = 0;
-		for (int i = 0; i < path.getNodes().size() - 1; i++) {
+		for (int i = 1; i < path.getNodes().size(); i++) {
 			final double cost = path.getNodes().get(i).getAction().getCost();
 			minCost = Math.min(minCost, cost);
 			maxCost = Math.max(maxCost, cost);

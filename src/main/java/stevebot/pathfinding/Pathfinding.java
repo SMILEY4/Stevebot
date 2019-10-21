@@ -275,6 +275,7 @@ public class Pathfinding {
 			nodes.add(current);
 			current = current.getPrev();
 		}
+		nodes.add(start);
 		Collections.reverse(nodes);
 
 		Path path;
