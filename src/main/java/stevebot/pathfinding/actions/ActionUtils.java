@@ -28,7 +28,11 @@ public class ActionUtils {
 	public static boolean canJump(BaseBlockPos pos) {
 		fastPos1.set(pos).add(0, 1, 0);
 		fastPos2.set(pos).add(0, 2, 0);
-		return BlockUtils.canWalkThrough(pos) && BlockUtils.canWalkThrough(fastPos1) && BlockUtils.canWalkThrough(fastPos2);
+		return BlockUtils.canWalkThrough(pos)
+				&& BlockUtils.canWalkThrough(fastPos1)
+				&& BlockUtils.canWalkThrough(fastPos2)
+				&& !BlockUtils.affectsJump(fastPos1)
+				&& !BlockUtils.affectsJump(fastPos1);
 	}
 
 
