@@ -12,7 +12,7 @@ public class Config {
 	public static final String MC_VERSION = "[1.12.2]";
 
 	private static float pathfindingTimeoutSeconds = 10;
-	private static PathRenderable.PathStyle pathStyle = PathRenderable.PathStyle.SOLID;
+	private static PathRenderable.PathStyle pathStyle = PathRenderable.PathStyle.ACTION_TYPE;
 	private static boolean verboseMode = true;
 	private static boolean showChunkCache = false;
 	private static boolean showNodeCache = false;
