@@ -119,6 +119,14 @@ public class ActionDigDown extends Action {
 
 
 
+	@Override
+	public String getActionName() {
+		return "dig-down";
+	}
+
+
+
+
 	public static class DigDownFactory implements ActionFactory {
 
 

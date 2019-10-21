@@ -125,6 +125,14 @@ public class ActionPillarUp extends Action {
 
 
 
+	@Override
+	public String getActionName() {
+		return "pillar-up";
+	}
+
+
+
+
 	public static class PillarUpFactory implements ActionFactory {
 
 

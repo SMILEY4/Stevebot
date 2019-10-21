@@ -33,6 +33,14 @@ public class ActionWalk extends Action {
 
 
 	@Override
+	public String getActionName() {
+		return "walk";
+	}
+
+
+
+
+	@Override
 	public ProcState tick(boolean fistTick) {
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
 			return ProcState.DONE;

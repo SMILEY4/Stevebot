@@ -28,6 +28,14 @@ public class ActionStepDown extends Action {
 
 
 	@Override
+	public String getActionName() {
+		return "step-up";
+	}
+
+
+
+
+	@Override
 	public ProcState tick(boolean firstTick) {
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
 			return ProcState.DONE;

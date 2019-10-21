@@ -52,6 +52,21 @@ public class Color extends Vector3f {
 
 
 	/**
+	 * @param n the number of colors
+	 * @return an array of n distinct colors
+	 */
+	public static Color[] generateDistinctColors(int n) {
+		Color[] colors = new Color[n];
+		for (int i = 0, j = 0; i < 360; i += 360 / n) {
+			colors[j++] = fromHSV((float)i/360f, 1f, 0.7f);
+		}
+		return colors;
+	}
+
+
+
+
+	/**
 	 * Creates a {@link Color} from the given HSB-components
 	 *
 	 * @param hue        the hue of the color between 0.0 and 1.0

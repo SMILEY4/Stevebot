@@ -57,6 +57,14 @@ public class ActionJump extends Action {
 
 
 	@Override
+	public String getActionName() {
+		return "jump";
+	}
+
+
+
+
+	@Override
 	public ProcState tick(boolean firstTick) {
 
 		switch (stateMachine.getState()) {

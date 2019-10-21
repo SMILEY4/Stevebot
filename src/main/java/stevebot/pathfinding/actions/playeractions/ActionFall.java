@@ -22,6 +22,14 @@ public class ActionFall extends Action {
 
 
 	@Override
+	public String getActionName() {
+		return "fall";
+	}
+
+
+
+
+	@Override
 	public ProcState tick(boolean fistTick) {
 		if (PlayerUtils.getPlayer().onGround) {
 			if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), false)) {

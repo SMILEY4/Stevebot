@@ -22,6 +22,14 @@ public class ActionEnterWater extends Action {
 
 
 	@Override
+	public String getActionName() {
+		return "enter-water";
+	}
+
+
+
+
+	@Override
 	public ProcState tick(boolean fistTick) {
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
 			PlayerUtils.getInput().releaseJump();
