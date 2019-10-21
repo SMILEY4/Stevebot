@@ -160,4 +160,14 @@ public class BaseBlockPos {
 		return "BaseBlockPos[" + getX() + "," + getY() + ", " + getZ() + "]";
 	}
 
+
+
+
+	public double dist(BaseBlockPos pos) {
+		final int dx = pos.x - this.x;
+		final int dy = pos.y - this.y;
+		final int dz = pos.z - this.z;
+		return Math.sqrt(dx * dx + dy * dy + dz * dz);
+	}
+
 }

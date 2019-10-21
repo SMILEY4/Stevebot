@@ -1,5 +1,6 @@
 package stevebot.pathfinding.nodes;
 
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.goal.Goal;
 
@@ -50,11 +51,10 @@ public class BestNodesContainer {
 	 * @param goal the goal of the path
 	 * @return true, if it was added to the best nodes
 	 */
-	public boolean update(Node node, Goal goal) {
+	public boolean update(BaseBlockPos start, Node node, Goal goal) {
+		final double costNode = (node.fcost() * goal.calcHCost(node.getPos())) / (Math.log(start.dist(node.getPos())) * 0.5);
 		for (int i = 0; i < capacity; i++) {
-			final double costNode = node.fcost() * goal.calcHCost(node.getPos());
-			final double costBest = costs[i];
-			if (costNode < costBest) {
+			if (costNode < costs[i]) {
 				costs[i] = costNode;
 				nodes[i] = node;
 				return true;

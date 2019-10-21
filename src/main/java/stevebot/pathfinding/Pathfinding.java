@@ -67,7 +67,10 @@ public class Pathfinding {
 		long timeLast = System.currentTimeMillis();
 		InventorySnapshot baseSnapshot = PlayerUtils.getInventory().createSnapshotFromPlayerEntity();
 
-		// calculate path
+		// calculate path until...
+		//	- open set is empty
+		//	- we hit too many unloaded chunks (goal is most likely in an unloaded chunk)
+		//	- we already found enough paths (no need to improve on existing paths)
 		while (!openSet.isEmpty() && nUnloadedHits < 400 && nBetterPathFound < 2) {
 
 			// timeout
@@ -111,14 +114,16 @@ public class Pathfinding {
 				continue;
 			}
 
-			// check if cost of current node is is already higher than best node (if one exists) -> is yes, ignore current node
+			// check if cost of current node is is already higher than best node (if one exists)
+			// 		-> yes, ignore current node and increment counter
+			// 		->	no, reset counter
 			if (bestNodes.getBest() != null && bestNodes.getBest().gcost() < current.gcost()) {
 				nWorseThanBest++;
 			} else {
 				nWorseThanBest = 0;
 			}
 
-			// detects when goal is not reachable
+			// detects when goal is not reachable (when the last x nodes in a row had a worse score than the best node so far)
 			if (!bestPath.reachedGoal() && nWorseThanBest > 500) {
 				break;
 			}
@@ -193,7 +198,7 @@ public class Pathfinding {
 						next.setPrev(current);
 						next.setAction(action);
 						next.open(openSet);
-						bestNodes.update(next, goal);
+						bestNodes.update(posStart, next, goal);
 					}
 				}
 
@@ -205,6 +210,7 @@ public class Pathfinding {
 			}
 
 		}
+
 
 		Stevebot.logNonCritical("Pathfinding completed in " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size());
 

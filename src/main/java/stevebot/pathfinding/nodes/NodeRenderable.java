@@ -32,30 +32,6 @@ public class NodeRenderable implements Renderable {
 
 
 
-	private void renderPaths(Renderer renderer) {
-		renderer.beginLines(2);
-		final Vector3d posNode = new Vector3d();
-		final Vector3d posPrev = new Vector3d();
-		try {
-			for (Node node : nodes.values()) {
-				if (node.getPrev() == null) {
-					continue;
-				}
-				BaseBlockPos nodePos = node.getPos();
-				BaseBlockPos prevPos = node.getPrev().getPos();
-				posNode.set(nodePos.getX(), nodePos.getY(), nodePos.getZ()).add(0.5);
-				posPrev.set(prevPos.getX(), prevPos.getY(), prevPos.getZ()).add(0.5);
-				renderer.drawLineOpen(posNode, posPrev, (node.isOpen() ? Color.WHITE : Color.GRAY));
-			}
-		} catch (ConcurrentModificationException e) {
-			// ignore
-		}
-		renderer.end();
-	}
-
-
-
-
 	private void renderAABB(Renderer renderer) {
 		renderer.beginBoxes(2);
 		final Vector3d pos = new Vector3d();
