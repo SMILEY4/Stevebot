@@ -72,11 +72,13 @@ public class ActionDigDown extends Action {
 			case PREPARING: {
 				PlayerUtils.getInventory().selectItem(((BlockBreakModification) getModifications()[0]).getTool());
 				stateMachine.fireTransition(Transition.PREPARED);
+				PlayerUtils.getCamera().enableForceCamera();
 				return ProcState.EXECUTING;
 			}
 			case BREAKING_BLOCK: {
 				if (ActionUtils.breakBlock(getFrom().getPosCopy().add(0, -1, 0))) {
 					stateMachine.fireTransition(Transition.BLOCK_BROKEN);
+					PlayerUtils.getCamera().disableForceCamera(true);
 				}
 				return ProcState.EXECUTING;
 			}

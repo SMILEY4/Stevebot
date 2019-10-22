@@ -116,4 +116,16 @@ public interface PlayerCamera {
 	 */
 	void setLook(double pitch, double yaw);
 
+	/**
+	 * Forces the camera to look in specific directions, event when freelook is enabled.
+	 */
+	void enableForceCamera();
+
+	/**
+	 * Stops forcing the camera to look in specific directions, event when freelook is enabled.
+	 *
+	 * @param restoreFreelookView restores the view direction to the state before forceCamera was enabled
+	 */
+	void disableForceCamera(boolean restoreFreelookView);
+
 }
