@@ -62,6 +62,7 @@ public class ActionDropDown extends Action {
 	@Override
 	public void resetAction() {
 		stateMachine.setState(State.PREPARING_1);
+		fall.resetAction();
 	}
 
 
@@ -174,7 +175,6 @@ public class ActionDropDown extends Action {
 			final Node nodeFall = NodeCache.get(node.getPosCopy().add(direction.dx, 0, direction.dz));
 			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(nodeFall, fallActionFactory.check(nodeFall));
 			return new ActionDropDown(node, result.to, result.estimatedCost, actionFall, direction);
-
 		}
 
 

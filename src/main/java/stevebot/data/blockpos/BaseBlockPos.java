@@ -157,7 +157,7 @@ public class BaseBlockPos {
 
 	@Override
 	public String toString() {
-		return "BaseBlockPos[" + getX() + "," + getY() + ", " + getZ() + "]";
+		return "BaseBlockPos[" + getX() + "," + getY() + "," + getZ() + "]";
 	}
 
 

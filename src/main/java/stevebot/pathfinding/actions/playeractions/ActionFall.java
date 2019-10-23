@@ -16,6 +16,7 @@ public class ActionFall extends Action {
 
 	private ActionFall(Node from, Node to, double cost) {
 		super(from, to, cost);
+
 	}
 
 
@@ -38,6 +39,7 @@ public class ActionFall extends Action {
 				return ProcState.EXECUTING;
 			}
 		} else {
+			PlayerUtils.getMovement().moveTowards(getTo().getPos(), false);
 			return ProcState.EXECUTING;
 		}
 	}
