@@ -43,6 +43,7 @@ public class ActionWalk extends Action {
 	@Override
 	public ProcState tick(boolean fistTick) {
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
+			PlayerUtils.getInput().setSneak();
 			return ProcState.DONE;
 		} else {
 			if (sprint) {
@@ -104,7 +105,6 @@ public class ActionWalk extends Action {
 
 
 		ActionWalk create(Node node, Direction direction, Result result) {
-			// final Result result = direction.diagonal ? checkDiagonal(node, direction) : checkStraight(node, direction);
 			return new ActionWalk(node, result.to, result.estimatedCost);
 		}
 
