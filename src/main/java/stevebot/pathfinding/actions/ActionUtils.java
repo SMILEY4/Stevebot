@@ -31,6 +31,7 @@ public class ActionUtils {
 		return BlockUtils.canWalkThrough(pos)
 				&& BlockUtils.canWalkThrough(fastPos1)
 				&& BlockUtils.canWalkThrough(fastPos2)
+				&& !BlockUtils.affectsJump(pos)
 				&& !BlockUtils.affectsJump(fastPos1)
 				&& !BlockUtils.affectsJump(fastPos1);
 	}
