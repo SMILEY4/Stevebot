@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="980.0" maxWidth="1672.0" minHeight="980.0" minWidth="1672.0" prefHeight="980.0" prefWidth="1672.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <SplitPane dividerPositions="0.17136150234741784" layoutX="199.0" layoutY="49.0" prefHeight="720.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <VBox layoutX="65.0" layoutY="68.0" prefHeight="718.0" prefWidth="215.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label maxWidth="10000.0" minWidth="0.0" prefWidth="10000.0" text="Map Size:">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <Spinner fx:id="spinnerMapWidth" editable="true" maxWidth="10000.0" minWidth="0.0" prefWidth="10000.0" />
+                        <Spinner fx:id="spinnerMapHeight" editable="true" maxWidth="10000.0" minWidth="0.0" prefWidth="10000.0" />
+                        <Button fx:id="btnClear" maxHeight="32.0" maxWidth="1000.0" minHeight="32.0" minWidth="0.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="1000.0" text="Clear" />
+                        <Separator prefWidth="200.0" />
+                        <Label maxWidth="10000.0" minWidth="0.0" prefWidth="10000.0" text="Current Node:">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="labelPosition" maxWidth="10000.0" minWidth="0.0" prefWidth="10000.0" text="pos:" />
+                        <Label fx:id="labelGCost" maxWidth="10000.0" minWidth="0.0" prefWidth="10000.0" text="gcost::" />
+                        <Label fx:id="labelHCost" maxWidth="10000.0" minWidth="0.0" prefWidth="10000.0" text="hcost:" />
+                        <Label fx:id="labelFCost" maxWidth="10000.0" minWidth="0.0" prefWidth="10000.0" text="fcost:" />
+                        <Separator prefWidth="200.0" />
+                        <Button fx:id="btnFindPath" maxWidth="1000.0" minWidth="0.0" mnemonicParsing="false" prefWidth="1000.0" text="Find Path" />
+                        <Spinner fx:id="spinnerStep" editable="true" maxWidth="10000.0" minWidth="0.0" prefWidth="10000.0" />
+                        <Region maxHeight="10000.0" maxWidth="0.0" minHeight="0.0" minWidth="0.0" prefHeight="10000.0" prefWidth="200.0" />
+                        <Label fx:id="labelFCost1" maxWidth="10000.0" minWidth="0.0" prefWidth="10000.0" text="Left Mouse: Start" />
+                        <Label fx:id="labelFCost11" maxWidth="10000.0" minWidth="0.0" prefWidth="10000.0" text="Right Mouse: Goal" />
+                        <Label fx:id="labelFCost12" maxWidth="10000.0" minWidth="0.0" prefWidth="10000.0" text="Middle Mouse: Walls" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <Canvas fx:id="canvas" height="978.0" width="1380.0" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
