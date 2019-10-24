@@ -101,6 +101,7 @@ public class PathExecutorImpl implements StateMachineListener<ExecutionState, Ex
 
 	@Override
 	public void stop() {
+		PlayerUtils.getInput().stopAll();
 		isExecuting = false;
 		if(!Config.isKeepPathRenderable()) {
 			renderer.removeRenderable(goalRenderable);

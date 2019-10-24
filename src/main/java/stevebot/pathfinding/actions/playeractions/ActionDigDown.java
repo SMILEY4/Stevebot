@@ -3,6 +3,7 @@ package stevebot.pathfinding.actions.playeractions;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockUtils;
 import stevebot.data.items.ItemLibrary;
+import stevebot.data.items.ItemUtils;
 import stevebot.data.items.wrapper.ItemToolWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.data.modification.BlockBreakModification;
@@ -10,7 +11,6 @@ import stevebot.data.modification.Modification;
 import stevebot.misc.Direction;
 import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
-import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.nodes.Node;
@@ -72,11 +72,13 @@ public class ActionDigDown extends Action {
 			case PREPARING: {
 				PlayerUtils.getInventory().selectItem(((BlockBreakModification) getModifications()[0]).getTool());
 				stateMachine.fireTransition(Transition.PREPARED);
+				PlayerUtils.getCamera().enableForceCamera();
 				return ProcState.EXECUTING;
 			}
 			case BREAKING_BLOCK: {
 				if (ActionUtils.breakBlock(getFrom().getPosCopy().add(0, -1, 0))) {
 					stateMachine.fireTransition(Transition.BLOCK_BROKEN);
+					PlayerUtils.getCamera().disableForceCamera(true);
 				}
 				return ProcState.EXECUTING;
 			}
@@ -114,6 +116,14 @@ public class ActionDigDown extends Action {
 	@Override
 	public Modification[] getModifications() {
 		return this.modifications;
+	}
+
+
+
+
+	@Override
+	public String getActionName() {
+		return "dig-down";
 	}
 
 
@@ -161,7 +171,8 @@ public class ActionDigDown extends Action {
 			final Modification[] modifications = new Modification[]{
 					Modification.breakBlock(posBreakBlock, (ItemToolWrapper) bestTool)
 			};
-			return Result.valid(Direction.DOWN, resultFall.to, ActionCosts.TMP_COST_BREAK_BLOCK + resultFall.estimatedCost, modifications);
+			float ticksToBreak = ItemUtils.getBreakDuration(bestTool.getStack(1), posBreakBlock);
+			return Result.valid(Direction.DOWN, resultFall.to, ticksToBreak + resultFall.estimatedCost, modifications);
 		}
 
 

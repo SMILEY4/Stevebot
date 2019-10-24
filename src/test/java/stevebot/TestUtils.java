@@ -85,6 +85,14 @@ public class TestUtils {
 	public static Action action(Node from, Node to, double cost) {
 		return new Action(from, to, cost) {
 			@Override
+			public String getActionName() {
+				return "test_action";
+			}
+
+
+
+
+			@Override
 			public ProcState tick(boolean fistTick) {
 				return ProcState.DONE;
 			}

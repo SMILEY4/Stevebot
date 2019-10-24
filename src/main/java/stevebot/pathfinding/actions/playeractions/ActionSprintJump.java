@@ -56,13 +56,19 @@ public class ActionSprintJump extends Action {
 
 
 	@Override
+	public String getActionName() {
+		return "sprint-jump";
+	}
+
+
+
+
+	@Override
 	public ProcState tick(boolean firstTick) {
 
 		switch (stateMachine.getState()) {
 			case PREPARING: {
-				PlayerUtils.getCamera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
-				boolean slowEnough = PlayerUtils.getMovement().slowDown(0.055);
-				if (slowEnough) {
+				if (PlayerUtils.getMovement().moveTowardsSpeed(getFrom().getPos().getCenterX(), getFrom().getPos().getCenterZ(), 0.055)) {
 					stateMachine.fireTransition(Transition.PREPARATION_DONE);
 				}
 				return ProcState.EXECUTING;
@@ -105,7 +111,6 @@ public class ActionSprintJump extends Action {
 
 
 		ActionSprintJump create(Node node, Direction direction, Result result) {
-			// final Result result = check(node, direction);
 			return new ActionSprintJump(node, result.to, result.estimatedCost);
 		}
 

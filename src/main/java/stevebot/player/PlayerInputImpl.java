@@ -193,7 +193,7 @@ public class PlayerInputImpl implements PlayerInput {
 	@Override
 	public void releaseJump() {
 		isHoldingJump = false;
-		setJump(false);
+		setJump(false, false);
 	}
 
 
@@ -292,8 +292,11 @@ public class PlayerInputImpl implements PlayerInput {
 	@Override
 	public void setInput(PlayerInputConfig.InputType type, boolean down) {
 		KeyBinding binding = inputConfig.getBinding(type);
+		if (binding.isKeyDown() == down) {
+			return;
+		}
 		KeyBinding.setKeyBindState(binding.getKeyCode(), down);
-		if(down) {
+		if (down) {
 			KeyBinding.onTick(binding.getKeyCode());
 		}
 	}

@@ -21,7 +21,7 @@ public class ActionDropDown extends Action {
 
 
 	private enum State {
-		PREPARING_1, PREPARING_2, FALLING, FINISHING;
+		PREPARING_1, PREPARING_2, FALLING;
 	}
 
 
@@ -30,7 +30,7 @@ public class ActionDropDown extends Action {
 
 
 	private enum Transition {
-		PREPARATION_1_DONE, PREPARATION_2_DONE, TOUCHED_GROUND
+		PREPARATION_1_DONE, PREPARATION_2_DONE
 	}
 
 
@@ -42,6 +42,7 @@ public class ActionDropDown extends Action {
 
 
 	private final ActionFall fall;
+	private boolean firstTickFall = true;
 	private final Direction direction;
 
 
@@ -53,7 +54,6 @@ public class ActionDropDown extends Action {
 		this.direction = direction;
 		stateMachine.defineTransition(State.PREPARING_1, Transition.PREPARATION_1_DONE, State.PREPARING_2);
 		stateMachine.defineTransition(State.PREPARING_2, Transition.PREPARATION_2_DONE, State.FALLING);
-		stateMachine.defineTransition(State.FALLING, Transition.TOUCHED_GROUND, State.FINISHING);
 	}
 
 
@@ -62,6 +62,15 @@ public class ActionDropDown extends Action {
 	@Override
 	public void resetAction() {
 		stateMachine.setState(State.PREPARING_1);
+		fall.resetAction();
+	}
+
+
+
+
+	@Override
+	public String getActionName() {
+		return "drop-down";
 	}
 
 
@@ -93,19 +102,11 @@ public class ActionDropDown extends Action {
 			}
 
 			case FALLING: {
-				if (PlayerUtils.getPlayer().onGround) {
-					stateMachine.fireTransition(Transition.TOUCHED_GROUND);
-				}
-				return ProcState.EXECUTING;
+				final ProcState stateFall = fall.tick(firstTickFall);
+				firstTickFall = false;
+				return stateFall;
 			}
 
-			case FINISHING: {
-				if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
-					return ProcState.DONE;
-				} else {
-					return ProcState.EXECUTING;
-				}
-			}
 
 			default: {
 				return ProcState.FAILED;
@@ -174,7 +175,6 @@ public class ActionDropDown extends Action {
 			final Node nodeFall = NodeCache.get(node.getPosCopy().add(direction.dx, 0, direction.dz));
 			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(nodeFall, fallActionFactory.check(nodeFall));
 			return new ActionDropDown(node, result.to, result.estimatedCost, actionFall, direction);
-
 		}
 
 

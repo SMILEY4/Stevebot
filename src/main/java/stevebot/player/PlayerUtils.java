@@ -9,8 +9,12 @@ import stevebot.minecraft.MinecraftAdapter;
 
 public class PlayerUtils {
 
-
-	public static final double AT_LOC_DIST_ERROR = 0.05;
+	// player-radius p = 0.3; half block size = 0.5; wanted radius around center x = ?
+	// player is at/near the center of the block when
+	// =>    p + x < 0.5
+	// 	   0.3 + x < 0.5
+	//           x < 0.2  =>  0.2*0.2 = 0.04
+	public static final double AT_LOC_DIST_ERROR = 0.04;
 
 	private static PlayerInput playerInput;
 	private static PlayerCamera playerCamera;
@@ -116,6 +120,25 @@ public class PlayerUtils {
 		EntityPlayerSP player = getPlayer();
 		if (player != null) {
 			return new Vector3d(player.posX, player.posY, player.posZ);
+		} else {
+			return null;
+		}
+	}
+
+
+
+
+	/**
+	 * @return the exact current position of the player in the block as a {@link Vector3d}
+	 */
+	public static Vector3d getPlayerPositionInBlock() {
+		EntityPlayerSP player = getPlayer();
+		if (player != null) {
+			final Vector3d playerPos = getPlayerPosition();
+			playerPos.x = playerPos.x - Math.floor(playerPos.x);
+			playerPos.y = playerPos.y - Math.floor(playerPos.y);
+			playerPos.z = playerPos.z - Math.floor(playerPos.z);
+			return playerPos;
 		} else {
 			return null;
 		}

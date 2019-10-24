@@ -67,7 +67,10 @@ public class Pathfinding {
 		long timeLast = System.currentTimeMillis();
 		InventorySnapshot baseSnapshot = PlayerUtils.getInventory().createSnapshotFromPlayerEntity();
 
-		// calculate path
+		// calculate path until...
+		//	- open set is empty
+		//	- we hit too many unloaded chunks (goal is most likely in an unloaded chunk)
+		//	- we already found enough paths (no need to improve on existing paths)
 		while (!openSet.isEmpty() && nUnloadedHits < 400 && nBetterPathFound < 2) {
 
 			// timeout
@@ -91,10 +94,11 @@ public class Pathfinding {
 				}
 			}
 
-			// get next node
+			// get next/current node (and close it)
 			Node current = removeLowest(openSet);
 
 			// check if reached goal
+			//    -> build path start-current and check if path is better than the already found path (if one exists)
 			if (goal.reached(current.getPos())) {
 				Path currentPath = buildPath(nodeStart, current, true);
 				if (currentPath.getCost() < bestPath.getCost()) {
@@ -105,17 +109,21 @@ public class Pathfinding {
 				continue;
 			}
 
-			// check if current path cost is already higher than prev. path cost / the best node
+			// check if cost of the current node is already higher than prev. path cost -> if yes, ignore current node
 			if (bestPath.getCost() < current.gcost()) {
 				continue;
 			}
+
+			// check if cost of current node is is already higher than best node (if one exists)
+			// 		-> yes, ignore current node and increment counter
+			// 		->	no, reset counter
 			if (bestNodes.getBest() != null && bestNodes.getBest().gcost() < current.gcost()) {
 				nWorseThanBest++;
 			} else {
 				nWorseThanBest = 0;
 			}
 
-			// detects if goal is not reachable
+			// detects when goal is not reachable (when the last x nodes in a row had a worse score than the best node so far)
 			if (!bestPath.reachedGoal() && nWorseThanBest > 500) {
 				break;
 			}
@@ -131,63 +139,86 @@ public class Pathfinding {
 			Set<Class<? extends ActionFactory>> impossibleFactories = new HashSet<>();
 			List<ActionFactory> factories = actionFactoryProvider.getAllFactories();
 
+			// iterate over every registered action
 			for (int i = 0, n = factories.size(); i < n; i++) {
 				ActionFactory factory = factories.get(i);
 
+				// continue if prev processed actions make this action impossible
 				if (impossibleFactories.contains(factory.getClass())) {
 					continue;
 				}
 
+				// check if action is valid
 				ActionFactory.Result result = factory.check(current);
+
+				// action is invalid
 				if (result.type == ActionFactory.ResultType.INVALID) {
 					continue;
 				}
+
+				// action hit an unloaded chunk
 				if (result.type == ActionFactory.ResultType.UNLOADED) {
 					hitUnloaded = true;
 					continue;
 				}
+
+				// action is valid
 				if (result.type == ActionFactory.ResultType.VALID) {
+
+					// add actions to list that are impossible when this action is valid
 					List<Class<? extends ActionFactory>> impList = factory.makesImpossible(result.direction);
 					if (impList != null) {
 						impossibleFactories.addAll(impList);
 					}
 
+					// get destination node of action
 					final Node next = result.to;
 
+					// calculate cost of dest. node; ignore action when  it does not improve the already existing cost
 					final double newCost = current.gcost() + result.estimatedCost;
 					if (!next.isOpen() && newCost >= next.gcost()) {
 						continue;
 					}
+
+					// open dest node and set new costs
 					if (newCost < next.gcost() || !next.isOpen()) {
+
+						// if the closed dest. node already has a score from a prev. action, check if the improvement is enough to justify opening it again
 						if (next.gcost() < ActionCosts.COST_INFINITE - 10 && !next.isOpen()) {
 							double improvement = next.gcost() - newCost;
 							if (improvement < 1) {
 								continue;
 							}
 						}
+
+						// create action and setup dest. node
 						Action action = factory.createAction(current, result);
 						next.setGCost(newCost);
 						next.setHCost(goal.calcHCost(next.getPos()));
 						next.setPrev(current);
 						next.setAction(action);
 						next.open(openSet);
-						bestNodes.update(next, goal);
+						bestNodes.update(posStart, next, goal);
 					}
 				}
 
 			}
 
+			// count hits in unloaded chunks
 			if (hitUnloaded) {
 				nUnloadedHits++;
 			}
 
 		}
 
+
 		Stevebot.logNonCritical("Pathfinding completed in " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size());
 
 		if (bestPath.reachedGoal()) {
+			// a valid path was found -> return that path
 			return bestPath;
 		} else {
+			// no path was found (timeout, goal in unloaded chunks, ...) -> find best node and return path start-bestnode (or empty path if none exists)
 			Node bestNode = bestNodes.getBest();
 			if (bestNode == null) {
 				return new EmptyPath();
@@ -275,6 +306,7 @@ public class Pathfinding {
 			nodes.add(current);
 			current = current.getPrev();
 		}
+		nodes.add(start);
 		Collections.reverse(nodes);
 
 		Path path;

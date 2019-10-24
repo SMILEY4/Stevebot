@@ -22,6 +22,9 @@ public class BlockUtils {
 	static final int FROSTED_ICE = 212;
 	static final int PACKED_ICE = 174;
 	static final int AIR = 0;
+	static final int VINE = 106;
+	static final int LADDER = 65;
+
 
 	private static BlockProvider blockProvider;
 	private static BlockLibrary blockLibrary;
@@ -268,6 +271,28 @@ public class BlockUtils {
 	 */
 	public static boolean avoidTouching(BaseBlockPos pos) {
 		return avoidTouching(blockProvider.getBlockAt(pos));
+	}
+
+
+
+
+	/**
+	 * @param block the block
+	 * @return whether the given block can affect a jump
+	 */
+	public static boolean affectsJump(BlockWrapper block) {
+		return block.getId() == VINE || block.getId() == LADDER;
+	}
+
+
+
+
+	/**
+	 * @param position the position of the block
+	 * @return whether the block at the given position can affect a jump
+	 */
+	public static boolean affectsJump(BaseBlockPos position) {
+		return affectsJump(blockProvider.getBlockAt(position));
 	}
 
 

@@ -55,7 +55,7 @@ public class InventorySnapshotTest {
 
 		snapshot.applyModification(Modification.placeBlock(new BaseBlockPos(), BLOCK_DIRT));
 
-		assertThat(snapshot.getStackSize(3)).isEqualTo(0);
+		assertThat(snapshot.getStackSize(3)).isEqualTo(-1);
 		assertThat(snapshot.getItem(3)).isNull();
 	}
 

@@ -48,6 +48,9 @@ public class PathRenderable implements Renderable {
 
 
 
+	private static final Color[] ACTION_COLORS = Color.generateDistinctColors(12);
+
+
 	private final Path path;
 
 
@@ -67,7 +70,7 @@ public class PathRenderable implements Renderable {
 
 		double minCost = ActionCosts.COST_INFINITE;
 		double maxCost = 0;
-		for (int i = 0; i < path.getNodes().size() - 1; i++) {
+		for (int i = 1; i < path.getNodes().size(); i++) {
 			final double cost = path.getNodes().get(i).getAction().getCost();
 			minCost = Math.min(minCost, cost);
 			maxCost = Math.max(maxCost, cost);
@@ -116,12 +119,38 @@ public class PathRenderable implements Renderable {
 				return Color.RED;
 			case PATH_ID:
 				return Color.random(path.hashCode());
-			case ACTION_TYPE:
-				return Color.random(to.getAction().getClass().hashCode());
 			case ACTION_ID:
 				return Color.random(to.getAction().hashCode());
 			case ACTION_COST:
 				return Color.mix(Color.GREEN, Color.RED, (float) ((cost - minCost) / (maxCost - minCost)));
+			case ACTION_TYPE:
+				switch (to.getAction().getActionName()) {
+					case "dig-down":
+						return ACTION_COLORS[0];
+					case "pillar-up":
+						return ACTION_COLORS[1];
+					case "enter-water":
+						return ACTION_COLORS[2];
+					case "exit-water":
+						return ACTION_COLORS[3];
+					case "swim":
+						return ACTION_COLORS[4];
+					case "jump":
+						return ACTION_COLORS[5];
+					case "sprint-jump":
+						return ACTION_COLORS[6];
+					case "fall":
+						return ACTION_COLORS[7];
+					case "drop-down":
+						return ACTION_COLORS[8];
+					case "step-down":
+						return ACTION_COLORS[9];
+					case "step-up":
+						return ACTION_COLORS[10];
+					case "walk":
+						return ACTION_COLORS[11];
+				}
+//				return Color.random(to.getAction().getClass().hashCode());
 			default:
 				return Color.BLACK;
 		}

@@ -56,7 +56,6 @@ public class ActionPillarUp extends Action {
 
 
 
-
 	@Override
 	public ProcState tick(boolean fistTick) {
 
@@ -70,6 +69,7 @@ public class ActionPillarUp extends Action {
 				boolean slowEnough = PlayerUtils.getMovement().slowDown(0.075);
 				if (slowEnough) {
 					stateMachine.fireTransition(Transition.SLOW_ENOUGH);
+					PlayerUtils.getCamera().enableForceCamera();
 				} else {
 					PlayerUtils.getCamera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
 				}
@@ -94,6 +94,7 @@ public class ActionPillarUp extends Action {
 
 			case LANDING: {
 				if (PlayerUtils.getPlayer().onGround && PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
+					PlayerUtils.getCamera().disableForceCamera(true);
 					return ProcState.DONE;
 				} else {
 					return ProcState.EXECUTING;
@@ -120,6 +121,14 @@ public class ActionPillarUp extends Action {
 	@Override
 	public Modification[] getModifications() {
 		return this.modifications;
+	}
+
+
+
+
+	@Override
+	public String getActionName() {
+		return "pillar-up";
 	}
 
 

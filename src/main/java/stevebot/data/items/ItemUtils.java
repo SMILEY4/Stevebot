@@ -3,6 +3,9 @@ package stevebot.data.items;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blocks.BlockUtils;
+import stevebot.data.blocks.BlockWrapper;
 
 public class ItemUtils {
 
@@ -21,6 +24,20 @@ public class ItemUtils {
 
 	public static ItemLibrary getItemLibrary() {
 		return ItemUtils.itemLibrary;
+	}
+
+
+
+
+	/**
+	 * @param itemStack the used item
+	 * @param position  the position of the block to break
+	 * @return the time (in ticks) it takes to break the block with the given item
+	 */
+	public static float getBreakDuration(ItemStack itemStack, BaseBlockPos position) {
+		final BlockWrapper blockWrapper = BlockUtils.getBlockProvider().getBlockAt(position);
+		final IBlockState blockState = blockWrapper.getBlock().getDefaultState();
+		return getBreakDuration(itemStack, blockState);
 	}
 
 

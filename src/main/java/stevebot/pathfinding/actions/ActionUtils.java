@@ -1,10 +1,12 @@
 package stevebot.pathfinding.actions;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
+import net.minecraft.block.Block;
 import net.minecraft.client.entity.EntityPlayerSP;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.blocks.BlockUtils;
+import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Direction;
 import stevebot.player.PlayerUtils;
 
@@ -26,7 +28,12 @@ public class ActionUtils {
 	public static boolean canJump(BaseBlockPos pos) {
 		fastPos1.set(pos).add(0, 1, 0);
 		fastPos2.set(pos).add(0, 2, 0);
-		return BlockUtils.canWalkThrough(pos) && BlockUtils.canWalkThrough(fastPos1) && BlockUtils.canWalkThrough(fastPos2);
+		return BlockUtils.canWalkThrough(pos)
+				&& BlockUtils.canWalkThrough(fastPos1)
+				&& BlockUtils.canWalkThrough(fastPos2)
+				&& !BlockUtils.affectsJump(pos)
+				&& !BlockUtils.affectsJump(fastPos1)
+				&& !BlockUtils.affectsJump(fastPos1);
 	}
 
 
@@ -169,7 +176,8 @@ public class ActionUtils {
 	 * @return whether the player can swim at the given position
 	 */
 	public static boolean canSwimAt(BaseBlockPos pos) {
-		if (!BlockUtils.isWater(fastPos1.set(pos).add(0, -1, 0))) {
+		fastPos1.set(pos).add(0, -1, 0);
+		if (!BlockUtils.isWater(fastPos1) || BlockUtils.isFlowingLiquid(fastPos1)) {
 			return false;
 		}
 		return canMoveThrough(pos);
@@ -229,7 +237,8 @@ public class ActionUtils {
 
 
 	public static boolean breakBlock(BaseBlockPos pos) {
-		if (BlockUtils.isAir(pos)) {
+		final Block mcBlock = MinecraftAdapter.get().getBlock(pos.copyAsMCBlockPos());
+		if (BlockUtils.isAir(BlockUtils.getBlockLibrary().getBlockByMCBlock(mcBlock))) {
 			return true;
 		} else {
 			PlayerUtils.getCamera().setLookAt(pos);

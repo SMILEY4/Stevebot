@@ -1,6 +1,7 @@
 package stevebot.player;
 
 import com.ruegnerlukas.simplemath.vectors.vec2.Vector2d;
+import com.ruegnerlukas.simplemath.vectors.vec2.Vector2f;
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -19,6 +20,8 @@ public class PlayerCameraImpl implements PlayerCamera {
 
 	private CameraState state = CameraState.DEFAULT;
 	private boolean isFreelook = false;
+	private CameraState preForcedState = state;
+	private Vector2f lastFreeView = new Vector2f();
 
 	private final EventListener listener = new EventListener<TickEvent.RenderTickEvent>() {
 		@Override
@@ -178,12 +181,15 @@ public class PlayerCameraImpl implements PlayerCamera {
 			player.rotationPitch = cameraPitch;
 			player.prevRotationYaw = cameraYaw;
 			player.prevRotationPitch = cameraPitch;
+			lastFreeView.set(player.rotationYaw, playerPitch);
+
 
 		} else {
 			player.rotationYaw = playerSP.rotationYaw - cameraYaw + playerYaw;
 			player.prevRotationYaw = playerSP.prevRotationYaw - cameraYaw + playerYaw;
 			player.rotationPitch = playerSP.rotationPitch - cameraPitch + playerPitch;
 			player.prevRotationPitch = playerSP.prevRotationPitch - cameraPitch + playerPitch;
+			lastFreeView.set(player.rotationYaw, playerPitch);
 		}
 
 	}
@@ -330,10 +336,34 @@ public class PlayerCameraImpl implements PlayerCamera {
 
 	@Override
 	public void setLook(double pitch, double yaw) {
-		EntityPlayerSP player = PlayerUtils.getPlayer();
+		final EntityPlayerSP player = PlayerUtils.getPlayer();
 		if (player != null) {
 			player.rotationPitch = (float) pitch;
 			player.rotationYaw = (float) yaw;
+		}
+	}
+
+
+
+
+	@Override
+	public void enableForceCamera() {
+		preForcedState = getState();
+		setState(CameraState.LOCKED);
+	}
+
+
+
+
+	@Override
+	public void disableForceCamera(boolean restoreFreelookView) {
+		setState(preForcedState);
+		if (restoreFreelookView) {
+			final Entity player = MinecraftAdapter.get().getRenderViewEntity();
+			player.rotationYaw = lastFreeView.x;
+			player.prevRotationYaw = lastFreeView.x;
+			player.rotationPitch = lastFreeView.y;
+			player.prevRotationPitch = lastFreeView.y;
 		}
 	}
 

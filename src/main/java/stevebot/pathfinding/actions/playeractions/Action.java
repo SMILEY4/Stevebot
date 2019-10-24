@@ -1,7 +1,7 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import stevebot.misc.ProcState;
 import stevebot.data.modification.Modification;
+import stevebot.misc.ProcState;
 import stevebot.pathfinding.nodes.Node;
 
 public abstract class Action {
@@ -67,6 +67,9 @@ public abstract class Action {
 
 
 
+	/**
+	 * @return whether this action modified any blocks
+	 */
 	public boolean hasModifications() {
 		return false;
 	}
@@ -74,6 +77,19 @@ public abstract class Action {
 
 
 
+	/**
+	 * @return whether this action modified the player inventory
+	 */
+	public boolean changedInventory() {
+		return false;
+	}
+
+
+
+
+	/**
+	 * @return the {@link Modification}s this action made
+	 */
 	public Modification[] getModifications() {
 		return Modification.EMPTY;
 	}
@@ -81,11 +97,10 @@ public abstract class Action {
 
 
 
-	public boolean changedInventory() {
-		return false;
-	}
-
-
+	/**
+	 * @return the unique name of this action
+	 */
+	public abstract String getActionName();
 
 
 	/**

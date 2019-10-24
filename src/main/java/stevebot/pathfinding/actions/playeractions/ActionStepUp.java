@@ -60,6 +60,14 @@ public class ActionStepUp extends Action {
 
 
 	@Override
+	public String getActionName() {
+		return "step-up";
+	}
+
+
+
+
+	@Override
 	public ProcState tick(boolean firstTick) {
 
 		if (PlayerUtils.getMotionVector().mul(1, 0, 1).length() < 0.075) {
