@@ -78,16 +78,6 @@ public abstract class Action {
 
 
 	/**
-	 * @return whether this action modified the player inventory
-	 */
-	public boolean changedInventory() {
-		return false;
-	}
-
-
-
-
-	/**
 	 * @return the {@link Modification}s this action made
 	 */
 	public Modification[] getModifications() {
