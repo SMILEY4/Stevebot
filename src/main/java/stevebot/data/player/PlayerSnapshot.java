@@ -10,12 +10,17 @@ import stevebot.data.items.wrapper.ItemBlockWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.data.modification.BlockBreakModification;
 import stevebot.data.modification.BlockPlaceModification;
+import stevebot.data.modification.HealthChangeModification;
 import stevebot.data.modification.Modification;
 
 public class PlayerSnapshot {
 
 
-	private final ItemWrapper[] itemsHotbar = new ItemWrapper[9];
+	// health
+	private int health;
+
+	// inventory
+	private final ItemWrapper[] hotbarItems = new ItemWrapper[9];
 	private final int[] hotbarStackSizes = new int[9];
 
 
@@ -34,58 +39,10 @@ public class PlayerSnapshot {
 	 * Creates a new snapshot with the same content as the given snapshot
 	 */
 	public PlayerSnapshot(PlayerSnapshot snapshot) {
+		this.health = snapshot.health;
 		for (int i = 0; i < 9; i++) {
-			setHotbarItemStack(i, snapshot.itemsHotbar[i], snapshot.hotbarStackSizes[i]);
+			setHotbarItemStack(i, snapshot.hotbarItems[i], snapshot.hotbarStackSizes[i]);
 		}
-	}
-
-
-
-
-	/**
-	 * Sets the item in the given slot
-	 *
-	 * @param slot      the slot (0-8)
-	 * @param item      the {@link ItemWrapper}
-	 * @param stackSize the size of the stack
-	 */
-	public void setHotbarItemStack(int slot, ItemWrapper item, int stackSize) {
-		itemsHotbar[slot] = item;
-		hotbarStackSizes[slot] = stackSize;
-	}
-
-
-
-
-	/**
-	 * Removes the item from the given slot
-	 *
-	 * @param slot the slot (0-8)
-	 */
-	public void clearSlot(int slot) {
-		setHotbarItemStack(slot, null, -1);
-	}
-
-
-
-
-	/**
-	 * @param slot the slot (0-8)
-	 * @return the item at the given slot or null
-	 */
-	public ItemWrapper getItem(int slot) {
-		return itemsHotbar[slot];
-	}
-
-
-
-
-	/**
-	 * @param slot the slot (0-8)
-	 * @return the size of the stack at the given slot or -1
-	 */
-	public int getStackSize(int slot) {
-		return hotbarStackSizes[slot];
 	}
 
 
@@ -119,6 +76,80 @@ public class PlayerSnapshot {
 				// todo
 			}
 		}
+
+		if (modification instanceof HealthChangeModification) {
+			final HealthChangeModification healthChangeModification = (HealthChangeModification) modification;
+			this.health += healthChangeModification.getHealthChange();
+		}
+	}
+
+
+	//==================//
+	//      HEALTH      //
+	//==================//
+
+
+
+
+	/**
+	 * @return the health of the player (1hp = half a heart)
+	 */
+	public int getPlayerHealth() {
+		return health;
+	}
+
+
+	//==================//
+	//    INVENTORY     //
+	//==================//
+
+
+
+
+	/**
+	 * Sets the item in the given slot
+	 *
+	 * @param slot      the slot (0-8)
+	 * @param item      the {@link ItemWrapper}
+	 * @param stackSize the size of the stack
+	 */
+	public void setHotbarItemStack(int slot, ItemWrapper item, int stackSize) {
+		hotbarItems[slot] = item;
+		hotbarStackSizes[slot] = stackSize;
+	}
+
+
+
+
+	/**
+	 * Removes the item from the given slot
+	 *
+	 * @param slot the slot (0-8)
+	 */
+	public void clearSlot(int slot) {
+		setHotbarItemStack(slot, null, -1);
+	}
+
+
+
+
+	/**
+	 * @param slot the slot (0-8)
+	 * @return the item at the given slot or null
+	 */
+	public ItemWrapper getItem(int slot) {
+		return hotbarItems[slot];
+	}
+
+
+
+
+	/**
+	 * @param slot the slot (0-8)
+	 * @return the size of the stack at the given slot or -1
+	 */
+	public int getStackSize(int slot) {
+		return hotbarStackSizes[slot];
 	}
 
 
@@ -153,7 +184,7 @@ public class PlayerSnapshot {
 	 */
 	public int findSlotById(int id) {
 		for (int i = 0; i < 9; i++) {
-			final ItemWrapper stack = itemsHotbar[i];
+			final ItemWrapper stack = hotbarItems[i];
 			if (stack != null && hotbarStackSizes[i] != 0 && id == stack.getId()) {
 				return i;
 			}
@@ -169,7 +200,7 @@ public class PlayerSnapshot {
 	 * @return the item at the given slot as a {@link BlockWrapper}, or {@link BlockLibrary#INVALID_BLOCK}
 	 */
 	public BlockWrapper getAsBlock(int slot) {
-		final ItemWrapper item = itemsHotbar[slot];
+		final ItemWrapper item = hotbarItems[slot];
 		if (item != null) {
 			if (item instanceof ItemBlockWrapper) {
 				return ((ItemBlockWrapper) item).getBlockWrapper();
@@ -189,7 +220,7 @@ public class PlayerSnapshot {
 	 */
 	public int findThrowawayBlock() {
 		for (int i = 0; i < 9; i++) {
-			final ItemWrapper stack = itemsHotbar[i];
+			final ItemWrapper stack = hotbarItems[i];
 			if (stack != null && hotbarStackSizes[i] != 0 && stack instanceof ItemBlockWrapper) {
 				return i;
 			}
@@ -219,7 +250,7 @@ public class PlayerSnapshot {
 		if (slot == -1) {
 			return ItemLibrary.INVALID_ITEM;
 		} else {
-			return itemsHotbar[slot];
+			return hotbarItems[slot];
 		}
 	}
 
@@ -236,7 +267,7 @@ public class PlayerSnapshot {
 		float bestSpeed = 999999;
 
 		for (int i = 0; i < 9; i++) {
-			final ItemWrapper stack = itemsHotbar[i];
+			final ItemWrapper stack = hotbarItems[i];
 			if (stack != null && hotbarStackSizes[i] != 0 && stack.getItem() instanceof ItemTool) {
 				final float breakTime = ItemUtils.getBreakDuration(stack.getStack(1), block.getBlock().getDefaultState());
 				if (bestSpeed > breakTime) {
