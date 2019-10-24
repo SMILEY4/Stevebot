@@ -1,41 +1,107 @@
-package stevebot.data.items;
+package stevebot.data.player;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemTool;
 import stevebot.data.blocks.BlockLibrary;
 import stevebot.data.blocks.BlockWrapper;
+import stevebot.data.items.ItemLibrary;
+import stevebot.data.items.ItemUtils;
 import stevebot.data.items.wrapper.ItemBlockWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.data.modification.BlockBreakModification;
 import stevebot.data.modification.BlockPlaceModification;
+import stevebot.data.modification.HealthChangeModification;
 import stevebot.data.modification.Modification;
 
-public class InventorySnapshot {
+public class PlayerSnapshot {
 
 
-	private final ItemWrapper[] itemsHotbar = new ItemWrapper[9];
-	private final int[] stackSizes = new int[9];
+	// health
+	private int health;
+
+	// inventory
+	private final ItemWrapper[] hotbarItems = new ItemWrapper[9];
+	private final int[] hotbarStackSizes = new int[9];
 
 
 
 
 	/**
-	 * Creates a new empty inventory snapshot
+	 * Creates a new empty snapshot
 	 */
-	public InventorySnapshot() {
+	public PlayerSnapshot() {
 	}
 
 
 
 
 	/**
-	 * Creates a new inventory snapshot with the same content as the given snapshot
+	 * Creates a new snapshot with the same content as the given snapshot
 	 */
-	public InventorySnapshot(InventorySnapshot snapshot) {
+	public PlayerSnapshot(PlayerSnapshot snapshot) {
+		this.health = snapshot.health;
 		for (int i = 0; i < 9; i++) {
-			setHotbarItemStack(i, snapshot.itemsHotbar[i], snapshot.stackSizes[i]);
+			setHotbarItemStack(i, snapshot.hotbarItems[i], snapshot.hotbarStackSizes[i]);
 		}
 	}
+
+
+
+
+	/**
+	 * Applies the givne {@link Modification} to this snapshot
+	 *
+	 * @param modification the modification to apply
+	 */
+	public void applyModification(Modification modification) {
+
+		if (modification instanceof BlockPlaceModification) {
+			final BlockPlaceModification placeModification = (BlockPlaceModification) modification;
+
+			final int slot = findSlotById(placeModification.getBlock().getItem().getId());
+			if (slot != -1) {
+				if (hotbarStackSizes[slot] == 1) {
+					clearSlot(slot);
+				} else {
+					hotbarStackSizes[slot] -= 1;
+				}
+			}
+		}
+
+		if (modification instanceof BlockBreakModification) {
+			final BlockBreakModification breakModification = (BlockBreakModification) modification;
+			if (breakModification.usedTool()) {
+				// todo
+			} else {
+				// todo
+			}
+		}
+
+		if (modification instanceof HealthChangeModification) {
+			final HealthChangeModification healthChangeModification = (HealthChangeModification) modification;
+			this.health += healthChangeModification.getHealthChange();
+		}
+	}
+
+
+	//==================//
+	//      HEALTH      //
+	//==================//
+
+
+
+
+	/**
+	 * @return the health of the player (1hp = half a heart)
+	 */
+	public int getPlayerHealth() {
+		return health;
+	}
+
+
+	//==================//
+	//    INVENTORY     //
+	//==================//
 
 
 
@@ -48,8 +114,8 @@ public class InventorySnapshot {
 	 * @param stackSize the size of the stack
 	 */
 	public void setHotbarItemStack(int slot, ItemWrapper item, int stackSize) {
-		itemsHotbar[slot] = item;
-		stackSizes[slot] = stackSize;
+		hotbarItems[slot] = item;
+		hotbarStackSizes[slot] = stackSize;
 	}
 
 
@@ -72,7 +138,7 @@ public class InventorySnapshot {
 	 * @return the item at the given slot or null
 	 */
 	public ItemWrapper getItem(int slot) {
-		return itemsHotbar[slot];
+		return hotbarItems[slot];
 	}
 
 
@@ -83,40 +149,7 @@ public class InventorySnapshot {
 	 * @return the size of the stack at the given slot or -1
 	 */
 	public int getStackSize(int slot) {
-		return stackSizes[slot];
-	}
-
-
-
-
-	/**
-	 * Applies the givne {@link Modification} to this snapshot
-	 *
-	 * @param modification the modification to apply
-	 */
-	public void applyModification(Modification modification) {
-
-		if (modification instanceof BlockPlaceModification) {
-			final BlockPlaceModification placeModification = (BlockPlaceModification) modification;
-
-			final int slot = findSlotById(placeModification.getBlock().getItem().getId());
-			if (slot != -1) {
-				if (stackSizes[slot] == 1) {
-					clearSlot(slot);
-				} else {
-					stackSizes[slot] -= 1;
-				}
-			}
-		}
-
-		if (modification instanceof BlockBreakModification) {
-			final BlockBreakModification breakModification = (BlockBreakModification) modification;
-			if (breakModification.usedTool()) {
-				// todo
-			} else {
-				// todo
-			}
-		}
+		return hotbarStackSizes[slot];
 	}
 
 
@@ -151,8 +184,8 @@ public class InventorySnapshot {
 	 */
 	public int findSlotById(int id) {
 		for (int i = 0; i < 9; i++) {
-			final ItemWrapper stack = itemsHotbar[i];
-			if (stack != null && stackSizes[i] != 0 && id == stack.getId()) {
+			final ItemWrapper stack = hotbarItems[i];
+			if (stack != null && hotbarStackSizes[i] != 0 && id == stack.getId()) {
 				return i;
 			}
 		}
@@ -167,7 +200,7 @@ public class InventorySnapshot {
 	 * @return the item at the given slot as a {@link BlockWrapper}, or {@link BlockLibrary#INVALID_BLOCK}
 	 */
 	public BlockWrapper getAsBlock(int slot) {
-		final ItemWrapper item = itemsHotbar[slot];
+		final ItemWrapper item = hotbarItems[slot];
 		if (item != null) {
 			if (item instanceof ItemBlockWrapper) {
 				return ((ItemBlockWrapper) item).getBlockWrapper();
@@ -187,8 +220,8 @@ public class InventorySnapshot {
 	 */
 	public int findThrowawayBlock() {
 		for (int i = 0; i < 9; i++) {
-			final ItemWrapper stack = itemsHotbar[i];
-			if (stack != null && stackSizes[i] != 0 && stack instanceof ItemBlockWrapper) {
+			final ItemWrapper stack = hotbarItems[i];
+			if (stack != null && hotbarStackSizes[i] != 0 && stack instanceof ItemBlockWrapper) {
 				return i;
 			}
 		}
@@ -217,7 +250,7 @@ public class InventorySnapshot {
 		if (slot == -1) {
 			return ItemLibrary.INVALID_ITEM;
 		} else {
-			return itemsHotbar[slot];
+			return hotbarItems[slot];
 		}
 	}
 
@@ -234,8 +267,8 @@ public class InventorySnapshot {
 		float bestSpeed = 999999;
 
 		for (int i = 0; i < 9; i++) {
-			final ItemWrapper stack = itemsHotbar[i];
-			if (stack != null && stackSizes[i] != 0 && stack.getItem() instanceof ItemTool) {
+			final ItemWrapper stack = hotbarItems[i];
+			if (stack != null && hotbarStackSizes[i] != 0 && stack.getItem() instanceof ItemTool) {
 				final float breakTime = ItemUtils.getBreakDuration(stack.getStack(1), block.getBlock().getDefaultState());
 				if (bestSpeed > breakTime) {
 					bestSpeed = breakTime;

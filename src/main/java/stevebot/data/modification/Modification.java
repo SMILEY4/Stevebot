@@ -25,4 +25,9 @@ public interface Modification {
 	}
 
 
+	static Modification healthChange(int healthChange) {
+		return new HealthChangeModification(healthChange);
+	}
+
+
 }

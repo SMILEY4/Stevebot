@@ -2,12 +2,17 @@ package stevebot.player;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentString;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockUtils;
+import stevebot.data.items.ItemUtils;
+import stevebot.data.player.PlayerSnapshot;
 import stevebot.minecraft.MinecraftAdapter;
 
 public class PlayerUtils {
+
 
 	// player-radius p = 0.3; half block size = 0.5; wanted radius around center x = ?
 	// player is at/near the center of the block when
@@ -20,6 +25,8 @@ public class PlayerUtils {
 	private static PlayerCamera playerCamera;
 	private static PlayerMovement playerMovement;
 	private static PlayerInventory playerInventory;
+
+	private static PlayerSnapshot activeSnapshot;
 
 
 
@@ -69,6 +76,46 @@ public class PlayerUtils {
 	 */
 	public static PlayerInventory getInventory() {
 		return playerInventory;
+	}
+
+
+
+
+	/**
+	 * @return a new {@link PlayerSnapshot} of the current state of the player
+	 */
+	public static PlayerSnapshot createSnapshot() {
+		final InventoryPlayer inventory = PlayerUtils.getPlayer().inventory;
+		final PlayerSnapshot snapshot = new PlayerSnapshot();
+		for (int i = 0; i < 9; i++) {
+			final ItemStack item = inventory.getStackInSlot(i);
+			if (item != ItemStack.EMPTY) {
+				snapshot.setHotbarItemStack(i, ItemUtils.getItemLibrary().getItemByMCItem(item.getItem()), item.getCount());
+			}
+		}
+		return snapshot;
+	}
+
+
+
+
+	/**
+	 * Sets the active snapshot to the given {@link PlayerSnapshot}
+	 *
+	 * @param snapshot the new active snapshot
+	 */
+	public static void setActiveSnapshot(PlayerSnapshot snapshot) {
+		PlayerUtils.activeSnapshot = snapshot;
+	}
+
+
+
+
+	/**
+	 * @return the currently active {@link PlayerSnapshot}
+	 */
+	public static PlayerSnapshot getActiveSnapshot() {
+		return PlayerUtils.activeSnapshot;
 	}
 
 
