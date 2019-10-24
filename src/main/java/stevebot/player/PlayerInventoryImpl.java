@@ -3,48 +3,10 @@ package stevebot.player;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import stevebot.data.items.InventorySnapshot;
 import stevebot.data.items.ItemUtils;
 import stevebot.data.items.wrapper.ItemWrapper;
 
 public class PlayerInventoryImpl implements PlayerInventory {
-
-
-	private InventorySnapshot currentSnapshot = null;
-
-
-
-
-	@Override
-	public InventorySnapshot createSnapshotFromPlayerEntity() {
-		final InventoryPlayer inventory = PlayerUtils.getPlayer().inventory;
-		final InventorySnapshot snapshot = new InventorySnapshot();
-		for (int i = 0; i < 9; i++) {
-			final ItemStack item = inventory.getStackInSlot(i);
-			if (item != ItemStack.EMPTY) {
-				snapshot.setHotbarItemStack(i, ItemUtils.getItemLibrary().getItemByMCItem(item.getItem()), item.getCount());
-			}
-		}
-		return snapshot;
-	}
-
-
-
-
-	@Override
-	public InventorySnapshot getCurrentSnapshot() {
-		return currentSnapshot;
-	}
-
-
-
-
-	@Override
-	public void setCurrentSnapshot(InventorySnapshot snapshot) {
-		this.currentSnapshot = snapshot;
-	}
-
-
 
 
 	@Override

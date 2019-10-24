@@ -149,7 +149,7 @@ public class ActionPillarUp extends Action {
 		public Result check(Node node) {
 
 			// check inventory
-			if (!PlayerUtils.getInventory().getCurrentSnapshot().hasThrowawayBlockInHotbar()) {
+			if (!PlayerUtils.getActiveSnapshot().hasThrowawayBlockInHotbar()) {
 				return Result.invalid();
 			}
 
@@ -165,9 +165,9 @@ public class ActionPillarUp extends Action {
 			}
 
 			// build valid result
-			int indexThrowaway = PlayerUtils.getInventory().getCurrentSnapshot().findThrowawayBlock();
+			int indexThrowaway = PlayerUtils.getActiveSnapshot().findThrowawayBlock();
 			final Modification[] modifications = new Modification[]{
-					Modification.placeBlock(node.getPos(), PlayerUtils.getInventory().getCurrentSnapshot().getAsBlock(indexThrowaway))
+					Modification.placeBlock(node.getPos(), PlayerUtils.getActiveSnapshot().getAsBlock(indexThrowaway))
 			};
 			return Result.valid(Direction.UP, NodeCache.get(to), ActionCosts.COST_PILLAR_UP, modifications);
 		}

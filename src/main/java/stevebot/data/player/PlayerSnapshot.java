@@ -1,39 +1,41 @@
-package stevebot.data.items;
+package stevebot.data.player;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemTool;
 import stevebot.data.blocks.BlockLibrary;
 import stevebot.data.blocks.BlockWrapper;
+import stevebot.data.items.ItemLibrary;
+import stevebot.data.items.ItemUtils;
 import stevebot.data.items.wrapper.ItemBlockWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.data.modification.BlockBreakModification;
 import stevebot.data.modification.BlockPlaceModification;
 import stevebot.data.modification.Modification;
 
-public class InventorySnapshot {
+public class PlayerSnapshot {
 
 
 	private final ItemWrapper[] itemsHotbar = new ItemWrapper[9];
-	private final int[] stackSizes = new int[9];
+	private final int[] hotbarStackSizes = new int[9];
 
 
 
 
 	/**
-	 * Creates a new empty inventory snapshot
+	 * Creates a new empty snapshot
 	 */
-	public InventorySnapshot() {
+	public PlayerSnapshot() {
 	}
 
 
 
 
 	/**
-	 * Creates a new inventory snapshot with the same content as the given snapshot
+	 * Creates a new snapshot with the same content as the given snapshot
 	 */
-	public InventorySnapshot(InventorySnapshot snapshot) {
+	public PlayerSnapshot(PlayerSnapshot snapshot) {
 		for (int i = 0; i < 9; i++) {
-			setHotbarItemStack(i, snapshot.itemsHotbar[i], snapshot.stackSizes[i]);
+			setHotbarItemStack(i, snapshot.itemsHotbar[i], snapshot.hotbarStackSizes[i]);
 		}
 	}
 
@@ -49,7 +51,7 @@ public class InventorySnapshot {
 	 */
 	public void setHotbarItemStack(int slot, ItemWrapper item, int stackSize) {
 		itemsHotbar[slot] = item;
-		stackSizes[slot] = stackSize;
+		hotbarStackSizes[slot] = stackSize;
 	}
 
 
@@ -83,7 +85,7 @@ public class InventorySnapshot {
 	 * @return the size of the stack at the given slot or -1
 	 */
 	public int getStackSize(int slot) {
-		return stackSizes[slot];
+		return hotbarStackSizes[slot];
 	}
 
 
@@ -101,10 +103,10 @@ public class InventorySnapshot {
 
 			final int slot = findSlotById(placeModification.getBlock().getItem().getId());
 			if (slot != -1) {
-				if (stackSizes[slot] == 1) {
+				if (hotbarStackSizes[slot] == 1) {
 					clearSlot(slot);
 				} else {
-					stackSizes[slot] -= 1;
+					hotbarStackSizes[slot] -= 1;
 				}
 			}
 		}
@@ -152,7 +154,7 @@ public class InventorySnapshot {
 	public int findSlotById(int id) {
 		for (int i = 0; i < 9; i++) {
 			final ItemWrapper stack = itemsHotbar[i];
-			if (stack != null && stackSizes[i] != 0 && id == stack.getId()) {
+			if (stack != null && hotbarStackSizes[i] != 0 && id == stack.getId()) {
 				return i;
 			}
 		}
@@ -188,7 +190,7 @@ public class InventorySnapshot {
 	public int findThrowawayBlock() {
 		for (int i = 0; i < 9; i++) {
 			final ItemWrapper stack = itemsHotbar[i];
-			if (stack != null && stackSizes[i] != 0 && stack instanceof ItemBlockWrapper) {
+			if (stack != null && hotbarStackSizes[i] != 0 && stack instanceof ItemBlockWrapper) {
 				return i;
 			}
 		}
@@ -235,7 +237,7 @@ public class InventorySnapshot {
 
 		for (int i = 0; i < 9; i++) {
 			final ItemWrapper stack = itemsHotbar[i];
-			if (stack != null && stackSizes[i] != 0 && stack.getItem() instanceof ItemTool) {
+			if (stack != null && hotbarStackSizes[i] != 0 && stack.getItem() instanceof ItemTool) {
 				final float breakTime = ItemUtils.getBreakDuration(stack.getStack(1), block.getBlock().getDefaultState());
 				if (bestSpeed > breakTime) {
 					bestSpeed = breakTime;

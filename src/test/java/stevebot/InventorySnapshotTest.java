@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockLibrary;
 import stevebot.data.blocks.BlockWrapper;
-import stevebot.data.items.InventorySnapshot;
+import stevebot.data.player.PlayerSnapshot;
 import stevebot.data.items.wrapper.ItemBlockWrapper;
 import stevebot.data.items.wrapper.ItemToolWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
@@ -39,7 +39,7 @@ public class InventorySnapshotTest {
 	@Test
 	void testApplyModificationPlace() {
 
-		final InventorySnapshot snapshot = new InventorySnapshot();
+		final PlayerSnapshot snapshot = new PlayerSnapshot();
 		snapshot.setHotbarItemStack(3, ITEM_DIRT, 2);
 		snapshot.setHotbarItemStack(6, ITEM_DIA_PICKAXE, 1);
 		snapshot.setHotbarItemStack(7, ITEM_STONE, 10);
@@ -65,7 +65,7 @@ public class InventorySnapshotTest {
 	@Test
 	void testFindThrowawayBlock() {
 
-		final InventorySnapshot snapshot = new InventorySnapshot();
+		final PlayerSnapshot snapshot = new PlayerSnapshot();
 		snapshot.setHotbarItemStack(1, ITEM_IRON_AXE, 1);
 		snapshot.setHotbarItemStack(3, ITEM_DIRT, 2);
 		snapshot.setHotbarItemStack(6, ITEM_DIA_PICKAXE, 1);
@@ -92,7 +92,7 @@ public class InventorySnapshotTest {
 	@Test
 	void testFindSlotById() {
 
-		final InventorySnapshot snapshot = new InventorySnapshot();
+		final PlayerSnapshot snapshot = new PlayerSnapshot();
 		snapshot.setHotbarItemStack(1, ITEM_IRON_AXE, 1);
 		snapshot.setHotbarItemStack(3, ITEM_DIRT, 2);
 		snapshot.setHotbarItemStack(6, ITEM_DIA_PICKAXE, 1);
@@ -113,7 +113,7 @@ public class InventorySnapshotTest {
 	@Test
 	void testGetAsBlock() {
 
-		final InventorySnapshot snapshot = new InventorySnapshot();
+		final PlayerSnapshot snapshot = new PlayerSnapshot();
 		snapshot.setHotbarItemStack(1, ITEM_IRON_AXE, 1);
 		snapshot.setHotbarItemStack(3, ITEM_DIRT, 2);
 		snapshot.setHotbarItemStack(6, ITEM_DIA_PICKAXE, 1);

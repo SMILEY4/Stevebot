@@ -4,8 +4,8 @@ import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockProvider;
 import stevebot.data.blocks.BlockUtils;
-import stevebot.data.items.InventorySnapshot;
 import stevebot.data.modification.Modification;
+import stevebot.data.player.PlayerSnapshot;
 import stevebot.misc.Config;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
@@ -65,7 +65,7 @@ public class Pathfinding {
 		int nWorseThanBest = 0;
 		int nBetterPathFound = 0;
 		long timeLast = System.currentTimeMillis();
-		InventorySnapshot baseSnapshot = PlayerUtils.getInventory().createSnapshotFromPlayerEntity();
+		PlayerSnapshot baseSnapshot = PlayerUtils.createSnapshot();
 
 		// calculate path until...
 		//	- open set is empty
@@ -130,9 +130,9 @@ public class Pathfinding {
 
 			// collect changes
 			BlockUtils.getBlockProvider().clearBlockChanges();
-			InventorySnapshot snapshot = new InventorySnapshot(baseSnapshot);
+			PlayerSnapshot snapshot = new PlayerSnapshot(baseSnapshot);
 			collectChanges(current, BlockUtils.getBlockProvider(), snapshot);
-			PlayerUtils.getInventory().setCurrentSnapshot(snapshot);
+			PlayerUtils.setActiveSnapshot(snapshot);
 
 			// process actions
 			boolean hitUnloaded = false;
@@ -267,7 +267,7 @@ public class Pathfinding {
 	 * @param blockProvider the block provider
 	 * @param snapshot      the player inventory snapshot
 	 */
-	private void collectChanges(Node node, BlockProvider blockProvider, InventorySnapshot snapshot) {
+	private void collectChanges(Node node, BlockProvider blockProvider, PlayerSnapshot snapshot) {
 		// TODO optimize this
 		// idea ???
 		// when opening node n -> check if prev node has changes in history or if action to reach n changed blocks
