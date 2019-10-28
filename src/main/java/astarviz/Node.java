@@ -2,16 +2,20 @@ package astarviz;
 
 public class Node {
 
+	public static final double INFINITY = 999999;
+
+	public final int x;
+	public final int y;
 
 	public boolean isWall = false;
 	public boolean isStart = false;
 	public boolean isGoal = false;
 
-	public double gcost = -1;
-	public double hcost = -1;
-
-	public int x;
-	public int y;
+	public double gcost = INFINITY;
+	public double hcost = INFINITY;
+	public boolean open = false;
+	public boolean processed = false;
+	public Node prev;
 
 
 
@@ -31,6 +35,8 @@ public class Node {
 		this.isGoal = other.isGoal;
 		this.gcost = other.gcost;
 		this.hcost = other.hcost;
+		this.open = other.open;
+		this.processed = other.processed;
 	}
 
 

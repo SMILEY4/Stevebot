@@ -16,6 +16,13 @@ public class Map {
 	private Vector2i posStart = null;
 	private Vector2i posGoal = null;
 
+	public Path path = null;
+
+	public Node[] bestNodes = new Node[Pathfinding.COEFFICIENTS.length];
+	public double[] bestCosts = new double[Pathfinding.COEFFICIENTS.length];
+
+	private final Node NODE_WALL = new Node(-10, -10);
+
 
 
 
@@ -30,12 +37,20 @@ public class Map {
 				nodes[x][y] = node;
 			}
 		}
+		this.NODE_WALL.isWall = true;
 	}
 
 
 
 
 	public Map(Map other) {
+		this(other, null);
+	}
+
+
+
+
+	public Map(Map other, Path path) {
 		this.width = other.width;
 		this.height = other.height;
 		this.nodes = new Node[width][height];
@@ -43,6 +58,17 @@ public class Map {
 			for (int y = 0; y < height; y++) {
 				nodes[x][y] = new Node(other.nodes[x][y]);
 			}
+		}
+		this.setStart(other.posStart);
+		this.setGoal(other.posGoal);
+		this.path = path;
+		for (int i = 0; i < Pathfinding.COEFFICIENTS.length; i++) {
+			if (other.bestNodes[i] == null) {
+				this.bestNodes[i] = null;
+			} else {
+				this.bestNodes[i] = getNode(other.bestNodes[i].x, other.bestNodes[i].y);
+			}
+			this.bestCosts[i] = other.bestCosts[i];
 		}
 	}
 
@@ -55,6 +81,13 @@ public class Map {
 				nodes[x][y].isWall = false;
 				nodes[x][y].isGoal = false;
 				nodes[x][y].isStart = false;
+				nodes[x][y].gcost = Node.INFINITY;
+				nodes[x][y].hcost = Node.INFINITY;
+				nodes[x][y].open = false;
+				nodes[x][y].processed = false;
+				nodes[x][y].prev = null;
+				bestNodes = new Node[Pathfinding.COEFFICIENTS.length];
+				bestCosts = new double[Pathfinding.COEFFICIENTS.length];
 			}
 		}
 	}
@@ -106,6 +139,17 @@ public class Map {
 
 	public void setWall(Vector2i pos) {
 		nodes[pos.x][pos.y].isWall = !nodes[pos.x][pos.y].isWall;
+	}
+
+
+
+
+	public Node getNode(int x, int y) {
+		if (0 <= x && x < width && 0 <= y && y < height) {
+			return nodes[x][y];
+		} else {
+			return NODE_WALL;
+		}
 	}
 
 }

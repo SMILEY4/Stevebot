@@ -6,10 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -31,8 +28,12 @@ public class ViewMain extends AnchorPane {
 
 	@FXML private Button btnFindPath;
 	@FXML private Spinner<Integer> spinnerStep;
+	@FXML private Slider sliderStep;
+
+	@FXML private TextArea areaInfo;
 
 	@FXML private Canvas canvas;
+
 
 	private Vector2i mouseOverNode = null;
 	private Map[] maps = null;
@@ -82,9 +83,17 @@ public class ViewMain extends AnchorPane {
 		btnFindPath.setOnAction(e -> findPath());
 
 		// path step
-		spinnerStep.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maps.length-1, 0));
+		spinnerStep.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maps.length - 1, 0));
 		spinnerStep.valueProperty().addListener(((observable, oldValue, newValue) -> {
 			viewStep(spinnerStep.getValue());
+		}));
+
+		sliderStep.setValue(0);
+		sliderStep.setMin(0);
+		sliderStep.setMax(maps.length - 1);
+		sliderStep.setBlockIncrement(1);
+		sliderStep.valueProperty().addListener(((observable, oldValue, newValue) -> {
+			viewStep((int) sliderStep.getValue());
 		}));
 
 		// mouse over
@@ -118,15 +127,24 @@ public class ViewMain extends AnchorPane {
 
 
 	private void findPath() {
-		maps = Pathfinding.findPath(maps[0]);
-		spinnerStep.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maps.length-1, maps.length-1));
-		repaint();
+		if (maps[0].getGoal() != null && maps[0].getStart() != null) {
+			maps = Pathfinding.findPath(maps[0]);
+			spinnerStep.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maps.length - 1, maps.length - 1));
+			sliderStep.setMin(0);
+			sliderStep.setMax(maps.length - 1);
+			sliderStep.setValue(maps.length - 1);
+			repaint();
+		} else {
+			System.err.println("No start or goal set!");
+		}
 	}
 
 
 
 
 	private void viewStep(int step) {
+		sliderStep.setValue(step);
+		spinnerStep.getValueFactory().setValue(step);
 		currentMapIndex = step;
 		repaint();
 	}
@@ -139,7 +157,10 @@ public class ViewMain extends AnchorPane {
 			maps = new Map[]{maps[0]};
 		}
 		maps[0].clear();
-		spinnerStep.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maps.length-1, 0));
+		spinnerStep.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maps.length - 1, 0));
+		sliderStep.setMin(0);
+		sliderStep.setMax(maps.length - 1);
+		sliderStep.setValue(0);
 		repaint();
 	}
 
@@ -151,7 +172,10 @@ public class ViewMain extends AnchorPane {
 			maps = new Map[]{maps[0]};
 		}
 		maps[0].setStart(pos);
-		spinnerStep.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maps.length-1, 0));
+		spinnerStep.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maps.length - 1, 0));
+		sliderStep.setMin(0);
+		sliderStep.setMax(maps.length - 1);
+		sliderStep.setValue(0);
 		repaint();
 	}
 
@@ -163,7 +187,10 @@ public class ViewMain extends AnchorPane {
 			maps = new Map[]{maps[0]};
 		}
 		maps[0].setGoal(pos);
-		spinnerStep.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maps.length-1, 0));
+		spinnerStep.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maps.length - 1, 0));
+		sliderStep.setMin(0);
+		sliderStep.setMax(maps.length - 1);
+		sliderStep.setValue(0);
 		repaint();
 	}
 
@@ -175,7 +202,10 @@ public class ViewMain extends AnchorPane {
 			maps = new Map[]{maps[0]};
 		}
 		maps[0].setWall(pos);
-		spinnerStep.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maps.length-1, 0));
+		spinnerStep.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maps.length - 1, 0));
+		sliderStep.setMin(0);
+		sliderStep.setMax(maps.length - 1);
+		sliderStep.setValue(0);
 		repaint();
 	}
 
@@ -230,10 +260,31 @@ public class ViewMain extends AnchorPane {
 
 	private void resizeMap(int width, int height) {
 		maps = new Map[]{new Map(width, height)};
-		spinnerStep.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maps.length-1, 0));
+		spinnerStep.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maps.length - 1, 0));
+		sliderStep.setValue(0);
+		sliderStep.setMin(0);
+		sliderStep.setMax(maps.length - 1);
 		repaint();
 	}
 
+
+
+	private void refreshAreaInfo(Map map) {
+
+		StringBuilder builder = new StringBuilder();
+
+		for(int i=0; i<map.bestNodes.length; i++) {
+			builder.append(i).append(": ");
+			if(map.bestNodes[i] == null) {
+				builder.append(" - ");
+			} else {
+				builder.append(map.bestNodes[i].x).append(",").append(map.bestNodes[i].y).append("  (").append(map.bestCosts[i]).append(")");
+			}
+			builder.append(System.lineSeparator());
+		}
+
+		areaInfo.setText(builder.toString());
+	}
 
 
 
@@ -254,10 +305,36 @@ public class ViewMain extends AnchorPane {
 		g.setFill(Color.WHITE);
 		g.fillRect(0, 0, screenWidth, screenHeight);
 
+		final Color COLOR_OPEN = Color.color(0.5f, 0.9f, 0.5f);
+		final Color COLOR_CLOSED = Color.color(0.5f, 0.5f, 0.9f);
+
+		final Color COLOR_MIN_BEST_COST = Color.GREEN;
+		final Color COLOR_MAX_BEST_COST = Color.RED;
+
+
 		// nodes
+//		double maxBestCost = -Node.INFINITY;
+//		double minBestCost = Node.INFINITY;
+//		for (int x = 0; x < mapWidth; x++) {
+//			for (int y = 0; y < mapHeight; y++) {
+//				final Node node = maps[currentMapIndex].nodes[x][y];
+//				if (node.isWall || node.isGoal || node.isStart || !node.processed || Math.abs(node.bestCost) > Node.INFINITY) {
+//					continue;
+//				}
+//				maxBestCost = Math.max(node.bestCost, maxBestCost);
+//				minBestCost = Math.min(node.bestCost, minBestCost);
+//			}
+//		}
+
+		Map currentMap = maps[currentMapIndex];
+		refreshAreaInfo(currentMap);
+
 		for (int x = 0; x < mapWidth; x++) {
 			for (int y = 0; y < mapHeight; y++) {
-				final Node node = maps[currentMapIndex].nodes[x][y];
+				final Node node = currentMap.nodes[x][y];
+
+//				double pBestCost = (node.bestCost - minBestCost) / (maxBestCost - minBestCost);
+//				pBestCost = pBestCost * pBestCost;
 
 				// set fill
 				if (node.isWall) {
@@ -267,7 +344,34 @@ public class ViewMain extends AnchorPane {
 				} else if (node.isGoal) {
 					g.setFill(Color.DARKBLUE);
 				} else {
-					g.setFill(Color.WHITE);
+
+					if (node.processed) {
+						g.setFill(node.open ? COLOR_OPEN : COLOR_CLOSED);
+//						Color colorBestCost = Color.color(
+//								COLOR_MIN_BEST_COST.getRed() * (1.0 - pBestCost) + COLOR_MAX_BEST_COST.getRed() * (pBestCost),
+//								COLOR_MIN_BEST_COST.getGreen() * (1.0 - pBestCost) + COLOR_MAX_BEST_COST.getGreen() * (pBestCost),
+//								COLOR_MIN_BEST_COST.getBlue() * (1.0 - pBestCost) + COLOR_MAX_BEST_COST.getBlue() * (pBestCost)
+//						);
+//						g.setFill(colorBestCost);
+//
+//						if(MathUtils.isNearlyEqual(node.bestCost, minBestCost)) {
+//							g.setFill(Color.YELLOW);
+//						}
+
+						for (int j = 0; j < currentMap.bestCosts.length; j++) {
+							if (currentMap.bestNodes[j] == null) {
+								continue;
+							}
+							if (node.x == currentMap.bestNodes[j].x && node.y == currentMap.bestNodes[j].y) {
+								g.setFill(Color.YELLOW);
+								break;
+							}
+						}
+
+					} else {
+						g.setFill(Color.WHITE);
+					}
+
 				}
 
 				// set outline
@@ -280,6 +384,21 @@ public class ViewMain extends AnchorPane {
 				// draw node
 				g.fillRect(x * nodeWidth, y * nodeHeight, nodeWidth, nodeHeight);
 				g.strokeRect(x * nodeWidth, y * nodeHeight, nodeWidth, nodeHeight);
+			}
+		}
+
+
+		if (maps[currentMapIndex].path != null) {
+			Path path = maps[currentMapIndex].path;
+			g.setStroke(Color.BLUE);
+			for (int i = 0; i < path.nodes.size() - 1; i++) {
+				final Node from = path.nodes.get(i);
+				final Node to = path.nodes.get(i + 1);
+				final double x0 = from.x * nodeWidth + nodeWidth / 2;
+				final double y0 = from.y * nodeHeight + nodeHeight / 2;
+				final double x1 = to.x * nodeWidth + nodeWidth / 2;
+				final double y1 = to.y * nodeHeight + nodeHeight / 2;
+				g.strokeLine(x0, y0, x1, y1);
 			}
 		}
 
