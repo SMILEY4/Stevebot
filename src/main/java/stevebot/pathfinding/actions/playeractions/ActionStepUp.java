@@ -69,40 +69,50 @@ public class ActionStepUp extends Action {
 
 	@Override
 	public ProcState tick(boolean firstTick) {
-
-		if (PlayerUtils.getMotionVector().mul(1, 0, 1).length() < 0.075) {
-			stateMachine.fireTransition(Transition.SLOW_ENOUGH);
-		}
-
 		switch (stateMachine.getState()) {
-
 			case SLOWING_DOWN: {
-				boolean slowEnough = PlayerUtils.getMovement().slowDown(0.075);
-				if (slowEnough) {
-					stateMachine.fireTransition(Transition.SLOW_ENOUGH);
-				} else {
-					PlayerUtils.getCamera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
-				}
-				return ProcState.EXECUTING;
+				return tickSlowDown();
 			}
-
 			case JUMPING: {
-				if (PlayerUtils.getPlayerBlockPos().equals(getFrom().getPos())) {
-					PlayerUtils.getInput().setJump();
-				}
-				if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
-					return ProcState.DONE;
-				} else {
-					return ProcState.EXECUTING;
-				}
+				return tickJump();
 			}
-
 			default: {
 				return ProcState.FAILED;
 			}
-
 		}
+	}
 
+
+
+
+	/**
+	 * Prepare for the jump by slowing down.
+	 */
+	private ProcState tickSlowDown() {
+		boolean slowEnough = PlayerUtils.getMovement().slowDown(0.075);
+		if (slowEnough) {
+			stateMachine.fireTransition(Transition.SLOW_ENOUGH);
+		} else {
+			PlayerUtils.getCamera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
+		}
+		return ProcState.EXECUTING;
+	}
+
+
+
+
+	/**
+	 * Jump up to the target block.
+	 */
+	private ProcState tickJump() {
+		if (PlayerUtils.getPlayerBlockPos().equals(getFrom().getPos())) {
+			PlayerUtils.getInput().setJump();
+		}
+		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
+			return ProcState.DONE;
+		} else {
+			return ProcState.EXECUTING;
+		}
 	}
 
 
