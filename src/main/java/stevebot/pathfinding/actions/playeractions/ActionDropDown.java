@@ -21,7 +21,7 @@ public class ActionDropDown extends Action {
 
 
 	private enum State {
-		PREPARING_1, PREPARING_2, FALLING;
+		WALK_TOWARDS_EDGE, SLIDE_OFF_EDGE, FALLING;
 	}
 
 
@@ -30,7 +30,7 @@ public class ActionDropDown extends Action {
 
 
 	private enum Transition {
-		PREPARATION_1_DONE, PREPARATION_2_DONE
+		IS_AT_POSITION, DROPPED_OFF_EDGE
 	}
 
 
@@ -52,8 +52,8 @@ public class ActionDropDown extends Action {
 		super(from, to, cost);
 		this.fall = fall;
 		this.direction = direction;
-		stateMachine.defineTransition(State.PREPARING_1, Transition.PREPARATION_1_DONE, State.PREPARING_2);
-		stateMachine.defineTransition(State.PREPARING_2, Transition.PREPARATION_2_DONE, State.FALLING);
+		stateMachine.defineTransition(State.WALK_TOWARDS_EDGE, Transition.IS_AT_POSITION, State.SLIDE_OFF_EDGE);
+		stateMachine.defineTransition(State.SLIDE_OFF_EDGE, Transition.DROPPED_OFF_EDGE, State.FALLING);
 	}
 
 
@@ -61,7 +61,8 @@ public class ActionDropDown extends Action {
 
 	@Override
 	public void resetAction() {
-		stateMachine.setState(State.PREPARING_1);
+		stateMachine.setState(State.WALK_TOWARDS_EDGE);
+		firstTickFall = false;
 		fall.resetAction();
 	}
 
@@ -78,41 +79,64 @@ public class ActionDropDown extends Action {
 
 	@Override
 	public ProcState tick(boolean firstTick) {
-
 		switch (stateMachine.getState()) {
-
-			case PREPARING_1: {
-				final double distToEdge = BlockUtils.distToEdge(PlayerUtils.getPlayerPosition(), direction);
-				if (distToEdge <= 0.4) {
-					stateMachine.fireTransition(Transition.PREPARATION_1_DONE);
-				} else {
-					PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
-				}
-				return ProcState.EXECUTING;
+			case WALK_TOWARDS_EDGE: {
+				return tickWalkTowardsEdge();
 			}
-
-			case PREPARING_2: {
-				if (PlayerUtils.getPlayer().onGround && !PlayerUtils.isPlayerMoving(0.0001, false)) {
-					PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
-				}
-				if (!PlayerUtils.getPlayer().onGround) {
-					stateMachine.fireTransition(Transition.PREPARATION_2_DONE);
-				}
-				return ProcState.EXECUTING;
+			case SLIDE_OFF_EDGE: {
+				return tickSlideOffEdge();
 			}
-
 			case FALLING: {
-				final ProcState stateFall = fall.tick(firstTickFall);
-				firstTickFall = false;
-				return stateFall;
+				return tickFall();
 			}
-
-
 			default: {
 				return ProcState.FAILED;
 			}
 		}
+	}
 
+
+
+
+	/**
+	 * Walk towards the edge but do not fall off.
+	 */
+	private ProcState tickWalkTowardsEdge() {
+		final double distToEdge = BlockUtils.distToEdge(PlayerUtils.getPlayerPosition(), direction);
+		if (distToEdge <= 0.4) {
+			stateMachine.fireTransition(Transition.IS_AT_POSITION);
+		} else {
+			PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
+		}
+		return ProcState.EXECUTING;
+	}
+
+
+
+
+	/**
+	 * Walk the last few units and fall off the edge of the block.
+	 */
+	private ProcState tickSlideOffEdge() {
+		if (PlayerUtils.getPlayer().onGround && !PlayerUtils.isPlayerMoving(0.0001, false)) {
+			PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
+		}
+		if (!PlayerUtils.getPlayer().onGround) {
+			stateMachine.fireTransition(Transition.DROPPED_OFF_EDGE);
+		}
+		return ProcState.EXECUTING;
+	}
+
+
+
+
+	/**
+	 * The fall.
+	 */
+	private ProcState tickFall() {
+		final ProcState stateFall = fall.tick(firstTickFall);
+		firstTickFall = false;
+		return stateFall;
 	}
 
 
