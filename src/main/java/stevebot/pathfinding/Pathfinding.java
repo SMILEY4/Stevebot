@@ -212,7 +212,7 @@ public class Pathfinding {
 		}
 
 
-		Stevebot.logNonCritical("Pathfinding completed in " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size());
+		Stevebot.logNonCritical("Pathfinding completed in " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size() + " nodes.");
 
 		if (bestPath.reachedGoal()) {
 			// a valid path was found -> return that path

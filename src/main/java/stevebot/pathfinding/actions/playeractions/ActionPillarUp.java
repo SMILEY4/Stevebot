@@ -79,7 +79,7 @@ public class ActionPillarUp extends Action {
 			case JUMPING: {
 				PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
 				if (PlayerUtils.getPlayerBlockPos().equals(getFrom().getPos())) {
-					PlayerUtils.getInput().setJump(false);
+					PlayerUtils.getInput().setJump();
 				}
 				if (PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
 					if (!PlayerUtils.getInventory().selectThrowawayBlock()) {
