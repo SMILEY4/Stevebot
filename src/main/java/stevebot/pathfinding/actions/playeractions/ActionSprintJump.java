@@ -77,16 +77,15 @@ public class ActionSprintJump extends Action {
 			case JUMPING: {
 				PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
 				PlayerUtils.getInput().setSprint();
-				final double distToEdge = BlockUtils.distToCenter(PlayerUtils.getPlayerPosition());
-				if (distToEdge > 0.4) {
-					PlayerUtils.getInput().setJump(false);
+				final double distToCenter = BlockUtils.distToCenter(getFrom().getPos(), PlayerUtils.getPlayerPosition());
+				if (distToCenter > 0.4) {
+					PlayerUtils.getInput().setJump();
 				}
 				if (PlayerUtils.getPlayer().onGround && PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
 					stateMachine.fireTransition(Transition.TOUCHED_GROUND);
 				}
 				return ProcState.EXECUTING;
 			}
-
 
 			case LANDING: {
 				if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {

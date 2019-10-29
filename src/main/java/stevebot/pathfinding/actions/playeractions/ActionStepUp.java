@@ -88,7 +88,7 @@ public class ActionStepUp extends Action {
 
 			case JUMPING: {
 				if (PlayerUtils.getPlayerBlockPos().equals(getFrom().getPos())) {
-					PlayerUtils.getInput().setJump(false);
+					PlayerUtils.getInput().setJump();
 				}
 				if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
 					return ProcState.DONE;

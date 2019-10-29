@@ -103,7 +103,7 @@ public class PathExecutorImpl implements StateMachineListener<ExecutionState, Ex
 	public void stop() {
 		PlayerUtils.getInput().stopAll();
 		isExecuting = false;
-		if(!Config.isKeepPathRenderable()) {
+		if (!Config.isKeepPathRenderable()) {
 			renderer.removeRenderable(goalRenderable);
 			renderer.removeRenderable(startRenderable);
 			renderer.removeRenderable(pathRenderable);
@@ -232,8 +232,6 @@ public class PathExecutorImpl implements StateMachineListener<ExecutionState, Ex
 	 */
 	private ProcState tick() {
 
-		pathTraceRenderable.addPoint(PlayerUtils.getPlayerPosition(), Color.MAGENTA);
-
 		PlayerUtils.getInput().stopAll();
 
 		if (firstTick) {
@@ -241,6 +239,8 @@ public class PathExecutorImpl implements StateMachineListener<ExecutionState, Ex
 		}
 		ProcState actionState = crawler.getCurrentNodeTo().getAction().tick(firstTick);
 		firstTick = false;
+
+		pathTraceRenderable.addPoint(PlayerUtils.getPlayerPosition(), Color.MAGENTA);
 
 		if (actionState == ProcState.FAILED) {
 			return ProcState.FAILED;

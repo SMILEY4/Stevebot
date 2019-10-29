@@ -153,8 +153,8 @@ public class PlayerInputImpl implements PlayerInput {
 
 
 	@Override
-	public void setJump(boolean allowInAir) {
-		setJump(true, allowInAir);
+	public void setJump() {
+		setJump(true, false);
 	}
 
 
@@ -184,7 +184,7 @@ public class PlayerInputImpl implements PlayerInput {
 	@Override
 	public void holdJump() {
 		isHoldingJump = true;
-		setJump(true);
+		setJump(true, false);
 	}
 
 

@@ -313,6 +313,20 @@ public class BlockUtils {
 
 
 	/**
+	 * @param pos      the position
+	 * @param blockPos the position of the block
+	 * @return the distance of the center of the given block to the given position on one axis
+	 */
+	public static double distToCenter(BaseBlockPos blockPos, Vector3d pos) {
+		final double dx = Math.abs((blockPos.getX() + 0.5) - pos.x);
+		final double dy = Math.abs((blockPos.getZ() + 0.5) - pos.z);
+		return Math.max(dx, dy);
+	}
+
+
+
+
+	/**
 	 * @param pos       the position
 	 * @param direction the direction
 	 * @return the distance of the nearest block-edge in the given direction to the given position
