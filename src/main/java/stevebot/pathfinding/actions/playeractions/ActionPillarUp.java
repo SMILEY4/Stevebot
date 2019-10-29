@@ -44,6 +44,7 @@ public class ActionPillarUp extends Action {
 		this.modifications = modifications;
 		stateMachine.defineTransition(State.SLOWING_DOWN, Transition.SLOW_ENOUGH, State.JUMPING);
 		stateMachine.defineTransition(State.JUMPING, Transition.PLACED_BLOCK, State.LANDING);
+		stateMachine.addListener(Transition.SLOW_ENOUGH, ((previous, next, transition) -> onSlowEnough()));
 	}
 
 
@@ -56,54 +57,81 @@ public class ActionPillarUp extends Action {
 
 
 
+
 	@Override
 	public ProcState tick(boolean fistTick) {
-
 		switch (stateMachine.getState()) {
-
 			case SLOWING_DOWN: {
-//				if (PlayerUtils.getMovement().moveTowardsSpeed(getTo().getPos().getX(), getTo().getPos().getZ(), 2)) {
-//					stateMachine.fireTransition(Transition.SLOW_ENOUGH);
-//				}
-//				return ProcState.EXECUTING;
-				boolean slowEnough = PlayerUtils.getMovement().slowDown(0.075);
-				if (slowEnough) {
-					stateMachine.fireTransition(Transition.SLOW_ENOUGH);
-					PlayerUtils.getCamera().enableForceCamera();
-				} else {
-					PlayerUtils.getCamera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
-				}
-				return ProcState.EXECUTING;
+				return tickSlowDown();
 			}
-
 			case JUMPING: {
-				PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
-				if (PlayerUtils.getPlayerBlockPos().equals(getFrom().getPos())) {
-					PlayerUtils.getInput().setJump();
-				}
-				if (PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
-					if (!PlayerUtils.getInventory().selectThrowawayBlock()) {
-						return ProcState.FAILED;
-					}
-					ActionUtils.placeBlockAgainst(getFrom().getPosCopy().add(0, -1, 0), Direction.UP);
-					stateMachine.fireTransition(Transition.PLACED_BLOCK);
-				}
-				return ProcState.EXECUTING;
+				return tickJump();
 			}
-
-
 			case LANDING: {
-				if (PlayerUtils.getPlayer().onGround && PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
-					PlayerUtils.getCamera().disableForceCamera(true);
-					return ProcState.DONE;
-				} else {
-					return ProcState.EXECUTING;
-				}
+				return tickLand();
 			}
-
 			default: {
 				return ProcState.FAILED;
 			}
+		}
+	}
+
+
+
+
+	/**
+	 * Prepare by slowing down enough.
+	 */
+	private ProcState tickSlowDown() {
+		boolean slowEnough = PlayerUtils.getMovement().slowDown(0.075);
+		if (slowEnough) {
+			stateMachine.fireTransition(Transition.SLOW_ENOUGH);
+		} else {
+			PlayerUtils.getCamera().setLookAt(getTo().getPos().getX(), getTo().getPos().getY(), getTo().getPos().getZ(), true);
+		}
+		return ProcState.EXECUTING;
+	}
+
+
+
+
+	private void onSlowEnough() {
+		PlayerUtils.getCamera().enableForceCamera();
+	}
+
+
+
+
+	/**
+	 * Pillar up by jumping and placing a block below.
+	 */
+	private ProcState tickJump() {
+		PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
+		if (PlayerUtils.getPlayerBlockPos().equals(getFrom().getPos())) {
+			PlayerUtils.getInput().setJump();
+		}
+		if (PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
+			if (!PlayerUtils.getInventory().selectThrowawayBlock()) {
+				return ProcState.FAILED;
+			}
+			ActionUtils.placeBlockAgainst(getFrom().getPosCopy().add(0, -1, 0), Direction.UP);
+			stateMachine.fireTransition(Transition.PLACED_BLOCK);
+		}
+		return ProcState.EXECUTING;
+	}
+
+
+
+
+	/**
+	 * Land on the new block.
+	 */
+	private ProcState tickLand() {
+		if (PlayerUtils.getPlayer().onGround && PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
+			PlayerUtils.getCamera().disableForceCamera(true);
+			return ProcState.DONE;
+		} else {
+			return ProcState.EXECUTING;
 		}
 	}
 
