@@ -6,7 +6,7 @@ import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventListener;
 import stevebot.misc.Config;
 import stevebot.misc.ProcState;
-import stevebot.misc.StateMachineListener;
+import stevebot.misc.TransitionListener;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.Path;
@@ -22,7 +22,7 @@ import stevebot.rendering.renderables.DynPointCollectionRenderObject;
 import static stevebot.pathfinding.execution.PathExecutionStateMachine.ExecutionState;
 import static stevebot.pathfinding.execution.PathExecutionStateMachine.ExecutionTransition;
 
-public class PathExecutorImpl implements StateMachineListener<ExecutionState, ExecutionTransition>, PathExecutor {
+public class PathExecutorImpl implements TransitionListener<ExecutionState, ExecutionTransition>, PathExecutor {
 
 
 	private PathFactory pathFactory;
@@ -213,7 +213,7 @@ public class PathExecutorImpl implements StateMachineListener<ExecutionState, Ex
 
 
 	@Override
-	public void onTransition(ExecutionState start, ExecutionState target, ExecutionTransition transition) {
+	public void onTransition(ExecutionState previous, ExecutionState next, ExecutionTransition transition) {
 		if (transition == ExecutionTransition.SEGMENT_CALCULATED) {
 			renderer.removeRenderable(pathRenderable);
 			Path path = pathFactory.getLastPath();
