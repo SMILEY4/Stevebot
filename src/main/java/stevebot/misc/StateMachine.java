@@ -1,7 +1,6 @@
 package stevebot.misc;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class StateMachine<S extends Enum, T extends Enum> {
 
@@ -9,7 +8,8 @@ public class StateMachine<S extends Enum, T extends Enum> {
 	private S errorState = null;
 	private S current;
 	private List<TransitionDefinition> definitions = new ArrayList<>();
-	private List<StateMachineListener<S, T>> listeners = new ArrayList<>();
+	private List<TransitionListener<S, T>> transitionListenersAll = new ArrayList<>();
+	private Map<T, List<TransitionListener<S, T>>> transitionListenerMap = new HashMap<>();
 
 
 
@@ -31,12 +31,28 @@ public class StateMachine<S extends Enum, T extends Enum> {
 
 
 	/**
-	 * Adds the given listener
+	 * Adds the given transition listener
 	 *
 	 * @param listener the listener
 	 */
-	public void addListener(StateMachineListener<S, T> listener) {
-		this.listeners.add(listener);
+	public void addListener(TransitionListener<S, T> listener) {
+		this.transitionListenersAll.add(listener);
+	}
+
+
+
+
+	/**
+	 * Adds the given transition listener to listen to the given transition.
+	 *
+	 * @param transition the transition to listen to
+	 * @param listener   the listener
+	 */
+	public void addListener(T transition, TransitionListener<S, T> listener) {
+		if (!transitionListenerMap.containsKey(transition)) {
+			transitionListenerMap.put(transition, new ArrayList<>());
+		}
+		transitionListenerMap.get(transition).add(listener);
 	}
 
 
@@ -47,8 +63,9 @@ public class StateMachine<S extends Enum, T extends Enum> {
 	 *
 	 * @param listener the listener
 	 */
-	public void removeListener(StateMachineListener<S, T> listener) {
-		this.listeners.remove(listener);
+	public void removeListener(TransitionListener<S, T> listener) {
+		this.transitionListenersAll.remove(listener);
+		transitionListenerMap.values().forEach(list -> list.remove(listener));
 	}
 
 
@@ -83,13 +100,16 @@ public class StateMachine<S extends Enum, T extends Enum> {
 	/**
 	 * Transition to the next state (if possible) depending on the given transition and the current state.
 	 *
-	 * @param transition the transition between the curren state and the target state
+	 * @param transition the transition between the current state and the target state
 	 */
 	public void fireTransition(T transition) {
 		for (TransitionDefinition definition : definitions) {
 			if (definition.transition == transition && definition.start == getState()) {
 				setState(definition.target);
-				listeners.forEach(listener -> listener.onTransition(definition.start, definition.target, transition));
+				transitionListenersAll.forEach(listener -> listener.onTransition(definition.start, definition.target, transition));
+				transitionListenerMap.getOrDefault(transition, Collections.emptyList()).forEach(
+						listener -> listener.onTransition(definition.start, definition.target, transition)
+				);
 				return;
 			}
 		}
@@ -103,7 +123,7 @@ public class StateMachine<S extends Enum, T extends Enum> {
 	 */
 	public void fireError() {
 		setState(errorState);
-		listeners.forEach(listener -> listener.onTransition(current, errorState, null));
+		transitionListenersAll.forEach(listener -> listener.onTransition(current, errorState, null));
 	}
 
 

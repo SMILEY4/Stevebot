@@ -66,41 +66,65 @@ public class ActionJump extends Action {
 
 	@Override
 	public ProcState tick(boolean firstTick) {
-
 		switch (stateMachine.getState()) {
 			case PREPARING: {
-				if (PlayerUtils.getMovement().moveTowardsSpeed(getFrom().getPos().getCenterX(), getFrom().getPos().getCenterZ(), 0.055)) {
-					stateMachine.fireTransition(Transition.PREPARATION_DONE);
-				}
-				return ProcState.EXECUTING;
+				return tickPreparation();
 			}
-
 			case JUMPING: {
-				PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
-				final double distToCenter = BlockUtils.distToCenter(getFrom().getPos(), PlayerUtils.getPlayerPosition());
-				if (distToCenter > 0.4) {
-					PlayerUtils.getInput().setJump();
-				}
-				if (PlayerUtils.getPlayer().onGround && PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
-					stateMachine.fireTransition(Transition.TOUCHED_GROUND);
-				}
-				return ProcState.EXECUTING;
+				return tickJump();
 			}
-
 			case LANDING: {
-				if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
-					return ProcState.DONE;
-				} else {
-					return ProcState.EXECUTING;
-				}
+				return tickLanding();
 			}
-
 			default: {
 				return ProcState.FAILED;
 			}
-
 		}
+	}
 
+
+
+
+	/**
+	 * Prepare everything before jumping
+	 */
+	private ProcState tickPreparation() {
+		if (PlayerUtils.getMovement().moveTowardsSpeed(getFrom().getPos().getCenterX(), getFrom().getPos().getCenterZ(), 0.055)) {
+			stateMachine.fireTransition(Transition.PREPARATION_DONE);
+		}
+		return ProcState.EXECUTING;
+	}
+
+
+
+
+	/**
+	 * Move into position and jump.
+	 */
+	private ProcState tickJump() {
+		PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
+		final double distToCenter = BlockUtils.distToCenter(getFrom().getPos(), PlayerUtils.getPlayerPosition());
+		if (distToCenter > 0.4) {
+			PlayerUtils.getInput().setJump();
+		}
+		if (PlayerUtils.getPlayer().onGround && PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
+			stateMachine.fireTransition(Transition.TOUCHED_GROUND);
+		}
+		return ProcState.EXECUTING;
+	}
+
+
+
+
+	/**
+	 * After landing on the target block.
+	 */
+	private ProcState tickLanding() {
+		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
+			return ProcState.DONE;
+		} else {
+			return ProcState.EXECUTING;
+		}
 	}
 
 

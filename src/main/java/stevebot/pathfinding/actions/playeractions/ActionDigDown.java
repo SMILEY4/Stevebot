@@ -51,6 +51,8 @@ public class ActionDigDown extends Action {
 		stateMachine.defineTransition(State.PREPARING, Transition.PREPARED, State.BREAKING_BLOCK);
 		stateMachine.defineTransition(State.BREAKING_BLOCK, Transition.BLOCK_BROKEN, State.FALLING);
 		stateMachine.defineTransition(State.FALLING, Transition.TOUCHED_GROUND, State.FINISHING);
+		stateMachine.addListener(Transition.PREPARED, (previous, next, transition) -> onPrepared());
+		stateMachine.addListener(Transition.BLOCK_BROKEN, (previous, next, transition) -> onBlockBroken());
 	}
 
 
@@ -59,7 +61,6 @@ public class ActionDigDown extends Action {
 	@Override
 	public void resetAction() {
 		stateMachine.setState(State.PREPARING);
-
 	}
 
 
@@ -67,39 +68,95 @@ public class ActionDigDown extends Action {
 
 	@Override
 	public ProcState tick(boolean fistTick) {
-
 		switch (stateMachine.getState()) {
 			case PREPARING: {
-				PlayerUtils.getInventory().selectItem(((BlockBreakModification) getModifications()[0]).getTool());
-				stateMachine.fireTransition(Transition.PREPARED);
-				PlayerUtils.getCamera().enableForceCamera();
-				return ProcState.EXECUTING;
+				return tickPrepare();
 			}
 			case BREAKING_BLOCK: {
-				if (ActionUtils.breakBlock(getFrom().getPosCopy().add(0, -1, 0))) {
-					stateMachine.fireTransition(Transition.BLOCK_BROKEN);
-					PlayerUtils.getCamera().disableForceCamera(true);
-				}
-				return ProcState.EXECUTING;
+				return tickBreakBlock();
 			}
 			case FALLING: {
-				if (PlayerUtils.getPlayer().onGround) {
-					stateMachine.fireTransition(Transition.TOUCHED_GROUND);
-				}
-				return ProcState.EXECUTING;
+				return tickFall();
 			}
 			case FINISHING: {
-				if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
-					return ProcState.DONE;
-				} else {
-					return ProcState.EXECUTING;
-				}
+				return tickFinish();
 			}
 			default: {
 				return ProcState.FAILED;
 			}
 		}
+	}
 
+
+
+
+	/**
+	 * Prepare everything before digging.
+	 */
+	private ProcState tickPrepare() {
+		PlayerUtils.getInventory().selectItem(((BlockBreakModification) getModifications()[0]).getTool());
+		stateMachine.fireTransition(Transition.PREPARED);
+		return ProcState.EXECUTING;
+	}
+
+
+
+
+	/**
+	 * Done preparing.
+	 */
+	private void onPrepared() {
+		PlayerUtils.getCamera().enableForceCamera();
+	}
+
+
+
+
+	/**
+	 * Dig down.
+	 */
+	private ProcState tickBreakBlock() {
+		if (ActionUtils.breakBlock(getFrom().getPosCopy().add(0, -1, 0))) {
+			stateMachine.fireTransition(Transition.BLOCK_BROKEN);
+		}
+		return ProcState.EXECUTING;
+	}
+
+
+
+
+	/**
+	 * The block was broken.
+	 */
+	private void onBlockBroken() {
+		PlayerUtils.getCamera().disableForceCamera(true);
+	}
+
+
+
+
+	/**
+	 * Fall after breaking the block below.
+	 */
+	private ProcState tickFall() {
+		if (PlayerUtils.getPlayer().onGround) {
+			stateMachine.fireTransition(Transition.TOUCHED_GROUND);
+		}
+		return ProcState.EXECUTING;
+	}
+
+
+
+
+	/**
+	 * Finish the action.
+	 */
+	private ProcState tickFinish() {
+		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
+			return ProcState.DONE;
+		} else {
+			return ProcState.EXECUTING;
+		}
 	}
 
 
