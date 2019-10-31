@@ -1,4 +1,4 @@
-package stevebot.commandsNew;
+package stevebot.commands;
 
 public class CommandTemplate {
 

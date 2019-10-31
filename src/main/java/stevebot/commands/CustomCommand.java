@@ -1,64 +1,72 @@
 package stevebot.commands;
 
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
-import stevebot.commands.tokens.CommandToken;
-import stevebot.commands.tokens.OptionalToken;
-import stevebot.commands.tokens.TokenParseResult;
+import net.minecraft.command.NumberInvalidException;
+import net.minecraft.server.MinecraftServer;
+import stevebot.data.blocks.BlockUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class CustomCommand {
+public class CustomCommand extends CommandBase {
 
 
-	public final String name;
-	public final String usage;
-	public final List<CommandToken> tokens;
-	public final CustomCommandListener listener;
-	private CommandBase commandBase;
+	private final String name;
+	private List<CommandTemplate> templates = new ArrayList<>();
 
 
 
 
 	/**
-	 * @param name     the minecraft name of this command. This command will start with "/name ...".
-	 * @param usage    the usage string of this command.
-	 * @param tokens   the tokens that make up this command.
-	 * @param listener a command listener.
+	 * @param name the name and first argument of this command "/name ..."
 	 */
-	public CustomCommand(String name, String usage, List<CommandToken> tokens, CustomCommandListener listener) {
+	public CustomCommand(String name) {
 		this.name = name;
-		this.usage = usage;
-		this.tokens = Collections.unmodifiableList(tokens);
-		this.listener = listener;
 	}
 
 
 
 
 	/**
-	 * Execute this command.
-	 *
-	 * @param sender the sender of the command.
-	 * @param args   the command arguments
-	 * @throws WrongUsageException if the command could not be parsed/executed
+	 * @param template the {@link CommandTemplate} to register
 	 */
-	public void execute(ICommandSender sender, String[] args) throws WrongUsageException {
+	protected void registerTemplate(CommandTemplate template) {
+		templates.add(template);
+	}
 
-		Map<String, CommandArgument<?>> argsMap = new HashMap<>();
-		String status = "success";
 
-		if (!tokens.isEmpty()) {
-			status = parse(sender, args, argsMap);
-		}
 
-		if (status.equalsIgnoreCase("success")) {
-			if (listener != null) {
-				listener.onCommand(sender, name, argsMap);
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+
+
+
+	@Override
+	public String getUsage(ICommandSender sender) {
+		return "";
+	}
+
+
+
+
+	@Override
+	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+
+		HashMap<String, Object> parameters = new HashMap<>();
+
+		for (CommandTemplate template : templates) {
+			parameters.clear();
+			if (parseTemplate(template, sender, args, parameters)) {
+				template.listener.onCommand(template.templateId, parameters);
 			}
-		} else {
-			throw new WrongUsageException(usage);
 		}
 
 	}
@@ -67,108 +75,108 @@ public class CustomCommand {
 
 
 	/**
-	 * Parse the command arguments into the given argsMap
-	 *
-	 * @return the string "success" or "failed".
+	 * @param template      the template
+	 * @param sender        the sender of this command
+	 * @param cmdArgs       the command arguments
+	 * @param parametersOut the map to put parameters into
+	 * @return whether the given arguments are valid for the given {@link CommandTemplate}
 	 */
-	private String parse(ICommandSender sender, String[] args, Map<String, CommandArgument<?>> argsMap) {
+	private boolean parseTemplate(CommandTemplate template, ICommandSender sender, String[] cmdArgs, Map<String, Object> parametersOut) {
 
-		List<String> argsList = new ArrayList<>(Arrays.asList(args));
+		if (template.tokens.length - 1 != cmdArgs.length) {
+			return false;
+		}
 
-		for (int i = 0; i < tokens.size(); i++) {
+		if (template.tokens.length == 1 && cmdArgs.length == 0) {
+			return true;
+		}
 
-			// get command
-			boolean isOptional = false;
-			CommandToken token = tokens.get(i);
-			isOptional = token instanceof OptionalToken;
+		for (int i = 1; i < template.tokens.length; i++) {
+			final String token = template.tokens[i];
+			final String arg = cmdArgs[i - 1];
 
-			// get next args
-			String[] currentArgs = nextArgs(argsList, token.requiredArguments(argsList.size()));
-			if (currentArgs == null && !isOptional) {
-				return "failed";
-			}
+			if (token.startsWith("<") && token.endsWith(">")) {
+				final String varToken = token.substring(1, token.length() - 1);
+				final String varname = varToken.split(":")[0];
+				final CommandTemplate.TokenVarType vartype = CommandTemplate.TokenVarType.valueOf(varToken.split(":")[1]);
 
-			// parse
-			TokenParseResult result = token.parse(sender, currentArgs);
-			if (result.success) {
-				if (result.argument != null) {
-					argsMap.put(token.getID(), result.argument);
+				switch (vartype) {
+					case STRING: {
+						parametersOut.put(varname, arg);
+						break;
+					}
+					case COORDINATE: {
+						Integer coordinate = parseBlockPos((sender == null ? 0 : sender.getPosition().getX()), arg);
+						if (coordinate != null) {
+							parametersOut.put(varname, coordinate);
+						} else {
+							return false;
+						}
+						break;
+					}
+					case INTEGER: {
+						try {
+							parametersOut.put(varname, Integer.parseInt(arg));
+						} catch (NumberFormatException e) {
+							return false;
+						}
+						break;
+					}
+					case FLOAT: {
+						try {
+							parametersOut.put(varname, Float.parseFloat(arg));
+						} catch (NumberFormatException e) {
+							return false;
+						}
+						break;
+					}
+					case BOOLEAN:
+						if ("true".equalsIgnoreCase(arg)) {
+							parametersOut.put(varname, true);
+						} else if ("false".equalsIgnoreCase(arg)) {
+							parametersOut.put(varname, false);
+						} else {
+							return false;
+						}
+					default: {
+						return false;
+					}
 				}
+
 			} else {
-				if (isOptional) {
-					continue;
-				} else {
-					return "failed";
+				if (!token.equalsIgnoreCase(arg)) {
+					return false;
 				}
 			}
 
-			// consume tokens
-			consume(argsList, token.requiredArguments(argsList.size()));
-
 		}
 
-		if (argsList.isEmpty()) {
-			return "success";
-		} else {
-			return "failed";
-		}
-
-
+		return true;
 	}
 
 
 
 
 	/**
-	 * @return the next n args from the given list, or null, if the list has less elements than n.
+	 * Converts the value in "input" to a blockpos-coordinate. If the input starts with "~", the result will be relative the the given origin
+	 *
+	 * @param origin the origin, if input is a relative value
+	 * @param input  the coordinate as string. Starts with a "~" if it is a relative position.
+	 * @return the result as an integer or null
 	 */
-	private String[] nextArgs(List<String> argsList, int n) {
-		if (argsList.size() < n) {
+	private static Integer parseBlockPos(int origin, String input) {
+		try {
+			if (input.startsWith("~")) {
+				double value = parseDouble(input.substring(1));
+				return BlockUtils.toBlockPos(value) + origin;
+			} else {
+				double value = parseDouble(input);
+				return BlockUtils.toBlockPos(value);
+			}
+		} catch (NumberInvalidException e) {
 			return null;
-		} else {
-			String[] args = new String[n];
-			for (int i = 0; i < n; i++) {
-				args[i] = argsList.get(i);
-			}
-			if (args.length == 1 && args[0].isEmpty()) {
-				return null;
-			}
-			return args;
 		}
 	}
 
-
-
-
-	/**
-	 * Remove the first n elements from the given list.
-	 */
-	private void consume(List<String> argsList, int n) {
-		if (argsList.size() >= n) {
-			for (int i = 0; i < n; i++) {
-				argsList.remove(0);
-			}
-		}
-	}
-
-
-
-
-	/**
-	 * @param commandBase the new {@link CommandBase} of this command.
-	 */
-	void setCommandBase(CommandBase commandBase) {
-		this.commandBase = commandBase;
-	}
-
-
-
-
-	/**
-	 * @return the {@link CommandBase} of this command.
-	 */
-	public CommandBase getCommandBase() {
-		return this.commandBase;
-	}
 
 }
