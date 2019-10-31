@@ -139,7 +139,7 @@ public class CustomCommand extends CommandBase {
 							return false;
 						}
 					default: {
-						return false;
+						throw new IllegalArgumentException("Unknown token-type: " + varToken.split(":")[1]);
 					}
 				}
 
