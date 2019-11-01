@@ -388,13 +388,7 @@ public class BlockUtils {
 	 * @return the position as a {@link BaseBlockPos}
 	 */
 	public static FastBlockPos toFastBlockPos(double x, double y, double z) {
-		final boolean isNegativeX = x < 0;
-		final boolean isNegativeY = y < 0;
-		final boolean isNegativeZ = z < 0;
-		int bpx = ((int) x) - (isNegativeX ? 1 : 0);
-		int bpy = ((int) y) - (isNegativeY ? 1 : 0);
-		int bpz = ((int) z) - (isNegativeZ ? 1 : 0);
-		return new FastBlockPos(bpx, bpy, bpz);
+		return new FastBlockPos(toBlockPos(x), toBlockPos(y), toBlockPos(z));
 	}
 
 
@@ -418,13 +412,7 @@ public class BlockUtils {
 	 * @return the position as a {@link BaseBlockPos}
 	 */
 	public static BaseBlockPos toBaseBlockPos(double x, double y, double z) {
-		final boolean isNegativeX = x < 0;
-		final boolean isNegativeY = y < 0;
-		final boolean isNegativeZ = z < 0;
-		int bpx = ((int) x) - (isNegativeX ? 1 : 0);
-		int bpy = ((int) y) - (isNegativeY ? 1 : 0);
-		int bpz = ((int) z) - (isNegativeZ ? 1 : 0);
-		return new BaseBlockPos(bpx, bpy, bpz);
+		return new BaseBlockPos(toBlockPos(x), toBlockPos(y), toBlockPos(z));
 	}
 
 
@@ -448,14 +436,21 @@ public class BlockUtils {
 	 * @return the position as a {@link BlockPos}
 	 */
 	public static BlockPos toMCBlockPos(double x, double y, double z) {
-		final boolean isNegativeX = x < 0;
-		final boolean isNegativeY = y < 0;
-		final boolean isNegativeZ = z < 0;
-		int bpx = ((int) x) - (isNegativeX ? 1 : 0);
-		int bpy = ((int) y) - (isNegativeY ? 1 : 0);
-		int bpz = ((int) z) - (isNegativeZ ? 1 : 0);
-		return new BlockPos(bpx, bpy, bpz);
+		return new BlockPos(toBlockPos(x), toBlockPos(y), toBlockPos(z));
 	}
 
+
+
+
+	/**
+	 * Converts the given value to a BlockPos-value.
+	 *
+	 * @param value the given value
+	 * @return the value rounded to the block
+	 */
+	public static int toBlockPos(double value) {
+		final boolean isNegative = value < 0;
+		return ((int) value) - (isNegative ? 1 : 0);
+	}
 
 }

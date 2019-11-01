@@ -7,7 +7,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import stevebot.commands.Commands;
+import stevebot.commands.CommandSystem;
+import stevebot.commands.StevebotCommands;
 import stevebot.data.blocks.*;
 import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.ItemLibraryImpl;
@@ -112,7 +113,8 @@ public class Stevebot {
 		Stevebot.pathHandler = new PathHandler(Stevebot.eventManager, Stevebot.renderer);
 
 		// commands
-		Commands.initialize(Stevebot.pathHandler);
+		StevebotCommands.initialize(Stevebot.pathHandler);
+		CommandSystem.registerCommands();
 	}
 
 
