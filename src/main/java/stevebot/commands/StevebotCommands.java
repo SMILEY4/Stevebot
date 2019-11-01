@@ -111,29 +111,30 @@ public class StevebotCommands {
 			Config.setShowNodeCache(CommandListener.getAsBoolean("show", parameters));
 		});
 
-		// pathstyle solid
-		CommandSystem.addCommand("pathstyleSolid", "pathstyle solid", (templateId, parameters) -> {
-			Config.setPathStyle(PathRenderable.PathStyle.SOLID);
-		});
-
-		// pathstyle pathid
-		CommandSystem.addCommand("pathstylePathId", "pathstyle pathid", (templateId, parameters) -> {
-			Config.setPathStyle(PathRenderable.PathStyle.PATH_ID);
-		});
-
-		// pathstyle actionid
-		CommandSystem.addCommand("pathstyleActionId", "pathstyle actionid", (templateId, parameters) -> {
-			Config.setPathStyle(PathRenderable.PathStyle.ACTION_ID);
-		});
-
-		// pathstyle actioncost
-		CommandSystem.addCommand("pathstyleActionCost", "pathstyle actioncost", (templateId, parameters) -> {
-			Config.setPathStyle(PathRenderable.PathStyle.ACTION_COST);
-		});
-
-		// pathstyle actiontype
-		CommandSystem.addCommand("pathstyleActionType", "pathstyle actiontype", (templateId, parameters) -> {
-			Config.setPathStyle(PathRenderable.PathStyle.ACTION_TYPE);
+		// pathstyle <style>
+		CommandSystem.addCommand("pathstyle", "pathstyle <style:{solid,pathid,actionid,actioncost,actiontype}>", (templateId, parameters) -> {
+			switch (CommandListener.getAsString("style", parameters)) {
+				case "solid": {
+					Config.setPathStyle(PathRenderable.PathStyle.SOLID);
+					break;
+				}
+				case "pathid": {
+					Config.setPathStyle(PathRenderable.PathStyle.PATH_ID);
+					break;
+				}
+				case "actionid": {
+					Config.setPathStyle(PathRenderable.PathStyle.ACTION_ID);
+					break;
+				}
+				case "actioncost": {
+					Config.setPathStyle(PathRenderable.PathStyle.ACTION_COST);
+					break;
+				}
+				case "actiontype": {
+					Config.setPathStyle(PathRenderable.PathStyle.ACTION_TYPE);
+					break;
+				}
+			}
 		});
 
 

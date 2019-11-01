@@ -98,7 +98,9 @@ public class CustomCommand extends CommandBase {
 			if (token.startsWith("<") && token.endsWith(">")) {
 				final String varToken = token.substring(1, token.length() - 1);
 				final String varname = varToken.split(":")[0];
-				final CommandTemplate.TokenVarType vartype = CommandTemplate.TokenVarType.valueOf(varToken.split(":")[1]);
+				final String strVartype = varToken.split(":")[1];
+				final CommandTemplate.TokenVarType vartype = strVartype.startsWith("{") ?
+						CommandTemplate.TokenVarType.ENUM : CommandTemplate.TokenVarType.valueOf(strVartype);
 
 				switch (vartype) {
 					case STRING: {
@@ -130,7 +132,7 @@ public class CustomCommand extends CommandBase {
 						}
 						break;
 					}
-					case BOOLEAN:
+					case BOOLEAN: {
 						if ("true".equalsIgnoreCase(arg)) {
 							parametersOut.put(varname, true);
 						} else if ("false".equalsIgnoreCase(arg)) {
@@ -138,6 +140,18 @@ public class CustomCommand extends CommandBase {
 						} else {
 							return false;
 						}
+					}
+					case ENUM: {
+						String[] enumTokens = strVartype.substring(1, strVartype.length() - 1).split(",");
+						boolean foundEnum = false;
+						for (String et : enumTokens) {
+							if (et.trim().equalsIgnoreCase(arg)) {
+								parametersOut.put(varname, et);
+								foundEnum = true;
+							}
+						}
+						return foundEnum;
+					}
 					default: {
 						throw new IllegalArgumentException("Unknown token-type: " + varToken.split(":")[1]);
 					}

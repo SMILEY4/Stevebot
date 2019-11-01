@@ -8,7 +8,8 @@ public class CommandTemplate {
 		COORDINATE,
 		INTEGER,
 		FLOAT,
-		BOOLEAN
+		BOOLEAN,
+		ENUM
 	}
 
 
