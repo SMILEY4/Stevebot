@@ -40,6 +40,27 @@ public class CommandSystem {
 
 
 	/**
+	 * @param commandName the name of the command "/commandName ..."
+	 * @return the command with the given name or null
+	 */
+	public static CustomCommand getCommand(String commandName) {
+		return commands.get(commandName);
+	}
+
+
+
+
+	/**
+	 * Removes all commands from this system. This will not deregister commands already registered in minecraft.
+	 */
+	public static void clearCommands() {
+		commands.clear();
+	}
+
+
+
+
+	/**
 	 * Registers all added commands at the {@link ClientCommandHandler}
 	 */
 	public static void registerCommands() {
