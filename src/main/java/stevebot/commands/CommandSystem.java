@@ -17,8 +17,9 @@ public class CommandSystem {
 	 * @param templateId  an unique name of the given command (template)
 	 * @param cmdTemplate a list of tokens seperated by a whitespace. A token can either be a word or a variable.
 	 *                    A variable is always in the form "<name:type>"
+	 * @param usage       a short description on how to use this command
 	 */
-	public static void addCommand(String templateId, String cmdTemplate, CommandListener listener) {
+	public static void addCommand(String templateId, String cmdTemplate, String usage, CommandListener listener) {
 
 		final String[] tokens = cmdTemplate.split(" ");
 		if (tokens.length == 0) {
@@ -33,7 +34,7 @@ public class CommandSystem {
 			commands.put(cmdName, command);
 		}
 
-		command.registerTemplate(new CommandTemplate(templateId, tokens, listener));
+		command.registerTemplate(new CommandTemplate(templateId, tokens, usage, listener));
 	}
 
 

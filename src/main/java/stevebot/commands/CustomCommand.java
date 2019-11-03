@@ -1,9 +1,6 @@
 package stevebot.commands;
 
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.NumberInvalidException;
+import net.minecraft.command.*;
 import net.minecraft.server.MinecraftServer;
 import stevebot.data.blocks.BlockUtils;
 
@@ -51,7 +48,14 @@ public class CustomCommand extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return "";
+		StringBuilder builder = new StringBuilder().append("\n");
+		for (int i = 0; i < templates.size(); i++) {
+			builder.append(templates.get(i).usage);
+			if (i != templates.size() - 1) {
+				builder.append("\n");
+			}
+		}
+		return builder.toString();
 	}
 
 
@@ -61,12 +65,19 @@ public class CustomCommand extends CommandBase {
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 
 		HashMap<String, Object> parameters = new HashMap<>();
+		boolean foundCommand = false;
 
 		for (CommandTemplate template : templates) {
 			parameters.clear();
 			if (parseTemplate(template, sender, args, parameters)) {
 				template.listener.onCommand(template.templateId, parameters);
+				foundCommand = true;
+				break;
 			}
+		}
+
+		if (!foundCommand) {
+			throw new WrongUsageException(getUsage(sender), new Object[0]);
 		}
 
 	}
