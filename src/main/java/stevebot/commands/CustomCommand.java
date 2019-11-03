@@ -48,7 +48,7 @@ public class CustomCommand extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		StringBuilder builder = new StringBuilder();
+		StringBuilder builder = new StringBuilder().append("\n");
 		for (int i = 0; i < templates.size(); i++) {
 			builder.append(templates.get(i).usage);
 			if (i != templates.size() - 1) {

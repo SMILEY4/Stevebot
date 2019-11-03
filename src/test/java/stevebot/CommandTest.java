@@ -26,7 +26,7 @@ public class CommandTest {
 
 		final boolean[] flag = new boolean[]{true};
 
-		CommandSystem.addCommand("testCommand", "test command", (templateId, parameters) -> {
+		CommandSystem.addCommand("testCommand", "test command", "", (templateId, parameters) -> {
 			if (flag[0]) {
 				assertThat(templateId).isNotNull();
 				assertThat(templateId).isEqualTo("testCommand");
@@ -67,7 +67,7 @@ public class CommandTest {
 
 		final int[] counter = new int[]{1};
 
-		CommandSystem.addCommand("testCommand_0", "test a", (templateId, parameters) -> {
+		CommandSystem.addCommand("testCommand_0", "test a", "", (templateId, parameters) -> {
 			if (counter[0] == 1) {
 				assertThat(templateId).isNotNull();
 				assertThat(templateId).isEqualTo("testCommand_0");
@@ -78,7 +78,7 @@ public class CommandTest {
 			}
 		});
 
-		CommandSystem.addCommand("testCommand_1", "test b", (templateId, parameters) -> {
+		CommandSystem.addCommand("testCommand_1", "test b", "", (templateId, parameters) -> {
 			if (counter[0] == 2) {
 				assertThat(templateId).isNotNull();
 				assertThat(templateId).isEqualTo("testCommand_1");
@@ -89,7 +89,7 @@ public class CommandTest {
 			}
 		});
 
-		CommandSystem.addCommand("testCommand_1", "test b other", (templateId, parameters) -> {
+		CommandSystem.addCommand("testCommand_1", "test b other", "", (templateId, parameters) -> {
 			if (counter[0] == 3) {
 				assertThat(templateId).isNotNull();
 				assertThat(templateId).isEqualTo("testCommand_1");
@@ -131,7 +131,7 @@ public class CommandTest {
 
 		final float VALUE = 1.526f;
 
-		CommandSystem.addCommand("testCommand", "test <number:FLOAT>", (templateId, parameters) -> {
+		CommandSystem.addCommand("testCommand", "test <number:FLOAT>", "", (templateId, parameters) -> {
 			assertThat(templateId).isNotNull();
 			assertThat(templateId).isEqualTo("testCommand");
 			assertThat(parameters).isNotNull();
@@ -156,7 +156,7 @@ public class CommandTest {
 
 		final String ENUM_VALUE = "c";
 
-		CommandSystem.addCommand("testCommand", "test <enum:{a,b,c,d}>", (templateId, parameters) -> {
+		CommandSystem.addCommand("testCommand", "test <enum:{a,b,c,d}>", "", (templateId, parameters) -> {
 			assertThat(templateId).isNotNull();
 			assertThat(templateId).isEqualTo("testCommand");
 			assertThat(parameters).isNotNull();
