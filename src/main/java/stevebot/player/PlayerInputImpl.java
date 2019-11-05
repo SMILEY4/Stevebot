@@ -184,7 +184,7 @@ public class PlayerInputImpl implements PlayerInput {
 	@Override
 	public void holdJump() {
 		isHoldingJump = true;
-		setJump(true, false);
+		setJump(true, true);
 	}
 
 
