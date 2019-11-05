@@ -1,9 +1,9 @@
 [
 {
   "modid": "stevebot",
-  "name": "SteveBot",
+  "name": "Stevebot",
   "description": "",
-  "version": "0.1",
+  "version": "dev",
   "url": "https://github.com/SMILEY4/Stevebot",
   "updateUrl": "",
   "authorList": ["SMILEY4"],
