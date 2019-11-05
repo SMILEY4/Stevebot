@@ -101,7 +101,7 @@ public class StevebotCommands {
 		// follow stop
 		CommandSystem.addCommand(
 				"followStop",
-				"/follow stop\n    Stop following the current path.",
+				"follow stop\n    Stop following the current path.",
 				"follow stop",
 				(templateId, parameters) -> {
 					if (PlayerUtils.getPlayer() != null) {
