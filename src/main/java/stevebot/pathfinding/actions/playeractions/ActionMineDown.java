@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ActionMineStraight extends Action {
+public class ActionMineDown extends Action {
 
 
 	private enum State {
-		PREPARE_FIRST, BREAKING_FIRST, BREAKING_SECOND, MOVING
+		PREPARE_FIRST, BREAKING_FIRST, BREAKING_SECOND, BREAKING_THIRD, MOVING
 	}
 
 
@@ -33,7 +33,7 @@ public class ActionMineStraight extends Action {
 
 
 	private enum Transition {
-		PREPARED, BROKE_FIRST, BROKE_SECOND
+		PREPARED_FIRST, BROKE_FIRST, BROKE_SECOND, BROKE_THIRD
 	}
 
 
@@ -48,14 +48,16 @@ public class ActionMineStraight extends Action {
 
 
 
-	private ActionMineStraight(Node from, Node to, double cost, Modification[] modifications) {
+	private ActionMineDown(Node from, Node to, double cost, Modification[] modifications) {
 		super(from, to, cost);
 		this.modifications = modifications;
-		stateMachine.defineTransition(State.PREPARE_FIRST, Transition.PREPARED, State.BREAKING_FIRST);
+		stateMachine.defineTransition(State.PREPARE_FIRST, Transition.PREPARED_FIRST, State.BREAKING_FIRST);
 		stateMachine.defineTransition(State.BREAKING_FIRST, Transition.BROKE_FIRST, State.BREAKING_SECOND);
-		stateMachine.defineTransition(State.BREAKING_SECOND, Transition.BROKE_SECOND, State.MOVING);
+		stateMachine.defineTransition(State.BREAKING_SECOND, Transition.BROKE_SECOND, State.BREAKING_THIRD);
+		stateMachine.defineTransition(State.BREAKING_THIRD, Transition.BROKE_THIRD, State.MOVING);
 		stateMachine.addListener(Transition.BROKE_FIRST, (previous, next, transition) -> onBrokeFirst());
 		stateMachine.addListener(Transition.BROKE_SECOND, (previous, next, transition) -> onBrokeSecond());
+		stateMachine.addListener(Transition.BROKE_THIRD, (previous, next, transition) -> onBrokeThird());
 	}
 
 
@@ -73,11 +75,13 @@ public class ActionMineStraight extends Action {
 	public ProcState tick(boolean fistTick) {
 		switch (stateMachine.getState()) {
 			case PREPARE_FIRST:
-				return tickPrepare();
+				return tickPrepareFirst();
 			case BREAKING_FIRST:
 				return tickBreakFirst();
 			case BREAKING_SECOND:
 				return tickBreakSecond();
+			case BREAKING_THIRD:
+				return tickBreakThird();
 			case MOVING:
 				return tickMove();
 			default: {
@@ -92,10 +96,10 @@ public class ActionMineStraight extends Action {
 	/**
 	 * Prepare to break the first block.
 	 */
-	private ProcState tickPrepare() {
+	private ProcState tickPrepareFirst() {
 		PlayerUtils.getInventory().selectItem(((BlockBreakModification) getModifications()[0]).getTool());
 		PlayerUtils.getCamera().enableForceCamera();
-		stateMachine.fireTransition(Transition.PREPARED);
+		stateMachine.fireTransition(Transition.PREPARED_FIRST);
 		return ProcState.EXECUTING;
 	}
 
@@ -120,7 +124,7 @@ public class ActionMineStraight extends Action {
 	 * The first block was broken
 	 */
 	private void onBrokeFirst() {
-		if (getModifications().length == 2) {
+		if (getModifications().length >= 2) {
 			PlayerUtils.getInventory().selectItem(((BlockBreakModification) getModifications()[1]).getTool());
 		}
 	}
@@ -129,10 +133,10 @@ public class ActionMineStraight extends Action {
 
 
 	/**
-	 * Break the seconds block
+	 * Break the second block.
 	 */
 	private ProcState tickBreakSecond() {
-		if (getModifications().length == 2) {
+		if (getModifications().length >= 2) {
 			final BlockBreakModification modification = (BlockBreakModification) getModifications()[1];
 			if (ActionUtils.breakBlock(modification.getPosition())) {
 				stateMachine.fireTransition(Transition.BROKE_SECOND);
@@ -147,9 +151,39 @@ public class ActionMineStraight extends Action {
 
 
 	/**
-	 * The second block was broken
+	 * The third block was broken
 	 */
 	private void onBrokeSecond() {
+		if (getModifications().length == 3) {
+			PlayerUtils.getInventory().selectItem(((BlockBreakModification) getModifications()[2]).getTool());
+		}
+	}
+
+
+
+
+	/**
+	 * Break the third block.
+	 */
+	private ProcState tickBreakThird() {
+		if (getModifications().length == 3) {
+			final BlockBreakModification modification = (BlockBreakModification) getModifications()[2];
+			if (ActionUtils.breakBlock(modification.getPosition())) {
+				stateMachine.fireTransition(Transition.BROKE_THIRD);
+			}
+		} else {
+			stateMachine.fireTransition(Transition.BROKE_THIRD);
+		}
+		return ProcState.EXECUTING;
+	}
+
+
+
+
+	/**
+	 * The third block was broken
+	 */
+	private void onBrokeThird() {
 		PlayerUtils.getCamera().disableForceCamera(true);
 	}
 
@@ -188,13 +222,13 @@ public class ActionMineStraight extends Action {
 
 	@Override
 	public String getActionName() {
-		return "mine-straight";
+		return "mine-down";
 	}
 
 
 
 
-	private static abstract class MineStraightActionFactory implements ActionFactory {
+	private static abstract class MineDownActionFactory implements ActionFactory {
 
 
 		@Override
@@ -205,8 +239,8 @@ public class ActionMineStraight extends Action {
 
 
 
-		ActionMineStraight create(Node node, Direction direction, Result result) {
-			return new ActionMineStraight(node, result.to, result.estimatedCost, result.modifications);
+		ActionMineDown create(Node node, Direction direction, Result result) {
+			return new ActionMineDown(node, result.to, result.estimatedCost, result.modifications);
 		}
 
 
@@ -215,11 +249,11 @@ public class ActionMineStraight extends Action {
 		Result check(Node node, Direction direction) {
 
 			// check to position
-			final BaseBlockPos to = node.getPosCopy().add(direction.dx, 0, direction.dz);
+			final BaseBlockPos to = node.getPosCopy().add(direction.dx, -1, direction.dz);
 			if (!BlockUtils.isLoaded(to)) {
 				return Result.unloaded();
 			}
-			if (ActionUtils.canStandAt(to)) {
+			if (ActionUtils.canStandAt(to, 3)) {
 				return Result.invalid();
 			}
 
@@ -232,7 +266,7 @@ public class ActionMineStraight extends Action {
 			float totalTicksTopBreak = 0;
 
 			// check top block to break
-			final BaseBlockPos posTop = to.copyAsFastBlockPos().add(0, 1, 0);
+			final BaseBlockPos posTop = to.copyAsFastBlockPos().add(0, 2, 0);
 			if (!BlockUtils.canWalkThrough(posTop)) {
 				final BreakBlockCheckResult resultTop = ActionUtils.checkBlockToBreak(posTop);
 				if (!resultTop.breakable) {
@@ -240,6 +274,18 @@ public class ActionMineStraight extends Action {
 				} else {
 					totalTicksTopBreak += resultTop.ticksToBreak;
 					modificationList.add(Modification.breakBlock(posTop, (ItemToolWrapper) resultTop.bestTool));
+				}
+			}
+
+			// check middle block to break
+			final BaseBlockPos posMiddle = to.copyAsFastBlockPos().add(0, 1, 0);
+			if (!BlockUtils.canWalkThrough(posMiddle)) {
+				final BreakBlockCheckResult resultBottom = ActionUtils.checkBlockToBreak(posMiddle);
+				if (!resultBottom.breakable) {
+					return Result.invalid();
+				} else {
+					totalTicksTopBreak += resultBottom.ticksToBreak;
+					modificationList.add(Modification.breakBlock(posMiddle, (ItemToolWrapper) resultBottom.bestTool));
 				}
 			}
 
@@ -260,7 +306,7 @@ public class ActionMineStraight extends Action {
 			}
 
 			final Modification[] modifications = modificationList.toArray(Modification.EMPTY);
-			return Result.valid(direction, NodeCache.get(to), totalTicksTopBreak + ActionCosts.COST_WALKING, modifications);
+			return Result.valid(direction, NodeCache.get(to), totalTicksTopBreak + ActionCosts.COST_STEP_DOWN, modifications);
 		}
 
 	}
@@ -270,7 +316,7 @@ public class ActionMineStraight extends Action {
 
 
 
-	public static class MineStraightFactoryNorth extends MineStraightActionFactory {
+	public static class MineDownFactoryNorth extends MineDownActionFactory {
 
 
 		@Override
@@ -293,7 +339,7 @@ public class ActionMineStraight extends Action {
 
 
 
-	public static class MineStraightFactoryEast extends MineStraightActionFactory {
+	public static class MineDownFactoryEast extends MineDownActionFactory {
 
 
 		@Override
@@ -316,7 +362,7 @@ public class ActionMineStraight extends Action {
 
 
 
-	public static class MineStraightFactorySouth extends MineStraightActionFactory {
+	public static class MineDownFactorySouth extends MineDownActionFactory {
 
 
 		@Override
@@ -339,7 +385,7 @@ public class ActionMineStraight extends Action {
 
 
 
-	public static class MineStraightFactoryWest extends MineStraightActionFactory {
+	public static class MineDownFactoryWest extends MineDownActionFactory {
 
 
 		@Override

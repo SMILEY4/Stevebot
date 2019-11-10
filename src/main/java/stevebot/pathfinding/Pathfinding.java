@@ -142,7 +142,6 @@ public class Pathfinding {
 			// iterate over every registered action
 			for (int i = 0, n = factories.size(); i < n; i++) {
 				ActionFactory factory = factories.get(i);
-				System.out.println(factory.getClass().getSimpleName());
 
 				// continue if prev processed actions make this action impossible
 				if (impossibleFactories.contains(factory.getClass())) {
