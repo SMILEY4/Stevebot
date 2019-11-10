@@ -68,6 +68,17 @@ public abstract class Action {
 
 
 	/**
+	 * Updates this action.
+	 *
+	 * @param fistTick true on the first update of this action
+	 * @return the resulting {@link ProcState} of the update
+	 */
+	public abstract ProcState tick(boolean fistTick);
+
+
+
+
+	/**
 	 * @return whether this action modified any blocks
 	 */
 	public boolean hasModifications() {
@@ -91,15 +102,6 @@ public abstract class Action {
 	 * @return the unique name of this action
 	 */
 	public abstract String getActionName();
-
-
-	/**
-	 * Updates this action.
-	 *
-	 * @param fistTick true on the first update of this action
-	 * @return the resulting {@link ProcState} of the update
-	 */
-	public abstract ProcState tick(boolean fistTick);
 
 
 }

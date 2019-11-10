@@ -6,6 +6,9 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.blocks.BlockUtils;
+import stevebot.data.items.ItemLibrary;
+import stevebot.data.items.ItemUtils;
+import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Direction;
 import stevebot.player.PlayerUtils;
@@ -231,6 +234,25 @@ public class ActionUtils {
 		final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
 		final Vector3d dirPlayer = posLookAt.sub(posHead).normalize();
 		return dirPlayer.dot(nFace) <= 0;
+	}
+
+
+
+
+	/**
+	 * Checks whether the block at the given position is breakable, by which item and how long it would take.
+	 *
+	 * @param blockPos the position of the block to break
+	 * @return {@link BreakBlockCheckResult}
+	 */
+	public static BreakBlockCheckResult checkBlockToBreak(BaseBlockPos blockPos) {
+		final ItemWrapper bestTool = PlayerUtils.getActiveSnapshot().findBestToolForBlock(BlockUtils.getBlockProvider().getBlockAt(blockPos));
+		if (bestTool == ItemLibrary.INVALID_ITEM) {
+			return BreakBlockCheckResult.invalid(blockPos);
+		} else {
+			final float ticksToBreak = ItemUtils.getBreakDuration(bestTool.getStack(1), blockPos);
+			return BreakBlockCheckResult.valid(blockPos, bestTool, ticksToBreak);
+		}
 	}
 
 

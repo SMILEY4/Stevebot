@@ -109,6 +109,13 @@ public class ActionFactoryProvider {
 
 		// dig down
 		registerFactory(new ActionDigDown.DigDownFactory());
+
+		// mine straight
+		registerFactory(new ActionMineStraight.MineStraightFactoryNorth());
+		registerFactory(new ActionMineStraight.MineStraightFactoryEast());
+		registerFactory(new ActionMineStraight.MineStraightFactorySouth());
+		registerFactory(new ActionMineStraight.MineStraightFactoryWest());
+
 	}
 
 

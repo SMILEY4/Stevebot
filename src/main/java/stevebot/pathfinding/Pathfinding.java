@@ -80,7 +80,7 @@ public class Pathfinding {
 			}
 
 			// status report
-			if (System.currentTimeMillis() - timeLast > 2000 * 2) {
+			if (System.currentTimeMillis() - timeLast > 2 * 1000) {
 				timeLast = System.currentTimeMillis();
 				Stevebot.logNonCritical("Searching... " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size() + " nodes.");
 			}
@@ -142,6 +142,7 @@ public class Pathfinding {
 			// iterate over every registered action
 			for (int i = 0, n = factories.size(); i < n; i++) {
 				ActionFactory factory = factories.get(i);
+				System.out.println(factory.getClass().getSimpleName());
 
 				// continue if prev processed actions make this action impossible
 				if (impossibleFactories.contains(factory.getClass())) {
