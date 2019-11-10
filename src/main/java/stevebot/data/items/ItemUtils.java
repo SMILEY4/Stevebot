@@ -31,6 +31,19 @@ public class ItemUtils {
 
 
 	/**
+	 * @param position the position of the block to break
+	 * @return the time (in ticks) it takes to break the block without a tool
+	 */
+	public static float getBreakDuration(BaseBlockPos position) {
+		final BlockWrapper blockWrapper = BlockUtils.getBlockProvider().getBlockAt(position);
+		final IBlockState blockState = blockWrapper.getBlock().getDefaultState();
+		return getBreakDuration(ItemStack.EMPTY, blockState);
+	}
+
+
+
+
+	/**
 	 * @param itemStack the used item
 	 * @param position  the position of the block to break
 	 * @return the time (in ticks) it takes to break the block with the given item
