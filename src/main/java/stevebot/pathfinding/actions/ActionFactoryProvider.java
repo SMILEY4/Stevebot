@@ -121,6 +121,13 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionMineDown.MineDownFactoryEast());
 		registerFactory(new ActionMineDown.MineDownFactorySouth());
 		registerFactory(new ActionMineDown.MineDownFactoryWest());
+
+		// mine up
+		registerFactory(new ActionMineUp.MineUpFactoryNorth());
+		registerFactory(new ActionMineUp.MineUpFactoryEast());
+		registerFactory(new ActionMineUp.MineUpFactorySouth());
+		registerFactory(new ActionMineUp.MineUpFactoryWest());
+
 	}
 
 
