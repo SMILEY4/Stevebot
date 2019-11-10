@@ -188,7 +188,7 @@ public class ActionMineStraight extends Action {
 
 	@Override
 	public String getActionName() {
-		return "mine_straight";
+		return "mine-straight";
 	}
 
 
@@ -213,7 +213,6 @@ public class ActionMineStraight extends Action {
 
 
 		Result check(Node node, Direction direction) {
-
 
 			// check to position
 			final BaseBlockPos to = node.getPosCopy().add(direction.dx, 0, direction.dz);
@@ -257,12 +256,8 @@ public class ActionMineStraight extends Action {
 			}
 
 			final Modification[] modifications = modificationList.toArray(Modification.EMPTY);
-
-			// TODO: totalTicksTopBreak can be negative !!!
-
 			return Result.valid(direction, NodeCache.get(to), totalTicksTopBreak + ActionCosts.COST_WALKING, modifications);
 		}
-
 
 	}
 

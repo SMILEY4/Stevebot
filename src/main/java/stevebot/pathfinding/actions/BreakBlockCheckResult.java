@@ -1,5 +1,6 @@
 package stevebot.pathfinding.actions;
 
+import com.ruegnerlukas.simplemath.MathUtils;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.wrapper.ItemWrapper;
@@ -31,9 +32,13 @@ public class BreakBlockCheckResult {
 
 	private BreakBlockCheckResult(BaseBlockPos blockPos, boolean breakable, ItemWrapper bestTool, float ticksToBreak) {
 		this.blockPos = blockPos;
-		this.breakable = breakable;
 		this.bestTool = bestTool;
 		this.ticksToBreak = ticksToBreak;
+		if (MathUtils.isNearlyEqual(ticksToBreak, ActionCosts.COST_INFINITE) || ticksToBreak > ActionCosts.COST_INFINITE) {
+			this.breakable = false;
+		} else {
+			this.breakable = breakable;
+		}
 	}
 
 }
