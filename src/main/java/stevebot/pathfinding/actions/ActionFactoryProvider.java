@@ -107,6 +107,9 @@ public class ActionFactoryProvider {
 		// pillar up
 		registerFactory(new ActionPillarUp.PillarUpFactory());
 
+		// pillar mine
+		registerFactory(new ActionPillarUpMine.PillarUpMineFactory());
+
 		// dig down
 		registerFactory(new ActionDigDown.DigDownFactory());
 
