@@ -193,7 +193,7 @@ public class ActionPillarUp extends Action {
 			}
 
 			// build valid result
-			int indexThrowaway = PlayerUtils.getActiveSnapshot().findThrowawayBlock();
+			final int indexThrowaway = PlayerUtils.getActiveSnapshot().findThrowawayBlock();
 			final Modification[] modifications = new Modification[]{
 					Modification.placeBlock(node.getPos(), PlayerUtils.getActiveSnapshot().getAsBlock(indexThrowaway))
 			};

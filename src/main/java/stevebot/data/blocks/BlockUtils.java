@@ -232,8 +232,7 @@ public class BlockUtils {
 	 */
 	public static boolean canWalkOn(BaseBlockPos pos) {
 		final BlockWrapper block = blockProvider.getBlockAt(pos);
-		final boolean canWalkOn = canWalkOn(block);
-		return canWalkOn;
+		return canWalkOn(block);
 	}
 
 
@@ -249,6 +248,27 @@ public class BlockUtils {
 		} else {
 			return block.getBlock().getDefaultState().isNormalCube();
 		}
+	}
+
+
+
+
+	/**
+	 * @return whether the block can be replaced by placing a block at its position.
+	 */
+	public static boolean canBeReplaced(BlockWrapper block) {
+		return block.getId() == AIR;
+	}
+
+
+
+
+	/**
+	 * @return whether the player can place a block at the given position (independent of player position)
+	 */
+	public static boolean canPlaceBlockAt(BaseBlockPos pos) {
+		final BlockWrapper block = blockProvider.getBlockAt(pos);
+		return canBeReplaced(block);
 	}
 
 
@@ -452,5 +472,6 @@ public class BlockUtils {
 		final boolean isNegative = value < 0;
 		return ((int) value) - (isNegative ? 1 : 0);
 	}
+
 
 }

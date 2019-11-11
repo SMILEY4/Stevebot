@@ -128,6 +128,11 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionMineUp.MineUpFactorySouth());
 		registerFactory(new ActionMineUp.MineUpFactoryWest());
 
+		// bridge
+		registerFactory(new ActionBridgeFree.BrideFreeFactoryNorth());
+		registerFactory(new ActionBridgeFree.BrideFreeFactoryEast());
+		registerFactory(new ActionBridgeFree.BrideFreeFactorySouth());
+		registerFactory(new ActionBridgeFree.BrideFreeFactoryWest());
 	}
 
 

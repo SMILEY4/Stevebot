@@ -109,6 +109,17 @@ public interface PlayerInput {
 	void setSprint(boolean sprint);
 
 	/**
+	 * Start to hold down sneak. Until {@link PlayerInputImpl#releaseSneak()} is called, the sneak button will be held down.
+	 * {@link PlayerInputImpl#stopAll()} will not reset affect the sneak-button anymore
+	 */
+	void holdSneak();
+
+	/**
+	 * Stop holding down the sneak button. The player will stop sneaking {@link PlayerInputImpl#stopAll()} has an effect again.
+	 */
+	void releaseSneak();
+
+	/**
 	 * Sneak until stopped.
 	 */
 	void setSneak();
@@ -160,5 +171,6 @@ public interface PlayerInput {
 	 * Stops all inputs.
 	 */
 	void stopAll();
+
 
 }
