@@ -146,8 +146,10 @@ public class CustomCommand extends CommandBase {
 					case BOOLEAN: {
 						if ("true".equalsIgnoreCase(arg)) {
 							parametersOut.put(varname, true);
+							break;
 						} else if ("false".equalsIgnoreCase(arg)) {
 							parametersOut.put(varname, false);
+							break;
 						} else {
 							return false;
 						}
