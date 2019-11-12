@@ -246,7 +246,7 @@ public class BlockUtils {
 		if (isLiquid(block) || isDangerous(block)) {
 			return false;
 		} else {
-			return block.getBlock().getDefaultState().isNormalCube();
+			return block.getBlock().getDefaultState().isNormalCube() || ICE == block.getId() || FROSTED_ICE == block.getId() || PACKED_ICE == block.getId();
 		}
 	}
 
