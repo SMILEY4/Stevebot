@@ -136,6 +136,13 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionBridgeFree.BrideFreeFactoryEast());
 		registerFactory(new ActionBridgeFree.BrideFreeFactorySouth());
 		registerFactory(new ActionBridgeFree.BrideFreeFactoryWest());
+
+		// door
+		registerFactory(new ActionPassDoor.PassDoorFactoryNorth());
+		registerFactory(new ActionPassDoor.PassDoorFactoryEast());
+		registerFactory(new ActionPassDoor.PassDoorFactorySouth());
+		registerFactory(new ActionPassDoor.PassDoorFactoryWest());
+
 	}
 
 

@@ -1,6 +1,10 @@
 package stevebot.data.blocks;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
@@ -25,6 +29,18 @@ public class BlockUtils {
 	static final int VINE = 106;
 	static final int LADDER = 65;
 
+	static final int WOODEN_DOOR = 64;
+	static final int SPRUCE_DOOR = 193;
+	static final int BIRCH_DOOR = 194;
+	static final int JUNGLE_DOOR = 195;
+	static final int ACACIA_DOOR = 196;
+	static final int DARK_OAK_DOOR = 197;
+	static final int FENCE_GATE = 107;
+	static final int SPRUCE_FENCE_GATE = 183;
+	static final int BIRCH_FENCE_GATE = 184;
+	static final int JUNGLE_FENCE_GATE = 185;
+	static final int DARK_OAK_FENCE_GATE = 186;
+	static final int ACACIA_FENCE_GATE = 187;
 
 	private static BlockProvider blockProvider;
 	private static BlockLibrary blockLibrary;
@@ -216,7 +232,8 @@ public class BlockUtils {
 	 */
 	public static boolean canWalkThrough(BlockWrapper block, BlockPos pos) {
 		if (isLiquid(block) || WATERLILY == block.getId() || isDangerous(block)
-				|| ICE == block.getId() || FROSTED_ICE == block.getId() || PACKED_ICE == block.getId()) {
+				|| ICE == block.getId() || FROSTED_ICE == block.getId() || PACKED_ICE == block.getId()
+				|| isDoorLike(block)) {
 			return false;
 		} else {
 			return block.getBlock().isPassable(MinecraftAdapter.get().getWorld(), pos);
@@ -313,6 +330,123 @@ public class BlockUtils {
 	 */
 	public static boolean affectsJump(BaseBlockPos position) {
 		return affectsJump(blockProvider.getBlockAt(position));
+	}
+
+
+
+
+	/**
+	 * @param block the block to check
+	 * @return whether the given block is (part of) a door
+	 */
+	public static boolean isDoor(BlockWrapper block) {
+		final int id = block.getId();
+		if (id == WOODEN_DOOR) return true;
+		if (id == SPRUCE_DOOR) return true;
+		if (id == BIRCH_DOOR) return true;
+		if (id == JUNGLE_DOOR) return true;
+		if (id == ACACIA_DOOR) return true;
+		if (id == DARK_OAK_DOOR) return true;
+		return false;
+	}
+
+
+
+
+	/**
+	 * @param position the position to check
+	 * @return whether the given position is (part of) a door
+	 */
+	public static boolean isDoor(BaseBlockPos position) {
+		return isDoor(blockProvider.getBlockAt(position));
+	}
+
+
+
+
+	/**
+	 * @param block the block to check
+	 * @return whether the given block is a fence gate
+	 */
+	public static boolean isFenceGate(BlockWrapper block) {
+		final int id = block.getId();
+		if (id == FENCE_GATE) return true;
+		if (id == SPRUCE_FENCE_GATE) return true;
+		if (id == BIRCH_FENCE_GATE) return true;
+		if (id == JUNGLE_FENCE_GATE) return true;
+		if (id == DARK_OAK_FENCE_GATE) return true;
+		if (id == ACACIA_FENCE_GATE) return true;
+		return false;
+	}
+
+
+
+
+	/**
+	 * @param position the position to check
+	 * @return whether the given position is a fence gate
+	 */
+	public static boolean isFenceGate(BaseBlockPos position) {
+		return isFenceGate(blockProvider.getBlockAt(position));
+	}
+
+
+
+
+	/**
+	 * @param block the block to check
+	 * @return whether the given block is (part of) a door or a fence gate
+	 */
+	public static boolean isDoorLike(BlockWrapper block) {
+		return isDoor(block) || isFenceGate(block);
+	}
+
+
+
+
+	/**
+	 * @param position the position to check
+	 * @return whether the given position is (part of) a door or a fence gate
+	 */
+	public static boolean isDoorLike(BaseBlockPos position) {
+		return isDoor(position) || isFenceGate(position);
+	}
+
+
+
+
+	/**
+	 * @param position  the position of the door or gate to check
+	 * @param direction the direction
+	 * @return whether the door or fence gate can be passed by the player in the given direction
+	 */
+	public static boolean canPassDoor(BaseBlockPos position, Direction direction) {
+
+		if (!BlockUtils.isDoorLike(position)) {
+			return false;
+		}
+
+		final IBlockState blockState = MinecraftAdapter.get().getWorld().getBlockState(position.copyAsMCBlockPos());
+
+		final EnumFacing.Axis facing = blockState.getValue(BlockHorizontal.FACING).getAxis();
+
+		boolean facingDoor = false;
+		if (facing == EnumFacing.Axis.X) {
+			if (direction == Direction.EAST || direction == Direction.WEST) {
+				facingDoor = true;
+			}
+		} else if (facing == EnumFacing.Axis.Z) {
+			if (direction == Direction.NORTH || direction == Direction.SOUTH) {
+				facingDoor = true;
+			}
+		}
+
+		if (isFenceGate(position)) {
+			return facingDoor && blockState.getValue(BlockDoor.OPEN);
+		} else {
+			return !facingDoor;
+		}
+
 	}
 
 

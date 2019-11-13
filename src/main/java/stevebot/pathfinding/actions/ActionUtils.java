@@ -187,16 +187,36 @@ public class ActionUtils {
 	}
 
 
-//	/**
-//	 * Places a block AT the given position
-//	 *
-//	 * @param pos the position to place the block at
-//	 * @return true, if the block was placed
-//	 */
-//	public static boolean placeBlockAt(BaseBlockPos pos) {
-//		// todo
-//		return false;
-//	}
+
+
+	/**
+	 * Check if there is a door at the given position and if the player can pass through the door ignoring the direction of the door
+	 *
+	 * @param position the position
+	 * @return whether the player can stand at the given position, occupied by a door
+	 */
+	public static boolean isDoorPassable(BaseBlockPos position) {
+
+		final BaseBlockPos positionTop = position.copyAsFastBlockPos().add(0, 1, 0);
+
+		final boolean isDoorBottom = BlockUtils.isDoorLike(position);
+		final boolean isDoorTop = BlockUtils.isDoorLike(positionTop);
+
+		// there is no door
+		if (!isDoorBottom && !isDoorTop) {
+			return false;
+		}
+
+		// can not walk through / stand at position
+		if (!isDoorBottom && !BlockUtils.canWalkThrough(position)) {
+			return false;
+		}
+		if (!isDoorTop && !BlockUtils.canWalkThrough(positionTop)) {
+			return false;
+		}
+
+		return true;
+	}
 
 
 
@@ -284,5 +304,6 @@ public class ActionUtils {
 			return fatalHeight;
 		}
 	}
+
 
 }

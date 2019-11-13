@@ -368,4 +368,12 @@ public class PlayerCameraImpl implements PlayerCamera {
 	}
 
 
+
+
+	@Override
+	public boolean isForceEnabled() {
+		return getState() == CameraState.LOCKED;
+	}
+
+
 }
