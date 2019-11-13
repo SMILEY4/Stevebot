@@ -57,7 +57,7 @@ public class ActionFall extends Action {
 
 
 	@Override
-	public ProcState tick(boolean fistTick) {
+	public ProcState tick(boolean firstTick) {
 		if (PlayerUtils.getPlayer().onGround) {
 			if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), false)) {
 				return ProcState.DONE;

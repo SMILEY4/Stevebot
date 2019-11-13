@@ -64,7 +64,7 @@ public class ActionBridgeFree extends Action {
 
 
 	@Override
-	public ProcState tick(boolean fistTick) {
+	public ProcState tick(boolean firstTick) {
 		switch (stateMachine.getState()) {
 			case PREPARE:
 				return tickPrepare();

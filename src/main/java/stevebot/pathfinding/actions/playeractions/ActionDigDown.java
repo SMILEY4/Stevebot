@@ -64,7 +64,7 @@ public class ActionDigDown extends Action {
 
 
 	@Override
-	public ProcState tick(boolean fistTick) {
+	public ProcState tick(boolean firstTick) {
 		switch (stateMachine.getState()) {
 			case PREPARING: {
 				return tickPrepare();

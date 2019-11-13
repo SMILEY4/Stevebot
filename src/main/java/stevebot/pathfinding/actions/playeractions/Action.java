@@ -70,10 +70,10 @@ public abstract class Action {
 	/**
 	 * Updates this action.
 	 *
-	 * @param fistTick true on the first update of this action
+	 * @param firstTick true on the first update of this action
 	 * @return the resulting {@link ProcState} of the update
 	 */
-	public abstract ProcState tick(boolean fistTick);
+	public abstract ProcState tick(boolean firstTick);
 
 
 

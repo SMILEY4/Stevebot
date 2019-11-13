@@ -93,7 +93,7 @@ public class TestUtils {
 
 
 			@Override
-			public ProcState tick(boolean fistTick) {
+			public ProcState tick(boolean firstTick) {
 				return ProcState.DONE;
 			}
 		};

@@ -52,9 +52,9 @@ public class ActionPassDoor extends Action {
 
 
 	@Override
-	public ProcState tick(boolean fistTick) {
+	public ProcState tick(boolean firstTick) {
 
-		if (fistTick) {
+		if (firstTick) {
 			// check, which door-blocks the player has to open
 			hasToOpenDoorBottom = !BlockUtils.canPassDoor(positionDoorBottom, direction);
 			if (BlockUtils.isDoor(positionDoorBottom)) {
