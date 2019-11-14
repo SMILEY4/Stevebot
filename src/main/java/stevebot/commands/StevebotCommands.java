@@ -1,7 +1,9 @@
 package stevebot.commands;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
+import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blocks.BlockUtils;
 import stevebot.misc.Config;
 import stevebot.pathfinding.PathHandler;
 import stevebot.pathfinding.goal.ExactGoal;
@@ -100,7 +102,7 @@ public class StevebotCommands {
 
 		// path level <level> freelook
 		CommandSystem.addCommand(
-				"pathLevel",
+				"pathLevelFreelook",
 				"path level <level:INTEGER> freelook",
 				"/path level <level>\n    Finds a path to the given y-level and enables freelook.\",.",
 				(templateId, parameters) -> {
@@ -109,6 +111,44 @@ public class StevebotCommands {
 						final int level = CommandListener.getAsInt("level", parameters);
 						Goal goal = new YGoal(level);
 						pathHandler.createPath(new BaseBlockPos(from), goal, true, true);
+					}
+				});
+
+		// path <block>
+		CommandSystem.addCommand(
+				"pathBlock",
+				"path <block:STRING>",
+				"/path level <level>\n    Finds a path to the nearest with of the given type.",
+				(templateId, parameters) -> {
+					if (PlayerUtils.getPlayer() != null) {
+						final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
+						final String blockName = CommandListener.getAsString("block", parameters);
+						final BaseBlockPos posBlock = BlockUtils.findNearest(BlockUtils.getBlockLibrary().getBlockByName(blockName), from, 219, 219);
+						if (posBlock != null) {
+							Goal goal = new ExactGoal(posBlock);
+							pathHandler.createPath(new BaseBlockPos(from), goal, true, false);
+						} else {
+							Stevebot.log("No block of the given type found.");
+						}
+					}
+				});
+
+		// path <block> freelook
+		CommandSystem.addCommand(
+				"pathBlockFreelook",
+				"path <block:STRING> freelook",
+				"/path level <level>\n    Finds a path to the nearest with of the given type and enables freelook.\",.",
+				(templateId, parameters) -> {
+					if (PlayerUtils.getPlayer() != null) {
+						final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
+						final String blockName = CommandListener.getAsString("block", parameters);
+						final BaseBlockPos posBlock = BlockUtils.findNearest(BlockUtils.getBlockLibrary().getBlockByName(blockName), from, 219, 219);
+						if (posBlock != null) {
+							Goal goal = new ExactGoal(posBlock);
+							pathHandler.createPath(new BaseBlockPos(from), goal, true, true);
+						} else {
+							Stevebot.log("No block of the given type found.");
+						}
 					}
 				});
 

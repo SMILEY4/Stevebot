@@ -608,4 +608,79 @@ public class BlockUtils {
 	}
 
 
+
+
+	/**
+	 * Searches the area of the given size for a block of the given type.
+	 *
+	 * @param blockType the type of the block to search for
+	 * @param position  the position
+	 * @param sizeX     the size of the area in x direction
+	 * @param sizeZ     the size of the area in z direction
+	 * @return the position of the block of the given type closest to the given position (or null if none found).
+	 */
+	public static BaseBlockPos findNearest(BlockWrapper blockType, BaseBlockPos position, int sizeX, int sizeZ) {
+
+		int x = 0;
+		int z = 0;
+		int dx = 0;
+		int dy = -1;
+
+		final int halfSizeX = sizeX / 2;
+		final int halfSizeZ = sizeZ / 2;
+
+		// spiral outwards
+		for (int i = 0; i < Math.pow(Math.max(halfSizeX, halfSizeZ), 2); i++) {
+			if ((-halfSizeX / 2 < x && x <= halfSizeX / 2) && (-halfSizeZ / 2 < z && z <= halfSizeZ / 2)) {
+				final BaseBlockPos result = searchColumn(x, z, blockType, position);
+				if (result != null) {
+					return result;
+				}
+			}
+			if ((x == z) || (x < 0 && x == -z) || (x > 0 && x == 1 - z)) {
+				int tmp = dx;
+				dx = -dy;
+				dy = tmp;
+			}
+			x += dx;
+			z += dy;
+		}
+
+		return null;
+	}
+
+
+
+
+	/**
+	 * Searches the column of blocks at the given coordinates for the given block.
+	 *
+	 * @param x         the x position of the column
+	 * @param z         the z position of the column
+	 * @param blockType the type of the block to search for
+	 * @param position  the position
+	 * @return the position of the block of the given type closest to the given position (or null if none found).
+	 */
+	private static BaseBlockPos searchColumn(int x, int z, BlockWrapper blockType, BaseBlockPos position) {
+
+		final int INFINITE = 99999;
+
+		final FastBlockPos closestBlock = new FastBlockPos();
+		int minDistY = INFINITE;
+
+		final FastBlockPos blockPos = new FastBlockPos();
+		for (int y = 0; y < 256; y++) {
+			final BlockWrapper block = getBlockProvider().getBlockAt(blockPos.set(x, y, z));
+			if (block.getId() == blockType.getId()) {
+				final int dy = Math.abs(position.getY() - y);
+				if (dy < minDistY) {
+					minDistY = dy;
+					closestBlock.set(x, y, z);
+				}
+			}
+		}
+
+		return minDistY == INFINITE ? null : closestBlock;
+	}
+
 }
