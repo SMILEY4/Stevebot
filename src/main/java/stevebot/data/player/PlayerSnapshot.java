@@ -3,6 +3,7 @@ package stevebot.data.player;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemTool;
 import stevebot.data.blocks.BlockLibrary;
+import stevebot.data.blocks.BlockUtils;
 import stevebot.data.blocks.BlockWrapper;
 import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.ItemUtils;
@@ -219,13 +220,21 @@ public class PlayerSnapshot {
 
 
 	/**
+	 * @param allowGravityBlock true, to include blocks that have gravity, like sand or gravel
 	 * @return the slot containing at least one throwaway block, or -1
 	 */
-	public int findThrowawayBlock() {
+	public int findThrowawayBlock(boolean allowGravityBlock) {
 		for (int i = 0; i < 9; i++) {
 			final ItemWrapper stack = hotbarItems[i];
 			if (stack != null && hotbarStackSizes[i] != 0 && stack instanceof ItemBlockWrapper) {
-				return i;
+				if (allowGravityBlock) {
+					return i;
+				} else {
+					final BlockWrapper block = ((ItemBlockWrapper) stack).getBlockWrapper();
+					if (block != null && !BlockUtils.hasGravity(block)) {
+						return i;
+					}
+				}
 			}
 		}
 		return -1;
@@ -235,10 +244,11 @@ public class PlayerSnapshot {
 
 
 	/**
+	 * @param allowGravityBlock true, to include blocks that have gravity, like sand or gravel
 	 * @return whether a slot contains a throwaway block
 	 */
-	public boolean hasThrowawayBlockInHotbar() {
-		return findThrowawayBlock() != -1;
+	public boolean hasThrowawayBlockInHotbar(boolean allowGravityBlock) {
+		return findThrowawayBlock(allowGravityBlock) != -1;
 	}
 
 
