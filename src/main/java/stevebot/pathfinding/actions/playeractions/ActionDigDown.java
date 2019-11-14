@@ -210,6 +210,9 @@ public class ActionDigDown extends Action {
 			// check if block breakable
 			final BaseBlockPos posBreakBlock = node.getPosCopy().add(0, -1, 0);
 			final BreakBlockCheckResult resultBreak = ActionUtils.checkBlockToBreak(posBreakBlock);
+			if(!ActionUtils.canSafelyBreak(posBreakBlock)) {
+				return Result.invalid();
+			}
 			if (!resultBreak.breakable) {
 				return Result.invalid();
 			}

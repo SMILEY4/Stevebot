@@ -293,6 +293,48 @@ public class ActionUtils {
 
 
 	/**
+	 * @param pos the position of the block to break
+	 * @return whether the block can be safely broken, that means, when there is no liquid or falling block above and no liquid next to the block
+	 */
+	public static boolean canSafelyBreak(BaseBlockPos pos) {
+
+		// check above
+		fastPos1.set(pos).add(Direction.UP);
+		if (BlockUtils.isLiquid(fastPos1) || BlockUtils.hasGravity(fastPos1)) {
+			return false;
+		}
+
+		// check north
+		fastPos1.set(pos).add(Direction.NORTH);
+		if (BlockUtils.isLiquid(fastPos1)) {
+			return false;
+		}
+
+		// check east
+		fastPos1.set(pos).add(Direction.EAST);
+		if (BlockUtils.isLiquid(fastPos1)) {
+			return false;
+		}
+
+		// check south
+		fastPos1.set(pos).add(Direction.SOUTH);
+		if (BlockUtils.isLiquid(fastPos1)) {
+			return false;
+		}
+
+		// check west
+		fastPos1.set(pos).add(Direction.WEST);
+		if (BlockUtils.isLiquid(fastPos1)) {
+			return false;
+		}
+
+		return true;
+	}
+
+
+
+
+	/**
 	 * @param heightInBlocks the height of the fall in blocks
 	 * @return the amount of damage the player would receive from falling the given height
 	 */

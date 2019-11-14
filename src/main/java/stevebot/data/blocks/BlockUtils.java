@@ -459,6 +459,17 @@ public class BlockUtils {
 
 
 	/**
+	 * @param position the position of the block
+	 * @return whether the block at the given position is affected by gravity.
+	 */
+	public static boolean hasGravity(BaseBlockPos position) {
+		return hasGravity(blockProvider.getBlockAt(position));
+	}
+
+
+
+
+	/**
 	 * @param block the block to check
 	 * @return whether the given block is affected by gravity.
 	 */

@@ -267,6 +267,9 @@ public class ActionMineDown extends Action {
 
 			// check top block to break
 			final BaseBlockPos posTop = to.copyAsFastBlockPos().add(0, 2, 0);
+			if(!ActionUtils.canSafelyBreak(posTop)) {
+				return Result.invalid();
+			}
 			if (!BlockUtils.canWalkThrough(posTop)) {
 				final BreakBlockCheckResult resultTop = ActionUtils.checkBlockToBreak(posTop);
 				if (!resultTop.breakable) {
@@ -279,6 +282,9 @@ public class ActionMineDown extends Action {
 
 			// check middle block to break
 			final BaseBlockPos posMiddle = to.copyAsFastBlockPos().add(0, 1, 0);
+			if(!ActionUtils.canSafelyBreak(posMiddle)) {
+				return Result.invalid();
+			}
 			if (!BlockUtils.canWalkThrough(posMiddle)) {
 				final BreakBlockCheckResult resultBottom = ActionUtils.checkBlockToBreak(posMiddle);
 				if (!resultBottom.breakable) {
@@ -291,6 +297,9 @@ public class ActionMineDown extends Action {
 
 			// check bottom block to break
 			final BaseBlockPos posBottom = to;
+			if(!ActionUtils.canSafelyBreak(posBottom)) {
+				return Result.invalid();
+			}
 			if (!BlockUtils.canWalkThrough(posBottom)) {
 				final BreakBlockCheckResult resultBottom = ActionUtils.checkBlockToBreak(posBottom);
 				if (!resultBottom.breakable) {

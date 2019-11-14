@@ -228,9 +228,12 @@ public class ActionPillarUpMine extends Action {
 			}
 
 			// check block to break
+			final BaseBlockPos posAbove = node.getPosCopy().add(0, 2, 0);
+			if (!ActionUtils.canSafelyBreak(posAbove)) {
+				return Result.invalid();
+			}
 			float ticksToBreak = 0;
 			Modification modificationBreakBlock = null;
-			final BaseBlockPos posAbove = node.getPosCopy().add(0, 2, 0);
 			if (!BlockUtils.canWalkThrough(posAbove)) {
 				final BreakBlockCheckResult resultBottom = ActionUtils.checkBlockToBreak(posAbove);
 				if (!resultBottom.breakable) {

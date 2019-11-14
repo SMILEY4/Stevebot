@@ -233,6 +233,9 @@ public class ActionMineStraight extends Action {
 
 			// check top block to break
 			final BaseBlockPos posTop = to.copyAsFastBlockPos().add(0, 1, 0);
+			if(!ActionUtils.canSafelyBreak(posTop)) {
+				return Result.invalid();
+			}
 			if (!BlockUtils.canWalkThrough(posTop)) {
 				final BreakBlockCheckResult resultTop = ActionUtils.checkBlockToBreak(posTop);
 				if (!resultTop.breakable) {
@@ -245,6 +248,9 @@ public class ActionMineStraight extends Action {
 
 			// check bottom block to break
 			final BaseBlockPos posBottom = to;
+			if(!ActionUtils.canSafelyBreak(posBottom)) {
+				return Result.invalid();
+			}
 			if (!BlockUtils.canWalkThrough(posBottom)) {
 				final BreakBlockCheckResult resultBottom = ActionUtils.checkBlockToBreak(posBottom);
 				if (!resultBottom.breakable) {
