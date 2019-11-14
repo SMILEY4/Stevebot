@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.goal.ExactGoal;
 import stevebot.pathfinding.goal.XZGoal;
+import stevebot.pathfinding.goal.YGoal;
 
 import java.util.Random;
 
@@ -24,6 +25,26 @@ public class GoalTests {
 		XZGoal goal = new XZGoal(x, z);
 		assertThat(goal.x).isEqualTo(x);
 		assertThat(goal.z).isEqualTo(z);
+	}
+
+
+
+
+	@Test
+	void testYGoal() {
+		final int y = random.nextInt(200);
+		YGoal goal = new YGoal(y);
+		assertThat(goal.y).isEqualTo(y);
+	}
+
+
+
+
+	@Test
+	void testYGoalNegative() {
+		final int y = -random.nextInt(200);
+		YGoal goal = new YGoal(y);
+		assertThat(goal.y).isEqualTo(0);
 	}
 
 

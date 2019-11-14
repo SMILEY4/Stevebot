@@ -1,12 +1,15 @@
 package stevebot.commands;
 
 import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
+import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blocks.BlockUtils;
 import stevebot.misc.Config;
 import stevebot.pathfinding.PathHandler;
 import stevebot.pathfinding.goal.ExactGoal;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.goal.XZGoal;
+import stevebot.pathfinding.goal.YGoal;
 import stevebot.pathfinding.path.PathRenderable;
 import stevebot.player.PlayerCameraImpl;
 import stevebot.player.PlayerUtils;
@@ -80,6 +83,72 @@ public class StevebotCommands {
 						final Vector3d dir = PlayerUtils.getCamera().getLookDir().setLength(CommandListener.getAsInt("dist", parameters));
 						Goal goal = new XZGoal(from.getX() + dir.getIntX(), from.getZ() + dir.getIntZ());
 						pathHandler.createPath(new BaseBlockPos(from), goal, true, true);
+					}
+				});
+
+		// path level <level>
+		CommandSystem.addCommand(
+				"pathLevel",
+				"path level <level:INTEGER>",
+				"/path level <level>\n    Finds a path to the given y-level.",
+				(templateId, parameters) -> {
+					if (PlayerUtils.getPlayer() != null) {
+						final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
+						final int level = CommandListener.getAsInt("level", parameters);
+						Goal goal = new YGoal(level);
+						pathHandler.createPath(new BaseBlockPos(from), goal, true, false);
+					}
+				});
+
+		// path level <level> freelook
+		CommandSystem.addCommand(
+				"pathLevelFreelook",
+				"path level <level:INTEGER> freelook",
+				"/path level <level>\n    Finds a path to the given y-level and enables freelook.\",.",
+				(templateId, parameters) -> {
+					if (PlayerUtils.getPlayer() != null) {
+						final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
+						final int level = CommandListener.getAsInt("level", parameters);
+						Goal goal = new YGoal(level);
+						pathHandler.createPath(new BaseBlockPos(from), goal, true, true);
+					}
+				});
+
+		// path <block>
+		CommandSystem.addCommand(
+				"pathBlock",
+				"path <block:STRING>",
+				"/path level <level>\n    Finds a path to the nearest with of the given type.",
+				(templateId, parameters) -> {
+					if (PlayerUtils.getPlayer() != null) {
+						final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
+						final String blockName = CommandListener.getAsString("block", parameters);
+						final BaseBlockPos posBlock = BlockUtils.findNearest(BlockUtils.getBlockLibrary().getBlockByName(blockName), from, 219, 219);
+						if (posBlock != null) {
+							Goal goal = new ExactGoal(posBlock);
+							pathHandler.createPath(new BaseBlockPos(from), goal, true, false);
+						} else {
+							Stevebot.log("No block of the given type found.");
+						}
+					}
+				});
+
+		// path <block> freelook
+		CommandSystem.addCommand(
+				"pathBlockFreelook",
+				"path <block:STRING> freelook",
+				"/path level <level>\n    Finds a path to the nearest with of the given type and enables freelook.\",.",
+				(templateId, parameters) -> {
+					if (PlayerUtils.getPlayer() != null) {
+						final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
+						final String blockName = CommandListener.getAsString("block", parameters);
+						final BaseBlockPos posBlock = BlockUtils.findNearest(BlockUtils.getBlockLibrary().getBlockByName(blockName), from, 219, 219);
+						if (posBlock != null) {
+							Goal goal = new ExactGoal(posBlock);
+							pathHandler.createPath(new BaseBlockPos(from), goal, true, true);
+						} else {
+							Stevebot.log("No block of the given type found.");
+						}
 					}
 				});
 
