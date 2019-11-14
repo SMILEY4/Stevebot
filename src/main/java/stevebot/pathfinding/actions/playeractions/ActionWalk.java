@@ -41,7 +41,7 @@ public class ActionWalk extends Action {
 
 
 	@Override
-	public ProcState tick(boolean fistTick) {
+	public ProcState tick(boolean firstTick) {
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
 			PlayerUtils.getInput().setSneak();
 			return ProcState.DONE;

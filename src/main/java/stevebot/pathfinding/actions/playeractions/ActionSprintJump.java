@@ -164,6 +164,9 @@ public class ActionSprintJump extends Action {
 			for (int i = 0; i < 3; i++) {
 				final BaseBlockPos gap = node.getPosCopy().add(direction.dx * (i + 1), 0, direction.dz * (i + 1));
 				if (i == 2) {
+					if (!BlockUtils.canWalkThrough(gap.copyAsFastBlockPos().add(0, 3, 0))) {
+						return Result.invalid();
+					}
 					if (!ActionUtils.canJump(gap)) {
 						return Result.invalid();
 					}

@@ -20,6 +20,8 @@ public class ActionCosts {
 	public static final double COST_SPRINT_JUMP = COST_SPRINTING * 3 + 3;
 	public static final double COST_PILLAR_UP = COST_FALL_N(1) + 10;
 
+	public static final double COST_PLACE_BLOCK = 3;
+
 	public static final double COST_SWIM = 20 / 3.0; // 6.666
 	public static final double COST_ENTER_WATER = COST_WALKING * 0.5 + COST_SWIM * 0.5; // 4.815 * 2 = 7.315
 	public static final double COST_EXIST_WATER = COST_WALKING * 0.5 + COST_SWIM * 0.5;

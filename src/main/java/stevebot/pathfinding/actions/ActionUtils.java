@@ -6,6 +6,9 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.blocks.BlockUtils;
+import stevebot.data.items.ItemLibrary;
+import stevebot.data.items.ItemUtils;
+import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Direction;
 import stevebot.player.PlayerUtils;
@@ -184,16 +187,36 @@ public class ActionUtils {
 	}
 
 
-//	/**
-//	 * Places a block AT the given position
-//	 *
-//	 * @param pos the position to place the block at
-//	 * @return true, if the block was placed
-//	 */
-//	public static boolean placeBlockAt(BaseBlockPos pos) {
-//		// todo
-//		return false;
-//	}
+
+
+	/**
+	 * Check if there is a door at the given position and if the player can pass through the door ignoring the direction of the door
+	 *
+	 * @param position the position
+	 * @return whether the player can stand at the given position, occupied by a door
+	 */
+	public static boolean isDoorPassable(BaseBlockPos position) {
+
+		final BaseBlockPos positionTop = position.copyAsFastBlockPos().add(0, 1, 0);
+
+		final boolean isDoorBottom = BlockUtils.isDoorLike(position);
+		final boolean isDoorTop = BlockUtils.isDoorLike(positionTop);
+
+		// there is no door
+		if (!isDoorBottom && !isDoorTop) {
+			return false;
+		}
+
+		// can not walk through / stand at position
+		if (!isDoorBottom && !BlockUtils.canWalkThrough(position)) {
+			return false;
+		}
+		if (!isDoorTop && !BlockUtils.canWalkThrough(positionTop)) {
+			return false;
+		}
+
+		return true;
+	}
 
 
 
@@ -236,6 +259,25 @@ public class ActionUtils {
 
 
 
+	/**
+	 * Checks whether the block at the given position is breakable, by which item and how long it would take.
+	 *
+	 * @param blockPos the position of the block to break
+	 * @return {@link BreakBlockCheckResult}
+	 */
+	public static BreakBlockCheckResult checkBlockToBreak(BaseBlockPos blockPos) {
+		final ItemWrapper bestTool = PlayerUtils.getActiveSnapshot().findBestToolForBlock(BlockUtils.getBlockProvider().getBlockAt(blockPos));
+		if (bestTool == ItemLibrary.INVALID_ITEM) {
+			return BreakBlockCheckResult.invalid(blockPos);
+		} else {
+			final float ticksToBreak = ItemUtils.getBreakDuration(bestTool.getStack(1), blockPos);
+			return BreakBlockCheckResult.valid(blockPos, bestTool, ticksToBreak);
+		}
+	}
+
+
+
+
 	public static boolean breakBlock(BaseBlockPos pos) {
 		final Block mcBlock = MinecraftAdapter.get().getBlock(pos.copyAsMCBlockPos());
 		if (BlockUtils.isAir(BlockUtils.getBlockLibrary().getBlockByMCBlock(mcBlock))) {
@@ -262,5 +304,6 @@ public class ActionUtils {
 			return fatalHeight;
 		}
 	}
+
 
 }

@@ -107,8 +107,42 @@ public class ActionFactoryProvider {
 		// pillar up
 		registerFactory(new ActionPillarUp.PillarUpFactory());
 
+		// pillar mine
+		registerFactory(new ActionPillarUpMine.PillarUpMineFactory());
+
 		// dig down
 		registerFactory(new ActionDigDown.DigDownFactory());
+
+		// mine straight
+		registerFactory(new ActionMineStraight.MineStraightFactoryNorth());
+		registerFactory(new ActionMineStraight.MineStraightFactoryEast());
+		registerFactory(new ActionMineStraight.MineStraightFactorySouth());
+		registerFactory(new ActionMineStraight.MineStraightFactoryWest());
+
+		// mine down
+		registerFactory(new ActionMineDown.MineDownFactoryNorth());
+		registerFactory(new ActionMineDown.MineDownFactoryEast());
+		registerFactory(new ActionMineDown.MineDownFactorySouth());
+		registerFactory(new ActionMineDown.MineDownFactoryWest());
+
+		// mine up
+		registerFactory(new ActionMineUp.MineUpFactoryNorth());
+		registerFactory(new ActionMineUp.MineUpFactoryEast());
+		registerFactory(new ActionMineUp.MineUpFactorySouth());
+		registerFactory(new ActionMineUp.MineUpFactoryWest());
+
+		// bridge
+		registerFactory(new ActionBridgeFree.BrideFreeFactoryNorth());
+		registerFactory(new ActionBridgeFree.BrideFreeFactoryEast());
+		registerFactory(new ActionBridgeFree.BrideFreeFactorySouth());
+		registerFactory(new ActionBridgeFree.BrideFreeFactoryWest());
+
+		// door
+		registerFactory(new ActionPassDoor.PassDoorFactoryNorth());
+		registerFactory(new ActionPassDoor.PassDoorFactoryEast());
+		registerFactory(new ActionPassDoor.PassDoorFactorySouth());
+		registerFactory(new ActionPassDoor.PassDoorFactoryWest());
+
 	}
 
 

@@ -11,6 +11,7 @@ public class PlayerInputImpl implements PlayerInput {
 	private PlayerInputConfig inputConfig = null;
 	private boolean muteUserInput = false;
 	private boolean isHoldingJump = false;
+	private boolean isHoldingSneak = false;
 
 	private final EventListener listenerPlayerTick = new EventListener<TickEvent.PlayerTickEvent>() {
 		@Override
@@ -226,6 +227,24 @@ public class PlayerInputImpl implements PlayerInput {
 
 
 	@Override
+	public void holdSneak() {
+		isHoldingSneak = true;
+		setSneak(true);
+	}
+
+
+
+
+	@Override
+	public void releaseSneak() {
+		isHoldingSneak = false;
+		setSneak(false);
+	}
+
+
+
+
+	@Override
 	public void setSneak() {
 		setSneak(true);
 	}
@@ -314,7 +333,9 @@ public class PlayerInputImpl implements PlayerInput {
 			setJump(false, true);
 		}
 		setSprint(false);
-		setSneak(false);
+		if (!isHoldingJump()) {
+			setSneak(false);
+		}
 		setPlaceBlock(false);
 		setBreakBlock(false);
 //		setInteract(false);

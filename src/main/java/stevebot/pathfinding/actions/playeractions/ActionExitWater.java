@@ -30,7 +30,7 @@ public class ActionExitWater extends Action {
 
 
 	@Override
-	public ProcState tick(boolean fistTick) {
+	public ProcState tick(boolean firstTick) {
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
 			PlayerUtils.getInput().releaseJump();
 			return ProcState.DONE;

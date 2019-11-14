@@ -7,11 +7,14 @@ import stevebot.data.blocks.BlockWrapper;
 import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.ItemUtils;
 import stevebot.data.items.wrapper.ItemBlockWrapper;
+import stevebot.data.items.wrapper.ItemHandWrapper;
+import stevebot.data.items.wrapper.ItemToolWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.data.modification.BlockBreakModification;
 import stevebot.data.modification.BlockPlaceModification;
 import stevebot.data.modification.HealthChangeModification;
 import stevebot.data.modification.Modification;
+import stevebot.pathfinding.actions.ActionCosts;
 
 public class PlayerSnapshot {
 
@@ -250,7 +253,7 @@ public class PlayerSnapshot {
 		if (slot == -1) {
 			return ItemLibrary.INVALID_ITEM;
 		} else {
-			return hotbarItems[slot];
+			return getAsTool(slot);
 		}
 	}
 
@@ -262,21 +265,33 @@ public class PlayerSnapshot {
 	 * @return the slot containing the best item to break the given block or -1
 	 */
 	public int findBestToolSlot(BlockWrapper block) {
-
 		int slotBest = -1;
-		float bestSpeed = 999999;
-
+		float bestSpeed = (float) ActionCosts.COST_INFINITE;
 		for (int i = 0; i < 9; i++) {
-			final ItemWrapper stack = hotbarItems[i];
-			if (stack != null && hotbarStackSizes[i] != 0 && stack.getItem() instanceof ItemTool) {
-				final float breakTime = ItemUtils.getBreakDuration(stack.getStack(1), block.getBlock().getDefaultState());
-				if (bestSpeed > breakTime) {
-					bestSpeed = breakTime;
-					slotBest = i;
-				}
+			final ItemToolWrapper tool = getAsTool(i);
+			final float breakTime = ItemUtils.getBreakDuration(tool.getStack(1), block.getBlock().getDefaultState());
+			if (bestSpeed > breakTime) {
+				bestSpeed = breakTime;
+				slotBest = i;
 			}
 		}
 		return slotBest;
+	}
+
+
+
+
+	/**
+	 * @param slot the slot (0-8)
+	 * @return the tool at the given slot. If the slot does not contain a tool, {@link ItemHandWrapper} is returned instead.
+	 */
+	public ItemToolWrapper getAsTool(int slot) {
+		final ItemWrapper stack = hotbarItems[slot];
+		if (stack != null && hotbarStackSizes[slot] != 0 && stack.getItem() instanceof ItemTool) {
+			return (ItemToolWrapper) stack;
+		} else {
+			return ItemLibrary.ITEM_HAND;
+		}
 	}
 
 }

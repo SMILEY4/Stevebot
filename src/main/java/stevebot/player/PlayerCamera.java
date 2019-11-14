@@ -128,4 +128,10 @@ public interface PlayerCamera {
 	 */
 	void disableForceCamera(boolean restoreFreelookView);
 
+
+	/**
+	 * @return whether the camera is forced to look in a specific direction.
+	 */
+	boolean isForceEnabled();
+
 }

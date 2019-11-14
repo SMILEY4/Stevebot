@@ -80,7 +80,7 @@ public class Pathfinding {
 			}
 
 			// status report
-			if (System.currentTimeMillis() - timeLast > 2000 * 2) {
+			if (System.currentTimeMillis() - timeLast > 2 * 1000) {
 				timeLast = System.currentTimeMillis();
 				Stevebot.logNonCritical("Searching... " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size() + " nodes.");
 			}

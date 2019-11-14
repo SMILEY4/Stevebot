@@ -2,6 +2,7 @@ package stevebot.data.items;
 
 import net.minecraft.item.Item;
 import stevebot.data.blocks.BlockWrapper;
+import stevebot.data.items.wrapper.ItemHandWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.events.EventListener;
 import stevebot.events.PostInitEvent;
@@ -12,6 +13,8 @@ public interface ItemLibrary {
 
 
 	ItemWrapper INVALID_ITEM = new ItemWrapper(ItemLibrary.ID_INVALID_ITEM, "null", null);
+	ItemHandWrapper ITEM_HAND = new ItemHandWrapper();
+
 
 	int ID_INVALID_ITEM = -2;
 

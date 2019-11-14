@@ -1,8 +1,8 @@
 package stevebot.pathfinding.path;
 
-import stevebot.misc.Config;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.misc.Config;
 import stevebot.pathfinding.Pathfinding;
 import stevebot.pathfinding.goal.Goal;
 
@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 public class PathFactory {
 
 
-	private static final boolean MULTITHREAD = true;
+	private static final boolean MULTITHREAD = false;
 
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private final Pathfinding pathfinding = new Pathfinding();

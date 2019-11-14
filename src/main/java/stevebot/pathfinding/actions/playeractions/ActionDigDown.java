@@ -1,11 +1,7 @@
 package stevebot.pathfinding.actions.playeractions;
 
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.data.blocks.BlockUtils;
-import stevebot.data.items.ItemLibrary;
-import stevebot.data.items.ItemUtils;
 import stevebot.data.items.wrapper.ItemToolWrapper;
-import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.data.modification.BlockBreakModification;
 import stevebot.data.modification.Modification;
 import stevebot.misc.Direction;
@@ -13,6 +9,7 @@ import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
+import stevebot.pathfinding.actions.BreakBlockCheckResult;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerUtils;
@@ -67,7 +64,7 @@ public class ActionDigDown extends Action {
 
 
 	@Override
-	public ProcState tick(boolean fistTick) {
+	public ProcState tick(boolean firstTick) {
 		switch (stateMachine.getState()) {
 			case PREPARING: {
 				return tickPrepare();
@@ -212,8 +209,8 @@ public class ActionDigDown extends Action {
 
 			// check if block breakable
 			final BaseBlockPos posBreakBlock = node.getPosCopy().add(0, -1, 0);
-			final ItemWrapper bestTool = PlayerUtils.getActiveSnapshot().findBestToolForBlock(BlockUtils.getBlockProvider().getBlockAt(posBreakBlock));
-			if (bestTool == ItemLibrary.INVALID_ITEM) {
+			final BreakBlockCheckResult resultBreak = ActionUtils.checkBlockToBreak(posBreakBlock);
+			if (!resultBreak.breakable) {
 				return Result.invalid();
 			}
 
@@ -226,10 +223,9 @@ public class ActionDigDown extends Action {
 
 			// build valid result
 			final Modification[] modifications = new Modification[]{
-					Modification.breakBlock(posBreakBlock, (ItemToolWrapper) bestTool)
+					Modification.breakBlock(posBreakBlock, (ItemToolWrapper) resultBreak.bestTool)
 			};
-			float ticksToBreak = ItemUtils.getBreakDuration(bestTool.getStack(1), posBreakBlock);
-			return Result.valid(Direction.DOWN, resultFall.to, ticksToBreak + resultFall.estimatedCost, modifications);
+			return Result.valid(Direction.DOWN, resultFall.to, resultBreak.ticksToBreak + resultFall.estimatedCost, modifications);
 		}
 
 

@@ -6,6 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockUtils;
 import stevebot.data.blocks.BlockWrapper;
+import stevebot.pathfinding.actions.ActionCosts;
 
 public class ItemUtils {
 
@@ -24,6 +25,19 @@ public class ItemUtils {
 
 	public static ItemLibrary getItemLibrary() {
 		return ItemUtils.itemLibrary;
+	}
+
+
+
+
+	/**
+	 * @param position the position of the block to break
+	 * @return the time (in ticks) it takes to break the block without a tool
+	 */
+	public static float getBreakDuration(BaseBlockPos position) {
+		final BlockWrapper blockWrapper = BlockUtils.getBlockProvider().getBlockAt(position);
+		final IBlockState blockState = blockWrapper.getBlock().getDefaultState();
+		return getBreakDuration(ItemStack.EMPTY, blockState);
 	}
 
 
@@ -52,9 +66,13 @@ public class ItemUtils {
 		// sources:
 		// https://greyminecraftcoder.blogspot.com/2015/01/calculating-rate-of-damage-when-mining.html
 		// https://minecraft.gamepedia.com/Breaking
+		final float blockHardness = state.getBlockHardness(null, null);
+		if (blockHardness < 0) {
+			return (float) ActionCosts.COST_INFINITE;
+		}
 		final float playerBreakSpeed = getDigSpeed(itemStack, state);
 		final int canHarvestMod = (itemStack != null && itemStack.canHarvestBlock(state)) ? 30 : 100;
-		final float dmgPerTick = ((playerBreakSpeed / state.getBlockHardness(null, null)) * (1f / canHarvestMod));
+		final float dmgPerTick = ((playerBreakSpeed / blockHardness) * (1f / canHarvestMod));
 		return 1f / dmgPerTick;
 	}
 

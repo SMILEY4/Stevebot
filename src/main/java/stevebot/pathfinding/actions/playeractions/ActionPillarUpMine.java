@@ -1,6 +1,9 @@
 package stevebot.pathfinding.actions.playeractions;
 
-import stevebot.data.blockpos.FastBlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blocks.BlockUtils;
+import stevebot.data.items.wrapper.ItemToolWrapper;
+import stevebot.data.modification.BlockBreakModification;
 import stevebot.data.modification.Modification;
 import stevebot.misc.Direction;
 import stevebot.misc.ProcState;
@@ -8,15 +11,16 @@ import stevebot.misc.StateMachine;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
+import stevebot.pathfinding.actions.BreakBlockCheckResult;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerUtils;
 
-public class ActionPillarUp extends Action {
+public class ActionPillarUpMine extends Action {
 
 
 	private enum State {
-		SLOWING_DOWN, JUMPING, LANDING;
+		SLOWING_DOWN, BREAKING, JUMPING, LANDING;
 	}
 
 
@@ -25,7 +29,7 @@ public class ActionPillarUp extends Action {
 
 
 	private enum Transition {
-		SLOW_ENOUGH, PLACED_BLOCK;
+		SLOW_ENOUGH, BROKE_BLOCK, PLACED_BLOCK;
 	}
 
 
@@ -39,12 +43,14 @@ public class ActionPillarUp extends Action {
 
 
 
-	private ActionPillarUp(Node from, Node to, double cost, Modification[] modifications) {
+	private ActionPillarUpMine(Node from, Node to, double cost, Modification[] modifications) {
 		super(from, to, cost);
 		this.modifications = modifications;
-		stateMachine.defineTransition(State.SLOWING_DOWN, Transition.SLOW_ENOUGH, State.JUMPING);
+		stateMachine.defineTransition(State.SLOWING_DOWN, Transition.SLOW_ENOUGH, State.BREAKING);
+		stateMachine.defineTransition(State.BREAKING, Transition.BROKE_BLOCK, State.JUMPING);
 		stateMachine.defineTransition(State.JUMPING, Transition.PLACED_BLOCK, State.LANDING);
 		stateMachine.addListener(Transition.SLOW_ENOUGH, ((previous, next, transition) -> onSlowEnough()));
+		stateMachine.addListener(Transition.BROKE_BLOCK, ((previous, next, transition) -> onBrokeBlock()));
 	}
 
 
@@ -64,6 +70,8 @@ public class ActionPillarUp extends Action {
 			case SLOWING_DOWN: {
 				return tickSlowDown();
 			}
+			case BREAKING:
+				return tickBreakBlock();
 			case JUMPING: {
 				return tickJump();
 			}
@@ -95,8 +103,35 @@ public class ActionPillarUp extends Action {
 
 
 
+	/**
+	 * Player reached the required speed and position.
+	 */
 	private void onSlowEnough() {
 		PlayerUtils.getCamera().enableForceCamera();
+		PlayerUtils.getInventory().selectItem(((BlockBreakModification) getModifications()[0]).getTool());
+	}
+
+
+
+
+	/**
+	 * Break the block above
+	 */
+	private ProcState tickBreakBlock() {
+		final BlockBreakModification modification = (BlockBreakModification) getModifications()[0];
+		if (ActionUtils.breakBlock(modification.getPosition())) {
+			stateMachine.fireTransition(Transition.BROKE_BLOCK);
+		}
+		return ProcState.EXECUTING;
+	}
+
+
+
+
+	/**
+	 * When the block above was broken
+	 */
+	private void onBrokeBlock() {
 	}
 
 
@@ -156,18 +191,18 @@ public class ActionPillarUp extends Action {
 
 	@Override
 	public String getActionName() {
-		return "pillar-up";
+		return "pillar-up-mine";
 	}
 
 
 
 
-	public static class PillarUpFactory implements ActionFactory {
+	public static class PillarUpMineFactory implements ActionFactory {
 
 
 		@Override
 		public Action createAction(Node node, Result result) {
-			return new ActionPillarUp(node, result.to, result.estimatedCost, result.modifications);
+			return new ActionPillarUpMine(node, result.to, result.estimatedCost, result.modifications);
 		}
 
 
@@ -181,23 +216,39 @@ public class ActionPillarUp extends Action {
 				return Result.invalid();
 			}
 
-			// check to-position
-			final FastBlockPos to = node.getPosCopy().add(0, 1, 0);
-			if (!ActionUtils.canMoveThrough(to)) {
-				return Result.invalid();
-			}
-
 			// check from-position
 			if (!ActionUtils.canStandAt(node.getPos())) {
 				return Result.invalid();
 			}
 
+			// check to-position
+			final BaseBlockPos blockAbove = node.getPosCopy().add(0, 2, 0);
+			if (BlockUtils.canWalkThrough(blockAbove)) {
+				return Result.invalid();
+			}
+
+			// check block to break
+			float ticksToBreak = 0;
+			Modification modificationBreakBlock = null;
+			final BaseBlockPos posAbove = node.getPosCopy().add(0, 2, 0);
+			if (!BlockUtils.canWalkThrough(posAbove)) {
+				final BreakBlockCheckResult resultBottom = ActionUtils.checkBlockToBreak(posAbove);
+				if (!resultBottom.breakable) {
+					return Result.invalid();
+				} else {
+					ticksToBreak += resultBottom.ticksToBreak;
+					modificationBreakBlock = Modification.breakBlock(posAbove, (ItemToolWrapper) resultBottom.bestTool);
+				}
+			}
+
 			// build valid result
 			final int indexThrowaway = PlayerUtils.getActiveSnapshot().findThrowawayBlock();
 			final Modification[] modifications = new Modification[]{
+					modificationBreakBlock,
 					Modification.placeBlock(node.getPos(), PlayerUtils.getActiveSnapshot().getAsBlock(indexThrowaway))
 			};
-			return Result.valid(Direction.UP, NodeCache.get(to), ActionCosts.COST_PILLAR_UP, modifications);
+			return Result.valid(Direction.UP, NodeCache.get(node.getPosCopy().add(0, 1, 0)),
+					ActionCosts.COST_PILLAR_UP + ticksToBreak, modifications);
 		}
 
 
