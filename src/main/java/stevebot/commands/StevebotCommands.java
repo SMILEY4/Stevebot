@@ -7,6 +7,7 @@ import stevebot.pathfinding.PathHandler;
 import stevebot.pathfinding.goal.ExactGoal;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.goal.XZGoal;
+import stevebot.pathfinding.goal.YGoal;
 import stevebot.pathfinding.path.PathRenderable;
 import stevebot.player.PlayerCameraImpl;
 import stevebot.player.PlayerUtils;
@@ -79,6 +80,34 @@ public class StevebotCommands {
 						final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
 						final Vector3d dir = PlayerUtils.getCamera().getLookDir().setLength(CommandListener.getAsInt("dist", parameters));
 						Goal goal = new XZGoal(from.getX() + dir.getIntX(), from.getZ() + dir.getIntZ());
+						pathHandler.createPath(new BaseBlockPos(from), goal, true, true);
+					}
+				});
+
+		// path level <level>
+		CommandSystem.addCommand(
+				"pathLevel",
+				"path level <level:INTEGER>",
+				"/path level <level>\n    Finds a path to the given y-level.",
+				(templateId, parameters) -> {
+					if (PlayerUtils.getPlayer() != null) {
+						final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
+						final int level = CommandListener.getAsInt("level", parameters);
+						Goal goal = new YGoal(level);
+						pathHandler.createPath(new BaseBlockPos(from), goal, true, false);
+					}
+				});
+
+		// path level <level> freelook
+		CommandSystem.addCommand(
+				"pathLevel",
+				"path level <level:INTEGER> freelook",
+				"/path level <level>\n    Finds a path to the given y-level and enables freelook.\",.",
+				(templateId, parameters) -> {
+					if (PlayerUtils.getPlayer() != null) {
+						final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
+						final int level = CommandListener.getAsInt("level", parameters);
+						Goal goal = new YGoal(level);
 						pathHandler.createPath(new BaseBlockPos(from), goal, true, true);
 					}
 				});
