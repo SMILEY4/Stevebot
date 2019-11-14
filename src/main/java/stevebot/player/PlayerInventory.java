@@ -8,9 +8,10 @@ public interface PlayerInventory {
 	/**
 	 * Selects a throwaway-block in the hotbar.
 	 *
+	 * @param allowGravityBlock true, to include blocks that have gravity, like sand or gravel
 	 * @return whether a throwaway-block was selected
 	 */
-	boolean selectThrowawayBlock();
+	boolean selectThrowawayBlock(boolean allowGravityBlock);
 
 	/**
 	 * Selects the slot containing the given item

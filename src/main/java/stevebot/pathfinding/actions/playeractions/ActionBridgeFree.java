@@ -100,7 +100,7 @@ public class ActionBridgeFree extends Action {
 	 * Place the block after the required position was reached.
 	 */
 	private ProcState tickPlaceBridge() {
-		if (!PlayerUtils.getInventory().selectThrowawayBlock()) {
+		if (!PlayerUtils.getInventory().selectThrowawayBlock(false)) {
 			return ProcState.FAILED;
 		}
 		PlayerUtils.getCamera().enableForceCamera();
@@ -191,12 +191,12 @@ public class ActionBridgeFree extends Action {
 			}
 
 			// check inventory
-			if (!PlayerUtils.getActiveSnapshot().hasThrowawayBlockInHotbar()) {
+			if (!PlayerUtils.getActiveSnapshot().hasThrowawayBlockInHotbar(false)) {
 				return Result.invalid();
 			}
 
 			// build valid result
-			final int indexThrowaway = PlayerUtils.getActiveSnapshot().findThrowawayBlock();
+			final int indexThrowaway = PlayerUtils.getActiveSnapshot().findThrowawayBlock(false);
 			final Modification[] modifications = new Modification[]{
 					Modification.placeBlock(posBridgeBlock, PlayerUtils.getActiveSnapshot().getAsBlock(indexThrowaway))
 			};

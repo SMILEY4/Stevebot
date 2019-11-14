@@ -111,7 +111,7 @@ public class ActionPillarUp extends Action {
 			PlayerUtils.getInput().setJump();
 		}
 		if (PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
-			if (!PlayerUtils.getInventory().selectThrowawayBlock()) {
+			if (!PlayerUtils.getInventory().selectThrowawayBlock(true)) {
 				return ProcState.FAILED;
 			}
 			ActionUtils.placeBlockAgainst(getFrom().getPosCopy().add(0, -1, 0), Direction.UP);
@@ -177,7 +177,7 @@ public class ActionPillarUp extends Action {
 		public Result check(Node node) {
 
 			// check inventory
-			if (!PlayerUtils.getActiveSnapshot().hasThrowawayBlockInHotbar()) {
+			if (!PlayerUtils.getActiveSnapshot().hasThrowawayBlockInHotbar(true)) {
 				return Result.invalid();
 			}
 
@@ -193,7 +193,7 @@ public class ActionPillarUp extends Action {
 			}
 
 			// build valid result
-			final int indexThrowaway = PlayerUtils.getActiveSnapshot().findThrowawayBlock();
+			final int indexThrowaway = PlayerUtils.getActiveSnapshot().findThrowawayBlock(true);
 			final Modification[] modifications = new Modification[]{
 					Modification.placeBlock(node.getPos(), PlayerUtils.getActiveSnapshot().getAsBlock(indexThrowaway))
 			};

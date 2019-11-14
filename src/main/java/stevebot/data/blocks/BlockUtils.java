@@ -42,6 +42,12 @@ public class BlockUtils {
 	static final int DARK_OAK_FENCE_GATE = 186;
 	static final int ACACIA_FENCE_GATE = 187;
 
+	static final int SAND = 12;
+	static final int GRAVEL = 13;
+	static final int ANVIL = 145;
+	static final int CONCRETE_POWDER = 252;
+
+
 	private static BlockProvider blockProvider;
 	private static BlockLibrary blockLibrary;
 
@@ -453,6 +459,29 @@ public class BlockUtils {
 
 
 	/**
+	 * @param position the position of the block
+	 * @return whether the block at the given position is affected by gravity.
+	 */
+	public static boolean hasGravity(BaseBlockPos position) {
+		return hasGravity(blockProvider.getBlockAt(position));
+	}
+
+
+
+
+	/**
+	 * @param block the block to check
+	 * @return whether the given block is affected by gravity.
+	 */
+	public static boolean hasGravity(BlockWrapper block) {
+		final int id = block.getId();
+		return id == SAND || id == GRAVEL || id == ANVIL || id == CONCRETE_POWDER;
+	}
+
+
+
+
+	/**
 	 * @param pos the position
 	 * @return the distance of the nearest block-center to the given position on one axis
 	 */
@@ -682,5 +711,6 @@ public class BlockUtils {
 
 		return minDistY == INFINITE ? null : closestBlock;
 	}
+
 
 }
