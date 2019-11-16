@@ -52,6 +52,14 @@ public class MinecraftAdapterImpl extends MinecraftAdapter {
 
 
 	@Override
+	public boolean isPlayerCreativeMode() {
+		return getPlayer().isCreative();
+	}
+
+
+
+
+	@Override
 	public Block getBlock(BlockPos pos) {
 		return getWorld().getBlockState(pos).getBlock();
 	}
