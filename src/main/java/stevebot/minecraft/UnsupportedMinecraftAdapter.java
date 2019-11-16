@@ -40,6 +40,14 @@ public class UnsupportedMinecraftAdapter extends MinecraftAdapter {
 
 
 	@Override
+	public boolean isPlayerCreativeMode() {
+		throw new UnsupportedOperationException();
+	}
+
+
+
+
+	@Override
 	public Block getBlock(BlockPos pos) {
 		throw new UnsupportedOperationException();
 	}

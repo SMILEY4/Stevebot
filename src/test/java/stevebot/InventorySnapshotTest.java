@@ -9,6 +9,8 @@ import stevebot.data.items.wrapper.ItemToolWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.data.modification.Modification;
 import stevebot.data.player.PlayerSnapshot;
+import stevebot.minecraft.MinecraftAdapter;
+import stevebot.minecraft.UnsupportedMinecraftAdapter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,6 +46,13 @@ public class InventorySnapshotTest {
 	@Test
 	void testApplyModificationPlace() {
 
+		MinecraftAdapter.initialize(new UnsupportedMinecraftAdapter() {
+			@Override
+			public boolean isPlayerCreativeMode() {
+				return false;
+			}
+		});
+
 		final PlayerSnapshot snapshot = new PlayerSnapshot();
 		snapshot.setHotbarItemStack(3, ITEM_DIRT, 2);
 		snapshot.setHotbarItemStack(6, ITEM_DIA_PICKAXE, 1);
@@ -62,6 +71,35 @@ public class InventorySnapshotTest {
 
 		assertThat(snapshot.getStackSize(3)).isEqualTo(-1);
 		assertThat(snapshot.getItem(3)).isNull();
+	}
+
+
+
+
+	@Test
+	void testApplyModificationPlaceCreative() {
+
+		MinecraftAdapter.initialize(new UnsupportedMinecraftAdapter() {
+			@Override
+			public boolean isPlayerCreativeMode() {
+				return true;
+			}
+		});
+
+		final PlayerSnapshot snapshot = new PlayerSnapshot();
+		snapshot.setHotbarItemStack(3, ITEM_DIRT, 2);
+		snapshot.setHotbarItemStack(6, ITEM_DIA_PICKAXE, 1);
+		snapshot.setHotbarItemStack(7, ITEM_STONE, 10);
+
+		snapshot.applyModification(Modification.placeBlock(new BaseBlockPos(), BLOCK_STONE));
+		snapshot.applyModification(Modification.placeBlock(new BaseBlockPos(), BLOCK_DIRT));
+
+		assertThat(snapshot.getStackSize(3)).isEqualTo(2);
+		assertThat(snapshot.getItem(3).getId()).isEqualTo(ITEM_DIRT.getId());
+
+		assertThat(snapshot.getStackSize(7)).isEqualTo(10);
+		assertThat(snapshot.getItem(7).getId()).isEqualTo(ITEM_STONE.getId());
+
 	}
 
 

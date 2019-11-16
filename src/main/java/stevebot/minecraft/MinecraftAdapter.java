@@ -59,6 +59,12 @@ public abstract class MinecraftAdapter {
 	 */
 	public abstract InventoryPlayer getPlayerInventory();
 
+
+	/**
+	 * @return true, if the player is in creative mode
+	 */
+	public abstract boolean isPlayerCreativeMode();
+
 	/**
 	 * @param pos the position of the block
 	 * @return the block at the given position
