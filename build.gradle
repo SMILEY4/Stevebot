@@ -1,5 +1,5 @@
 group = "stevebot"
-version = "dev"
+version = "0.3.0"
 
 buildscript {
     repositories {
