@@ -101,6 +101,16 @@ public class PlayerSnapshot {
 
 
 	/**
+	 * Sets the health of the player (1hp = half a heart)
+	 */
+	public void setPlayerHealth(int health) {
+		this.health = health;
+	}
+
+
+
+
+	/**
 	 * @return the health of the player (1hp = half a heart)
 	 */
 	public int getPlayerHealth() {

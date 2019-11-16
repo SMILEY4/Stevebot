@@ -3,6 +3,7 @@ package stevebot.pathfinding.actions.playeractions;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.blocks.BlockUtils;
+import stevebot.data.modification.BlockBreakModification;
 import stevebot.data.modification.Modification;
 import stevebot.misc.Direction;
 import stevebot.misc.ProcState;
@@ -148,13 +149,21 @@ public class ActionFall extends Action {
 
 		@Override
 		public Result check(Node node) {
+			return checkWithModification(node, null);
+		}
+
+
+
+
+		Result checkWithModification(Node node, BlockBreakModification modification) {
+
 
 			final BaseBlockPos from = node.getPos();
 
 			// find destination position and fall-height
 			int height = 0;
 			FastBlockPos fallTo = from.copyAsFastBlockPos().add(0, -1, 0);
-			while (BlockUtils.canWalkThrough(fallTo)) {
+			while (canFallThrough(fallTo, modification)) {
 				fallTo = fallTo.add(0, -1, 0);
 				height++;
 				if (height > 300) {
@@ -187,6 +196,17 @@ public class ActionFall extends Action {
 			}
 
 			return Result.valid(Direction.NONE, NodeCache.get(fallTo), ActionCosts.COST_FALL_N(from.getY() - fallTo.getY()));
+		}
+
+
+
+
+		private boolean canFallThrough(BaseBlockPos position, BlockBreakModification modification) {
+			if (modification != null && modification.getPosition().equals(position)) {
+				return true;
+			} else {
+				return BlockUtils.canWalkThrough(position);
+			}
 		}
 
 

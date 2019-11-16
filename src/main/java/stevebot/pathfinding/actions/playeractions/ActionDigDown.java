@@ -11,7 +11,6 @@ import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.actions.BreakBlockCheckResult;
 import stevebot.pathfinding.nodes.Node;
-import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerUtils;
 
 public class ActionDigDown extends Action {
@@ -210,23 +209,25 @@ public class ActionDigDown extends Action {
 			// check if block breakable
 			final BaseBlockPos posBreakBlock = node.getPosCopy().add(0, -1, 0);
 			final BreakBlockCheckResult resultBreak = ActionUtils.checkBlockToBreak(posBreakBlock);
-			if(!ActionUtils.canSafelyBreak(posBreakBlock)) {
-				return Result.invalid();
-			}
 			if (!resultBreak.breakable) {
 				return Result.invalid();
 			}
+			if (!ActionUtils.canSafelyBreak(posBreakBlock)) {
+				return Result.invalid();
+			}
+
+			// create modification
+			BlockBreakModification modification = (BlockBreakModification) Modification.breakBlock(posBreakBlock, (ItemToolWrapper) resultBreak.bestTool);
 
 			// check fall
-			final Node nodeFall = NodeCache.get(posBreakBlock);
-			final Result resultFall = fallActionFactory.check(nodeFall);
+			final Result resultFall = fallActionFactory.checkWithModification(node, modification);
 			if (ResultType.VALID != resultFall.type) {
 				return Result.invalid();
 			}
 
 			// build valid result
 			final Modification[] modifications = new Modification[]{
-					Modification.breakBlock(posBreakBlock, (ItemToolWrapper) resultBreak.bestTool)
+					modification
 			};
 			return Result.valid(Direction.DOWN, resultFall.to, resultBreak.ticksToBreak + resultFall.estimatedCost, modifications);
 		}

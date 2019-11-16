@@ -46,11 +46,10 @@ public interface BlockProvider {
 	/**
 	 * Temporarily changes a block at a specified position without placing/breaking it in the real world.
 	 *
-	 * @param change           the change to add.
-	 * @param overrideExisting true, to override any existing block change at that same position.
+	 * @param modification     the modification to add.
+	 * @param overrideExisting true, to override any existing modification at that same position.
 	 */
-	void addModification(Modification change, boolean overrideExisting);
-
+	void addModification(Modification modification, boolean overrideExisting);
 
 	/**
 	 * Removes/Resets all temporary block changes.
