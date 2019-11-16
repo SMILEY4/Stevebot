@@ -230,7 +230,7 @@ public class ActionUtils {
 	 */
 	public static boolean placeBlockAgainst(BaseBlockPos pos, Direction direction) {
 		if (BlockUtils.canWalkOn(pos) && facesPlayer(pos, direction)) {
-			PlayerUtils.getCamera().setLookAtBlockSide(pos, direction);
+			PlayerUtils.getCamera().setLookAt(pos);
 			PlayerUtils.getInput().setPlaceBlock();
 			return true;
 		} else {

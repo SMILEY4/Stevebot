@@ -338,7 +338,7 @@ public class PlayerInputImpl implements PlayerInput {
 		}
 		setPlaceBlock(false);
 		setBreakBlock(false);
-//		setInteract(false);
+		setInteract(false);
 	}
 
 

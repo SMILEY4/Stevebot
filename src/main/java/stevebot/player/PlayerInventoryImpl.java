@@ -40,23 +40,40 @@ public class PlayerInventoryImpl implements PlayerInventory {
 
 
 	@Override
-	public boolean selectItem(ItemWrapper item) {
+	public int findItem(ItemWrapper item) {
 		final InventoryPlayer inventory = PlayerUtils.getPlayer().inventory;
 		for (int i = 0; i < 9; i++) {
 			final ItemStack stack = inventory.getStackInSlot(i);
-			if (stack.isEmpty()) {
-				if (item == null) {
-					inventory.currentItem = i;
-					return true;
-				}
-			} else {
+			if (!stack.isEmpty()) {
 				if (ItemUtils.getItemLibrary().getItemByMCItem(stack.getItem()).getId() == item.getId()) {
-					inventory.currentItem = i;
-					return true;
+					return i;
 				}
 			}
 		}
-		return false;
+		return -1;
+	}
+
+
+
+
+	@Override
+	public boolean selectItem(ItemWrapper item) {
+		final InventoryPlayer inventory = PlayerUtils.getPlayer().inventory;
+		final int slot = findItem(item);
+		if (slot != -1) {
+			inventory.currentItem = slot;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+
+
+	@Override
+	public boolean hasItem(ItemWrapper item) {
+		return findItem(item) != -1;
 	}
 
 

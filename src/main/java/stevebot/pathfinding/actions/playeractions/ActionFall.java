@@ -38,7 +38,7 @@ public class ActionFall extends Action {
 	private StateMachine<State, Transition> stateMachine = new StateMachine<>();
 
 	private final Modification[] modifications = new Modification[1];
-	private final boolean landInWater;
+	private boolean landInWater;
 
 
 
