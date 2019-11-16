@@ -1,6 +1,5 @@
 package stevebot.data.player;
 
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemTool;
 import stevebot.data.blocks.BlockLibrary;
@@ -16,8 +15,8 @@ import stevebot.data.modification.BlockBreakModification;
 import stevebot.data.modification.BlockPlaceModification;
 import stevebot.data.modification.HealthChangeModification;
 import stevebot.data.modification.Modification;
+import stevebot.minecraft.MinecraftAdapter;
 import stevebot.pathfinding.actions.ActionCosts;
-import stevebot.player.PlayerUtils;
 
 public class PlayerSnapshot {
 
@@ -62,8 +61,7 @@ public class PlayerSnapshot {
 	public void applyModification(Modification modification) {
 
 		if (modification instanceof BlockPlaceModification) {
-			final EntityPlayerSP player = PlayerUtils.getPlayer();
-			if (player.isCreative()) {
+			if (MinecraftAdapter.get().isPlayerCreativeMode()) {
 				return;
 			}
 
