@@ -13,6 +13,15 @@ public interface PlayerInventory {
 	 */
 	boolean selectThrowawayBlock(boolean allowGravityBlock);
 
+
+	/**
+	 * Searches for the given item in the players hotbar
+	 *
+	 * @param item the item to find
+	 * @return the slot with the given item or -1
+	 */
+	int findItem(ItemWrapper item);
+
 	/**
 	 * Selects the slot containing the given item
 	 *
@@ -21,5 +30,13 @@ public interface PlayerInventory {
 	 */
 	boolean selectItem(ItemWrapper item);
 
+
+	/**
+	 * Check if the given item is in the players hotbar
+	 *
+	 * @param item the item to check
+	 * @return true, if the item is in the hotbar
+	 */
+	boolean hasItem(ItemWrapper item);
 
 }

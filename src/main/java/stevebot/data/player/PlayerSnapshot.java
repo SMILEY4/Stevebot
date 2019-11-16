@@ -262,6 +262,35 @@ public class PlayerSnapshot {
 
 
 	/**
+	 * @return the slot containing a bucket with water, or -1
+	 */
+	public int findWaterBucketInHotbar() {
+		final int ID_BUCKET_WATER = 326;
+		for (int i = 0; i < 9; i++) {
+			final ItemWrapper stack = hotbarItems[i];
+			if (stack != null && hotbarStackSizes[i] != 0) {
+				if (stack.getId() == ID_BUCKET_WATER) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+
+
+
+
+	/**
+	 * @return whether a slot contains a water bucket
+	 */
+	public boolean hasWaterBucketInHotbar() {
+		return findWaterBucketInHotbar() != -1;
+	}
+
+
+
+
+	/**
 	 * @param block the block to break
 	 * @return the best item to break the given block or {@link ItemLibrary#INVALID_ITEM}
 	 */
