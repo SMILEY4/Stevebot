@@ -66,6 +66,7 @@ public class Pathfinding {
 		int nBetterPathFound = 0;
 		long timeLast = System.currentTimeMillis();
 		PlayerSnapshot baseSnapshot = PlayerUtils.createSnapshot();
+		baseSnapshot.setPlayerHealth((int) PlayerUtils.getPlayer().getHealth());
 
 		// calculate path until...
 		//	- open set is empty

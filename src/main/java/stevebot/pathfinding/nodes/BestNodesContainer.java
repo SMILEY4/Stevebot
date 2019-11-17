@@ -52,7 +52,7 @@ public class BestNodesContainer {
 	 * @return true, if it was added to the best nodes
 	 */
 	public boolean update(BaseBlockPos start, Node node, Goal goal) {
-		final double costNode = (node.fcost() * goal.calcHCost(node.getPos())) / (Math.log(start.dist(node.getPos())) * 0.5);
+		final double costNode = node.hcost();
 		for (int i = 0; i < capacity; i++) {
 			if (costNode < costs[i]) {
 				costs[i] = costNode;

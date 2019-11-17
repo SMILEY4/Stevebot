@@ -661,7 +661,7 @@ public class BlockUtils {
 		// spiral outwards
 		for (int i = 0; i < Math.pow(Math.max(halfSizeX, halfSizeZ), 2); i++) {
 			if ((-halfSizeX / 2 < x && x <= halfSizeX / 2) && (-halfSizeZ / 2 < z && z <= halfSizeZ / 2)) {
-				final BaseBlockPos result = searchColumn(x, z, blockType, position);
+				final BaseBlockPos result = searchColumn(x + position.getX(), z + position.getZ(), blockType, position);
 				if (result != null) {
 					return result;
 				}
