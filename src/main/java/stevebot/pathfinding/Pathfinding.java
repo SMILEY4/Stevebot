@@ -10,7 +10,6 @@ import stevebot.misc.Config;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionFactoryProvider;
-import stevebot.pathfinding.actions.ImpossibleActions;
 import stevebot.pathfinding.actions.playeractions.Action;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.nodes.BestNodesContainer;
@@ -71,7 +70,6 @@ public class Pathfinding {
 		long timeLast = System.currentTimeMillis();
 		final PlayerSnapshot baseSnapshot = PlayerUtils.createSnapshot();
 		baseSnapshot.setPlayerHealth((int) PlayerUtils.getPlayer().getHealth());
-		final ImpossibleActions impossibleActions = new ImpossibleActions();
 
 		// calculate path until...
 		//	- open set is empty
@@ -142,7 +140,7 @@ public class Pathfinding {
 
 			// process actions
 			boolean hitUnloaded = false;
-			impossibleActions.reset();
+			actionFactoryProvider.getImpossibleActionHandler().reset();
 			List<ActionFactory> factories = actionFactoryProvider.getAllFactories();
 
 			// iterate over every registered action
@@ -150,7 +148,7 @@ public class Pathfinding {
 				ActionFactory factory = factories.get(i);
 
 				// continue, if prev processed actions make this action impossible
-				if (impossibleActions.isPossible(factory)) {
+				if (actionFactoryProvider.getImpossibleActionHandler().isPossible(factory)) {
 					continue;
 				}
 
@@ -172,7 +170,7 @@ public class Pathfinding {
 				if (result.type == ActionFactory.ResultType.VALID) {
 
 					// add actions to list that are impossible when this action is valid
-					impossibleActions.addCompletedFactory(factory);
+					actionFactoryProvider.getImpossibleActionHandler().addValidFactory(factory);
 
 					// get destination node of action
 					final Node next = result.to;

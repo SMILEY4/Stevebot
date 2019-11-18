@@ -11,6 +11,9 @@ public class ActionFactoryProvider {
 	private final List<ActionFactory> factories = new ArrayList<>();
 
 
+	private final ImpossibleActionHandler impossibleActionHandler = new ImpossibleActionHandler();
+
+
 
 
 	public ActionFactoryProvider() {
@@ -24,6 +27,9 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionWalk.WalkFactorySouthWest());
 		registerFactory(new ActionWalk.WalkFactoryWest());
 		registerFactory(new ActionWalk.WalkFactoryNorthWest());
+
+
+
 
 		// step-down-factories
 		registerFactory(new ActionStepDown.StepDownFactoryNorth());
@@ -166,5 +172,16 @@ public class ActionFactoryProvider {
 	public List<ActionFactory> getAllFactories() {
 		return factories;
 	}
+
+
+
+
+	/**
+	 * @return the handler for impossible actions
+	 */
+	public ImpossibleActionHandler getImpossibleActionHandler() {
+		return impossibleActionHandler;
+	}
+
 
 }
