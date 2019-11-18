@@ -144,6 +144,16 @@ public class ActionFall extends Action {
 
 
 
+	@Override
+	public boolean isOnPath(BaseBlockPos position) {
+		return position.getX() == getFrom().getPos().getX()
+				&& position.getZ() == getTo().getPos().getZ()
+				&& (position.getY() <= getFrom().getPos().getY() && position.getY() >= getTo().getPos().getY());
+	}
+
+
+
+
 	public static class FallActionFactory implements ActionFactory {
 
 

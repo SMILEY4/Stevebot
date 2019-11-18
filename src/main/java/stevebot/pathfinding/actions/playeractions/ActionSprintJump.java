@@ -130,6 +130,14 @@ public class ActionSprintJump extends Action {
 
 
 
+	@Override
+	public boolean isOnPath(BaseBlockPos position) {
+		return position.getY() >= getFrom().getPos().getY();
+	}
+
+
+
+
 	private static abstract class SprintJumpActionFactory implements ActionFactory {
 
 

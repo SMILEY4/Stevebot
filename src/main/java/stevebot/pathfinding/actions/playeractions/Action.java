@@ -1,5 +1,6 @@
 package stevebot.pathfinding.actions.playeractions;
 
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.modification.Modification;
 import stevebot.misc.ProcState;
 import stevebot.pathfinding.nodes.Node;
@@ -74,6 +75,15 @@ public abstract class Action {
 	 * @return the resulting {@link ProcState} of the update
 	 */
 	public abstract ProcState tick(boolean firstTick);
+
+
+	/**
+	 * Check if the given position is on the path of this action.
+	 *
+	 * @param position the position to check
+	 * @return true, if the position is on the path
+	 */
+	public abstract boolean isOnPath(BaseBlockPos position);
 
 
 

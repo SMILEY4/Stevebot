@@ -171,6 +171,14 @@ public class ActionMineStraight extends Action {
 
 
 	@Override
+	public boolean isOnPath(BaseBlockPos position) {
+		return position.equals(getFrom().getPos()) || position.equals(getTo().getPos());
+	}
+
+
+
+
+	@Override
 	public boolean hasModifications() {
 		return true;
 	}
@@ -233,7 +241,7 @@ public class ActionMineStraight extends Action {
 
 			// check top block to break
 			final BaseBlockPos posTop = to.copyAsFastBlockPos().add(0, 1, 0);
-			if(!ActionUtils.canSafelyBreak(posTop)) {
+			if (!ActionUtils.canSafelyBreak(posTop)) {
 				return Result.invalid();
 			}
 			if (!BlockUtils.canWalkThrough(posTop)) {
@@ -248,7 +256,7 @@ public class ActionMineStraight extends Action {
 
 			// check bottom block to break
 			final BaseBlockPos posBottom = to;
-			if(!ActionUtils.canSafelyBreak(posBottom)) {
+			if (!ActionUtils.canSafelyBreak(posBottom)) {
 				return Result.invalid();
 			}
 			if (!BlockUtils.canWalkThrough(posBottom)) {

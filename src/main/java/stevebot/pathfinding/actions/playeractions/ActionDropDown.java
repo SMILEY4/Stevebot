@@ -142,6 +142,13 @@ public class ActionDropDown extends Action {
 
 
 
+	@Override
+	public boolean isOnPath(BaseBlockPos position) {
+		return position.equals(getFrom().getPos()) || fall.isOnPath(position);
+	}
+
+
+
 	private static abstract class DropDownActionFactory implements ActionFactory {
 
 

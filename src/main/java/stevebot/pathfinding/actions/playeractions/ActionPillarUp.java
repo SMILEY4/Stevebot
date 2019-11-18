@@ -1,5 +1,6 @@
 package stevebot.pathfinding.actions.playeractions;
 
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.modification.Modification;
 import stevebot.misc.Direction;
@@ -133,6 +134,14 @@ public class ActionPillarUp extends Action {
 		} else {
 			return ProcState.EXECUTING;
 		}
+	}
+
+
+
+
+	@Override
+	public boolean isOnPath(BaseBlockPos position) {
+		return position.equals(getFrom().getPos()) || position.equals(getTo().getPos());
 	}
 
 
