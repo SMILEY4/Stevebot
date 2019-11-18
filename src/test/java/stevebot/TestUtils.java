@@ -96,6 +96,14 @@ public class TestUtils {
 			public ProcState tick(boolean firstTick) {
 				return ProcState.DONE;
 			}
+
+
+
+
+			@Override
+			public boolean isOnPath(BaseBlockPos position) {
+				return true;
+			}
 		};
 	}
 
