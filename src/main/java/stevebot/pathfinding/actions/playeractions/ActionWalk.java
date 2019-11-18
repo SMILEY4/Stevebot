@@ -11,11 +11,6 @@ import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class ActionWalk extends Action {
 
 
@@ -75,51 +70,6 @@ public class ActionWalk extends Action {
 
 
 	private static abstract class WalkActionFactory implements ActionFactory {
-
-
-		private static final Map<Direction, List<Class<? extends ActionFactory>>> IMPOSSIBLE_ACTIONS = new HashMap<>();
-
-
-
-
-		static {
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH, new ArrayList<>()).add(ActionDropDown.DropDownFactoryNorth.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_EAST, new ArrayList<>()).add(ActionDropDown.DropDownFactoryNorthEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.EAST, new ArrayList<>()).add(ActionDropDown.DropDownFactoryEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_EAST, new ArrayList<>()).add(ActionDropDown.DropDownFactorySouthEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH, new ArrayList<>()).add(ActionDropDown.DropDownFactorySouth.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_WEST, new ArrayList<>()).add(ActionDropDown.DropDownFactorySouthWest.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.WEST, new ArrayList<>()).add(ActionDropDown.DropDownFactoryWest.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_WEST, new ArrayList<>()).add(ActionDropDown.DropDownFactoryNorthWest.class);
-
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH, new ArrayList<>()).add(ActionStepDown.StepDownFactoryNorth.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_EAST, new ArrayList<>()).add(ActionStepDown.StepDownFactoryNorthEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.EAST, new ArrayList<>()).add(ActionStepDown.StepDownFactoryEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_EAST, new ArrayList<>()).add(ActionStepDown.StepDownFactorySouthEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH, new ArrayList<>()).add(ActionStepDown.StepDownFactorySouth.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_WEST, new ArrayList<>()).add(ActionStepDown.StepDownFactorySouthWest.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.WEST, new ArrayList<>()).add(ActionStepDown.StepDownFactoryWest.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_WEST, new ArrayList<>()).add(ActionStepDown.StepDownFactoryNorthWest.class);
-
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH, new ArrayList<>()).add(ActionStepUp.StepUpFactoryNorth.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_EAST, new ArrayList<>()).add(ActionStepUp.StepUpFactoryNorthEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.EAST, new ArrayList<>()).add(ActionStepUp.StepUpFactoryEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_EAST, new ArrayList<>()).add(ActionStepUp.StepUpFactorySouthEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH, new ArrayList<>()).add(ActionStepUp.StepUpFactorySouth.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_WEST, new ArrayList<>()).add(ActionStepUp.StepUpFactorySouthWest.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.WEST, new ArrayList<>()).add(ActionStepUp.StepUpFactoryWest.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_WEST, new ArrayList<>()).add(ActionStepUp.StepUpFactoryNorthWest.class);
-		}
-
-
-
-
-		@Override
-		public List<Class<? extends ActionFactory>> makesImpossible(Direction direction) {
-			return IMPOSSIBLE_ACTIONS.get(direction);
-		}
-
-
 
 
 		ActionWalk create(Node node, Direction direction, Result result) {
@@ -209,12 +159,12 @@ public class ActionWalk extends Action {
 
 
 
-	public static class WalkFactoryNorth extends WalkActionFactory {
+	private static abstract class AbstractWalkActionFactory extends WalkActionFactory {
 
 
 		@Override
 		public Result check(Node node) {
-			return check(node, Direction.NORTH);
+			return check(node, getDirection());
 		}
 
 
@@ -222,7 +172,23 @@ public class ActionWalk extends Action {
 
 		@Override
 		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH, result);
+			return create(node, getDirection(), result);
+		}
+
+
+	}
+
+
+
+
+
+
+	public static class WalkFactoryNorth extends AbstractWalkActionFactory {
+
+
+		@Override
+		public Direction getDirection() {
+			return Direction.NORTH;
 		}
 
 	}
@@ -232,20 +198,12 @@ public class ActionWalk extends Action {
 
 
 
-	public static class WalkFactoryNorthEast extends WalkActionFactory {
+	public static class WalkFactoryNorthEast extends AbstractWalkActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.NORTH_EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH_EAST, result);
+		public Direction getDirection() {
+			return Direction.NORTH_EAST;
 		}
 
 	}
@@ -255,20 +213,12 @@ public class ActionWalk extends Action {
 
 
 
-	public static class WalkFactoryEast extends WalkActionFactory {
+	public static class WalkFactoryEast extends AbstractWalkActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.EAST, result);
+		public Direction getDirection() {
+			return Direction.EAST;
 		}
 
 	}
@@ -278,20 +228,12 @@ public class ActionWalk extends Action {
 
 
 
-	public static class WalkFactorySouthEast extends WalkActionFactory {
+	public static class WalkFactorySouthEast extends AbstractWalkActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH_EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH_EAST, result);
+		public Direction getDirection() {
+			return Direction.SOUTH_EAST;
 		}
 
 	}
@@ -301,20 +243,12 @@ public class ActionWalk extends Action {
 
 
 
-	public static class WalkFactorySouth extends WalkActionFactory {
+	public static class WalkFactorySouth extends AbstractWalkActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH, result);
+		public Direction getDirection() {
+			return Direction.SOUTH;
 		}
 
 	}
@@ -324,20 +258,12 @@ public class ActionWalk extends Action {
 
 
 
-	public static class WalkFactorySouthWest extends WalkActionFactory {
+	public static class WalkFactorySouthWest extends AbstractWalkActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH_WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH_WEST, result);
+		public Direction getDirection() {
+			return Direction.SOUTH_WEST;
 		}
 
 	}
@@ -347,20 +273,12 @@ public class ActionWalk extends Action {
 
 
 
-	public static class WalkFactoryWest extends WalkActionFactory {
+	public static class WalkFactoryWest extends AbstractWalkActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.WEST, result);
+		public Direction getDirection() {
+			return Direction.WEST;
 		}
 
 	}
@@ -370,20 +288,12 @@ public class ActionWalk extends Action {
 
 
 
-	public static class WalkFactoryNorthWest extends WalkActionFactory {
+	public static class WalkFactoryNorthWest extends AbstractWalkActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.NORTH_WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH_WEST, result);
+		public Direction getDirection() {
+			return Direction.NORTH_WEST;
 		}
 
 	}

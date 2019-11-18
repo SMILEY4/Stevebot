@@ -156,12 +156,12 @@ public class ActionSwim extends Action {
 
 
 
-	public static class SwimFactoryNorth extends SwimActionFactory {
+	private static abstract class AbstractSwimActionFactory extends SwimActionFactory {
 
 
 		@Override
 		public Result check(Node node) {
-			return check(node, Direction.NORTH);
+			return check(node, getDirection());
 		}
 
 
@@ -169,7 +169,23 @@ public class ActionSwim extends Action {
 
 		@Override
 		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH, result);
+			return create(node, getDirection(), result);
+		}
+
+
+	}
+
+
+
+
+
+
+	public static class SwimFactoryNorth extends AbstractSwimActionFactory {
+
+
+		@Override
+		public Direction getDirection() {
+			return Direction.NORTH;
 		}
 
 	}
@@ -179,20 +195,12 @@ public class ActionSwim extends Action {
 
 
 
-	public static class SwimFactoryNorthEast extends SwimActionFactory {
+	public static class SwimFactoryNorthEast extends AbstractSwimActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.NORTH_EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH_EAST, result);
+		public Direction getDirection() {
+			return Direction.NORTH_EAST;
 		}
 
 	}
@@ -202,20 +210,12 @@ public class ActionSwim extends Action {
 
 
 
-	public static class SwimFactoryEast extends SwimActionFactory {
+	public static class SwimFactoryEast extends AbstractSwimActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.EAST, result);
+		public Direction getDirection() {
+			return Direction.EAST;
 		}
 
 	}
@@ -225,20 +225,12 @@ public class ActionSwim extends Action {
 
 
 
-	public static class SwimFactorySouthEast extends SwimActionFactory {
+	public static class SwimFactorySouthEast extends AbstractSwimActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH_EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH_EAST, result);
+		public Direction getDirection() {
+			return Direction.SOUTH_EAST;
 		}
 
 	}
@@ -248,20 +240,12 @@ public class ActionSwim extends Action {
 
 
 
-	public static class SwimFactorySouth extends SwimActionFactory {
+	public static class SwimFactorySouth extends AbstractSwimActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH, result);
+		public Direction getDirection() {
+			return Direction.SOUTH;
 		}
 
 	}
@@ -271,20 +255,12 @@ public class ActionSwim extends Action {
 
 
 
-	public static class SwimFactorySouthWest extends SwimActionFactory {
+	public static class SwimFactorySouthWest extends AbstractSwimActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH_WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH_WEST, result);
+		public Direction getDirection() {
+			return Direction.SOUTH_WEST;
 		}
 
 	}
@@ -294,20 +270,12 @@ public class ActionSwim extends Action {
 
 
 
-	public static class SwimFactoryWest extends SwimActionFactory {
+	public static class SwimFactoryWest extends AbstractSwimActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.WEST, result);
+		public Direction getDirection() {
+			return Direction.WEST;
 		}
 
 	}
@@ -317,20 +285,12 @@ public class ActionSwim extends Action {
 
 
 
-	public static class SwimFactoryNorthWest extends SwimActionFactory {
+	public static class SwimFactoryNorthWest extends AbstractSwimActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.NORTH_WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH_WEST, result);
+		public Direction getDirection() {
+			return Direction.NORTH_WEST;
 		}
 
 	}

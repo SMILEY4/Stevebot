@@ -13,11 +13,6 @@ import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class ActionStepUp extends Action {
 
 
@@ -134,51 +129,6 @@ public class ActionStepUp extends Action {
 	private static abstract class StepUpActionFactory implements ActionFactory {
 
 
-		private static final Map<Direction, List<Class<? extends ActionFactory>>> IMPOSSIBLE_ACTIONS = new HashMap<>();
-
-
-
-
-		static {
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH, new ArrayList<>()).add(ActionDropDown.DropDownFactoryNorth.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_EAST, new ArrayList<>()).add(ActionDropDown.DropDownFactoryNorthEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.EAST, new ArrayList<>()).add(ActionDropDown.DropDownFactoryEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_EAST, new ArrayList<>()).add(ActionDropDown.DropDownFactorySouthEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH, new ArrayList<>()).add(ActionDropDown.DropDownFactorySouth.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_WEST, new ArrayList<>()).add(ActionDropDown.DropDownFactorySouthWest.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.WEST, new ArrayList<>()).add(ActionDropDown.DropDownFactoryWest.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_WEST, new ArrayList<>()).add(ActionDropDown.DropDownFactoryNorthWest.class);
-
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH, new ArrayList<>()).add(ActionStepDown.StepDownFactoryNorth.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_EAST, new ArrayList<>()).add(ActionStepDown.StepDownFactoryNorthEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.EAST, new ArrayList<>()).add(ActionStepDown.StepDownFactoryEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_EAST, new ArrayList<>()).add(ActionStepDown.StepDownFactorySouthEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH, new ArrayList<>()).add(ActionStepDown.StepDownFactorySouth.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_WEST, new ArrayList<>()).add(ActionStepDown.StepDownFactorySouthWest.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.WEST, new ArrayList<>()).add(ActionStepDown.StepDownFactoryWest.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_WEST, new ArrayList<>()).add(ActionStepDown.StepDownFactoryNorthWest.class);
-
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH, new ArrayList<>()).add(ActionWalk.WalkFactoryNorth.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_EAST, new ArrayList<>()).add(ActionWalk.WalkFactoryNorthEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.EAST, new ArrayList<>()).add(ActionWalk.WalkFactoryEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_EAST, new ArrayList<>()).add(ActionWalk.WalkFactorySouthEast.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH, new ArrayList<>()).add(ActionWalk.WalkFactorySouth.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.SOUTH_WEST, new ArrayList<>()).add(ActionWalk.WalkFactorySouthWest.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.WEST, new ArrayList<>()).add(ActionWalk.WalkFactoryWest.class);
-			IMPOSSIBLE_ACTIONS.getOrDefault(Direction.NORTH_WEST, new ArrayList<>()).add(ActionWalk.WalkFactoryNorthWest.class);
-		}
-
-
-
-
-		@Override
-		public List<Class<? extends ActionFactory>> makesImpossible(Direction direction) {
-			return IMPOSSIBLE_ACTIONS.get(direction);
-		}
-
-
-
-
 		ActionStepUp create(Node node, Direction direction, Result result) {
 			// final Result result = direction.diagonal ? checkDiagonal(node, direction) : checkStraight(node, direction);
 			return new ActionStepUp(node, result.to, result.estimatedCost);
@@ -260,12 +210,12 @@ public class ActionStepUp extends Action {
 
 
 
-	public static class StepUpFactoryNorth extends ActionStepUp.StepUpActionFactory {
+	private static abstract class AbstractStepUpActionFactory extends StepUpActionFactory {
 
 
 		@Override
 		public Result check(Node node) {
-			return check(node, Direction.NORTH);
+			return check(node, getDirection());
 		}
 
 
@@ -273,7 +223,23 @@ public class ActionStepUp extends Action {
 
 		@Override
 		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH, result);
+			return create(node, getDirection(), result);
+		}
+
+
+	}
+
+
+
+
+
+
+	public static class StepUpFactoryNorth extends AbstractStepUpActionFactory {
+
+
+		@Override
+		public Direction getDirection() {
+			return Direction.NORTH;
 		}
 
 	}
@@ -283,20 +249,12 @@ public class ActionStepUp extends Action {
 
 
 
-	public static class StepUpFactoryNorthEast extends ActionStepUp.StepUpActionFactory {
+	public static class StepUpFactoryNorthEast extends AbstractStepUpActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.NORTH_EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH_EAST, result);
+		public Direction getDirection() {
+			return Direction.NORTH_EAST;
 		}
 
 	}
@@ -306,20 +264,12 @@ public class ActionStepUp extends Action {
 
 
 
-	public static class StepUpFactoryEast extends ActionStepUp.StepUpActionFactory {
+	public static class StepUpFactoryEast extends AbstractStepUpActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.EAST, result);
+		public Direction getDirection() {
+			return Direction.EAST;
 		}
 
 	}
@@ -329,20 +279,12 @@ public class ActionStepUp extends Action {
 
 
 
-	public static class StepUpFactorySouthEast extends ActionStepUp.StepUpActionFactory {
+	public static class StepUpFactorySouthEast extends AbstractStepUpActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH_EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH_EAST, result);
+		public Direction getDirection() {
+			return Direction.SOUTH_EAST;
 		}
 
 	}
@@ -352,20 +294,12 @@ public class ActionStepUp extends Action {
 
 
 
-	public static class StepUpFactorySouth extends ActionStepUp.StepUpActionFactory {
+	public static class StepUpFactorySouth extends AbstractStepUpActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH, result);
+		public Direction getDirection() {
+			return Direction.SOUTH;
 		}
 
 	}
@@ -375,20 +309,12 @@ public class ActionStepUp extends Action {
 
 
 
-	public static class StepUpFactorySouthWest extends ActionStepUp.StepUpActionFactory {
+	public static class StepUpFactorySouthWest extends AbstractStepUpActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH_WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH_WEST, result);
+		public Direction getDirection() {
+			return Direction.SOUTH_WEST;
 		}
 
 	}
@@ -398,20 +324,12 @@ public class ActionStepUp extends Action {
 
 
 
-	public static class StepUpFactoryWest extends ActionStepUp.StepUpActionFactory {
+	public static class StepUpFactoryWest extends AbstractStepUpActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.WEST, result);
+		public Direction getDirection() {
+			return Direction.WEST;
 		}
 
 	}
@@ -421,20 +339,12 @@ public class ActionStepUp extends Action {
 
 
 
-	public static class StepUpFactoryNorthWest extends ActionStepUp.StepUpActionFactory {
+	public static class StepUpFactoryNorthWest extends AbstractStepUpActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.NORTH_WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH_WEST, result);
+		public Direction getDirection() {
+			return Direction.NORTH_WEST;
 		}
 
 	}

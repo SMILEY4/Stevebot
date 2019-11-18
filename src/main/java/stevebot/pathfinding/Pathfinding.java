@@ -10,6 +10,7 @@ import stevebot.misc.Config;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
 import stevebot.pathfinding.actions.ActionFactoryProvider;
+import stevebot.pathfinding.actions.ImpossibleActions;
 import stevebot.pathfinding.actions.playeractions.Action;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.nodes.BestNodesContainer;
@@ -21,7 +22,10 @@ import stevebot.pathfinding.path.PartialPath;
 import stevebot.pathfinding.path.Path;
 import stevebot.player.PlayerUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.PriorityQueue;
 
 public class Pathfinding {
 
@@ -59,14 +63,15 @@ public class Pathfinding {
 
 		// prepare misc
 		Path bestPath = new EmptyPath();
-		BestNodesContainer bestNodes = new BestNodesContainer(20);
-		long timeStart = System.currentTimeMillis();
+		final BestNodesContainer bestNodes = new BestNodesContainer(20);
+		final long timeStart = System.currentTimeMillis();
 		int nUnloadedHits = 0;
 		int nWorseThanBest = 0;
 		int nBetterPathFound = 0;
 		long timeLast = System.currentTimeMillis();
-		PlayerSnapshot baseSnapshot = PlayerUtils.createSnapshot();
+		final PlayerSnapshot baseSnapshot = PlayerUtils.createSnapshot();
 		baseSnapshot.setPlayerHealth((int) PlayerUtils.getPlayer().getHealth());
+		final ImpossibleActions impossibleActions = new ImpossibleActions();
 
 		// calculate path until...
 		//	- open set is empty
@@ -137,15 +142,15 @@ public class Pathfinding {
 
 			// process actions
 			boolean hitUnloaded = false;
-			Set<Class<? extends ActionFactory>> impossibleFactories = new HashSet<>();
+			impossibleActions.reset();
 			List<ActionFactory> factories = actionFactoryProvider.getAllFactories();
 
 			// iterate over every registered action
 			for (int i = 0, n = factories.size(); i < n; i++) {
 				ActionFactory factory = factories.get(i);
 
-				// continue if prev processed actions make this action impossible
-				if (impossibleFactories.contains(factory.getClass())) {
+				// continue, if prev processed actions make this action impossible
+				if (impossibleActions.isPossible(factory)) {
 					continue;
 				}
 
@@ -167,10 +172,7 @@ public class Pathfinding {
 				if (result.type == ActionFactory.ResultType.VALID) {
 
 					// add actions to list that are impossible when this action is valid
-					List<Class<? extends ActionFactory>> impList = factory.makesImpossible(result.direction);
-					if (impList != null) {
-						impossibleFactories.addAll(impList);
-					}
+					impossibleActions.addCompletedFactory(factory);
 
 					// get destination node of action
 					final Node next = result.to;

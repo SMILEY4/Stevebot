@@ -156,12 +156,12 @@ public class ActionPassDoor extends Action {
 
 
 
-	public static class PassDoorFactoryNorth extends WalkActionFactory {
+	private static abstract class AbstractWalkActionFactory extends WalkActionFactory {
 
 
 		@Override
 		public Result check(Node node) {
-			return check(node, Direction.NORTH);
+			return check(node, getDirection());
 		}
 
 
@@ -169,7 +169,23 @@ public class ActionPassDoor extends Action {
 
 		@Override
 		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH, result);
+			return create(node, getDirection(), result);
+		}
+
+
+	}
+
+
+
+
+
+
+	public static class PassDoorFactoryNorth extends AbstractWalkActionFactory {
+
+
+		@Override
+		public Direction getDirection() {
+			return Direction.NORTH;
 		}
 
 	}
@@ -179,20 +195,12 @@ public class ActionPassDoor extends Action {
 
 
 
-	public static class PassDoorFactoryEast extends WalkActionFactory {
+	public static class PassDoorFactoryEast extends AbstractWalkActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.EAST, result);
+		public Direction getDirection() {
+			return Direction.EAST;
 		}
 
 	}
@@ -202,20 +210,12 @@ public class ActionPassDoor extends Action {
 
 
 
-	public static class PassDoorFactorySouth extends WalkActionFactory {
+	public static class PassDoorFactorySouth extends AbstractWalkActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH, result);
+		public Direction getDirection() {
+			return Direction.SOUTH;
 		}
 
 	}
@@ -225,20 +225,12 @@ public class ActionPassDoor extends Action {
 
 
 
-	public static class PassDoorFactoryWest extends WalkActionFactory {
+	public static class PassDoorFactoryWest extends AbstractWalkActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.WEST, result);
+		public Direction getDirection() {
+			return Direction.WEST;
 		}
 
 	}

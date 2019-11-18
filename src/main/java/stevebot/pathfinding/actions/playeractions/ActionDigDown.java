@@ -241,6 +241,14 @@ public class ActionDigDown extends Action {
 		}
 
 
+
+
+		@Override
+		public Direction getDirection() {
+			return Direction.DOWN;
+		}
+
+
 	}
 
 

@@ -6,9 +6,6 @@ import stevebot.misc.Direction;
 import stevebot.pathfinding.actions.playeractions.Action;
 import stevebot.pathfinding.nodes.Node;
 
-import java.util.Collections;
-import java.util.List;
-
 public interface ActionFactory {
 
 
@@ -131,11 +128,9 @@ public interface ActionFactory {
 
 
 	/**
-	 * @param direction the direction
-	 * @return a list of other {@link ActionFactory}s that are not possible for the same node when this factory creates a valid action.
+	 * @return the rough direction of the action this factory will produce
 	 */
-	default List<Class<? extends ActionFactory>> makesImpossible(Direction direction) {
-		return Collections.emptyList();
-	}
+	Direction getDirection();
+
 
 }

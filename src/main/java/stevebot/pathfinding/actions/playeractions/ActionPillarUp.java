@@ -210,6 +210,14 @@ public class ActionPillarUp extends Action {
 		}
 
 
+
+
+		@Override
+		public Direction getDirection() {
+			return Direction.UP;
+		}
+
+
 	}
 
 

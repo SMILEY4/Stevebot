@@ -236,12 +236,12 @@ public class ActionJump extends Action {
 
 
 
-	public static class JumpFactoryNorth extends ActionJump.JumpActionFactory {
+	private static abstract class AbstractJumpActionFactory extends JumpActionFactory {
 
 
 		@Override
 		public Result check(Node node) {
-			return check(node, Direction.NORTH);
+			return check(node, getDirection());
 		}
 
 
@@ -249,7 +249,23 @@ public class ActionJump extends Action {
 
 		@Override
 		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH, result);
+			return create(node, getDirection(), result);
+		}
+
+
+	}
+
+
+
+
+
+
+	public static class JumpFactoryNorth extends AbstractJumpActionFactory {
+
+
+		@Override
+		public Direction getDirection() {
+			return Direction.NORTH;
 		}
 
 	}
@@ -259,20 +275,12 @@ public class ActionJump extends Action {
 
 
 
-	public static class JumpFactoryNorthEast extends ActionJump.JumpActionFactory {
+	public static class JumpFactoryNorthEast extends AbstractJumpActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.NORTH_EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH_EAST, result);
+		public Direction getDirection() {
+			return Direction.NORTH_EAST;
 		}
 
 	}
@@ -282,20 +290,12 @@ public class ActionJump extends Action {
 
 
 
-	public static class JumpFactoryEast extends ActionJump.JumpActionFactory {
+	public static class JumpFactoryEast extends AbstractJumpActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.EAST, result);
+		public Direction getDirection() {
+			return Direction.EAST;
 		}
 
 	}
@@ -305,20 +305,12 @@ public class ActionJump extends Action {
 
 
 
-	public static class JumpFactorySouthEast extends ActionJump.JumpActionFactory {
+	public static class JumpFactorySouthEast extends AbstractJumpActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH_EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH_EAST, result);
+		public Direction getDirection() {
+			return Direction.SOUTH_EAST;
 		}
 
 	}
@@ -328,20 +320,12 @@ public class ActionJump extends Action {
 
 
 
-	public static class JumpFactorySouth extends ActionJump.JumpActionFactory {
+	public static class JumpFactorySouth extends AbstractJumpActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH, result);
+		public Direction getDirection() {
+			return Direction.SOUTH;
 		}
 
 	}
@@ -351,20 +335,12 @@ public class ActionJump extends Action {
 
 
 
-	public static class JumpFactorySouthWest extends ActionJump.JumpActionFactory {
+	public static class JumpFactorySouthWest extends AbstractJumpActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH_WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH_WEST, result);
+		public Direction getDirection() {
+			return Direction.SOUTH_WEST;
 		}
 
 	}
@@ -374,20 +350,12 @@ public class ActionJump extends Action {
 
 
 
-	public static class JumpFactoryWest extends ActionJump.JumpActionFactory {
+	public static class JumpFactoryWest extends AbstractJumpActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.WEST, result);
+		public Direction getDirection() {
+			return Direction.WEST;
 		}
 
 	}
@@ -397,20 +365,12 @@ public class ActionJump extends Action {
 
 
 
-	public static class JumpFactoryNorthWest extends ActionJump.JumpActionFactory {
+	public static class JumpFactoryNorthWest extends AbstractJumpActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.NORTH_WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH_WEST, result);
+		public Direction getDirection() {
+			return Direction.WEST;
 		}
 
 	}

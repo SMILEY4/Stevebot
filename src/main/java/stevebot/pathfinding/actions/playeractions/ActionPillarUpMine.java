@@ -216,6 +216,10 @@ public class ActionPillarUpMine extends Action {
 
 
 
+
+
+
+
 		@Override
 		public Result check(Node node) {
 
@@ -262,7 +266,10 @@ public class ActionPillarUpMine extends Action {
 					ActionCosts.COST_PILLAR_UP + ticksToBreak, modifications);
 		}
 
-
+		@Override
+		public Direction getDirection() {
+			return Direction.UP;
+		}
 	}
 
 
