@@ -240,7 +240,7 @@ public class ActionMineStraight extends Action {
 			float totalTicksTopBreak = 0;
 
 			// check top block to break
-			final BaseBlockPos posTop = to.copyAsFastBlockPos().add(0, 1, 0);
+			final BaseBlockPos posTop = to.copyAsFastBlockPos().add(Direction.UP);
 			if (!ActionUtils.canSafelyBreak(posTop)) {
 				return Result.invalid();
 			}

@@ -104,7 +104,7 @@ public class ActionBridgeFree extends Action {
 			return ProcState.FAILED;
 		}
 		PlayerUtils.getCamera().enableForceCamera();
-		ActionUtils.placeBlockAgainst(getFrom().getPosCopy().add(0, -1, 0), direction);
+		ActionUtils.placeBlockAgainst(getFrom().getPosCopy().add(Direction.DOWN), direction);
 		stateMachine.fireTransition(Transition.PLACED_BLOCK);
 		return ProcState.EXECUTING;
 	}
@@ -188,7 +188,7 @@ public class ActionBridgeFree extends Action {
 			if (!ActionUtils.canMoveThrough(to)) {
 				return Result.invalid();
 			}
-			final BaseBlockPos posBridgeBlock = to.copyAsFastBlockPos().add(0, -1, 0);
+			final BaseBlockPos posBridgeBlock = to.copyAsFastBlockPos().add(Direction.DOWN);
 			if (!BlockUtils.canPlaceBlockAt(posBridgeBlock)) {
 				return Result.invalid();
 			}

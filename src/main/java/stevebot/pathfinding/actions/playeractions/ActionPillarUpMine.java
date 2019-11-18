@@ -149,7 +149,7 @@ public class ActionPillarUpMine extends Action {
 			if (!PlayerUtils.getInventory().selectThrowawayBlock(true)) {
 				return ProcState.FAILED;
 			}
-			ActionUtils.placeBlockAgainst(getFrom().getPosCopy().add(0, -1, 0), Direction.UP);
+			ActionUtils.placeBlockAgainst(getFrom().getPosCopy().add(Direction.DOWN), Direction.UP);
 			stateMachine.fireTransition(Transition.PLACED_BLOCK);
 		}
 		return ProcState.EXECUTING;
@@ -258,7 +258,7 @@ public class ActionPillarUpMine extends Action {
 					modificationBreakBlock,
 					Modification.placeBlock(node.getPos(), PlayerUtils.getActiveSnapshot().getAsBlock(indexThrowaway))
 			};
-			return Result.valid(Direction.UP, NodeCache.get(node.getPosCopy().add(0, 1, 0)),
+			return Result.valid(Direction.UP, NodeCache.get(node.getPosCopy().add(Direction.UP)),
 					ActionCosts.COST_PILLAR_UP + ticksToBreak, modifications);
 		}
 

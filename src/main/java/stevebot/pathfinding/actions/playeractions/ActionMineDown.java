@@ -289,7 +289,7 @@ public class ActionMineDown extends Action {
 			}
 
 			// check middle block to break
-			final BaseBlockPos posMiddle = to.copyAsFastBlockPos().add(0, 1, 0);
+			final BaseBlockPos posMiddle = to.copyAsFastBlockPos().add(Direction.UP);
 			if (!ActionUtils.canSafelyBreak(posMiddle)) {
 				return Result.invalid();
 			}
