@@ -129,6 +129,14 @@ public class ActionBridgeFree extends Action {
 
 
 	@Override
+	public boolean isOnPath(BaseBlockPos position) {
+		return position.equals(getFrom().getPos()) || position.equals(getTo().getPos());
+	}
+
+
+
+
+	@Override
 	public boolean hasModifications() {
 		return true;
 	}

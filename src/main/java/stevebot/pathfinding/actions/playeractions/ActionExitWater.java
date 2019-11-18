@@ -47,6 +47,18 @@ public class ActionExitWater extends Action {
 
 
 
+	@Override
+	public boolean isOnPath(BaseBlockPos position) {
+		if (position.equals(getFrom().getPos()) || position.equals(getTo().getPos())) {
+			return true;
+		} else {
+			return position.equals(getFrom().getPosCopy().add(Direction.DOWN)) || position.equals(getTo().getPosCopy().add(Direction.DOWN));
+		}
+	}
+
+
+
+
 
 	private static abstract class ExitWaterActionFactory implements ActionFactory {
 

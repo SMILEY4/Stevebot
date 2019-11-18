@@ -33,6 +33,9 @@ public class PathExecutorImpl implements TransitionListener<ExecutionState, Exec
 	private boolean follow = false;
 	private boolean firstTick = true;
 
+	private static final int OFF_PATH_THRESHOLD = 64;
+	private int offPathCounter = 0;
+
 	private Renderer renderer;
 	private Renderable pathRenderable;
 	private Renderable startRenderable;
@@ -232,20 +235,21 @@ public class PathExecutorImpl implements TransitionListener<ExecutionState, Exec
 	 */
 	private ProcState tick() {
 
-		PlayerUtils.getInput().stopAll();
+		if (checkPathFailed()) {
+			return ProcState.FAILED;
+		}
 
+		PlayerUtils.getInput().stopAll();
 		if (firstTick) {
 			crawler.getCurrentNodeTo().getAction().resetAction();
 		}
 		ProcState actionState = crawler.getCurrentNodeTo().getAction().tick(firstTick);
 		firstTick = false;
-
 		pathTraceRenderable.addPoint(PlayerUtils.getPlayerPosition(), Color.MAGENTA);
 
 		if (actionState == ProcState.FAILED) {
 			return ProcState.FAILED;
 		}
-
 		if (actionState == ProcState.DONE) {
 			firstTick = true;
 			boolean hasNext = crawler.nextAction();
@@ -253,8 +257,25 @@ public class PathExecutorImpl implements TransitionListener<ExecutionState, Exec
 				return ProcState.DONE;
 			}
 		}
-
 		return ProcState.EXECUTING;
+	}
+
+
+
+
+	/**
+	 * Checks whether the player is off the given path for too long.
+	 *
+	 * @return true, if the path failed
+	 */
+	private boolean checkPathFailed() {
+		final boolean onPath = crawler.getCurrentNodeTo().getAction().isOnPath(PlayerUtils.getPlayerBlockPos());
+		if (onPath) {
+			offPathCounter = 0;
+		} else {
+			offPathCounter++;
+		}
+		return offPathCounter > OFF_PATH_THRESHOLD;
 	}
 
 

@@ -93,6 +93,19 @@ public class ActionPassDoor extends Action {
 
 
 
+	@Override
+	public boolean isOnPath(BaseBlockPos position) {
+		if (position.equals(getFrom().getPos()) || position.equals(getTo().getPos())) {
+			return true;
+		} else {
+			final BaseBlockPos posDoor = getFrom().getPosCopy().add(Direction.get(getFrom().getPos(), getTo().getPos()));
+			return position.equals(posDoor);
+		}
+	}
+
+
+
+
 	private static abstract class WalkActionFactory implements ActionFactory {
 
 

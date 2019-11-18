@@ -47,6 +47,18 @@ public class ActionStepDown extends Action {
 
 
 
+	@Override
+	public boolean isOnPath(BaseBlockPos position) {
+		if (position.equals(getFrom().getPos()) || position.equals(getTo().getPos())) {
+			return true;
+		} else {
+			return position.equals(getTo().getPosCopy().add(Direction.UP));
+		}
+	}
+
+
+
+
 	private static abstract class StepDownActionFactory implements ActionFactory {
 
 

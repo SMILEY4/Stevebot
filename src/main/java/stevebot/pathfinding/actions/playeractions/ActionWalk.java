@@ -56,6 +56,24 @@ public class ActionWalk extends Action {
 
 
 
+	@Override
+	public boolean isOnPath(BaseBlockPos position) {
+		Direction direction = Direction.get(getFrom().getPos(), getTo().getPos());
+		if (direction.diagonal) {
+			if (position.equals(getFrom().getPos()) || position.equals(getTo().getPos())) {
+				return true;
+			}
+			final BaseBlockPos posGap0 = getFrom().getPosCopy().add(direction.dx, 0, 0);
+			final BaseBlockPos posGap1 = getFrom().getPosCopy().add(0, 0, direction.dz);
+			return position.equals(posGap0) || position.equals(posGap1);
+		} else {
+			return position.equals(getFrom().getPos()) || position.equals(getTo().getPos());
+		}
+	}
+
+
+
+
 	private static abstract class WalkActionFactory implements ActionFactory {
 
 
