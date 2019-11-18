@@ -67,7 +67,7 @@ public class ActionUtils {
 	 * @return whether the player can jump through the given position.
 	 */
 	public static boolean canJumpThrough(BaseBlockPos pos) {
-		if (BlockUtils.canWalkOn(fastPos1.set(pos).add(0, -1, 0))) {
+		if (BlockUtils.canWalkOn(fastPos1.set(pos).add(Direction.DOWN))) {
 			return false;
 		}
 		return canJump(pos);
@@ -83,7 +83,7 @@ public class ActionUtils {
 	 * @return whether the player can jump at the given position
 	 */
 	public static boolean canJumpAt(BaseBlockPos pos) {
-		if (!BlockUtils.canWalkOn(fastPos1.set(pos).add(0, -1, 0))) {
+		if (!BlockUtils.canWalkOn(fastPos1.set(pos).add(Direction.DOWN))) {
 			return false;
 		}
 		return canJump(pos);
@@ -118,7 +118,7 @@ public class ActionUtils {
 	 * @return whether the player can move through the given position
 	 */
 	public static boolean canMoveThrough(BaseBlockPos pos) {
-		return BlockUtils.canWalkThrough(pos) && BlockUtils.canWalkThrough(fastPos1.set(pos).add(0, 1, 0));
+		return BlockUtils.canWalkThrough(pos) && BlockUtils.canWalkThrough(fastPos1.set(pos).add(Direction.UP));
 	}
 
 
@@ -163,7 +163,7 @@ public class ActionUtils {
 	 * @return whether the player can stand at the given position
 	 */
 	public static boolean canStandAt(BaseBlockPos pos, int height) {
-		if (!BlockUtils.canWalkOn(fastPos1.set(pos).add(0, -1, 0))) {
+		if (!BlockUtils.canWalkOn(fastPos1.set(pos).add(Direction.DOWN))) {
 			return false;
 		}
 		return canMoveThrough(pos, height);
@@ -179,7 +179,7 @@ public class ActionUtils {
 	 * @return whether the player can swim at the given position
 	 */
 	public static boolean canSwimAt(BaseBlockPos pos) {
-		fastPos1.set(pos).add(0, -1, 0);
+		fastPos1.set(pos).add(Direction.DOWN);
 		if (!BlockUtils.isWater(fastPos1) || BlockUtils.isFlowingLiquid(fastPos1)) {
 			return false;
 		}
@@ -197,7 +197,7 @@ public class ActionUtils {
 	 */
 	public static boolean isDoorPassable(BaseBlockPos position) {
 
-		final BaseBlockPos positionTop = position.copyAsFastBlockPos().add(0, 1, 0);
+		final BaseBlockPos positionTop = position.copyAsFastBlockPos().add(Direction.UP);
 
 		final boolean isDoorBottom = BlockUtils.isDoorLike(position);
 		final boolean isDoorTop = BlockUtils.isDoorLike(positionTop);

@@ -112,7 +112,7 @@ public class ActionDigDown extends Action {
 	 * Dig down.
 	 */
 	private ProcState tickBreakBlock() {
-		if (ActionUtils.breakBlock(getFrom().getPosCopy().add(0, -1, 0))) {
+		if (ActionUtils.breakBlock(getFrom().getPosCopy().add(Direction.DOWN))) {
 			stateMachine.fireTransition(Transition.BLOCK_BROKEN);
 		}
 		return ProcState.EXECUTING;
@@ -215,7 +215,7 @@ public class ActionDigDown extends Action {
 			}
 
 			// check if block breakable
-			final BaseBlockPos posBreakBlock = node.getPosCopy().add(0, -1, 0);
+			final BaseBlockPos posBreakBlock = node.getPosCopy().add(Direction.DOWN);
 			final BreakBlockCheckResult resultBreak = ActionUtils.checkBlockToBreak(posBreakBlock);
 			if (!resultBreak.breakable) {
 				return Result.invalid();

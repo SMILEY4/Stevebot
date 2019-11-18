@@ -27,7 +27,7 @@ public class ActionPassDoor extends Action {
 	private ActionPassDoor(Node from, Node to, BaseBlockPos positionDoor, Direction direction, double cost) {
 		super(from, to, cost);
 		this.positionDoorBottom = positionDoor;
-		this.positionDoorTop = positionDoor.copyAsFastBlockPos().add(0, 1, 0);
+		this.positionDoorTop = positionDoor.copyAsFastBlockPos().add(Direction.UP);
 		this.direction = direction;
 	}
 

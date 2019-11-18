@@ -48,7 +48,7 @@ public class ActionFall extends Action {
 		super(from, to, cost);
 		stateMachine.defineTransition(State.FALLING, Transition.LANDED, State.FINISHING);
 
-		final FastBlockPos fallOn = to.getPosCopy().add(0, -1, 0);
+		final FastBlockPos fallOn = to.getPosCopy().add(Direction.DOWN);
 		this.landInWater = BlockUtils.isWater(fallOn);
 
 		if (!landInWater) {
@@ -172,15 +172,15 @@ public class ActionFall extends Action {
 
 			// find destination position and fall-height
 			int height = 0;
-			FastBlockPos fallTo = from.copyAsFastBlockPos().add(0, -1, 0);
+			FastBlockPos fallTo = from.copyAsFastBlockPos().add(Direction.DOWN);
 			while (canFallThrough(fallTo, modification)) {
-				fallTo = fallTo.add(0, -1, 0);
+				fallTo = fallTo.add(Direction.DOWN);
 				height++;
 				if (height > 300) {
 					return Result.invalid();
 				}
 			}
-			fallTo = fallTo.add(0, 1, 0);
+			fallTo = fallTo.add(Direction.UP);
 
 			// check if there is a fall
 			if (height <= 0) {
@@ -188,7 +188,7 @@ public class ActionFall extends Action {
 			}
 
 			// check if destination pos is water
-			final FastBlockPos d0 = fallTo.copy().add(0, -1, 0);
+			final FastBlockPos d0 = fallTo.copy().add(Direction.DOWN);
 			final boolean landInWater = BlockUtils.isWater(d0) && !BlockUtils.isFlowingLiquid(d0);
 
 			// check if player can walk on destination position / destination is not dangerous

@@ -115,7 +115,7 @@ public class ActionPillarUp extends Action {
 			if (!PlayerUtils.getInventory().selectThrowawayBlock(true)) {
 				return ProcState.FAILED;
 			}
-			ActionUtils.placeBlockAgainst(getFrom().getPosCopy().add(0, -1, 0), Direction.UP);
+			ActionUtils.placeBlockAgainst(getFrom().getPosCopy().add(Direction.DOWN), Direction.UP);
 			stateMachine.fireTransition(Transition.PLACED_BLOCK);
 		}
 		return ProcState.EXECUTING;
@@ -191,7 +191,7 @@ public class ActionPillarUp extends Action {
 			}
 
 			// check to-position
-			final FastBlockPos to = node.getPosCopy().add(0, 1, 0);
+			final FastBlockPos to = node.getPosCopy().add(Direction.UP);
 			if (!ActionUtils.canMoveThrough(to)) {
 				return Result.invalid();
 			}
