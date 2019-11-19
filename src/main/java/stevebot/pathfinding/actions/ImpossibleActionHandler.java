@@ -137,13 +137,12 @@ public class ImpossibleActionHandler {
 	 * @return whether an action in the given direction is still possible.
 	 */
 	public boolean isPossible(Class<? extends Action> action, Direction direction) {
-//		final Set<Direction> invalidDirections = invalidActions.get(action);
-//		if (invalidDirections == null) {
-//			return true;
-//		} else {
-//			return !invalidDirections.contains(direction);
-//		}
-		return true;
+		final Set<Direction> invalidDirections = invalidActions.get(action);
+		if (invalidDirections == null) {
+			return true;
+		} else {
+			return !invalidDirections.contains(direction);
+		}
 	}
 
 

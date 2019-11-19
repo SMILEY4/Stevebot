@@ -60,7 +60,6 @@ public class BlockCache {
 
 
 	/**
-	 *
 	 * @return the listener of this cache that listens to {@link BlockEvent.BreakEvent}-events
 	 */
 	public EventListener getListenerBreakBlock() {
@@ -69,8 +68,8 @@ public class BlockCache {
 
 
 
+
 	/**
-	 *
 	 * @return the listener of this cache that listens to {@link BlockEvent.PlaceEvent}-events
 	 */
 	public EventListener getListenerPlaceBlock() {
@@ -184,6 +183,16 @@ public class BlockCache {
 		final int chunkY = chunk.toLocalY(blockY);
 		final int chunkZ = chunk.toLocalZ(blockZ);
 		chunk.setId(chunkX, chunkY, chunkZ, BlockLibrary.ID_INVALID_BLOCK);
+	}
+
+
+
+
+	/**
+	 * Clears this block cache.
+	 */
+	public void clear() {
+		getChunkCache().clear();
 	}
 
 

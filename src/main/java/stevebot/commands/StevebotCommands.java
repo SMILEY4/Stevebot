@@ -270,7 +270,7 @@ public class StevebotCommands {
 				"/statistics\n    Displays statistics about the last pathfinding process.",
 				(templateId, parameters) -> {
 					final PathfindingStatistics statistics = Pathfinding.statistics;
-					if(statistics == null) {
+					if (statistics == null) {
 						Stevebot.log("No statistics available.");
 					} else {
 						statistics.log();
@@ -284,12 +284,23 @@ public class StevebotCommands {
 				"/statistics console\n    Displays statistics about the last pathfinding process (formatted for console output).",
 				(templateId, parameters) -> {
 					final PathfindingStatistics statistics = Pathfinding.statistics;
-					if(statistics == null) {
+					if (statistics == null) {
 						Stevebot.log("No statistics available.");
 					} else {
 						statistics.logConsole();
 					}
 				});
+
+		// clear node cache
+		CommandSystem.addCommand(
+				"clearBlockCache",
+				"clear blockcache",
+				"/clear blockcache\n    Clears the block-cache.",
+				(templateId, parameters) -> {
+					BlockUtils.getBlockProvider().getBlockCache().clear();
+					Stevebot.log("Cache cleared.");
+				});
+
 	}
 
 }
