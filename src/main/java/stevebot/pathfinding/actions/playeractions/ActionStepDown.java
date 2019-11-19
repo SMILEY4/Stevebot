@@ -164,6 +164,13 @@ public class ActionStepDown extends Action {
 		}
 
 
+
+
+		@Override
+		public Class<ActionStepDown> producesAction() {
+			return ActionStepDown.class;
+		}
+
 	}
 
 

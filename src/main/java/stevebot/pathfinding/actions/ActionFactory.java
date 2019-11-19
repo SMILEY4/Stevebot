@@ -133,4 +133,10 @@ public interface ActionFactory {
 	Direction getDirection();
 
 
+	/**
+	 * @return the type of action produced by this factory
+	 */
+	Class<? extends Action> producesAction();
+
+
 }

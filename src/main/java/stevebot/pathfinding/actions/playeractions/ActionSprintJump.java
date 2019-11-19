@@ -213,6 +213,13 @@ public class ActionSprintJump extends Action {
 		}
 
 
+
+
+		@Override
+		public Class<ActionPillarUp> producesAction() {
+			return ActionPillarUp.class;
+		}
+
 	}
 
 

@@ -173,6 +173,13 @@ public class ActionSwim extends Action {
 		}
 
 
+
+
+		@Override
+		public Class<ActionSwim> producesAction() {
+			return ActionSwim.class;
+		}
+
 	}
 
 

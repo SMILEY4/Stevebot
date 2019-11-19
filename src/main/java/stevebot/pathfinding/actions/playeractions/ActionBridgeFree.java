@@ -223,6 +223,14 @@ public class ActionBridgeFree extends Action {
 			return create(node, getDirection(), result);
 		}
 
+
+
+
+		@Override
+		public Class<ActionBridgeFree> producesAction() {
+			return ActionBridgeFree.class;
+		}
+
 	}
 
 

@@ -218,6 +218,14 @@ public class ActionPillarUp extends Action {
 		}
 
 
+
+
+		@Override
+		public Class<ActionPillarUp> producesAction() {
+			return ActionPillarUp.class;
+		}
+
+
 	}
 
 

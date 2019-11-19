@@ -236,6 +236,14 @@ public class ActionFall extends Action {
 		}
 
 
+
+
+		@Override
+		public Class<ActionFall> producesAction() {
+			return ActionFall.class;
+		}
+
+
 	}
 
 }

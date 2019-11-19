@@ -166,6 +166,14 @@ public class ActionExitWater extends Action {
 			return create(node, getDirection(), result);
 		}
 
+
+
+
+		@Override
+		public Class<ActionExitWater> producesAction() {
+			return ActionExitWater.class;
+		}
+
 	}
 
 

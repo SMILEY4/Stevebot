@@ -291,6 +291,15 @@ public class ActionMineStraight extends Action {
 			return create(node, getDirection(), result);
 		}
 
+
+
+
+		@Override
+		public Class<ActionMineStraight> producesAction() {
+			return ActionMineStraight.class;
+		}
+
+
 	}
 
 

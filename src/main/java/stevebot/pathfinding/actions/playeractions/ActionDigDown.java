@@ -249,6 +249,13 @@ public class ActionDigDown extends Action {
 		}
 
 
+
+
+		@Override
+		public Class<ActionDigDown> producesAction() {
+			return ActionDigDown.class;
+		}
+
 	}
 
 

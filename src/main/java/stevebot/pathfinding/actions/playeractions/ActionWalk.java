@@ -176,6 +176,13 @@ public class ActionWalk extends Action {
 		}
 
 
+
+
+		@Override
+		public Class<ActionWalk> producesAction() {
+			return ActionWalk.class;
+		}
+
 	}
 
 

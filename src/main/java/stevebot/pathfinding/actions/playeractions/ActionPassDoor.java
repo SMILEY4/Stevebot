@@ -106,7 +106,7 @@ public class ActionPassDoor extends Action {
 
 
 
-	private static abstract class WalkActionFactory implements ActionFactory {
+	private static abstract class PassDoorActionFactory implements ActionFactory {
 
 
 		ActionPassDoor create(Node node, Direction direction, Result result) {
@@ -156,7 +156,7 @@ public class ActionPassDoor extends Action {
 
 
 
-	private static abstract class AbstractWalkActionFactory extends WalkActionFactory {
+	private static abstract class AbstractPassDoorActionFactory extends PassDoorActionFactory {
 
 
 		@Override
@@ -173,6 +173,13 @@ public class ActionPassDoor extends Action {
 		}
 
 
+
+
+		@Override
+		public Class<ActionPassDoor> producesAction() {
+			return ActionPassDoor.class;
+		}
+
 	}
 
 
@@ -180,7 +187,7 @@ public class ActionPassDoor extends Action {
 
 
 
-	public static class PassDoorFactoryNorth extends AbstractWalkActionFactory {
+	public static class PassDoorFactoryNorth extends AbstractPassDoorActionFactory {
 
 
 		@Override
@@ -195,7 +202,7 @@ public class ActionPassDoor extends Action {
 
 
 
-	public static class PassDoorFactoryEast extends AbstractWalkActionFactory {
+	public static class PassDoorFactoryEast extends AbstractPassDoorActionFactory {
 
 
 		@Override
@@ -210,7 +217,7 @@ public class ActionPassDoor extends Action {
 
 
 
-	public static class PassDoorFactorySouth extends AbstractWalkActionFactory {
+	public static class PassDoorFactorySouth extends AbstractPassDoorActionFactory {
 
 
 		@Override
@@ -225,7 +232,7 @@ public class ActionPassDoor extends Action {
 
 
 
-	public static class PassDoorFactoryWest extends AbstractWalkActionFactory {
+	public static class PassDoorFactoryWest extends AbstractPassDoorActionFactory {
 
 
 		@Override

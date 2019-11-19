@@ -340,6 +340,14 @@ public class ActionMineDown extends Action {
 			return create(node, getDirection(), result);
 		}
 
+
+
+
+		@Override
+		public Class<ActionMineDown> producesAction() {
+			return ActionMineDown.class;
+		}
+
 	}
 
 

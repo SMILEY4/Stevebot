@@ -253,6 +253,14 @@ public class ActionJump extends Action {
 		}
 
 
+
+
+		@Override
+		public Class<ActionJump> producesAction() {
+			return ActionJump.class;
+		}
+
+
 	}
 
 

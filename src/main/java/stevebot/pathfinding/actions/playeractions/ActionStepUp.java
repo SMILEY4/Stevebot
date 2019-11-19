@@ -227,6 +227,13 @@ public class ActionStepUp extends Action {
 		}
 
 
+
+
+		@Override
+		public Class<ActionStepUp> producesAction() {
+			return ActionStepUp.class;
+		}
+
 	}
 
 

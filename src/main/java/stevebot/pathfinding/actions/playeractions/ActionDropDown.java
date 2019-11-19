@@ -269,6 +269,14 @@ public class ActionDropDown extends Action {
 			return create(node, getDirection(), result);
 		}
 
+
+
+
+		@Override
+		public Class<ActionDropDown> producesAction() {
+			return ActionDropDown.class;
+		}
+
 	}
 
 
