@@ -28,6 +28,19 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionWalk.WalkFactoryWest());
 		registerFactory(new ActionWalk.WalkFactoryNorthWest());
 
+		impossibleActionHandler.makesImpossible(ActionWalk.class,
+				ActionSwim.class,
+				ActionStepUp.class,
+				ActionStepDown.class,
+				ActionPassDoor.class,
+				ActionMineUp.class,
+				ActionMineStraight.class,
+				ActionExitWater.class,
+				ActionEnterWater.class,
+				ActionDropDown.class,
+				ActionBridgeFree.class
+		);
+
 		// step-down-factories
 		registerFactory(new ActionStepDown.StepDownFactoryNorth());
 		registerFactory(new ActionStepDown.StepDownFactoryNorthEast());
@@ -37,6 +50,19 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionStepDown.StepDownFactorySouthWest());
 		registerFactory(new ActionStepDown.StepDownFactoryWest());
 		registerFactory(new ActionStepDown.StepDownFactoryNorthWest());
+
+		impossibleActionHandler.makesImpossible(ActionStepDown.class,
+				ActionWalk.class,
+				ActionSwim.class,
+				ActionStepUp.class,
+				ActionPassDoor.class,
+				ActionMineUp.class,
+				ActionMineStraight.class,
+				ActionExitWater.class,
+				ActionEnterWater.class,
+				ActionDropDown.class,
+				ActionBridgeFree.class
+		);
 
 		// step-up-factories
 		registerFactory(new ActionStepUp.StepUpFactoryNorth());
@@ -48,6 +74,19 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionStepUp.StepUpFactoryWest());
 		registerFactory(new ActionStepUp.StepUpFactoryNorthWest());
 
+		impossibleActionHandler.makesImpossible(ActionStepUp.class,
+				ActionWalk.class,
+				ActionSwim.class,
+				ActionStepDown.class,
+				ActionSprintJump.class,
+				ActionPassDoor.class,
+				ActionMineUp.class,
+				ActionExitWater.class,
+				ActionEnterWater.class,
+				ActionDropDown.class,
+				ActionBridgeFree.class
+		);
+
 		// drop-down-factories
 		registerFactory(new ActionDropDown.DropDownFactoryNorth());
 		registerFactory(new ActionDropDown.DropDownFactoryNorthEast());
@@ -57,6 +96,19 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionDropDown.DropDownFactorySouthWest());
 		registerFactory(new ActionDropDown.DropDownFactoryWest());
 		registerFactory(new ActionDropDown.DropDownFactoryNorthWest());
+
+		impossibleActionHandler.makesImpossible(ActionDropDown.class,
+				ActionWalk.class,
+				ActionSwim.class,
+				ActionStepUp.class,
+				ActionStepDown.class,
+				ActionPassDoor.class,
+				ActionMineUp.class,
+				ActionMineStraight.class,
+				ActionMineDown.class,
+				ActionExitWater.class,
+				ActionEnterWater.class
+		);
 
 		// enter water
 		registerFactory(new ActionEnterWater.EnterWaterFactoryNorth());
@@ -68,6 +120,20 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionEnterWater.EnterWaterFactoryWest());
 		registerFactory(new ActionEnterWater.EnterWaterFactoryNorthWest());
 
+		impossibleActionHandler.makesImpossible(ActionEnterWater.class,
+				ActionWalk.class,
+				ActionSwim.class,
+				ActionStepUp.class,
+				ActionStepDown.class,
+				ActionPassDoor.class,
+				ActionMineUp.class,
+				ActionMineStraight.class,
+				ActionMineDown.class,
+				ActionExitWater.class,
+				ActionDropDown.class,
+				ActionBridgeFree.class
+		);
+
 		// exit water
 		registerFactory(new ActionExitWater.ExitWaterFactoryNorth());
 		registerFactory(new ActionExitWater.ExitWaterFactoryNorthEast());
@@ -77,6 +143,20 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionExitWater.ExitWaterFactorySouthWest());
 		registerFactory(new ActionExitWater.ExitWaterFactoryWest());
 		registerFactory(new ActionExitWater.ExitWaterFactoryNorthWest());
+
+		impossibleActionHandler.makesImpossible(ActionExitWater.class,
+				ActionWalk.class,
+				ActionSwim.class,
+				ActionStepUp.class,
+				ActionStepDown.class,
+				ActionPassDoor.class,
+				ActionMineUp.class,
+				ActionMineStraight.class,
+				ActionMineDown.class,
+				ActionEnterWater.class,
+				ActionDropDown.class,
+				ActionBridgeFree.class
+		);
 
 		// swim
 		registerFactory(new ActionSwim.SwimFactoryNorth());
@@ -88,8 +168,33 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionSwim.SwimFactoryWest());
 		registerFactory(new ActionSwim.SwimFactoryNorthWest());
 
+		impossibleActionHandler.makesImpossible(ActionSwim.class,
+				ActionWalk.class,
+				ActionSwim.class,
+				ActionStepUp.class,
+				ActionStepDown.class,
+				ActionSprintJump.class,
+				ActionPillarUpMine.class,
+				ActionPillarUp.class,
+				ActionPassDoor.class,
+				ActionMineUp.class,
+				ActionMineStraight.class,
+				ActionMineDown.class,
+				ActionFall.class,
+				ActionJump.class,
+				ActionExitWater.class,
+				ActionEnterWater.class,
+				ActionDropDown.class,
+				ActionDigDown.class,
+				ActionBridgeFree.class
+		);
+
 		// fall-factory
 		registerFactory(new ActionFall.FallActionFactory());
+
+		impossibleActionHandler.makesImpossible(ActionFall.class,
+				ActionDigDown.class
+		);
 
 		// jump-factories
 		registerFactory(new ActionJump.JumpFactoryNorth());
@@ -101,20 +206,54 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionJump.JumpFactoryWest());
 		registerFactory(new ActionJump.JumpFactoryNorthWest());
 
+		impossibleActionHandler.makesImpossible(ActionJump.class,
+				ActionWalk.class,
+				ActionSwim.class,
+				ActionStepUp.class,
+				ActionPassDoor.class,
+				ActionMineUp.class,
+				ActionMineStraight.class,
+				ActionMineDown.class,
+				ActionExitWater.class
+		);
+
 		// sprint-jump-factories
 		registerFactory(new ActionSprintJump.SprintJumpFactoryNorth());
 		registerFactory(new ActionSprintJump.SprintJumpFactoryEast());
 		registerFactory(new ActionSprintJump.SprintJumpFactorySouth());
 		registerFactory(new ActionSprintJump.SprintJumpFactoryWest());
 
+		impossibleActionHandler.makesImpossible(ActionSprintJump.class,
+				ActionWalk.class,
+				ActionSwim.class,
+				ActionStepUp.class,
+				ActionPassDoor.class,
+				ActionMineUp.class,
+				ActionMineStraight.class,
+				ActionMineDown.class,
+				ActionExitWater.class
+		);
+
 		// pillar up
 		registerFactory(new ActionPillarUp.PillarUpFactory());
+
+		impossibleActionHandler.makesImpossible(ActionPillarUp.class,
+				ActionPillarUpMine.class
+		);
 
 		// pillar mine
 		registerFactory(new ActionPillarUpMine.PillarUpMineFactory());
 
+		impossibleActionHandler.makesImpossible(ActionPillarUpMine.class,
+				ActionPillarUp.class
+		);
+
 		// dig down
 		registerFactory(new ActionDigDown.DigDownFactory());
+
+		impossibleActionHandler.makesImpossible(ActionDigDown.class,
+				ActionFall.class
+		);
 
 		// mine straight
 		registerFactory(new ActionMineStraight.MineStraightFactoryNorth());
@@ -122,11 +261,35 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionMineStraight.MineStraightFactorySouth());
 		registerFactory(new ActionMineStraight.MineStraightFactoryWest());
 
+		impossibleActionHandler.makesImpossible(ActionMineStraight.class,
+				ActionWalk.class,
+				ActionSwim.class,
+				ActionStepDown.class,
+				ActionSprintJump.class,
+				ActionPassDoor.class,
+				ActionJump.class,
+				ActionExitWater.class,
+				ActionEnterWater.class,
+				ActionDropDown.class,
+				ActionBridgeFree.class
+		);
+
 		// mine down
 		registerFactory(new ActionMineDown.MineDownFactoryNorth());
 		registerFactory(new ActionMineDown.MineDownFactoryEast());
 		registerFactory(new ActionMineDown.MineDownFactorySouth());
 		registerFactory(new ActionMineDown.MineDownFactoryWest());
+
+		impossibleActionHandler.makesImpossible(ActionMineDown.class,
+				ActionSwim.class,
+				ActionStepUp.class,
+				ActionStepDown.class,
+				ActionPassDoor.class,
+				ActionExitWater.class,
+				ActionEnterWater.class,
+				ActionDropDown.class,
+				ActionBridgeFree.class
+		);
 
 		// mine up
 		registerFactory(new ActionMineUp.MineUpFactoryNorth());
@@ -134,11 +297,36 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionMineUp.MineUpFactorySouth());
 		registerFactory(new ActionMineUp.MineUpFactoryWest());
 
+		impossibleActionHandler.makesImpossible(ActionMineUp.class,
+				ActionWalk.class,
+				ActionSwim.class,
+				ActionStepDown.class,
+				ActionSprintJump.class,
+				ActionPassDoor.class,
+				ActionJump.class,
+				ActionExitWater.class,
+				ActionEnterWater.class,
+				ActionDropDown.class,
+				ActionBridgeFree.class
+		);
+
 		// bridge
 		registerFactory(new ActionBridgeFree.BrideFreeFactoryNorth());
 		registerFactory(new ActionBridgeFree.BrideFreeFactoryEast());
 		registerFactory(new ActionBridgeFree.BrideFreeFactorySouth());
 		registerFactory(new ActionBridgeFree.BrideFreeFactoryWest());
+
+		impossibleActionHandler.makesImpossible(ActionBridgeFree.class,
+				ActionWalk.class,
+				ActionSwim.class,
+				ActionStepUp.class,
+				ActionPassDoor.class,
+				ActionMineUp.class,
+				ActionMineStraight.class,
+				ActionMineDown.class,
+				ActionExitWater.class,
+				ActionEnterWater.class
+		);
 
 		// door
 		registerFactory(new ActionPassDoor.PassDoorFactoryNorth());
@@ -146,6 +334,21 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionPassDoor.PassDoorFactorySouth());
 		registerFactory(new ActionPassDoor.PassDoorFactoryWest());
 
+		impossibleActionHandler.makesImpossible(ActionPassDoor.class,
+				ActionWalk.class,
+				ActionSwim.class,
+				ActionStepUp.class,
+				ActionStepDown.class,
+				ActionSprintJump.class,
+				ActionMineUp.class,
+				ActionMineStraight.class,
+				ActionMineDown.class,
+				ActionJump.class,
+				ActionExitWater.class,
+				ActionEnterWater.class,
+				ActionDropDown.class,
+				ActionBridgeFree.class
+		);
 	}
 
 

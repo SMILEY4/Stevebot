@@ -19,14 +19,30 @@ public class ImpossibleActionHandler {
 
 	/**
 	 * Registers following relationship: for a given node (and direction):
+	 * if "valid" is the type of a valid action, all "impossible" can never be valid actions.
+	 *
+	 * @param valid      the class of the valid action
+	 * @param impossible the classes of the impossible actions
+	 */
+	public void makesImpossible(Class<? extends Action> valid, Class<? extends Action>... impossible) {
+		for (Class<? extends Action> imp : impossible) {
+			makesImpossible(valid, imp);
+		}
+	}
+
+
+
+
+	/**
+	 * Registers following relationship: for a given node (and direction):
 	 * if "valid" is the type of a valid action, "impossible" can never be a valid action.
 	 *
 	 * @param valid      the class of the valid action
 	 * @param impossible the class of the impossible action
 	 */
 	public void makesImpossible(Class<? extends Action> valid, Class<? extends Action> impossible) {
-		final Set<Class<? extends Action>> set = mapping.computeIfAbsent(valid, k -> new HashSet<>());
-		set.add(impossible);
+//		final Set<Class<? extends Action>> set = mapping.computeIfAbsent(valid, k -> new HashSet<>());
+//		set.add(impossible);
 	}
 
 
@@ -121,12 +137,13 @@ public class ImpossibleActionHandler {
 	 * @return whether an action in the given direction is still possible.
 	 */
 	public boolean isPossible(Class<? extends Action> action, Direction direction) {
-		final Set<Direction> invalidDirections = invalidActions.get(action);
-		if (invalidDirections == null) {
-			return true;
-		} else {
-			return !invalidDirections.contains(direction);
-		}
+//		final Set<Direction> invalidDirections = invalidActions.get(action);
+//		if (invalidDirections == null) {
+//			return true;
+//		} else {
+//			return !invalidDirections.contains(direction);
+//		}
+		return true;
 	}
 
 
