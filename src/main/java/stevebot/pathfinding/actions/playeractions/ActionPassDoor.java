@@ -106,7 +106,7 @@ public class ActionPassDoor extends Action {
 
 
 
-	private static abstract class WalkActionFactory implements ActionFactory {
+	private static abstract class PassDoorActionFactory implements ActionFactory {
 
 
 		ActionPassDoor create(Node node, Direction direction, Result result) {
@@ -156,12 +156,12 @@ public class ActionPassDoor extends Action {
 
 
 
-	public static class PassDoorFactoryNorth extends WalkActionFactory {
+	private static abstract class AbstractPassDoorActionFactory extends PassDoorActionFactory {
 
 
 		@Override
 		public Result check(Node node) {
-			return check(node, Direction.NORTH);
+			return check(node, getDirection());
 		}
 
 
@@ -169,7 +169,15 @@ public class ActionPassDoor extends Action {
 
 		@Override
 		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH, result);
+			return create(node, getDirection(), result);
+		}
+
+
+
+
+		@Override
+		public Class<ActionPassDoor> producesAction() {
+			return ActionPassDoor.class;
 		}
 
 	}
@@ -179,20 +187,12 @@ public class ActionPassDoor extends Action {
 
 
 
-	public static class PassDoorFactoryEast extends WalkActionFactory {
+	public static class PassDoorFactoryNorth extends AbstractPassDoorActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.EAST, result);
+		public Direction getDirection() {
+			return Direction.NORTH;
 		}
 
 	}
@@ -202,20 +202,12 @@ public class ActionPassDoor extends Action {
 
 
 
-	public static class PassDoorFactorySouth extends WalkActionFactory {
+	public static class PassDoorFactoryEast extends AbstractPassDoorActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH, result);
+		public Direction getDirection() {
+			return Direction.EAST;
 		}
 
 	}
@@ -225,20 +217,27 @@ public class ActionPassDoor extends Action {
 
 
 
-	public static class PassDoorFactoryWest extends WalkActionFactory {
+	public static class PassDoorFactorySouth extends AbstractPassDoorActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.WEST);
+		public Direction getDirection() {
+			return Direction.SOUTH;
 		}
 
+	}
 
+
+
+
+
+
+	public static class PassDoorFactoryWest extends AbstractPassDoorActionFactory {
 
 
 		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.WEST, result);
+		public Direction getDirection() {
+			return Direction.WEST;
 		}
 
 	}

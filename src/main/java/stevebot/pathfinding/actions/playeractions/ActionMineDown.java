@@ -17,7 +17,6 @@ import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ActionMineDown extends Action {
@@ -239,14 +238,6 @@ public class ActionMineDown extends Action {
 	private static abstract class MineDownActionFactory implements ActionFactory {
 
 
-		@Override
-		public List<Class<? extends ActionFactory>> makesImpossible(Direction direction) {
-			return Collections.emptyList();
-		}
-
-
-
-
 		ActionMineDown create(Node node, Direction direction, Result result) {
 			return new ActionMineDown(node, result.to, result.estimatedCost, result.modifications);
 		}
@@ -333,12 +324,12 @@ public class ActionMineDown extends Action {
 
 
 
-	public static class MineDownFactoryNorth extends MineDownActionFactory {
+	private static abstract class AbstractMineDownActionFactory extends MineDownActionFactory {
 
 
 		@Override
 		public Result check(Node node) {
-			return check(node, Direction.NORTH);
+			return check(node, getDirection());
 		}
 
 
@@ -346,7 +337,15 @@ public class ActionMineDown extends Action {
 
 		@Override
 		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH, result);
+			return create(node, getDirection(), result);
+		}
+
+
+
+
+		@Override
+		public Class<ActionMineDown> producesAction() {
+			return ActionMineDown.class;
 		}
 
 	}
@@ -356,20 +355,12 @@ public class ActionMineDown extends Action {
 
 
 
-	public static class MineDownFactoryEast extends MineDownActionFactory {
+	public static class MineDownFactoryNorth extends AbstractMineDownActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.EAST, result);
+		public Direction getDirection() {
+			return Direction.NORTH;
 		}
 
 	}
@@ -379,20 +370,12 @@ public class ActionMineDown extends Action {
 
 
 
-	public static class MineDownFactorySouth extends MineDownActionFactory {
+	public static class MineDownFactoryEast extends AbstractMineDownActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH, result);
+		public Direction getDirection() {
+			return Direction.EAST;
 		}
 
 	}
@@ -402,20 +385,27 @@ public class ActionMineDown extends Action {
 
 
 
-	public static class MineDownFactoryWest extends MineDownActionFactory {
+	public static class MineDownFactorySouth extends AbstractMineDownActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.WEST);
+		public Direction getDirection() {
+			return Direction.SOUTH;
 		}
 
+	}
 
+
+
+
+
+
+	public static class MineDownFactoryWest extends AbstractMineDownActionFactory {
 
 
 		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.WEST, result);
+		public Direction getDirection() {
+			return Direction.WEST;
 		}
 
 	}

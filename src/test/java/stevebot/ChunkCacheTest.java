@@ -100,6 +100,33 @@ public class ChunkCacheTest {
 
 
 	@Test
+	void testClearCache() {
+
+		final int blockXa = 21;
+		final int blockYa = 0;
+		final int blockZa = -4;
+
+		final int blockXb = 32;
+		final int blockYb = 12;
+		final int blockZb = -42;
+
+		final ChunkCache cache = new ChunkCache();
+		final ChunkCache.CachedChunk chunkA = cache.getCachedChunk(blockXa, blockYa, blockZa);
+		final ChunkCache.CachedChunk chunkB = cache.getCachedChunk(blockXb, blockYb, blockZb);
+
+		cache.clear();
+
+		final ChunkCache.CachedChunk chunkA2 = cache.getCachedChunk(blockXa, blockYa, blockZa);
+		final ChunkCache.CachedChunk chunkB2 = cache.getCachedChunk(blockXb, blockYb, blockZb);
+
+		assertThat(chunkA2).isNotEqualTo(chunkA);
+		assertThat(chunkB2).isNotEqualTo(chunkB);
+	}
+
+
+
+
+	@Test
 	void testCachedChunkIds() {
 
 		final int blockX = 21;

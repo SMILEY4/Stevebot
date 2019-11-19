@@ -143,12 +143,12 @@ public class ActionEnterWater extends Action {
 
 
 
-	public static class EnterWaterFactoryNorth extends EnterWaterActionFactory {
+	private static abstract class AbstractEnterWaterActionFactory extends EnterWaterActionFactory {
 
 
 		@Override
 		public Result check(Node node) {
-			return check(node, Direction.NORTH);
+			return check(node, getDirection());
 		}
 
 
@@ -156,7 +156,15 @@ public class ActionEnterWater extends Action {
 
 		@Override
 		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH, result);
+			return create(node, getDirection(), result);
+		}
+
+
+
+
+		@Override
+		public Class<ActionEnterWater> producesAction() {
+			return ActionEnterWater.class;
 		}
 
 	}
@@ -166,20 +174,12 @@ public class ActionEnterWater extends Action {
 
 
 
-	public static class EnterWaterFactoryNorthEast extends EnterWaterActionFactory {
+	public static class EnterWaterFactoryNorth extends AbstractEnterWaterActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.NORTH_EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH_EAST, result);
+		public Direction getDirection() {
+			return Direction.NORTH;
 		}
 
 	}
@@ -189,20 +189,12 @@ public class ActionEnterWater extends Action {
 
 
 
-	public static class EnterWaterFactoryEast extends EnterWaterActionFactory {
+	public static class EnterWaterFactoryNorthEast extends AbstractEnterWaterActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.EAST, result);
+		public Direction getDirection() {
+			return Direction.NORTH_EAST;
 		}
 
 	}
@@ -212,20 +204,12 @@ public class ActionEnterWater extends Action {
 
 
 
-	public static class EnterWaterFactorySouthEast extends EnterWaterActionFactory {
+	public static class EnterWaterFactoryEast extends AbstractEnterWaterActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH_EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH_EAST, result);
+		public Direction getDirection() {
+			return Direction.EAST;
 		}
 
 	}
@@ -235,20 +219,12 @@ public class ActionEnterWater extends Action {
 
 
 
-	public static class EnterWaterFactorySouth extends EnterWaterActionFactory {
+	public static class EnterWaterFactorySouthEast extends AbstractEnterWaterActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH, result);
+		public Direction getDirection() {
+			return Direction.SOUTH_EAST;
 		}
 
 	}
@@ -258,20 +234,12 @@ public class ActionEnterWater extends Action {
 
 
 
-	public static class EnterWaterFactorySouthWest extends EnterWaterActionFactory {
+	public static class EnterWaterFactorySouth extends AbstractEnterWaterActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH_WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH_WEST, result);
+		public Direction getDirection() {
+			return Direction.SOUTH;
 		}
 
 	}
@@ -281,20 +249,12 @@ public class ActionEnterWater extends Action {
 
 
 
-	public static class EnterWaterFactoryWest extends EnterWaterActionFactory {
+	public static class EnterWaterFactorySouthWest extends AbstractEnterWaterActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.WEST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.WEST, result);
+		public Direction getDirection() {
+			return Direction.SOUTH_WEST;
 		}
 
 	}
@@ -304,20 +264,27 @@ public class ActionEnterWater extends Action {
 
 
 
-	public static class EnterWaterFactoryNorthWest extends EnterWaterActionFactory {
+	public static class EnterWaterFactoryWest extends AbstractEnterWaterActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.NORTH_WEST);
+		public Direction getDirection() {
+			return Direction.WEST;
 		}
 
+	}
 
+
+
+
+
+
+	public static class EnterWaterFactoryNorthWest extends AbstractEnterWaterActionFactory {
 
 
 		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH_WEST, result);
+		public Direction getDirection() {
+			return Direction.NORTH_WEST;
 		}
 
 	}

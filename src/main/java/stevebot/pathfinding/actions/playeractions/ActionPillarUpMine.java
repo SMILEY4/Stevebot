@@ -263,6 +263,21 @@ public class ActionPillarUpMine extends Action {
 		}
 
 
+
+
+		@Override
+		public Direction getDirection() {
+			return Direction.UP;
+		}
+
+
+
+
+		@Override
+		public Class<ActionPillarUpMine> producesAction() {
+			return ActionPillarUpMine.class;
+		}
+
 	}
 
 

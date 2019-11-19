@@ -13,9 +13,6 @@ import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerUtils;
 
-import java.util.Collections;
-import java.util.List;
-
 public class ActionBridgeFree extends Action {
 
 
@@ -163,14 +160,6 @@ public class ActionBridgeFree extends Action {
 	private static abstract class BrideFreeActionFactory implements ActionFactory {
 
 
-		@Override
-		public List<Class<? extends ActionFactory>> makesImpossible(Direction direction) {
-			return Collections.emptyList();
-		}
-
-
-
-
 		ActionBridgeFree create(Node node, Direction direction, Result result) {
 			return new ActionBridgeFree(node, result.to, result.estimatedCost, direction, result.modifications);
 		}
@@ -218,12 +207,12 @@ public class ActionBridgeFree extends Action {
 
 
 
-	public static class BrideFreeFactoryNorth extends BrideFreeActionFactory {
+	private static abstract class AbstractBrideFreeActionFactory extends BrideFreeActionFactory {
 
 
 		@Override
 		public Result check(Node node) {
-			return check(node, Direction.NORTH);
+			return check(node, getDirection());
 		}
 
 
@@ -231,7 +220,15 @@ public class ActionBridgeFree extends Action {
 
 		@Override
 		public Action createAction(Node node, Result result) {
-			return create(node, Direction.NORTH, result);
+			return create(node, getDirection(), result);
+		}
+
+
+
+
+		@Override
+		public Class<ActionBridgeFree> producesAction() {
+			return ActionBridgeFree.class;
 		}
 
 	}
@@ -241,20 +238,12 @@ public class ActionBridgeFree extends Action {
 
 
 
-	public static class BrideFreeFactoryEast extends BrideFreeActionFactory {
+	public static class BrideFreeFactoryNorth extends AbstractBrideFreeActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.EAST);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.EAST, result);
+		public Direction getDirection() {
+			return Direction.NORTH;
 		}
 
 	}
@@ -264,20 +253,12 @@ public class ActionBridgeFree extends Action {
 
 
 
-	public static class BrideFreeFactorySouth extends BrideFreeActionFactory {
+	public static class BrideFreeFactoryEast extends AbstractBrideFreeActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.SOUTH);
-		}
-
-
-
-
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.SOUTH, result);
+		public Direction getDirection() {
+			return Direction.EAST;
 		}
 
 	}
@@ -287,20 +268,27 @@ public class ActionBridgeFree extends Action {
 
 
 
-	public static class BrideFreeFactoryWest extends BrideFreeActionFactory {
+	public static class BrideFreeFactorySouth extends AbstractBrideFreeActionFactory {
 
 
 		@Override
-		public Result check(Node node) {
-			return check(node, Direction.WEST);
+		public Direction getDirection() {
+			return Direction.SOUTH;
 		}
 
+	}
 
+
+
+
+
+
+	public static class BrideFreeFactoryWest extends AbstractBrideFreeActionFactory {
 
 
 		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, Direction.WEST, result);
+		public Direction getDirection() {
+			return Direction.WEST;
 		}
 
 	}

@@ -6,6 +6,8 @@ import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockUtils;
 import stevebot.misc.Config;
 import stevebot.pathfinding.PathHandler;
+import stevebot.pathfinding.Pathfinding;
+import stevebot.pathfinding.PathfindingStatistics;
 import stevebot.pathfinding.goal.ExactGoal;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.goal.XZGoal;
@@ -262,6 +264,42 @@ public class StevebotCommands {
 					}
 				});
 
+		CommandSystem.addCommand(
+				"statistics",
+				"statistics",
+				"/statistics\n    Displays statistics about the last pathfinding process.",
+				(templateId, parameters) -> {
+					final PathfindingStatistics statistics = Pathfinding.statistics;
+					if (statistics == null) {
+						Stevebot.log("No statistics available.");
+					} else {
+						statistics.log();
+					}
+				});
+
+		// statistics console
+		CommandSystem.addCommand(
+				"statisticsConsole",
+				"statistics console",
+				"/statistics console\n    Displays statistics about the last pathfinding process (formatted for console output).",
+				(templateId, parameters) -> {
+					final PathfindingStatistics statistics = Pathfinding.statistics;
+					if (statistics == null) {
+						Stevebot.log("No statistics available.");
+					} else {
+						statistics.logConsole();
+					}
+				});
+
+		// clear node cache
+		CommandSystem.addCommand(
+				"clearBlockCache",
+				"clear blockcache",
+				"/clear blockcache\n    Clears the block-cache.",
+				(templateId, parameters) -> {
+					BlockUtils.getBlockProvider().getBlockCache().clear();
+					Stevebot.log("Cache cleared.");
+				});
 
 	}
 

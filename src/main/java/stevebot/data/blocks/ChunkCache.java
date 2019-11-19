@@ -147,6 +147,16 @@ public class ChunkCache {
 
 
 	/**
+	 * Clears this chunk-cache
+	 */
+	public void clear() {
+		chunks.clear();
+	}
+
+
+
+
+	/**
 	 * @return a {@link Renderable} representing this {@link ChunkCache}.
 	 */
 	public Renderable getChunkCacheRenderable() {

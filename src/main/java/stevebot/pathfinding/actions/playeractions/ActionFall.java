@@ -228,6 +228,22 @@ public class ActionFall extends Action {
 		}
 
 
+
+
+		@Override
+		public Direction getDirection() {
+			return Direction.DOWN;
+		}
+
+
+
+
+		@Override
+		public Class<ActionFall> producesAction() {
+			return ActionFall.class;
+		}
+
+
 	}
 
 }
