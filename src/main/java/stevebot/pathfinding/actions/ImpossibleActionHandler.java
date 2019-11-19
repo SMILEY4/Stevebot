@@ -12,7 +12,7 @@ public class ImpossibleActionHandler {
 
 	private HashMap<Class<? extends Action>, Set<Class<? extends Action>>> mapping = new HashMap<>();
 
-	private HashMap<Class<? extends Action>, Set<Direction>> invalidActions = new HashMap<>();
+	private HashMap<String, boolean[]> invalidActions = new HashMap<>();
 
 
 
@@ -83,8 +83,8 @@ public class ImpossibleActionHandler {
 		final Set<Class<? extends Action>> impossibleActions = mapping.get(validAction);
 		if (impossibleActions != null) {
 			for (Class<? extends Action> action : impossibleActions) {
-				final Set<Direction> invalidDirections = invalidActions.computeIfAbsent(action, k -> new HashSet<>());
-				invalidDirections.add(direction);
+				final boolean[] invalidDirections = invalidActions.computeIfAbsent(action.getSimpleName(), k -> new boolean[Direction.values().length]);
+				invalidDirections[direction.ordinal()] = true;
 			}
 		}
 	}
@@ -137,11 +137,11 @@ public class ImpossibleActionHandler {
 	 * @return whether an action in the given direction is still possible.
 	 */
 	public boolean isPossible(Class<? extends Action> action, Direction direction) {
-		final Set<Direction> invalidDirections = invalidActions.get(action);
+		final boolean[] invalidDirections = invalidActions.get(action.getSimpleName());
 		if (invalidDirections == null) {
 			return true;
 		} else {
-			return !invalidDirections.contains(direction);
+			return !invalidDirections[direction.ordinal()];
 		}
 	}
 
