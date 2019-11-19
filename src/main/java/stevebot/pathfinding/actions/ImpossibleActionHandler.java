@@ -3,18 +3,30 @@ package stevebot.pathfinding.actions;
 import stevebot.misc.Direction;
 import stevebot.pathfinding.actions.playeractions.Action;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
 public class ImpossibleActionHandler {
+
+
+	private HashMap<Class<? extends Action>, Set<Class<? extends Action>>> mapping = new HashMap<>();
+
+	private HashMap<Class<? extends Action>, Set<Direction>> invalidActions = new HashMap<>();
+
+
 
 
 	/**
 	 * Registers following relationship: for a given node (and direction):
-	 * if the "valid" can create a valid action, the "impossible" can never create a valid action.
+	 * if "valid" is the type of a valid action, "impossible" can never be a valid action.
 	 *
-	 * @param valid      the valid TODO
-	 * @param impossible the impossible TODO
+	 * @param valid      the class of the valid action
+	 * @param impossible the class of the impossible action
 	 */
-	public void makesImpossible(Class<Action> valid, Class<Action> impossible) {
-		// TODO
+	public void makesImpossible(Class<? extends Action> valid, Class<? extends Action> impossible) {
+		final Set<Class<? extends Action>> set = mapping.computeIfAbsent(valid, k -> new HashSet<>());
+		set.add(impossible);
 	}
 
 
@@ -25,8 +37,8 @@ public class ImpossibleActionHandler {
 	 *
 	 * @param factory the {@link ActionFactory}
 	 */
-	public void addValidFactory(ActionFactory factory) {
-		addValidFactory(factory, factory.getDirection());
+	public void addValid(ActionFactory factory) {
+		addValid(factory, factory.getDirection());
 	}
 
 
@@ -38,7 +50,27 @@ public class ImpossibleActionHandler {
 	 * @param factory   the {@link ActionFactory}
 	 * @param direction the directon of the action
 	 */
-	public void addValidFactory(ActionFactory factory, Direction direction) {
+	public void addValid(ActionFactory factory, Direction direction) {
+		addValid(factory.producesAction(), direction);
+	}
+
+
+
+
+	/**
+	 * Adds the given action to the list of completed actions in the given direction.
+	 *
+	 * @param validAction the valid action
+	 * @param direction   the directon of the action
+	 */
+	public void addValid(Class<? extends Action> validAction, Direction direction) {
+		final Set<Class<? extends Action>> impossibleActions = mapping.get(validAction);
+		if (impossibleActions != null) {
+			for (Class<? extends Action> action : impossibleActions) {
+				final Set<Direction> invalidDirections = invalidActions.computeIfAbsent(action, k -> new HashSet<>());
+				invalidDirections.add(direction);
+			}
+		}
 	}
 
 
@@ -48,6 +80,7 @@ public class ImpossibleActionHandler {
 	 * Rests everything
 	 */
 	public void reset() {
+		invalidActions.clear();
 	}
 
 
@@ -74,7 +107,26 @@ public class ImpossibleActionHandler {
 	 * @return whether an action from the given factory in the given direction is still possible.
 	 */
 	public boolean isPossible(ActionFactory factory, Direction direction) {
-		return true;
+		return isPossible(factory.producesAction(), direction);
+	}
+
+
+
+
+	/**
+	 * Checks if an action from is possible depending on the previously successful/valid actions
+	 *
+	 * @param action    the type of the {@link Action}
+	 * @param direction the direction of the action
+	 * @return whether an action in the given direction is still possible.
+	 */
+	public boolean isPossible(Class<? extends Action> action, Direction direction) {
+		final Set<Direction> invalidDirections = invalidActions.get(action);
+		if (invalidDirections == null) {
+			return true;
+		} else {
+			return !invalidDirections.contains(direction);
+		}
 	}
 
 

@@ -18,7 +18,7 @@ public class ActionFactoryProvider {
 
 	public ActionFactoryProvider() {
 
-		// walk.factories
+		// walk-factories
 		registerFactory(new ActionWalk.WalkFactoryNorth());
 		registerFactory(new ActionWalk.WalkFactoryNorthEast());
 		registerFactory(new ActionWalk.WalkFactoryEast());
@@ -27,9 +27,6 @@ public class ActionFactoryProvider {
 		registerFactory(new ActionWalk.WalkFactorySouthWest());
 		registerFactory(new ActionWalk.WalkFactoryWest());
 		registerFactory(new ActionWalk.WalkFactoryNorthWest());
-
-
-
 
 		// step-down-factories
 		registerFactory(new ActionStepDown.StepDownFactoryNorth());

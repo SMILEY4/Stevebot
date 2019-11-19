@@ -170,7 +170,7 @@ public class Pathfinding {
 				if (result.type == ActionFactory.ResultType.VALID) {
 
 					// add actions to list that are impossible when this action is valid
-					actionFactoryProvider.getImpossibleActionHandler().addValidFactory(factory);
+					actionFactoryProvider.getImpossibleActionHandler().addValid(factory);
 
 					// get destination node of action
 					final Node next = result.to;
