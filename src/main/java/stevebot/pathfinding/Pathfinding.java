@@ -29,6 +29,8 @@ import java.util.PriorityQueue;
 public class Pathfinding {
 
 
+	public static PathfindingStatistics statistics = null;
+
 	private static final ActionFactoryProvider actionFactoryProvider = new ActionFactoryProvider();
 
 
@@ -71,6 +73,11 @@ public class Pathfinding {
 		final PlayerSnapshot baseSnapshot = PlayerUtils.createSnapshot();
 		baseSnapshot.setPlayerHealth((int) PlayerUtils.getPlayer().getHealth());
 
+		final PathfindingStatistics currentStatistics = new PathfindingStatistics();
+		currentStatistics.timeStart = System.currentTimeMillis();
+		currentStatistics.start = posStart;
+		currentStatistics.goal = goal;
+
 		// calculate path until...
 		//	- open set is empty
 		//	- we hit too many unloaded chunks (goal is most likely in an unloaded chunk)
@@ -80,6 +87,7 @@ public class Pathfinding {
 			// timeout
 			if (checkForTimeout(timeStart, timeoutInMs)) {
 				Stevebot.logNonCritical("Timeout");
+				currentStatistics.hitTimeout = true;
 				break;
 			}
 
@@ -100,21 +108,26 @@ public class Pathfinding {
 
 			// get next/current node (and close it)
 			Node current = removeLowest(openSet);
+			currentStatistics.nodesConsidered++;
 
 			// check if reached goal
 			//    -> build path start-current and check if path is better than the already found path (if one exists)
 			if (goal.reached(current.getPos())) {
 				Path currentPath = buildPath(nodeStart, current, true);
+				currentStatistics.pathsFoundTotal++;
+				currentStatistics.paths.add(currentPath);
 				if (currentPath.getCost() < bestPath.getCost()) {
 					Stevebot.logNonCritical("Found possible path: " + ((System.currentTimeMillis() - timeStart)) + "ms, cost: " + currentPath.getCost());
 					nBetterPathFound++;
 					bestPath = currentPath;
+					currentStatistics.betterPathsFound++;
 				}
 				continue;
 			}
 
 			// check if cost of the current node is already higher than prev. path cost -> if yes, ignore current node
 			if (bestPath.getCost() < current.gcost()) {
+				currentStatistics.nodesWorseThanPath++;
 				continue;
 			}
 
@@ -123,6 +136,8 @@ public class Pathfinding {
 			// 		->	no, reset counter
 			if (bestNodes.getBest() != null && bestNodes.getBest().gcost() < current.gcost()) {
 				nWorseThanBest++;
+				currentStatistics.nodesWorseThanBestTotal++;
+				currentStatistics.nodesWorseThanBestRow = Math.max(currentStatistics.nodesWorseThanBestRow, nWorseThanBest);
 			} else {
 				nWorseThanBest = 0;
 			}
@@ -143,12 +158,16 @@ public class Pathfinding {
 			actionFactoryProvider.getImpossibleActionHandler().reset();
 			List<ActionFactory> factories = actionFactoryProvider.getAllFactories();
 
+			currentStatistics.nodesProcessed++;
+
 			// iterate over every registered action
 			for (int i = 0, n = factories.size(); i < n; i++) {
 				ActionFactory factory = factories.get(i);
+				currentStatistics.actionsConsidered++;
 
 				// continue, if prev processed actions make this action impossible
-				if (actionFactoryProvider.getImpossibleActionHandler().isPossible(factory)) {
+				if (!actionFactoryProvider.getImpossibleActionHandler().isPossible(factory)) {
+					currentStatistics.actionsImpossible++;
 					continue;
 				}
 
@@ -157,17 +176,20 @@ public class Pathfinding {
 
 				// action is invalid
 				if (result.type == ActionFactory.ResultType.INVALID) {
+					currentStatistics.actionsInvalid++;
 					continue;
 				}
 
 				// action hit an unloaded chunk
 				if (result.type == ActionFactory.ResultType.UNLOADED) {
 					hitUnloaded = true;
+					currentStatistics.actionsUnloaded++;
 					continue;
 				}
 
 				// action is valid
 				if (result.type == ActionFactory.ResultType.VALID) {
+					currentStatistics.actionsValid++;
 
 					// add actions to list that are impossible when this action is valid
 					actionFactoryProvider.getImpossibleActionHandler().addValid(factory);
@@ -193,6 +215,7 @@ public class Pathfinding {
 						}
 
 						// create action and setup dest. node
+						currentStatistics.actionsCreated++;
 						Action action = factory.createAction(current, result);
 						next.setGCost(newCost);
 						next.setHCost(goal.calcHCost(next.getPos()));
@@ -214,17 +237,27 @@ public class Pathfinding {
 
 
 		Stevebot.logNonCritical("Pathfinding completed in " + ((System.currentTimeMillis() - timeStart)) + "ms, considered " + NodeCache.getNodes().size() + " nodes.");
+		currentStatistics.timeEnd = System.currentTimeMillis();
 
 		if (bestPath.reachedGoal()) {
 			// a valid path was found -> return that path
+			currentStatistics.pathFound = true;
+			currentStatistics.pathCost = bestPath.getCost();
+			currentStatistics.pathLength = bestPath.getNodes().size();
+			statistics = currentStatistics;
 			return bestPath;
 		} else {
 			// no path was found (timeout, goal in unloaded chunks, ...) -> find best node and return path start-bestnode (or empty path if none exists)
 			Node bestNode = bestNodes.getBest();
 			if (bestNode == null) {
+				currentStatistics.pathFound = false;
 				return new EmptyPath();
 			} else {
-				return buildPath(nodeStart, bestNode, false);
+				final Path path = buildPath(nodeStart, bestNode, false);
+				currentStatistics.pathFound = true;
+				currentStatistics.pathCost = path.getCost();
+				currentStatistics.pathLength = path.getNodes().size();
+				return path;
 			}
 		}
 

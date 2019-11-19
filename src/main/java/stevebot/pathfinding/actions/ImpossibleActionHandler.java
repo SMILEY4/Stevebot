@@ -41,8 +41,8 @@ public class ImpossibleActionHandler {
 	 * @param impossible the class of the impossible action
 	 */
 	public void makesImpossible(Class<? extends Action> valid, Class<? extends Action> impossible) {
-//		final Set<Class<? extends Action>> set = mapping.computeIfAbsent(valid, k -> new HashSet<>());
-//		set.add(impossible);
+		final Set<Class<? extends Action>> set = mapping.computeIfAbsent(valid, k -> new HashSet<>());
+		set.add(impossible);
 	}
 
 
