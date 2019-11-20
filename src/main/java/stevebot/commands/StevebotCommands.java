@@ -8,6 +8,7 @@ import stevebot.misc.Config;
 import stevebot.pathfinding.PathHandler;
 import stevebot.pathfinding.Pathfinding;
 import stevebot.pathfinding.PathfindingStatistics;
+import stevebot.pathfinding.actions.playeractions.ActionObserver;
 import stevebot.pathfinding.goal.ExactGoal;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.goal.XZGoal;
@@ -299,6 +300,15 @@ public class StevebotCommands {
 				(templateId, parameters) -> {
 					BlockUtils.getBlockProvider().getBlockCache().clear();
 					Stevebot.log("Cache cleared.");
+				});
+
+		// display action cost recording stats
+		CommandSystem.addCommand(
+				"actionCostStats",
+				"actioncosts",
+				"/actioncosts\n    Logs the costs of the recorded actions.",
+				(templateId, parameters) -> {
+					ActionObserver.log();
 				});
 
 	}
