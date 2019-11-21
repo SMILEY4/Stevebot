@@ -102,7 +102,7 @@ public class ActionStepDown extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_STEP_DOWN);
+			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().COST_STEP_DOWN);
 		}
 
 
@@ -141,7 +141,7 @@ public class ActionStepDown extends Action {
 				if ((traversable0 && avoid1) || (traversable1 && avoid0)) {
 					return Result.invalid();
 				} else {
-					return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_STEP_DOWN * ActionCosts.COST_MULT_DIAGONAL * ((!traversable0 || !traversable1) ? ActionCosts.COST_MULT_TOUCHING : 1));
+					return Result.valid(direction, NodeCache.get(to), ActionCosts.get().COST_STEP_DOWN * ActionCosts.get().COST_MULT_DIAGONAL * ((!traversable0 || !traversable1) ? ActionCosts.get().COST_MULT_TOUCHING : 1));
 				}
 			} else {
 				return Result.invalid();

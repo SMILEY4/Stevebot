@@ -60,7 +60,7 @@ public class NodeCache {
 	 * @return the created node
 	 */
 	private static Node create(BaseBlockPos pos, Node prev) {
-		return create(pos, prev, ActionCosts.COST_INFINITE);
+		return create(pos, prev, ActionCosts.get().COST_INFINITE);
 	}
 
 

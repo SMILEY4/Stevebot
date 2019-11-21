@@ -34,7 +34,7 @@ public class BreakBlockCheckResult {
 		this.blockPos = blockPos;
 		this.bestTool = bestTool;
 		this.ticksToBreak = ticksToBreak;
-		if (MathUtils.isNearlyEqual(ticksToBreak, ActionCosts.COST_INFINITE) || ticksToBreak > ActionCosts.COST_INFINITE) {
+		if (MathUtils.isNearlyEqual(ticksToBreak, ActionCosts.get().COST_INFINITE) || ticksToBreak > ActionCosts.get().COST_INFINITE) {
 			this.breakable = false;
 		} else {
 			this.breakable = breakable;

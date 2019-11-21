@@ -207,7 +207,7 @@ public class ActionFall extends Action {
 				}
 			}
 
-			return Result.valid(Direction.NONE, NodeCache.get(fallTo), ActionCosts.COST_FALL_N(from.getY() - fallTo.getY()));
+			return Result.valid(Direction.NONE, NodeCache.get(fallTo), ActionCosts.get().COST_FALL_N(from.getY() - fallTo.getY()));
 		}
 
 

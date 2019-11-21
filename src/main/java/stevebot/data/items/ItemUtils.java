@@ -68,7 +68,7 @@ public class ItemUtils {
 		// https://minecraft.gamepedia.com/Breaking
 		final float blockHardness = state.getBlockHardness(null, null);
 		if (blockHardness < 0) {
-			return (float) ActionCosts.COST_INFINITE;
+			return (float) ActionCosts.get().COST_INFINITE;
 		}
 		final float playerBreakSpeed = getDigSpeed(itemStack, state);
 		final int canHarvestMod = (itemStack != null && itemStack.canHarvestBlock(state)) ? 30 : 100;

@@ -312,7 +312,7 @@ public class ActionMineDown extends Action {
 			}
 
 			final Modification[] modifications = modificationList.toArray(Modification.EMPTY);
-			return Result.valid(direction, NodeCache.get(to), totalTicksTopBreak + ActionCosts.COST_STEP_DOWN, modifications);
+			return Result.valid(direction, NodeCache.get(to), totalTicksTopBreak + ActionCosts.get().COST_STEP_DOWN, modifications);
 		}
 
 	}

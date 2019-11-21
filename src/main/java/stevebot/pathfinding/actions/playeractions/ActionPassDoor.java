@@ -147,7 +147,7 @@ public class ActionPassDoor extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_WALKING * 2);
+			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().COST_WALKING * 2);
 		}
 
 

@@ -320,7 +320,7 @@ public class PlayerSnapshot {
 	 */
 	public int findBestToolSlot(BlockWrapper block) {
 		int slotBest = -1;
-		float bestSpeed = (float) ActionCosts.COST_INFINITE;
+		float bestSpeed = (float) ActionCosts.get().COST_INFINITE;
 		for (int i = 0; i < 9; i++) {
 			final ItemToolWrapper tool = getAsTool(i);
 			final float breakTime = ItemUtils.getBreakDuration(tool.getStack(1), block.getBlock().getDefaultState());

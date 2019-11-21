@@ -59,7 +59,7 @@ public class PathTest {
 		assertThat(path.getLastNode()).isNull();
 		assertThat(path.getNodes().size()).isEqualTo(0);
 		assertThat(path.reachedGoal()).isFalse();
-		assertThat(path.getCost()).isCloseTo(ActionCosts.COST_INFINITE, Percentage.withPercentage(0.01));
+		assertThat(path.getCost()).isCloseTo(ActionCosts.get().COST_INFINITE, Percentage.withPercentage(0.01));
 	}
 
 }

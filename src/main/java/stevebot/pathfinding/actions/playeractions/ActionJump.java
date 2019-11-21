@@ -191,7 +191,7 @@ public class ActionJump extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(Direction.NONE, NodeCache.get(to), ActionCosts.COST_WALK_JUMP);
+			return Result.valid(Direction.NONE, NodeCache.get(to), ActionCosts.get().COST_WALK_JUMP);
 		}
 
 
@@ -235,7 +235,7 @@ public class ActionJump extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(Direction.NONE, NodeCache.get(to), ActionCosts.COST_WALK_JUMP * ActionCosts.COST_MULT_DIAGONAL);
+			return Result.valid(Direction.NONE, NodeCache.get(to), ActionCosts.get().COST_WALK_JUMP * ActionCosts.get().COST_MULT_DIAGONAL);
 		}
 
 

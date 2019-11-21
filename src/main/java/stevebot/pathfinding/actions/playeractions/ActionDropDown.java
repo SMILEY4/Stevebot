@@ -208,7 +208,7 @@ public class ActionDropDown extends Action {
 
 			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(nodeFall, resultFall);
 
-			return Result.valid(direction, actionFall.getTo(), ActionCosts.COST_WALKING + actionFall.getCost());
+			return Result.valid(direction, actionFall.getTo(), ActionCosts.get().COST_WALKING + actionFall.getCost());
 		}
 
 
@@ -252,7 +252,7 @@ public class ActionDropDown extends Action {
 				return Result.unloaded();
 			}
 
-			return Result.valid(direction, actionFall.getTo(), ActionCosts.COST_WALKING * ActionCosts.COST_MULT_DIAGONAL + actionFall.getCost());
+			return Result.valid(direction, actionFall.getTo(), ActionCosts.get().COST_WALKING * ActionCosts.get().COST_MULT_DIAGONAL + actionFall.getCost());
 		}
 
 

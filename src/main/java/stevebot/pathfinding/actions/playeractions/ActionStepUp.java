@@ -174,7 +174,7 @@ public class ActionStepUp extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_STEP_UP);
+			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().COST_STEP_UP);
 		}
 
 
@@ -205,7 +205,7 @@ public class ActionStepUp extends Action {
 			boolean traversable1 = ActionUtils.canMoveThrough(p1, 3) && BlockUtils.isLoaded(p1);
 
 			if (ActionUtils.canStandAt(to) && traversable0 && traversable1) {
-				return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_STEP_UP * ActionCosts.COST_MULT_DIAGONAL);
+				return Result.valid(direction, NodeCache.get(to), ActionCosts.get().COST_STEP_UP * ActionCosts.get().COST_MULT_DIAGONAL);
 			} else {
 				return Result.invalid();
 			}

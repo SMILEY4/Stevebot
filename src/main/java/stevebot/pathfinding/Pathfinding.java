@@ -207,7 +207,7 @@ public class Pathfinding {
 					if (newCost < next.gcost() || !next.isOpen()) {
 
 						// if the closed dest. node already has a score from a prev. action, check if the improvement is enough to justify opening it again
-						if (next.gcost() < ActionCosts.COST_INFINITE - 10 && !next.isOpen()) {
+						if (next.gcost() < ActionCosts.get().COST_INFINITE - 10 && !next.isOpen()) {
 							double improvement = next.gcost() - newCost;
 							if (improvement < 1) {
 								continue;

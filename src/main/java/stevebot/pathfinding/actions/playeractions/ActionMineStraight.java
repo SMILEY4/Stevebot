@@ -263,7 +263,7 @@ public class ActionMineStraight extends Action {
 			}
 
 			final Modification[] modifications = modificationList.toArray(Modification.EMPTY);
-			return Result.valid(direction, NodeCache.get(to), totalTicksTopBreak + ActionCosts.COST_WALKING, modifications);
+			return Result.valid(direction, NodeCache.get(to), totalTicksTopBreak + ActionCosts.get().COST_WALKING, modifications);
 		}
 
 	}
