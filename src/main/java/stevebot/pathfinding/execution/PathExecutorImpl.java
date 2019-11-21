@@ -7,6 +7,7 @@ import stevebot.events.EventListener;
 import stevebot.misc.Config;
 import stevebot.misc.ProcState;
 import stevebot.misc.TransitionListener;
+import stevebot.pathfinding.actions.playeractions.Action;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.Path;
@@ -240,17 +241,21 @@ public class PathExecutorImpl implements TransitionListener<ExecutionState, Exec
 		}
 
 		PlayerUtils.getInput().stopAll();
+
+		final Action currentAction = crawler.getCurrentNodeTo().getAction();
 		if (firstTick) {
-			crawler.getCurrentNodeTo().getAction().resetAction();
+			currentAction.resetAction();
 		}
-		ProcState actionState = crawler.getCurrentNodeTo().getAction().tick(firstTick);
+		ProcState actionState = currentAction.tick(firstTick);
 		firstTick = false;
 		pathTraceRenderable.addPoint(PlayerUtils.getPlayerPosition(), Color.MAGENTA);
 
 		if (actionState == ProcState.FAILED) {
+			currentAction.onActionFinished(ProcState.FAILED);
 			return ProcState.FAILED;
 		}
 		if (actionState == ProcState.DONE) {
+			currentAction.onActionFinished(ProcState.DONE);
 			firstTick = true;
 			boolean hasNext = crawler.nextAction();
 			if (!hasNext) {

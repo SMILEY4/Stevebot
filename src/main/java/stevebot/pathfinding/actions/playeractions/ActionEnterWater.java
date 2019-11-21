@@ -6,6 +6,7 @@ import stevebot.misc.Direction;
 import stevebot.misc.ProcState;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
@@ -30,7 +31,16 @@ public class ActionEnterWater extends Action {
 
 
 	@Override
+	public String getActionNameExp() {
+		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos()).diagonal ? "-diagonal" : "-straight");
+	}
+
+
+
+
+	@Override
 	public ProcState tick(boolean firstTick) {
+		ActionObserver.tickAction(this.getActionNameExp());
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
 			return ProcState.DONE;
 		} else {

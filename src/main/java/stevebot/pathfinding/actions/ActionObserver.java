@@ -1,4 +1,4 @@
-package stevebot.pathfinding.actions.playeractions;
+package stevebot.pathfinding.actions;
 
 import stevebot.Stevebot;
 
@@ -31,16 +31,20 @@ public class ActionObserver {
 	 * Ends the recording of one action
 	 *
 	 * @param actionName the name of the action
+	 * @param discard    if the current recording should be discarded
 	 */
-	public static void endAction(String actionName) {
+	public static void endAction(String actionName, boolean discard) {
 		if (actionTicks.containsKey(actionName)) {
 			final long ticks = actionTicks.get(actionName);
 			actionTicks.remove(actionName);
-			final Sample sample = samples.getOrDefault(actionName, new Sample(actionName));
-			sample.min = Math.min(sample.min, ticks);
-			sample.max = Math.max(sample.max, ticks);
-			sample.sum += ticks;
-			sample.nSamples++;
+			if (!discard) {
+				final Sample sample = samples.getOrDefault(actionName, new Sample(actionName));
+				sample.min = Math.min(sample.min, ticks);
+				sample.max = Math.max(sample.max, ticks);
+				sample.sum += ticks;
+				sample.nSamples++;
+				samples.put(actionName, sample);
+			}
 		}
 	}
 

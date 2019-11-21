@@ -8,10 +8,7 @@ import stevebot.data.modification.Modification;
 import stevebot.misc.Direction;
 import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
-import stevebot.pathfinding.actions.ActionCosts;
-import stevebot.pathfinding.actions.ActionFactory;
-import stevebot.pathfinding.actions.ActionUtils;
-import stevebot.pathfinding.actions.BreakBlockCheckResult;
+import stevebot.pathfinding.actions.*;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerUtils;
@@ -66,6 +63,7 @@ public class ActionPillarUpMine extends Action {
 
 	@Override
 	public ProcState tick(boolean firstTick) {
+		ActionObserver.tickAction(this.getActionName());
 		switch (stateMachine.getState()) {
 			case SLOWING_DOWN: {
 				return tickSlowDown();

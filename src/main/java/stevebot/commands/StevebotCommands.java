@@ -8,7 +8,7 @@ import stevebot.misc.Config;
 import stevebot.pathfinding.PathHandler;
 import stevebot.pathfinding.Pathfinding;
 import stevebot.pathfinding.PathfindingStatistics;
-import stevebot.pathfinding.actions.playeractions.ActionObserver;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.goal.ExactGoal;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.goal.XZGoal;
