@@ -32,7 +32,7 @@ public class ActionExitWater extends Action {
 
 	@Override
 	public String getActionNameExp() {
-		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos()).diagonal ? "-diagonal" : "-straight");
+		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos(), true).diagonal ? "-diagonal" : "-straight");
 	}
 
 
@@ -120,12 +120,12 @@ public class ActionExitWater extends Action {
 			if (!BlockUtils.isLoaded(to)) {
 				return Result.unloaded();
 			}
-			if (!ActionUtils.canSwimAt(to)) {
+			if (ActionUtils.canSwimAt(to)) {
 				return Result.invalid();
 			}
 
 			// check from-position
-			if (!ActionUtils.canStandAt(node.getPos())) {
+			if (!ActionUtils.canSwimAt(node.getPos())) {
 				return Result.invalid();
 			}
 
