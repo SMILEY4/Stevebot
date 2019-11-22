@@ -46,11 +46,31 @@ public abstract class ActionCostConstants {
 	// bridge
 	public final double BRIDGE_FREE = 30.0;
 
+	// pass door
+	public final double PASS_DOOR = 17.333333333333332;
+
+	// pillar up
+	public final double PILLAR_UP = 20.714285714285715;
+
+	/*
+	TODO
+	- pillar up mine (d)
+	- mine up (d)
+	- mine straight (d)
+	- mine down (d)
+	- fall (d)
+	- drop down (d)
+	- dig down (d)
+
+	-> (s) = simple -> action cost is completely defined by one constant (e.g. walk)
+	-> (d) = dynamic -> action cost can nod be defined by constant (e.g. break block)
+
+	 */
 
 	public final double COST_SPRINTING = 20.0 / 5.612; // 3.563
 	public final double COST_WALKING = 20.0 / 4.317; // 4.632
+	public final double COST_SNEAKING = 20.0 / 1.3; // 15.384
 	public final double COST_STEP_DOWN = COST_WALKING; // 4.632
-	public final double COST_LADDER_DOWN = 20.0 / 3.0; // 6.666
 	public final double COST_STEP_UP = 7.556;
 	public final double COST_WALK_JUMP = COST_WALKING * 2 + 1; // = 9.264 + 1
 	public final double COST_SPRINT_JUMP = COST_SPRINTING * 3 + 3;
@@ -62,8 +82,6 @@ public abstract class ActionCostConstants {
 	public final double COST_ENTER_WATER = COST_WALKING * 0.5 + COST_SWIM * 0.5; // 4.815 * 2 = 7.315
 	public final double COST_EXIST_WATER = COST_WALKING * 0.5 + COST_SWIM * 0.5;
 
-	public final double COST_LADDER_UP = 20.0 / 2.35; // 8.510
-	public final double COST_SNEAKING = 20.0 / 1.3; // 15.384
 
 	public final double COST_MULT_TOUCHING = 1.6;
 	public final double COST_MULT_DIAGONAL = 1.414;
@@ -442,5 +460,57 @@ public final double step-up-diagonal = 24.0;
 public final double sprint-jump = 33.0;
 
 
+
+walk-sprint-straight (7)
+   avg: 8.285714285714286
+   min: 8
+   max: 10
+
+pass-door (6)
+   avg: 17.333333333333332
+   min: 16
+   max: 18
+
+---------------------------
+public final double walk-sprint-straight = 8.285714285714286;
+public final double pass-door = 17.333333333333332;
+
+
+
+
+
+
+=== ACTION COST SAMPLES ===
+walk-sprint-diagonal (5)
+   avg: 10.8
+   min: 10
+   max: 12
+
+step-up-straight (4)
+   avg: 21.5
+   min: 20
+   max: 22
+
+walk-sprint-straight (3)
+   avg: 8.0
+   min: 8
+   max: 8
+
+pillar-up (14)
+   avg: 20.714285714285715
+   min: 20
+   max: 22
+
+step-up-diagonal (1)
+   avg: 22.0
+   min: 22
+   max: 22
+
+---------------------------
+public final double walk-sprint-diagonal = 10.8;
+public final double step-up-straight = 21.5;
+public final double walk-sprint-straight = 8.0;
+public final double pillar-up = 20.714285714285715;
+public final double step-up-diagonal = 22.0;
 
  */
