@@ -3,6 +3,14 @@ package stevebot.pathfinding.actions;
 public abstract class ActionCostConstants {
 
 
+	/*
+	SETTING PRECISE ACTION COST:
+	1. calculate and follow a path with the action -> actual cost in ticks will be recorded for each action in the path
+	2. exec. command /actioncost -> the real cost of all executed actions will be printed in the console
+	3. decide if the recorded data is representative (min,max,avg and sample-size) and set action cost to avg real cost
+	 */
+
+
 	// walk
 	public final double WALK_SPRINT_STRAIGHT_ = 7.900369003690037;
 	public final double WALK_SPRINT_DIAGONAL = 10.73076923076923;
@@ -350,4 +358,89 @@ public final double walk-sprint-straight = 8.25;
 public final double jump-diagonal = 37.55555555555556;
 public final double jump-straight = 39.333333333333336;
 public final double bridge-free = 26.0;
+
+
+=== ACTION COST SAMPLES ===
+walk-sprint-diagonal (279)
+   avg: 10.272401433691757
+   min: 10
+   max: 14
+
+step-down-straight (10)
+   avg: 11.4
+   min: 8
+   max: 18
+
+swim-diagonal (17)
+   avg: 26.823529411764707
+   min: 18
+   max: 46
+
+swim-straight (8)
+   avg: 18.5
+   min: 14
+   max: 24
+
+walk-sprint-straight (119)
+   avg: 7.5210084033613445
+   min: 6
+   max: 10
+
+exit-water-straight (1)
+   avg: 37.0
+   min: 37
+   max: 37
+
+step-up-straight (17)
+   avg: 23.88235294117647
+   min: 22
+   max: 24
+
+enter-water-diagonal (3)
+   avg: 14.666666666666666
+   min: 14
+   max: 16
+
+step-down-diagonal (10)
+   avg: 14.4
+   min: 12
+   max: 24
+
+enter-water-straight (2)
+   avg: 11.0
+   min: 8
+   max: 14
+
+exit-water-diagonal (3)
+   avg: 43.333333333333336
+   min: 28
+   max: 54
+
+step-up-diagonal (2)
+   avg: 24.0
+   min: 22
+   max: 26
+
+sprint-jump (1)
+   avg: 33.0
+   min: 33
+   max: 33
+
+---------------------------
+public final double walk-sprint-diagonal = 10.272401433691757;
+public final double step-down-straight = 11.4;
+public final double swim-diagonal = 26.823529411764707;
+public final double swim-straight = 18.5;
+public final double walk-sprint-straight = 7.5210084033613445;
+public final double exit-water-straight = 37.0;
+public final double step-up-straight = 23.88235294117647;
+public final double enter-water-diagonal = 14.666666666666666;
+public final double step-down-diagonal = 14.4;
+public final double enter-water-straight = 11.0;
+public final double exit-water-diagonal = 43.333333333333336;
+public final double step-up-diagonal = 24.0;
+public final double sprint-jump = 33.0;
+
+
+
  */

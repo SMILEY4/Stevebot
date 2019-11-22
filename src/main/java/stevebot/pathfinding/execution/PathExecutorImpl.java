@@ -26,6 +26,8 @@ import static stevebot.pathfinding.execution.PathExecutionStateMachine.Execution
 public class PathExecutorImpl implements TransitionListener<ExecutionState, ExecutionTransition>, PathExecutor {
 
 
+	public static long pathTicks = 0;
+
 	private PathFactory pathFactory;
 	private PathExecutionStateMachine stateMachine = new PathExecutionStateMachine();
 	private PathCrawler crawler = new PathCrawler();
@@ -44,6 +46,7 @@ public class PathExecutorImpl implements TransitionListener<ExecutionState, Exec
 	private DynPointCollectionRenderObject pathTraceRenderable = new DynPointCollectionRenderObject(3);
 
 	private PathExecutionListener pathListener;
+
 
 	private final EventListener<TickEvent.ClientTickEvent> clientTickListener = new EventListener<TickEvent.ClientTickEvent>() {
 		@Override
@@ -164,6 +167,7 @@ public class PathExecutorImpl implements TransitionListener<ExecutionState, Exec
 			}
 
 			case WAITING_FOR_SEGMENT: {
+				pathTicks = 0;
 				if (pathFactory.hasPath()) {
 					if (pathFactory.getCurrentPath() instanceof EmptyPath || pathFactory.getCurrentPath().getNodes().size() <= 1) {
 						stateMachine.fireTransition(ExecutionTransition.REACHED_END_OF_PATH);
@@ -185,6 +189,7 @@ public class PathExecutorImpl implements TransitionListener<ExecutionState, Exec
 					onClientTick();
 				}
 				if (state == ProcState.DONE) {
+					Stevebot.log("Done following segment  (" + pathTicks + ")");
 					Path path = pathFactory.getCurrentPath();
 					if (path.reachedGoal() || path instanceof EmptyPath) {
 						pathFactory.removeCurrentPath();
@@ -247,6 +252,7 @@ public class PathExecutorImpl implements TransitionListener<ExecutionState, Exec
 			currentAction.resetAction();
 		}
 		ProcState actionState = currentAction.tick(firstTick);
+		pathTicks++;
 		firstTick = false;
 		pathTraceRenderable.addPoint(PlayerUtils.getPlayerPosition(), Color.MAGENTA);
 

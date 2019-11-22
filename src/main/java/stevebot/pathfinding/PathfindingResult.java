@@ -3,13 +3,16 @@ package stevebot.pathfinding;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.goal.Goal;
+import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.Path;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PathfindingStatistics {
+public class PathfindingResult {
 
+
+	public Path finalPath = new EmptyPath();
 
 	public BaseBlockPos start;
 	public Goal goal;
@@ -51,7 +54,7 @@ public class PathfindingStatistics {
 		Stevebot.log("=== STATISTICS ===");
 		Stevebot.log("start: " + start.toString());
 		Stevebot.log("goal: " + goal.goalString());
-		Stevebot.log("found path: " + pathFound);
+		Stevebot.log("found path: " + pathFound + ", path=" + (finalPath == null ? "null" : finalPath.getClass().getSimpleName()));
 		Stevebot.log("time: " + (timeEnd - timeStart) + "ms");
 		if (pathFound) {
 			Stevebot.log("path cost: " + pathCost);
@@ -89,44 +92,44 @@ public class PathfindingStatistics {
 
 
 	/**
-	 * Log the statistics formatted for console-output.
+	 * Log the statistics formatted for console-output as non-critical.
 	 */
 	public void logConsole() {
-		Stevebot.log("=== STATISTICS ===");
-		Stevebot.log("       start: " + start.toString());
-		Stevebot.log("       goal: " + goal.goalString());
-		Stevebot.log(" found path: " + pathFound);
-		Stevebot.log("       time: " + (timeEnd - timeStart) + "ms");
+		Stevebot.logNonCritical("=== STATISTICS ===");
+		Stevebot.logNonCritical("       start: " + start.toString());
+		Stevebot.logNonCritical("       goal: " + goal.goalString());
+		Stevebot.logNonCritical(" found path: " + pathFound + ", path=" + (finalPath == null ? "null" : finalPath.getClass().getSimpleName()));
+		Stevebot.logNonCritical("       time: " + (timeEnd - timeStart) + "ms");
 		if (pathFound) {
-			Stevebot.log("  path cost: " + pathCost);
-			Stevebot.log("path length: " + pathLength);
-			Stevebot.log("");
-			Stevebot.log("       hit timeout: " + hitTimeout);
-			Stevebot.log(" paths found total: " + pathsFoundTotal);
-			Stevebot.log("better paths found: " + betterPathsFound);
-			Stevebot.log("");
-			Stevebot.log("paths:");
+			Stevebot.logNonCritical("  path cost: " + pathCost);
+			Stevebot.logNonCritical("path length: " + pathLength);
+			Stevebot.logNonCritical("");
+			Stevebot.logNonCritical("       hit timeout: " + hitTimeout);
+			Stevebot.logNonCritical(" paths found total: " + pathsFoundTotal);
+			Stevebot.logNonCritical("better paths found: " + betterPathsFound);
+			Stevebot.logNonCritical("");
+			Stevebot.logNonCritical("paths:");
 			for (Path path : paths) {
-				Stevebot.log("        cost: " + path.getCost());
-				Stevebot.log("      length: " + path.getNodes().size());
-				Stevebot.log("      ------");
+				Stevebot.logNonCritical("        cost: " + path.getCost());
+				Stevebot.logNonCritical("      length: " + path.getNodes().size());
+				Stevebot.logNonCritical("      ------");
 			}
-			Stevebot.log("");
-			Stevebot.log("nodes considered: " + nodesConsidered);
-			Stevebot.log(" nodes processed: " + nodesProcessed + "  (" + (((float) nodesProcessed / (float) nodesConsidered) * 100f) + "%)" + " -> discarded " + (nodesConsidered - nodesProcessed));
-			Stevebot.log("");
-			Stevebot.log("        nodes worse than path: " + nodesWorseThanPath);
-			Stevebot.log("  nodes worse than best (row): " + nodesWorseThanBestRow);
-			Stevebot.log("nodes worse than best (total): " + nodesWorseThanBestTotal);
-			Stevebot.log("");
-			Stevebot.log("  actions considered: " + actionsConsidered);
-			Stevebot.log("actions (impossible): " + actionsImpossible + "(" + (((float) actionsImpossible / (float) actionsConsidered) * 100f) + "%)");
-			Stevebot.log("   actions (invalid): " + actionsInvalid + "(" + (((float) actionsInvalid / (float) actionsConsidered) * 100f) + "%)");
-			Stevebot.log("  actions (unloaded): " + actionsUnloaded + "(" + (((float) actionsUnloaded / (float) actionsConsidered) * 100f) + "%)");
-			Stevebot.log("     actions (valid): " + actionsValid + "(" + (((float) actionsValid / (float) actionsConsidered) * 100f) + "%)");
-			Stevebot.log("   actions (created): " + actionsCreated + "(" + (((float) actionsCreated / (float) actionsConsidered) * 100f) + "%)");
+			Stevebot.logNonCritical("");
+			Stevebot.logNonCritical("nodes considered: " + nodesConsidered);
+			Stevebot.logNonCritical(" nodes processed: " + nodesProcessed + "  (" + (((float) nodesProcessed / (float) nodesConsidered) * 100f) + "%)" + " -> discarded " + (nodesConsidered - nodesProcessed));
+			Stevebot.logNonCritical("");
+			Stevebot.logNonCritical("        nodes worse than path: " + nodesWorseThanPath);
+			Stevebot.logNonCritical("  nodes worse than best (row): " + nodesWorseThanBestRow);
+			Stevebot.logNonCritical("nodes worse than best (total): " + nodesWorseThanBestTotal);
+			Stevebot.logNonCritical("");
+			Stevebot.logNonCritical("  actions considered: " + actionsConsidered);
+			Stevebot.logNonCritical("actions (impossible): " + actionsImpossible + "(" + (((float) actionsImpossible / (float) actionsConsidered) * 100f) + "%)");
+			Stevebot.logNonCritical("   actions (invalid): " + actionsInvalid + "(" + (((float) actionsInvalid / (float) actionsConsidered) * 100f) + "%)");
+			Stevebot.logNonCritical("  actions (unloaded): " + actionsUnloaded + "(" + (((float) actionsUnloaded / (float) actionsConsidered) * 100f) + "%)");
+			Stevebot.logNonCritical("     actions (valid): " + actionsValid + "(" + (((float) actionsValid / (float) actionsConsidered) * 100f) + "%)");
+			Stevebot.logNonCritical("   actions (created): " + actionsCreated + "(" + (((float) actionsCreated / (float) actionsConsidered) * 100f) + "%)");
 		}
-		Stevebot.log("==================");
+		Stevebot.logNonCritical("==================");
 	}
 
 
