@@ -52,17 +52,31 @@ public class ActionObserver {
 
 
 	/**
+	 * Clears the recorded action cost samples
+	 */
+	public static void clear() {
+		samples.clear();
+		actionTicks.clear();
+	}
+
+
+
+
+	/**
 	 * Prints all samples to the console
 	 */
 	public static void log() {
 		Stevebot.log("=== ACTION COST SAMPLES ===");
 		for (Sample sample : samples.values()) {
-			Stevebot.log(sample.name);
+			Stevebot.log(sample.name + " (" + sample.nSamples + ")");
 			Stevebot.log("   avg: " + ((double) sample.sum / (double) sample.nSamples));
 			Stevebot.log("   min: " + sample.min);
 			Stevebot.log("   max: " + sample.max);
 		}
-		Stevebot.log("===========================");
+		Stevebot.log("---------------------------");
+		for (Sample sample : samples.values()) {
+			Stevebot.log("public final double " + sample.name + " = " + ((double) sample.sum / (double) sample.nSamples) + ";");
+		}
 	}
 
 

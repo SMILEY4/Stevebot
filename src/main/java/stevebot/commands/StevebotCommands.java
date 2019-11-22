@@ -311,6 +311,15 @@ public class StevebotCommands {
 					ActionObserver.log();
 				});
 
+		// clear action cost recording stats
+		CommandSystem.addCommand(
+				"actionCostClear",
+				"actioncosts clear",
+				"/actioncosts clear\n    Clears costs of the recorded actions.",
+				(templateId, parameters) -> {
+					ActionObserver.clear();
+				});
+
 	}
 
 }

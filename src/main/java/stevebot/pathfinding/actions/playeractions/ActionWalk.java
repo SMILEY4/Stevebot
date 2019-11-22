@@ -17,12 +17,27 @@ public class ActionWalk extends Action {
 
 	private final boolean sprint;
 
+	boolean touchesBlock = false;
+
 
 
 
 	private ActionWalk(Node from, Node to, double cost) {
 		super(from, to, cost);
 		this.sprint = true;
+
+		// TMP: used for cost recoding
+		Direction direction = Direction.get(from.getPos(), to.getPos());
+		if (direction.diagonal) {
+			Direction[] splitDirection = direction.split();
+			final BaseBlockPos p0 = from.getPosCopy().add(splitDirection[0].dx, 0, splitDirection[0].dz);
+			final BaseBlockPos p1 = from.getPosCopy().add(splitDirection[1].dx, 0, splitDirection[1].dz);
+			boolean traversable0 = ActionUtils.canMoveThrough(p0) && BlockUtils.isLoaded(p0);
+			boolean traversable1 = ActionUtils.canMoveThrough(p1) && BlockUtils.isLoaded(p1);
+			touchesBlock = !traversable0 || !traversable1;
+		} else {
+			touchesBlock = false;
+		}
 	}
 
 
@@ -38,7 +53,7 @@ public class ActionWalk extends Action {
 
 	@Override
 	public String getActionNameExp() {
-		return this.getActionName() + (sprint ? "-sprint" : "") + (Direction.get(getFrom().getPos(), getTo().getPos()).diagonal ? "-diagonal" : "-straight");
+		return this.getActionName() + (sprint ? "-sprint" : "") + (Direction.get(getFrom().getPos(), getTo().getPos()).diagonal ? "-diagonal" : "-straight") + (touchesBlock ? "-touches" : "");
 	}
 
 

@@ -66,7 +66,7 @@ public class ActionStepUp extends Action {
 
 	@Override
 	public String getActionNameExp() {
-		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos()).diagonal ? "-diagonal" : "-straight");
+		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos(), true).diagonal ? "-diagonal" : "-straight");
 	}
 
 

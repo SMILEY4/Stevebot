@@ -25,7 +25,7 @@ public class ActionStepDown extends Action {
 
 	@Override
 	public String getActionName() {
-		return "step-up";
+		return "step-down";
 	}
 
 
@@ -33,7 +33,7 @@ public class ActionStepDown extends Action {
 
 	@Override
 	public String getActionNameExp() {
-		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos()).diagonal ? "-diagonal" : "-straight");
+		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos(), true).diagonal ? "-diagonal" : "-straight");
 	}
 
 
@@ -41,7 +41,7 @@ public class ActionStepDown extends Action {
 
 	@Override
 	public ProcState tick(boolean firstTick) {
-		ActionObserver.tickAction(this.getActionName());
+		ActionObserver.tickAction(this.getActionNameExp());
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
 			return ProcState.DONE;
 		} else {
