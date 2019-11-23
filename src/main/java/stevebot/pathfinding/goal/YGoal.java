@@ -33,7 +33,7 @@ public class YGoal extends Goal {
 	@Override
 	public double calcHCost(BaseBlockPos pos) {
 		final int dist = Math.abs(pos.getY() - y);
-		return dist * ActionCosts.get().COST_WALKING;
+		return dist * ActionCosts.get().WALK_SPRINT_STRAIGHT;
 	}
 
 

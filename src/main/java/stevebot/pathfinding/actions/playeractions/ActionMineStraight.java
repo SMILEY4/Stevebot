@@ -158,8 +158,10 @@ public class ActionMineStraight extends Action {
 	 */
 	private ProcState tickMove() {
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
+			PlayerUtils.getInput().setSneak();
 			return ProcState.DONE;
 		} else {
+			PlayerUtils.getInput().setSprint();
 			return ProcState.EXECUTING;
 		}
 	}
@@ -263,7 +265,7 @@ public class ActionMineStraight extends Action {
 			}
 
 			final Modification[] modifications = modificationList.toArray(Modification.EMPTY);
-			return Result.valid(direction, NodeCache.get(to), totalTicksTopBreak + ActionCosts.get().COST_WALKING, modifications);
+			return Result.valid(direction, NodeCache.get(to), totalTicksTopBreak + ActionCosts.get().WALK_SPRINT_STRAIGHT, modifications);
 		}
 
 	}

@@ -131,7 +131,7 @@ public class ActionWalk extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().COST_SPRINTING);
+			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().WALK_SPRINT_STRAIGHT);
 		}
 
 
@@ -168,7 +168,17 @@ public class ActionWalk extends Action {
 				if ((traversable0 && avoid1) || (traversable1 && avoid0)) {
 					return Result.invalid();
 				} else {
-					return Result.valid(direction, NodeCache.get(to), ActionCosts.get().COST_SPRINTING * ActionCosts.get().COST_MULT_DIAGONAL * ((!traversable0 || !traversable1) ? ActionCosts.get().COST_MULT_TOUCHING : 1));
+					double cost;
+					if (direction.diagonal) {
+						if ((!traversable0 || !traversable1)) {
+							cost = ActionCosts.get().WALK_SPRINT_DIAGONAL_TOUCHES;
+						} else {
+							cost = ActionCosts.get().WALK_SPRINT_DIAGONAL;
+						}
+					} else {
+						cost = ActionCosts.get().WALK_SPRINT_STRAIGHT;
+					}
+					return Result.valid(direction, NodeCache.get(to), cost);
 				}
 			} else {
 				return Result.invalid();

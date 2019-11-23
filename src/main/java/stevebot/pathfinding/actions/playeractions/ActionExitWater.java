@@ -107,7 +107,7 @@ public class ActionExitWater extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().COST_EXIST_WATER);
+			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().EXIT_WATER_STRAIGHT);
 		}
 
 
@@ -144,7 +144,7 @@ public class ActionExitWater extends Action {
 				if ((traversable0 && avoid1) || (traversable1 && avoid0)) {
 					return Result.invalid();
 				} else {
-					return Result.valid(direction, NodeCache.get(to), ActionCosts.get().COST_EXIST_WATER * ActionCosts.get().COST_MULT_DIAGONAL * ((!traversable0 || !traversable1) ? ActionCosts.get().COST_MULT_TOUCHING : 1));
+					return Result.valid(direction, NodeCache.get(to), ActionCosts.get().EXIT_WATER_DIAGONAL);
 				}
 			} else {
 				return Result.invalid();

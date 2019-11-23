@@ -199,7 +199,7 @@ public class ActionBridgeFree extends Action {
 			final Modification[] modifications = new Modification[]{
 					Modification.placeBlock(posBridgeBlock, PlayerUtils.getActiveSnapshot().getAsBlock(indexThrowaway))
 			};
-			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().COST_PLACE_BLOCK + ActionCosts.get().COST_SNEAKING, modifications);
+			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().BRIDGE_FREE, modifications);
 		}
 
 	}

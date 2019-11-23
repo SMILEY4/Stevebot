@@ -75,7 +75,7 @@ public class ActionDropDown extends Action {
 
 	@Override
 	public String getActionNameExp() {
-		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos()).diagonal ? "-diagonal" : "-straight");
+		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos(), true).diagonal ? "-diagonal" : "-straight");
 	}
 
 
@@ -83,12 +83,13 @@ public class ActionDropDown extends Action {
 
 	@Override
 	public ProcState tick(boolean firstTick) {
-		ActionObserver.tickAction(getActionNameExp());
 		switch (stateMachine.getState()) {
 			case WALK_TOWARDS_EDGE: {
+				ActionObserver.tickAction(getActionNameExp());
 				return tickWalkTowardsEdge();
 			}
 			case SLIDE_OFF_EDGE: {
+				ActionObserver.tickAction(getActionNameExp());
 				return tickSlideOffEdge();
 			}
 			case FALLING: {
@@ -208,7 +209,7 @@ public class ActionDropDown extends Action {
 
 			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(nodeFall, resultFall);
 
-			return Result.valid(direction, actionFall.getTo(), ActionCosts.get().COST_WALKING + actionFall.getCost());
+			return Result.valid(direction, actionFall.getTo(), ActionCosts.get().DROP_DOWN_STRAIGHT + actionFall.getCost());
 		}
 
 
@@ -252,7 +253,7 @@ public class ActionDropDown extends Action {
 				return Result.unloaded();
 			}
 
-			return Result.valid(direction, actionFall.getTo(), ActionCosts.get().COST_WALKING * ActionCosts.get().COST_MULT_DIAGONAL + actionFall.getCost());
+			return Result.valid(direction, actionFall.getTo(), ActionCosts.get().DROP_DOWN_DIAGONAL + actionFall.getCost());
 		}
 
 

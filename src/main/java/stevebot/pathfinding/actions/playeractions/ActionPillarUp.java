@@ -208,7 +208,7 @@ public class ActionPillarUp extends Action {
 			final Modification[] modifications = new Modification[]{
 					Modification.placeBlock(node.getPos(), PlayerUtils.getActiveSnapshot().getAsBlock(indexThrowaway))
 			};
-			return Result.valid(Direction.UP, NodeCache.get(to), ActionCosts.get().COST_PILLAR_UP, modifications);
+			return Result.valid(Direction.UP, NodeCache.get(to), ActionCosts.get().PILLAR_UP, modifications);
 		}
 
 

@@ -12,7 +12,7 @@ public abstract class ActionCostConstants {
 
 
 	// walk
-	public final double WALK_SPRINT_STRAIGHT_ = 7.900369003690037;
+	public final double WALK_SPRINT_STRAIGHT = 7.900369003690037;
 	public final double WALK_SPRINT_DIAGONAL = 10.73076923076923;
 	public final double WALK_SPRINT_DIAGONAL_TOUCHES = 20.0;
 
@@ -52,39 +52,41 @@ public abstract class ActionCostConstants {
 	// pillar up
 	public final double PILLAR_UP = 20.714285714285715;
 
+	// drop down
+	public final double DROP_DOWN_STRAIGHT = 35.0;
+	public final double DROP_DOWN_DIAGONAL = 38.0;
+
 	/*
 	TODO
-	- pillar up mine (d)
-	- mine up (d)
-	- mine straight (d)
-	- mine down (d)
-	- fall (d)
-	- drop down (d)
-	- dig down (d)
 
-	-> (s) = simple -> action cost is completely defined by one constant (e.g. walk)
-	-> (d) = dynamic -> action cost can nod be defined by constant (e.g. break block)
+	- step down diagonal touching
+	- swim touching
+	- exit water diagonal touching
+	- enter water diagonal touching
+
+	- drop down
+
 
 	 */
 
-	public final double COST_SPRINTING = 20.0 / 5.612; // 3.563
-	public final double COST_WALKING = 20.0 / 4.317; // 4.632
-	public final double COST_SNEAKING = 20.0 / 1.3; // 15.384
-	public final double COST_STEP_DOWN = COST_WALKING; // 4.632
-	public final double COST_STEP_UP = 7.556;
-	public final double COST_WALK_JUMP = COST_WALKING * 2 + 1; // = 9.264 + 1
-	public final double COST_SPRINT_JUMP = COST_SPRINTING * 3 + 3;
-	public final double COST_PILLAR_UP = 7.556;
-
-	public final double COST_PLACE_BLOCK = 3;
-
-	public final double COST_SWIM = 20 / 3.0; // 6.666
-	public final double COST_ENTER_WATER = COST_WALKING * 0.5 + COST_SWIM * 0.5; // 4.815 * 2 = 7.315
-	public final double COST_EXIST_WATER = COST_WALKING * 0.5 + COST_SWIM * 0.5;
-
-
-	public final double COST_MULT_TOUCHING = 1.6;
-	public final double COST_MULT_DIAGONAL = 1.414;
+//	public final double COST_SPRINTING = 20.0 / 5.612; // 3.563
+//	public final double COST_WALKING = 20.0 / 4.317; // 4.632
+//	public final double COST_SNEAKING = 20.0 / 1.3; // 15.384
+//	public final double COST_STEP_DOWN = COST_WALKING; // 4.632
+//	public final double COST_STEP_UP = 7.556;
+//	public final double COST_WALK_JUMP = COST_WALKING * 2 + 1; // = 9.264 + 1
+//	public final double COST_SPRINT_JUMP = COST_SPRINTING * 3 + 3;
+//	public final double COST_PILLAR_UP = 7.556;
+//
+//	public final double COST_PLACE_BLOCK = 3;
+//
+//	public final double COST_SWIM = 20 / 3.0; // 6.666
+//	public final double COST_ENTER_WATER = COST_WALKING * 0.5 + COST_SWIM * 0.5; // 4.815 * 2 = 7.315
+//	public final double COST_EXIST_WATER = COST_WALKING * 0.5 + COST_SWIM * 0.5;
+//
+//
+//	public final double COST_MULT_TOUCHING = 1.6;
+//	public final double COST_MULT_DIAGONAL = 1.414;
 
 	public final double COST_INFINITE = 99999999;
 
@@ -512,5 +514,46 @@ public final double step-up-straight = 21.5;
 public final double walk-sprint-straight = 8.0;
 public final double pillar-up = 20.714285714285715;
 public final double step-up-diagonal = 22.0;
+
+
+
+walk-sprint-straight (6)
+   avg: 9.0
+   min: 6
+   max: 10
+
+pillar-up (12)
+   avg: 20.166666666666668
+   min: 20
+   max: 22
+
+---------------------------
+public final double walk-sprint-straight = 9.0;
+public final double pillar-up = 20.166666666666668;
+
+
+
+
+
+
+drop-down-straight (4)
+   avg: 69.0
+   min: 67
+   max: 71
+
+walk-sprint-straight (28)
+   avg: 8.535714285714286
+   min: 6
+   max: 11
+
+drop-down-diagonal (3)
+   avg: 79.0
+   min: 73
+   max: 83
+
+---------------------------
+public final double drop-down-straight = 69.0;
+public final double walk-sprint-straight = 8.535714285714286;
+public final double drop-down-diagonal = 79.0;
 
  */

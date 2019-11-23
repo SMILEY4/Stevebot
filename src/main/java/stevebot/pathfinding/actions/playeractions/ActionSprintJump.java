@@ -187,7 +187,7 @@ public class ActionSprintJump extends Action {
 				}
 			}
 
-			return Result.valid(Direction.NONE, NodeCache.get(to), ActionCosts.get().COST_SPRINT_JUMP);
+			return Result.valid(Direction.NONE, NodeCache.get(to), ActionCosts.get().SPRINT_JUMP);
 		}
 
 

@@ -39,7 +39,10 @@ public class ExactGoal extends Goal {
 		final int pz = pos.getZ();
 		int dMax = Math.max(Math.abs(px - gx), Math.abs(pz - gz));
 		int dMin = Math.min(Math.abs(px - gx), Math.abs(pz - gz));
-		return (dMin * ActionCosts.get().COST_MULT_DIAGONAL + (dMax - dMin)) * ActionCosts.get().COST_WALKING + Math.abs(py - gy) * (py < gy ? ActionCosts.get().COST_STEP_DOWN : ActionCosts.get().COST_STEP_UP);
+
+		final double cost_mult_diagonal = ActionCosts.get().WALK_SPRINT_DIAGONAL / ActionCosts.get().WALK_SPRINT_STRAIGHT;
+		return (dMin * cost_mult_diagonal + (dMax - dMin)) * ActionCosts.get().WALK_SPRINT_STRAIGHT + Math.abs(py - gy)
+				* (py < gy ? ActionCosts.get().STEP_DOWN_STRAIGHT : ActionCosts.get().STEP_UP_STRAIGHT);
 	}
 
 

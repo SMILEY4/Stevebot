@@ -315,7 +315,7 @@ public class ActionMineUp extends Action {
 			}
 
 			final Modification[] modifications = modificationList.toArray(Modification.EMPTY);
-			return Result.valid(direction, NodeCache.get(to), totalTicksTopBreak + ActionCosts.get().COST_STEP_UP, modifications);
+			return Result.valid(direction, NodeCache.get(to), totalTicksTopBreak + ActionCosts.get().STEP_UP_STRAIGHT, modifications);
 		}
 
 	}
