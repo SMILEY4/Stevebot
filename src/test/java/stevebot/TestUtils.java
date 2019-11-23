@@ -19,7 +19,7 @@ public class TestUtils {
 
 	public static CompletedPath completedPath(int nNodes) {
 		List<Node> nodes = nodes(nNodes);
-		final double cost = nodes.isEmpty() ? ActionCosts.COST_INFINITE : nodes.get(nodes.size() - 1).gcost();
+		final double cost = nodes.isEmpty() ? ActionCosts.get().COST_INFINITE : nodes.get(nodes.size() - 1).gcost();
 		return new CompletedPath(cost, nodes);
 	}
 
@@ -28,7 +28,7 @@ public class TestUtils {
 
 	public static PartialPath partialPath(int nNodes) {
 		List<Node> nodes = nodes(nNodes);
-		final double cost = nodes.isEmpty() ? ActionCosts.COST_INFINITE : nodes.get(nodes.size() - 1).gcost();
+		final double cost = nodes.isEmpty() ? ActionCosts.get().COST_INFINITE : nodes.get(nodes.size() - 1).gcost();
 		return new PartialPath(cost, nodes);
 	}
 

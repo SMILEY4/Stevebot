@@ -36,7 +36,7 @@ public class BestNodesContainer {
 		nodes = new Node[capacity];
 
 		for (int i = 0; i < capacity; i++) {
-			costs[i] = ActionCosts.COST_INFINITE;
+			costs[i] = ActionCosts.get().COST_INFINITE;
 			modifiers[i] = Math.pow((modifierDamper * (i + 1)), 2) + (1.0 - modifierDamper * modifierDamper);
 		}
 	}

@@ -6,6 +6,7 @@ import stevebot.misc.Direction;
 import stevebot.misc.ProcState;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
@@ -53,6 +54,7 @@ public class ActionPassDoor extends Action {
 
 	@Override
 	public ProcState tick(boolean firstTick) {
+		ActionObserver.tickAction(this.getActionName());
 
 		if (firstTick) {
 			// check, which door-blocks the player has to open
@@ -145,7 +147,7 @@ public class ActionPassDoor extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_WALKING * 2);
+			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().PASS_DOOR);
 		}
 
 

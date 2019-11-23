@@ -8,6 +8,7 @@ import stevebot.misc.Direction;
 import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
 import stevebot.pathfinding.actions.ActionFactory;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.actions.BreakBlockCheckResult;
 import stevebot.pathfinding.nodes.Node;
@@ -64,6 +65,7 @@ public class ActionDigDown extends Action {
 
 	@Override
 	public ProcState tick(boolean firstTick) {
+		ActionObserver.tickAction(this.getActionName());
 		switch (stateMachine.getState()) {
 			case PREPARING: {
 				return tickPrepare();

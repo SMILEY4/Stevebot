@@ -14,7 +14,7 @@ public class EmptyPath implements Path {
 
 	@Override
 	public double getCost() {
-		return ActionCosts.COST_INFINITE;
+		return ActionCosts.get().COST_INFINITE;
 	}
 
 

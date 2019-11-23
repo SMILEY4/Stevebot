@@ -10,6 +10,7 @@ import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
@@ -97,6 +98,7 @@ public class ActionFall extends Action {
 
 	@Override
 	public ProcState tick(boolean firstTick) {
+		ActionObserver.tickAction(this.getActionName());
 		switch (stateMachine.getState()) {
 			case FALLING:
 				return tickFalling();
@@ -205,7 +207,7 @@ public class ActionFall extends Action {
 				}
 			}
 
-			return Result.valid(Direction.NONE, NodeCache.get(fallTo), ActionCosts.COST_FALL_N(from.getY() - fallTo.getY()));
+			return Result.valid(Direction.NONE, NodeCache.get(fallTo), ActionCosts.get().COST_FALL_N(from.getY() - fallTo.getY()));
 		}
 
 

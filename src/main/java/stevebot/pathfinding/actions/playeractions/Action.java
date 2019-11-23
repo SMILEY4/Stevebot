@@ -3,6 +3,7 @@ package stevebot.pathfinding.actions.playeractions;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.modification.Modification;
 import stevebot.misc.ProcState;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.nodes.Node;
 
 public abstract class Action {
@@ -77,6 +78,20 @@ public abstract class Action {
 	public abstract ProcState tick(boolean firstTick);
 
 
+
+
+	/**
+	 * Called when the action finished with done or failed
+	 *
+	 * @param state the state with which this action finished
+	 */
+	public void onActionFinished(ProcState state) {
+		ActionObserver.endAction(this.getActionNameExp(), state == ProcState.FAILED);
+	}
+
+
+
+
 	/**
 	 * Check if the given position is on the path of this action.
 	 *
@@ -112,6 +127,16 @@ public abstract class Action {
 	 * @return the unique name of this action
 	 */
 	public abstract String getActionName();
+
+
+
+
+	/**
+	 * @return the expanded name of this action
+	 */
+	public String getActionNameExp() {
+		return getActionName();
+	}
 
 
 }

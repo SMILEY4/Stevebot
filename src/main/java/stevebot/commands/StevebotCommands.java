@@ -7,7 +7,8 @@ import stevebot.data.blocks.BlockUtils;
 import stevebot.misc.Config;
 import stevebot.pathfinding.PathHandler;
 import stevebot.pathfinding.Pathfinding;
-import stevebot.pathfinding.PathfindingStatistics;
+import stevebot.pathfinding.PathfindingResult;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.goal.ExactGoal;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.goal.XZGoal;
@@ -269,11 +270,11 @@ public class StevebotCommands {
 				"statistics",
 				"/statistics\n    Displays statistics about the last pathfinding process.",
 				(templateId, parameters) -> {
-					final PathfindingStatistics statistics = Pathfinding.statistics;
-					if (statistics == null) {
+					final PathfindingResult result = Pathfinding.lastResults;
+					if (result == null) {
 						Stevebot.log("No statistics available.");
 					} else {
-						statistics.log();
+						result.log();
 					}
 				});
 
@@ -283,11 +284,11 @@ public class StevebotCommands {
 				"statistics console",
 				"/statistics console\n    Displays statistics about the last pathfinding process (formatted for console output).",
 				(templateId, parameters) -> {
-					final PathfindingStatistics statistics = Pathfinding.statistics;
-					if (statistics == null) {
+					final PathfindingResult result = Pathfinding.lastResults;
+					if (result == null) {
 						Stevebot.log("No statistics available.");
 					} else {
-						statistics.logConsole();
+						result.logConsole();
 					}
 				});
 
@@ -299,6 +300,24 @@ public class StevebotCommands {
 				(templateId, parameters) -> {
 					BlockUtils.getBlockProvider().getBlockCache().clear();
 					Stevebot.log("Cache cleared.");
+				});
+
+		// display action cost recording stats
+		CommandSystem.addCommand(
+				"actionCostStats",
+				"actioncosts",
+				"/actioncosts\n    Logs the costs of the recorded actions.",
+				(templateId, parameters) -> {
+					ActionObserver.log();
+				});
+
+		// clear action cost recording stats
+		CommandSystem.addCommand(
+				"actionCostClear",
+				"actioncosts clear",
+				"/actioncosts clear\n    Clears costs of the recorded actions.",
+				(templateId, parameters) -> {
+					ActionObserver.clear();
 				});
 
 	}

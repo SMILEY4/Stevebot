@@ -6,6 +6,7 @@ import stevebot.misc.Direction;
 import stevebot.misc.ProcState;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
@@ -30,7 +31,16 @@ public class ActionExitWater extends Action {
 
 
 	@Override
+	public String getActionNameExp() {
+		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos(), true).diagonal ? "-diagonal" : "-straight");
+	}
+
+
+
+
+	@Override
 	public ProcState tick(boolean firstTick) {
+		ActionObserver.tickAction(this.getActionNameExp());
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
 			PlayerUtils.getInput().releaseJump();
 			return ProcState.DONE;
@@ -97,7 +107,7 @@ public class ActionExitWater extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_EXIST_WATER);
+			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().EXIT_WATER_STRAIGHT);
 		}
 
 
@@ -110,12 +120,12 @@ public class ActionExitWater extends Action {
 			if (!BlockUtils.isLoaded(to)) {
 				return Result.unloaded();
 			}
-			if (!ActionUtils.canSwimAt(to)) {
+			if (ActionUtils.canSwimAt(to)) {
 				return Result.invalid();
 			}
 
 			// check from-position
-			if (!ActionUtils.canStandAt(node.getPos())) {
+			if (!ActionUtils.canSwimAt(node.getPos())) {
 				return Result.invalid();
 			}
 
@@ -134,7 +144,7 @@ public class ActionExitWater extends Action {
 				if ((traversable0 && avoid1) || (traversable1 && avoid0)) {
 					return Result.invalid();
 				} else {
-					return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_EXIST_WATER * ActionCosts.COST_MULT_DIAGONAL * ((!traversable0 || !traversable1) ? ActionCosts.COST_MULT_TOUCHING : 1));
+					return Result.valid(direction, NodeCache.get(to), ActionCosts.get().EXIT_WATER_DIAGONAL);
 				}
 			} else {
 				return Result.invalid();

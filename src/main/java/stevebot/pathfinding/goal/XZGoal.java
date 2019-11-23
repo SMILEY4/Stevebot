@@ -35,7 +35,8 @@ public class XZGoal extends Goal {
 		// https://www.growingwiththeweb.com/2012/06/a-pathfinding-algorithm.html
 		int dMax = Math.max(Math.abs(pos.getX() - x), Math.abs(pos.getZ() - z));
 		int dMin = Math.min(Math.abs(pos.getX() - x), Math.abs(pos.getZ() - z));
-		return (dMin * ActionCosts.COST_MULT_DIAGONAL + (dMax - dMin)) * ActionCosts.COST_WALKING;
+		final double cost_mult_diagonal = ActionCosts.get().WALK_SPRINT_DIAGONAL / ActionCosts.get().WALK_SPRINT_STRAIGHT;
+		return (dMin * cost_mult_diagonal + (dMax - dMin)) * ActionCosts.get().WALK_SPRINT_STRAIGHT;
 	}
 
 

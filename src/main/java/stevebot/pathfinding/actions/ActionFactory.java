@@ -102,7 +102,7 @@ public interface ActionFactory {
 
 
 		public ResultType type = ResultType.INVALID;
-		public double estimatedCost = ActionCosts.COST_INFINITE;
+		public double estimatedCost = ActionCosts.get().COST_INFINITE;
 		public Node to = null;
 		public Direction direction = Direction.NONE;
 		public Modification[] modifications;

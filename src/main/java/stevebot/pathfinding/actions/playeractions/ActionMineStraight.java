@@ -8,10 +8,7 @@ import stevebot.data.modification.Modification;
 import stevebot.misc.Direction;
 import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
-import stevebot.pathfinding.actions.ActionCosts;
-import stevebot.pathfinding.actions.ActionFactory;
-import stevebot.pathfinding.actions.ActionUtils;
-import stevebot.pathfinding.actions.BreakBlockCheckResult;
+import stevebot.pathfinding.actions.*;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
 import stevebot.player.PlayerUtils;
@@ -70,6 +67,7 @@ public class ActionMineStraight extends Action {
 
 	@Override
 	public ProcState tick(boolean firstTick) {
+		ActionObserver.tickAction(this.getActionName());
 		switch (stateMachine.getState()) {
 			case PREPARE_FIRST:
 				return tickPrepare();
@@ -160,8 +158,10 @@ public class ActionMineStraight extends Action {
 	 */
 	private ProcState tickMove() {
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
+			PlayerUtils.getInput().setSneak();
 			return ProcState.DONE;
 		} else {
+			PlayerUtils.getInput().setSprint();
 			return ProcState.EXECUTING;
 		}
 	}
@@ -265,7 +265,7 @@ public class ActionMineStraight extends Action {
 			}
 
 			final Modification[] modifications = modificationList.toArray(Modification.EMPTY);
-			return Result.valid(direction, NodeCache.get(to), totalTicksTopBreak + ActionCosts.COST_WALKING, modifications);
+			return Result.valid(direction, NodeCache.get(to), totalTicksTopBreak + ActionCosts.get().WALK_SPRINT_STRAIGHT, modifications);
 		}
 
 	}

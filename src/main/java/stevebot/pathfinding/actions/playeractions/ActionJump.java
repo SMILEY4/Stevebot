@@ -8,6 +8,7 @@ import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
@@ -65,7 +66,16 @@ public class ActionJump extends Action {
 
 
 	@Override
+	public String getActionNameExp() {
+		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos(), true).diagonal ? "-diagonal" : "-straight");
+	}
+
+
+
+
+	@Override
 	public ProcState tick(boolean firstTick) {
+		ActionObserver.tickAction(this.getActionNameExp());
 		switch (stateMachine.getState()) {
 			case PREPARING: {
 				return tickPreparation();
@@ -181,7 +191,7 @@ public class ActionJump extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(Direction.NONE, NodeCache.get(to), ActionCosts.COST_WALK_JUMP);
+			return Result.valid(Direction.NONE, NodeCache.get(to), ActionCosts.get().JUMP_STRAIGHT);
 		}
 
 
@@ -225,7 +235,7 @@ public class ActionJump extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(Direction.NONE, NodeCache.get(to), ActionCosts.COST_WALK_JUMP * ActionCosts.COST_MULT_DIAGONAL);
+			return Result.valid(Direction.NONE, NodeCache.get(to), ActionCosts.get().JUMP_DIAGONAL);
 		}
 
 

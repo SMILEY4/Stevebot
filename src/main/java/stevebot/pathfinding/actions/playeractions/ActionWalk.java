@@ -6,6 +6,7 @@ import stevebot.misc.Direction;
 import stevebot.misc.ProcState;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
@@ -16,12 +17,27 @@ public class ActionWalk extends Action {
 
 	private final boolean sprint;
 
+	boolean touchesBlock = false;
+
 
 
 
 	private ActionWalk(Node from, Node to, double cost) {
 		super(from, to, cost);
 		this.sprint = true;
+
+		// TMP: used for cost recoding
+		Direction direction = Direction.get(from.getPos(), to.getPos());
+		if (direction.diagonal) {
+			Direction[] splitDirection = direction.split();
+			final BaseBlockPos p0 = from.getPosCopy().add(splitDirection[0].dx, 0, splitDirection[0].dz);
+			final BaseBlockPos p1 = from.getPosCopy().add(splitDirection[1].dx, 0, splitDirection[1].dz);
+			boolean traversable0 = ActionUtils.canMoveThrough(p0) && BlockUtils.isLoaded(p0);
+			boolean traversable1 = ActionUtils.canMoveThrough(p1) && BlockUtils.isLoaded(p1);
+			touchesBlock = !traversable0 || !traversable1;
+		} else {
+			touchesBlock = false;
+		}
 	}
 
 
@@ -36,7 +52,16 @@ public class ActionWalk extends Action {
 
 
 	@Override
+	public String getActionNameExp() {
+		return this.getActionName() + (sprint ? "-sprint" : "") + (Direction.get(getFrom().getPos(), getTo().getPos()).diagonal ? "-diagonal" : "-straight") + (touchesBlock ? "-touches" : "");
+	}
+
+
+
+
+	@Override
 	public ProcState tick(boolean firstTick) {
+		ActionObserver.tickAction(this.getActionNameExp());
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
 			PlayerUtils.getInput().setSneak();
 			return ProcState.DONE;
@@ -106,7 +131,7 @@ public class ActionWalk extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_SPRINTING);
+			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().WALK_SPRINT_STRAIGHT);
 		}
 
 
@@ -143,7 +168,17 @@ public class ActionWalk extends Action {
 				if ((traversable0 && avoid1) || (traversable1 && avoid0)) {
 					return Result.invalid();
 				} else {
-					return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_SPRINTING * ActionCosts.COST_MULT_DIAGONAL * ((!traversable0 || !traversable1) ? ActionCosts.COST_MULT_TOUCHING : 1));
+					double cost;
+					if (direction.diagonal) {
+						if ((!traversable0 || !traversable1)) {
+							cost = ActionCosts.get().WALK_SPRINT_DIAGONAL_TOUCHES;
+						} else {
+							cost = ActionCosts.get().WALK_SPRINT_DIAGONAL;
+						}
+					} else {
+						cost = ActionCosts.get().WALK_SPRINT_STRAIGHT;
+					}
+					return Result.valid(direction, NodeCache.get(to), cost);
 				}
 			} else {
 				return Result.invalid();

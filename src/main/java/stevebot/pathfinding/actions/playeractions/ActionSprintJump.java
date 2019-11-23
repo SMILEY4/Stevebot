@@ -7,6 +7,7 @@ import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
@@ -65,6 +66,7 @@ public class ActionSprintJump extends Action {
 
 	@Override
 	public ProcState tick(boolean firstTick) {
+		ActionObserver.tickAction(this.getActionName());
 		switch (stateMachine.getState()) {
 			case PREPARING: {
 				return tickPreparation();
@@ -185,7 +187,7 @@ public class ActionSprintJump extends Action {
 				}
 			}
 
-			return Result.valid(Direction.NONE, NodeCache.get(to), ActionCosts.COST_SPRINT_JUMP);
+			return Result.valid(Direction.NONE, NodeCache.get(to), ActionCosts.get().SPRINT_JUMP);
 		}
 
 

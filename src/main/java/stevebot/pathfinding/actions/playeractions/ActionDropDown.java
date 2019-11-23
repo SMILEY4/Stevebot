@@ -7,6 +7,7 @@ import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
@@ -73,12 +74,22 @@ public class ActionDropDown extends Action {
 
 
 	@Override
+	public String getActionNameExp() {
+		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos(), true).diagonal ? "-diagonal" : "-straight");
+	}
+
+
+
+
+	@Override
 	public ProcState tick(boolean firstTick) {
 		switch (stateMachine.getState()) {
 			case WALK_TOWARDS_EDGE: {
+				ActionObserver.tickAction(getActionNameExp());
 				return tickWalkTowardsEdge();
 			}
 			case SLIDE_OFF_EDGE: {
+				ActionObserver.tickAction(getActionNameExp());
 				return tickSlideOffEdge();
 			}
 			case FALLING: {
@@ -198,7 +209,7 @@ public class ActionDropDown extends Action {
 
 			final ActionFall actionFall = (ActionFall) fallActionFactory.createAction(nodeFall, resultFall);
 
-			return Result.valid(direction, actionFall.getTo(), ActionCosts.COST_WALKING + actionFall.getCost());
+			return Result.valid(direction, actionFall.getTo(), ActionCosts.get().DROP_DOWN_STRAIGHT + actionFall.getCost());
 		}
 
 
@@ -242,7 +253,7 @@ public class ActionDropDown extends Action {
 				return Result.unloaded();
 			}
 
-			return Result.valid(direction, actionFall.getTo(), ActionCosts.COST_WALKING * ActionCosts.COST_MULT_DIAGONAL + actionFall.getCost());
+			return Result.valid(direction, actionFall.getTo(), ActionCosts.get().DROP_DOWN_DIAGONAL + actionFall.getCost());
 		}
 
 

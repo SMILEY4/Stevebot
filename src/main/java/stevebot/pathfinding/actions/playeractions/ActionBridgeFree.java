@@ -8,6 +8,7 @@ import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
@@ -62,6 +63,7 @@ public class ActionBridgeFree extends Action {
 
 	@Override
 	public ProcState tick(boolean firstTick) {
+		ActionObserver.tickAction(this.getActionName());
 		switch (stateMachine.getState()) {
 			case PREPARE:
 				return tickPrepare();
@@ -197,7 +199,7 @@ public class ActionBridgeFree extends Action {
 			final Modification[] modifications = new Modification[]{
 					Modification.placeBlock(posBridgeBlock, PlayerUtils.getActiveSnapshot().getAsBlock(indexThrowaway))
 			};
-			return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_PLACE_BLOCK + ActionCosts.COST_SNEAKING, modifications);
+			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().BRIDGE_FREE, modifications);
 		}
 
 	}

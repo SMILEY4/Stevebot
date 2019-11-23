@@ -68,7 +68,7 @@ public class PathRenderable implements Renderable {
 
 		renderer.beginLineStrip(DEFAULT_LINE_WIDTH);
 
-		double minCost = ActionCosts.COST_INFINITE;
+		double minCost = ActionCosts.get().COST_INFINITE;
 		double maxCost = 0;
 		for (int i = 1; i < path.getNodes().size(); i++) {
 			final double cost = path.getNodes().get(i).getAction().getCost();

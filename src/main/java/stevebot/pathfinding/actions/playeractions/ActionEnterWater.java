@@ -6,6 +6,7 @@ import stevebot.misc.Direction;
 import stevebot.misc.ProcState;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
@@ -30,7 +31,16 @@ public class ActionEnterWater extends Action {
 
 
 	@Override
+	public String getActionNameExp() {
+		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos()).diagonal ? "-diagonal" : "-straight");
+	}
+
+
+
+
+	@Override
 	public ProcState tick(boolean firstTick) {
+		ActionObserver.tickAction(this.getActionNameExp());
 		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
 			return ProcState.DONE;
 		} else {
@@ -90,7 +100,7 @@ public class ActionEnterWater extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_ENTER_WATER);
+			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().ENTER_WATER_STRAIGHT);
 		}
 
 
@@ -127,7 +137,7 @@ public class ActionEnterWater extends Action {
 				if ((traversable0 && avoid1) || (traversable1 && avoid0)) {
 					return Result.invalid();
 				} else {
-					return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_ENTER_WATER * ActionCosts.COST_MULT_DIAGONAL * ((!traversable0 || !traversable1) ? ActionCosts.COST_MULT_TOUCHING : 1));
+					return Result.valid(direction, NodeCache.get(to), ActionCosts.get().ENTER_WATER_DIAGONAL);
 				}
 			} else {
 				return Result.invalid();

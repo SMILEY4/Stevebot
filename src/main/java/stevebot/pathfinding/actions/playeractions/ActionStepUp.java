@@ -8,6 +8,7 @@ import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.actions.ActionFactory;
+import stevebot.pathfinding.actions.ActionObserver;
 import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.pathfinding.nodes.NodeCache;
@@ -64,7 +65,16 @@ public class ActionStepUp extends Action {
 
 
 	@Override
+	public String getActionNameExp() {
+		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos(), true).diagonal ? "-diagonal" : "-straight");
+	}
+
+
+
+
+	@Override
 	public ProcState tick(boolean firstTick) {
+		ActionObserver.tickAction(this.getActionNameExp());
 		switch (stateMachine.getState()) {
 			case SLOWING_DOWN: {
 				return tickSlowDown();
@@ -164,7 +174,7 @@ public class ActionStepUp extends Action {
 				return Result.invalid();
 			}
 
-			return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_STEP_UP);
+			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().STEP_UP_STRAIGHT);
 		}
 
 
@@ -195,7 +205,7 @@ public class ActionStepUp extends Action {
 			boolean traversable1 = ActionUtils.canMoveThrough(p1, 3) && BlockUtils.isLoaded(p1);
 
 			if (ActionUtils.canStandAt(to) && traversable0 && traversable1) {
-				return Result.valid(direction, NodeCache.get(to), ActionCosts.COST_STEP_UP * ActionCosts.COST_MULT_DIAGONAL);
+				return Result.valid(direction, NodeCache.get(to), ActionCosts.get().STEP_UP_DIAGONAL);
 			} else {
 				return Result.invalid();
 			}
