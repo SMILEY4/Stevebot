@@ -2,6 +2,7 @@ package stevebot.pathfinding.actions.playeractions;
 
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockUtils;
+import stevebot.data.modification.Modification;
 import stevebot.misc.Direction;
 import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
@@ -50,6 +51,22 @@ public class ActionDropDown extends Action {
 		this.direction = direction;
 		stateMachine.defineTransition(State.WALK_TOWARDS_EDGE, Transition.IS_AT_POSITION, State.SLIDE_OFF_EDGE);
 		stateMachine.defineTransition(State.SLIDE_OFF_EDGE, Transition.DROPPED_OFF_EDGE, State.FALLING);
+	}
+
+
+
+
+	@Override
+	public boolean hasModifications() {
+		return fall.hasModifications();
+	}
+
+
+
+
+	@Override
+	public Modification[] getModifications() {
+		return fall.getModifications();
 	}
 
 
@@ -242,10 +259,6 @@ public class ActionDropDown extends Action {
 			// check+create fall
 			final Node nodeFall = NodeCache.get(node.getPosCopy().add(direction.dx, 0, direction.dz));
 			final Result resultFall = fallActionFactory.check(nodeFall);
-			ActionFall actionFall = null;
-			if (ResultType.VALID == resultFall.type) {
-				actionFall = (ActionFall) fallActionFactory.createAction(nodeFall, resultFall);
-			}
 			if (ResultType.INVALID == resultFall.type) {
 				return Result.invalid();
 			}
@@ -253,7 +266,7 @@ public class ActionDropDown extends Action {
 				return Result.unloaded();
 			}
 
-			return Result.valid(direction, actionFall.getTo(), ActionCosts.get().DROP_DOWN_DIAGONAL + actionFall.getCost());
+			return Result.valid(direction, resultFall.to, ActionCosts.get().DROP_DOWN_DIAGONAL + resultFall.estimatedCost, resultFall.modifications);
 		}
 
 

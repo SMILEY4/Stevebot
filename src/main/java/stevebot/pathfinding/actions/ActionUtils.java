@@ -340,11 +340,7 @@ public class ActionUtils {
 	 */
 	public static int calculateFallDamage(int heightInBlocks) {
 		final int fatalHeight = heightInBlocks - 3;
-		if (fatalHeight <= 0) {
-			return 0;
-		} else {
-			return fatalHeight;
-		}
+		return Math.max(fatalHeight, 0);
 	}
 
 
