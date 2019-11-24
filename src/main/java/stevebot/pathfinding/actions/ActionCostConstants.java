@@ -56,6 +56,9 @@ public abstract class ActionCostConstants {
 	public final double DROP_DOWN_STRAIGHT = 35.0;
 	public final double DROP_DOWN_DIAGONAL = 38.0;
 
+	// break block
+	public final double CONSTANT_BLOCK_BREAK_MOD = 15.0;
+
 	/*
 	TODO
 

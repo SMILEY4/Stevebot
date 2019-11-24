@@ -257,7 +257,7 @@ public class ActionPillarUpMine extends Action {
 					Modification.placeBlock(node.getPos(), PlayerUtils.getActiveSnapshot().getAsBlock(indexThrowaway))
 			};
 			return Result.valid(Direction.UP, NodeCache.get(node.getPosCopy().add(Direction.UP)),
-					ActionCosts.get().PILLAR_UP + ticksToBreak, modifications);
+					ActionCosts.get().PILLAR_UP + ticksToBreak + ActionCosts.get().CONSTANT_BLOCK_BREAK_MOD, modifications);
 		}
 
 

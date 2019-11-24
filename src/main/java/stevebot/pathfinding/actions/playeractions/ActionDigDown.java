@@ -7,10 +7,7 @@ import stevebot.data.modification.Modification;
 import stevebot.misc.Direction;
 import stevebot.misc.ProcState;
 import stevebot.misc.StateMachine;
-import stevebot.pathfinding.actions.ActionFactory;
-import stevebot.pathfinding.actions.ActionObserver;
-import stevebot.pathfinding.actions.ActionUtils;
-import stevebot.pathfinding.actions.BreakBlockCheckResult;
+import stevebot.pathfinding.actions.*;
 import stevebot.pathfinding.nodes.Node;
 import stevebot.player.PlayerUtils;
 
@@ -239,7 +236,8 @@ public class ActionDigDown extends Action {
 			final Modification[] modifications = new Modification[]{
 					modification
 			};
-			return Result.valid(Direction.DOWN, resultFall.to, resultBreak.ticksToBreak + resultFall.estimatedCost, modifications);
+			return Result.valid(Direction.DOWN, resultFall.to,
+					resultBreak.ticksToBreak + resultFall.estimatedCost + ActionCosts.get().CONSTANT_BLOCK_BREAK_MOD, modifications);
 		}
 
 
