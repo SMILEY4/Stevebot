@@ -29,8 +29,12 @@ import java.util.PriorityQueue;
 public class Pathfinding {
 
 
-	private static final ActionFactoryProvider actionFactoryProvider = new ActionFactoryProvider();
+	private static final double H_COST_WEIGHT = 1.3;
+	private static final int MAX_UNLOADED_HITS = 400;
+	private static final int MAX_BETTER_PATHS = 2;
+	private static final int MAX_WORSE_NODES = 500;
 
+	private static final ActionFactoryProvider actionFactoryProvider = new ActionFactoryProvider();
 	public static PathfindingResult lastResults = null;
 
 
@@ -82,7 +86,7 @@ public class Pathfinding {
 		//	- open set is empty
 		//	- we hit too many unloaded chunks (goal is most likely in an unloaded chunk)
 		//	- we already found enough paths (no need to improve on existing paths)
-		while (!openSet.isEmpty() && nUnloadedHits < 400 && nBetterPathFound < 2) {
+		while (!openSet.isEmpty() && nUnloadedHits < MAX_UNLOADED_HITS && nBetterPathFound < MAX_BETTER_PATHS) {
 
 			// timeout
 			if (checkForTimeout(timeStart, timeoutInMs)) {
@@ -143,7 +147,7 @@ public class Pathfinding {
 			}
 
 			// detects when goal is not reachable (when the last x nodes in a row had a worse score than the best node so far)
-			if (!bestPath.reachedGoal() && nWorseThanBest > 500) {
+			if (!bestPath.reachedGoal() && nWorseThanBest > MAX_WORSE_NODES) {
 				break;
 			}
 
@@ -218,7 +222,7 @@ public class Pathfinding {
 						pathfindingResult.actionsCreated++;
 						Action action = factory.createAction(current, result);
 						next.setGCost(newCost);
-						next.setHCost(goal.calcHCost(next.getPos()));
+						next.setHCost(goal.calcHCost(next.getPos()) * H_COST_WEIGHT);
 						next.setPrev(current);
 						next.setAction(action);
 						next.open(openSet);
@@ -307,11 +311,6 @@ public class Pathfinding {
 	 * @param snapshot      the player inventory snapshot
 	 */
 	private void collectChanges(Node node, BlockProvider blockProvider, PlayerSnapshot snapshot) {
-		// TODO optimize this
-		// idea ???
-		// when opening node n -> check if prev node has changes in history or if action to reach n changed blocks
-		// 							-> if true -> set flag "changesInHistory"
-		// when collecting changes -> check for flag -> if false, do nothing
 		Node current = node;
 		while (current.getPrev() != null) {
 			Action action = current.getAction();

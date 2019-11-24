@@ -96,7 +96,7 @@ public class PathfindingResult {
 	 */
 	public void logConsole() {
 		Stevebot.logNonCritical("=== STATISTICS ===");
-		Stevebot.logNonCritical("       start: " + start.toString());
+		Stevebot.logNonCritical("      start: " + start.toString());
 		Stevebot.logNonCritical("       goal: " + goal.goalString());
 		Stevebot.logNonCritical(" found path: " + pathFound + ", path=" + (finalPath == null ? "null" : finalPath.getClass().getSimpleName()));
 		Stevebot.logNonCritical("       time: " + (timeEnd - timeStart) + "ms");
