@@ -121,7 +121,7 @@ public class StevebotCommands {
 		CommandSystem.addCommand(
 				"pathBlock",
 				"path <block:STRING>",
-				"/path level <level>\n    Finds a path to the nearest with of the given type.",
+				"/path <block>\n    Finds a path to the nearest block of the given type (e.g. minecraft:diamond_ore).",
 				(templateId, parameters) -> {
 					if (PlayerUtils.getPlayer() != null) {
 						final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
@@ -140,7 +140,7 @@ public class StevebotCommands {
 		CommandSystem.addCommand(
 				"pathBlockFreelook",
 				"path <block:STRING> freelook",
-				"/path level <level>\n    Finds a path to the nearest with of the given type and enables freelook.\",.",
+				"/path <block>\n    Finds a path to the nearest block of the given type (e.g. minecraft:diamond_ore) and enables freelook.",
 				(templateId, parameters) -> {
 					if (PlayerUtils.getPlayer() != null) {
 						final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
@@ -174,7 +174,7 @@ public class StevebotCommands {
 		CommandSystem.addCommand(
 				"followStop",
 				"follow stop",
-				"follow stop\n    Stop following the current path.",
+				"/follow stop\n    Stop following the current path.",
 				(templateId, parameters) -> {
 					if (PlayerUtils.getPlayer() != null) {
 						pathHandler.cancelPath();
