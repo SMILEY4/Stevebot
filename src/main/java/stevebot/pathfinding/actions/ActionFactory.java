@@ -37,6 +37,7 @@ public interface ActionFactory {
 
 		private static final Result invalid = new Result();
 		private static final Result unloaded = new Result();
+		private static final Result valid = new Result();
 
 
 
@@ -74,12 +75,11 @@ public interface ActionFactory {
 		 * @return a new {@link Result} of the type {@link ResultType#VALID}.
 		 */
 		public static Result valid(Direction direction, Node to, double cost) {
-			Result result = new Result();
-			result.type = ResultType.VALID;
-			result.estimatedCost = cost;
-			result.to = to;
-			result.direction = direction;
-			return result;
+			valid.type = ResultType.VALID;
+			valid.estimatedCost = cost;
+			valid.to = to;
+			valid.direction = direction;
+			return valid;
 		}
 
 
