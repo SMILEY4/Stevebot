@@ -199,15 +199,18 @@ public class ActionFall extends Action {
 			}
 
 			// check if player can survive fall
+			final int damage = ActionUtils.calculateFallDamage(height);
 			if (!landInWater) {
 				final int currentHealth = PlayerUtils.getActiveSnapshot().getPlayerHealth();
-				final int damage = ActionUtils.calculateFallDamage(height);
 				if (currentHealth - damage <= 1) {
 					return Result.invalid();
 				}
 			}
 
-			return Result.valid(Direction.NONE, NodeCache.get(fallTo), ActionCosts.get().COST_FALL_N(from.getY() - fallTo.getY()));
+			Modification modDamage = Modification.healthChange(-damage);
+
+			return Result.valid(Direction.NONE, NodeCache.get(fallTo),
+					ActionCosts.get().COST_FALL_N(from.getY() - fallTo.getY()), new Modification[]{modDamage});
 		}
 
 
