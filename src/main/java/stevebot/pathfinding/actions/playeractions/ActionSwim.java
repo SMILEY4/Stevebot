@@ -15,303 +15,259 @@ import stevebot.player.PlayerUtils;
 public class ActionSwim extends Action {
 
 
-	private final boolean sprint;
+    private ActionSwim(Node from, Node to, double cost) {
+        super(from, to, cost);
+    }
+
+
+    @Override
+    public String getActionName() {
+        return "swim";
+    }
+
+
+    @Override
+    public String getActionNameExp() {
+        return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos()).diagonal ? "-diagonal" : "-straight");
+    }
+
+
+    @Override
+    public ProcState tick(boolean firstTick) {
+        ActionObserver.tickAction(this.getActionNameExp());
+        if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
+            PlayerUtils.getInput().releaseJump();
+            return ProcState.DONE;
+        } else {
+            final boolean isInWater = BlockUtils.isWater(PlayerUtils.getPlayerBlockPos());
+            if (isInWater) {
+                PlayerUtils.getInput().holdJump();
+            } else {
+                PlayerUtils.getInput().releaseJump();
+            }
+            return ProcState.EXECUTING;
+        }
+    }
 
 
+    @Override
+    public boolean isOnPath(BaseBlockPos position) {
+        if (position.equals(getFrom().getPos()) || position.equals(getTo().getPos())) {
+            return true;
+        } else {
+            return position.getY() <= getFrom().getPosCopy().getY() || position.getY() <= getTo().getPosCopy().getY();
+        }
+    }
 
 
-	private ActionSwim(Node from, Node to, double cost) {
-		super(from, to, cost);
-		this.sprint = true;
-	}
+    private static abstract class SwimActionFactory implements ActionFactory {
 
 
+        ActionSwim create(Node node, Direction direction, Result result) {
+            return new ActionSwim(node, result.to, result.estimatedCost);
+        }
 
 
-	@Override
-	public String getActionName() {
-		return "swim";
-	}
+        Result check(Node node, Direction direction) {
+            if (direction.diagonal) {
+                return checkDiagonal(node, direction);
+            } else {
+                return checkStraight(node, direction);
+            }
+        }
 
 
+        Result checkStraight(Node node, Direction direction) {
 
+            // check to-position
+            final BaseBlockPos to = node.getPosCopy().add(direction.dx, 0, direction.dz);
+            if (!BlockUtils.isLoaded(to)) {
+                return Result.unloaded();
+            }
+            if (!ActionUtils.canSwimAt(to)) {
+                return Result.invalid();
+            }
 
-	@Override
-	public String getActionNameExp() {
-		return this.getActionName() + (Direction.get(getFrom().getPos(), getTo().getPos()).diagonal ? "-diagonal" : "-straight");
-	}
+            // check from-position
+            if (!ActionUtils.canSwimAt(node.getPos())) {
+                return Result.invalid();
+            }
 
+            return Result.valid(direction, NodeCache.get(to), ActionCosts.get().SWIM_STRAIGHT);
+        }
 
 
+        Result checkDiagonal(Node node, Direction direction) {
 
-	@Override
-	public ProcState tick(boolean firstTick) {
-		ActionObserver.tickAction(this.getActionNameExp());
-		if (PlayerUtils.getMovement().moveTowards(getTo().getPos(), true)) {
-			PlayerUtils.getInput().releaseJump();
-			return ProcState.DONE;
-		} else {
-			final boolean isInWater = BlockUtils.isWater(PlayerUtils.getPlayerBlockPos());
-			if (isInWater) {
-				PlayerUtils.getInput().holdJump();
-			} else {
-				PlayerUtils.getInput().releaseJump();
-			}
-			return ProcState.EXECUTING;
-		}
-	}
+            // check to-position
+            final BaseBlockPos to = node.getPosCopy().add(direction.dx, 0, direction.dz);
+            if (!BlockUtils.isLoaded(to)) {
+                return Result.unloaded();
+            }
+            if (!ActionUtils.canSwimAt(to)) {
+                return Result.invalid();
+            }
 
+            // check from-position
+            if (!ActionUtils.canSwimAt(node.getPos())) {
+                return Result.invalid();
+            }
 
+            // check diagonal
+            Direction[] splitDirection = direction.split();
+            final BaseBlockPos p0 = node.getPosCopy().add(splitDirection[0].dx, 0, splitDirection[0].dz);
+            final BaseBlockPos p1 = node.getPosCopy().add(splitDirection[1].dx, 0, splitDirection[1].dz);
 
+            boolean traversable0 = ActionUtils.canMoveThrough(p0) && BlockUtils.isLoaded(p0);
+            boolean traversable1 = ActionUtils.canMoveThrough(p1) && BlockUtils.isLoaded(p1);
 
-	@Override
-	public boolean isOnPath(BaseBlockPos position) {
-		if (position.equals(getFrom().getPos()) || position.equals(getTo().getPos())) {
-			return true;
-		} else {
-			return position.getY() <= getFrom().getPosCopy().getY() || position.getY() <= getTo().getPosCopy().getY();
-		}
-	}
+            boolean avoid0 = BlockUtils.avoidTouching(p0) || BlockUtils.avoidTouching(p0.copyAsFastBlockPos().add(Direction.UP));
+            boolean avoid1 = BlockUtils.avoidTouching(p1) || BlockUtils.avoidTouching(p1.copyAsFastBlockPos().add(Direction.UP));
 
+            if (traversable0 || traversable1) {
+                if ((traversable0 && avoid1) || (traversable1 && avoid0)) {
+                    return Result.invalid();
+                } else {
+                    return Result.valid(direction, NodeCache.get(to),
+                            direction.diagonal ? ActionCosts.get().SWIM_DIAGONAL : ActionCosts.get().SWIM_STRAIGHT);
+                }
+            } else {
+                return Result.invalid();
+            }
 
+        }
 
 
-	private static abstract class SwimActionFactory implements ActionFactory {
+    }
 
 
-		ActionSwim create(Node node, Direction direction, Result result) {
-			return new ActionSwim(node, result.to, result.estimatedCost);
-		}
 
 
+    private static abstract class AbstractSwimActionFactory extends SwimActionFactory {
 
 
-		Result check(Node node, Direction direction) {
-			if (direction.diagonal) {
-				return checkDiagonal(node, direction);
-			} else {
-				return checkStraight(node, direction);
-			}
-		}
+        @Override
+        public Result check(Node node) {
+            return check(node, getDirection());
+        }
 
 
+        @Override
+        public Action createAction(Node node, Result result) {
+            return create(node, getDirection(), result);
+        }
 
 
-		Result checkStraight(Node node, Direction direction) {
+        @Override
+        public Class<ActionSwim> producesAction() {
+            return ActionSwim.class;
+        }
 
-			// check to-position
-			final BaseBlockPos to = node.getPosCopy().add(direction.dx, 0, direction.dz);
-			if (!BlockUtils.isLoaded(to)) {
-				return Result.unloaded();
-			}
-			if (!ActionUtils.canSwimAt(to)) {
-				return Result.invalid();
-			}
+    }
 
-			// check from-position
-			if (!ActionUtils.canSwimAt(node.getPos())) {
-				return Result.invalid();
-			}
 
-			return Result.valid(direction, NodeCache.get(to), ActionCosts.get().SWIM_STRAIGHT);
-		}
 
 
+    public static class SwimFactoryNorth extends AbstractSwimActionFactory {
 
 
-		Result checkDiagonal(Node node, Direction direction) {
+        @Override
+        public Direction getDirection() {
+            return Direction.NORTH;
+        }
 
-			// check to-position
-			final BaseBlockPos to = node.getPosCopy().add(direction.dx, 0, direction.dz);
-			if (!BlockUtils.isLoaded(to)) {
-				return Result.unloaded();
-			}
-			if (!ActionUtils.canSwimAt(to)) {
-				return Result.invalid();
-			}
+    }
 
-			// check from-position
-			if (!ActionUtils.canSwimAt(node.getPos())) {
-				return Result.invalid();
-			}
 
-			// check diagonal
-			Direction[] splitDirection = direction.split();
-			final BaseBlockPos p0 = node.getPosCopy().add(splitDirection[0].dx, 0, splitDirection[0].dz);
-			final BaseBlockPos p1 = node.getPosCopy().add(splitDirection[1].dx, 0, splitDirection[1].dz);
 
-			boolean traversable0 = ActionUtils.canMoveThrough(p0) && BlockUtils.isLoaded(p0);
-			boolean traversable1 = ActionUtils.canMoveThrough(p1) && BlockUtils.isLoaded(p1);
 
-			boolean avoid0 = BlockUtils.avoidTouching(p0) || BlockUtils.avoidTouching(p0.copyAsFastBlockPos().add(Direction.UP));
-			boolean avoid1 = BlockUtils.avoidTouching(p1) || BlockUtils.avoidTouching(p1.copyAsFastBlockPos().add(Direction.UP));
+    public static class SwimFactoryNorthEast extends AbstractSwimActionFactory {
 
-			if (traversable0 || traversable1) {
-				if ((traversable0 && avoid1) || (traversable1 && avoid0)) {
-					return Result.invalid();
-				} else {
-					return Result.valid(direction, NodeCache.get(to),
-							direction.diagonal ? ActionCosts.get().SWIM_DIAGONAL : ActionCosts.get().SWIM_STRAIGHT);
-				}
-			} else {
-				return Result.invalid();
-			}
 
-		}
+        @Override
+        public Direction getDirection() {
+            return Direction.NORTH_EAST;
+        }
 
+    }
 
-	}
 
 
 
+    public static class SwimFactoryEast extends AbstractSwimActionFactory {
 
 
+        @Override
+        public Direction getDirection() {
+            return Direction.EAST;
+        }
 
-	private static abstract class AbstractSwimActionFactory extends SwimActionFactory {
+    }
 
 
-		@Override
-		public Result check(Node node) {
-			return check(node, getDirection());
-		}
 
 
+    public static class SwimFactorySouthEast extends AbstractSwimActionFactory {
 
 
-		@Override
-		public Action createAction(Node node, Result result) {
-			return create(node, getDirection(), result);
-		}
+        @Override
+        public Direction getDirection() {
+            return Direction.SOUTH_EAST;
+        }
 
+    }
 
 
 
-		@Override
-		public Class<ActionSwim> producesAction() {
-			return ActionSwim.class;
-		}
 
-	}
+    public static class SwimFactorySouth extends AbstractSwimActionFactory {
 
 
+        @Override
+        public Direction getDirection() {
+            return Direction.SOUTH;
+        }
 
+    }
 
 
 
-	public static class SwimFactoryNorth extends AbstractSwimActionFactory {
 
+    public static class SwimFactorySouthWest extends AbstractSwimActionFactory {
 
-		@Override
-		public Direction getDirection() {
-			return Direction.NORTH;
-		}
 
-	}
+        @Override
+        public Direction getDirection() {
+            return Direction.SOUTH_WEST;
+        }
 
+    }
 
 
 
 
+    public static class SwimFactoryWest extends AbstractSwimActionFactory {
 
-	public static class SwimFactoryNorthEast extends AbstractSwimActionFactory {
 
+        @Override
+        public Direction getDirection() {
+            return Direction.WEST;
+        }
 
-		@Override
-		public Direction getDirection() {
-			return Direction.NORTH_EAST;
-		}
+    }
 
-	}
 
 
 
+    public static class SwimFactoryNorthWest extends AbstractSwimActionFactory {
 
 
+        @Override
+        public Direction getDirection() {
+            return Direction.NORTH_WEST;
+        }
 
-	public static class SwimFactoryEast extends AbstractSwimActionFactory {
-
-
-		@Override
-		public Direction getDirection() {
-			return Direction.EAST;
-		}
-
-	}
-
-
-
-
-
-
-	public static class SwimFactorySouthEast extends AbstractSwimActionFactory {
-
-
-		@Override
-		public Direction getDirection() {
-			return Direction.SOUTH_EAST;
-		}
-
-	}
-
-
-
-
-
-
-	public static class SwimFactorySouth extends AbstractSwimActionFactory {
-
-
-		@Override
-		public Direction getDirection() {
-			return Direction.SOUTH;
-		}
-
-	}
-
-
-
-
-
-
-	public static class SwimFactorySouthWest extends AbstractSwimActionFactory {
-
-
-		@Override
-		public Direction getDirection() {
-			return Direction.SOUTH_WEST;
-		}
-
-	}
-
-
-
-
-
-
-	public static class SwimFactoryWest extends AbstractSwimActionFactory {
-
-
-		@Override
-		public Direction getDirection() {
-			return Direction.WEST;
-		}
-
-	}
-
-
-
-
-
-
-	public static class SwimFactoryNorthWest extends AbstractSwimActionFactory {
-
-
-		@Override
-		public Direction getDirection() {
-			return Direction.NORTH_WEST;
-		}
-
-	}
+    }
 
 }
 

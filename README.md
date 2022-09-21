@@ -6,7 +6,7 @@ Requires Forge for Minecraft 1.12
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/Q6micHhYB54/0.jpg)](https://www.youtube.com/watch?v=Q6micHhYB54 "Stevebot 1.0.0")
 
 
-#### Commands
+## Commands
 
 - /path \<xs> \<ys> \<ze> \<xe> \<ye> \<ze>  -  Finds a path from the first position to the second position.
     
