@@ -1,9 +1,9 @@
 package stevebot.pathfinding.actions;
 
-import com.ruegnerlukas.simplemath.MathUtils;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.wrapper.ItemWrapper;
+import stevebot.math.MathUtils;
 
 public class BreakBlockCheckResult {
 

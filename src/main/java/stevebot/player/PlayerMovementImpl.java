@@ -1,9 +1,9 @@
 package stevebot.player;
 
-import com.ruegnerlukas.simplemath.MathUtils;
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockUtils;
+import stevebot.math.MathUtils;
+import stevebot.math.vectors.vec3.Vector3d;
 
 public class PlayerMovementImpl implements PlayerMovement {
 

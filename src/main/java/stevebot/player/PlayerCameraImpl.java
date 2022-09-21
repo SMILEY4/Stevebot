@@ -1,8 +1,5 @@
 package stevebot.player;
 
-import com.ruegnerlukas.simplemath.vectors.vec2.Vector2d;
-import com.ruegnerlukas.simplemath.vectors.vec2.Vector2f;
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MouseHelper;
@@ -12,6 +9,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.input.Mouse;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventListener;
+import stevebot.math.vectors.vec2.Vector2d;
+import stevebot.math.vectors.vec2.Vector2f;
+import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Direction;
 

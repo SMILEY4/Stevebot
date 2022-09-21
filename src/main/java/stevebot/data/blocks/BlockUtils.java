@@ -1,6 +1,5 @@
 package stevebot.data.blocks;
 
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
@@ -8,6 +7,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
+import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Direction;
 

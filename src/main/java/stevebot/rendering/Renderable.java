@@ -1,8 +1,8 @@
 package stevebot.rendering;
 
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.util.math.BlockPos;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.math.vectors.vec3.Vector3d;
 
 public interface Renderable {
 

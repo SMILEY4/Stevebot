@@ -1,12 +1,12 @@
 package stevebot.data.blocks;
 
 
-import com.ruegnerlukas.simplemath.MathUtils;
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3i;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
+import stevebot.math.MathUtils;
+import stevebot.math.vectors.vec3.Vector3d;
+import stevebot.math.vectors.vec3.Vector3i;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
 import stevebot.rendering.Renderer;

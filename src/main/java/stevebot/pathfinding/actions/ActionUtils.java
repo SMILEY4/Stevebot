@@ -1,6 +1,5 @@
 package stevebot.pathfinding.actions;
 
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.block.Block;
 import net.minecraft.client.entity.EntityPlayerSP;
 import stevebot.data.blockpos.BaseBlockPos;
@@ -9,6 +8,7 @@ import stevebot.data.blocks.BlockUtils;
 import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.ItemUtils;
 import stevebot.data.items.wrapper.ItemWrapper;
+import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Direction;
 import stevebot.player.PlayerUtils;

@@ -1,9 +1,9 @@
 package stevebot.player;
 
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventListener;
+import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.misc.Direction;
 
 public interface PlayerCamera {

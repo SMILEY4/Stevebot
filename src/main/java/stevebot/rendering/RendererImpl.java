@@ -1,6 +1,5 @@
 package stevebot.rendering;
 
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -15,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 import stevebot.data.blocks.BlockProvider;
 import stevebot.data.blocks.ChunkCache;
 import stevebot.events.EventListener;
+import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Config;
 import stevebot.pathfinding.nodes.NodeCache;

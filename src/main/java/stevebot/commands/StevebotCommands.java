@@ -1,9 +1,9 @@
 package stevebot.commands;
 
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import stevebot.Stevebot;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockUtils;
+import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.misc.Config;
 import stevebot.pathfinding.PathHandler;
 import stevebot.pathfinding.Pathfinding;

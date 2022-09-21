@@ -1,9 +1,9 @@
 package stevebot.pathfinding.nodes;
 
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import java.util.ConcurrentModificationException;
 import java.util.Map;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
 import stevebot.rendering.Renderer;

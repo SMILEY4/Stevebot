@@ -40,7 +40,6 @@ configurations {
 }
 
 dependencies {
-    provided group: 'com.github.SMILEY4', name: 'SimpleMath', version: 'master-SNAPSHOT'
     testImplementation("org.assertj:assertj-core:3.11.1")
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.2"
     testRuntime('org.junit.jupiter:junit-jupiter-engine:5.5.2')

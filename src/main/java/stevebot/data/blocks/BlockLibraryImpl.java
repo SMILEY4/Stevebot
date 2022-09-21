@@ -1,6 +1,5 @@
 package stevebot.data.blocks;
 
-import com.ruegnerlukas.simplemath.MathUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +9,7 @@ import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.events.EventListener;
 import stevebot.events.PostInitEvent;
+import stevebot.math.MathUtils;
 import stevebot.minecraft.MinecraftAdapter;
 
 public class BlockLibraryImpl implements BlockLibrary {

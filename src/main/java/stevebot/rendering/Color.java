@@ -1,7 +1,7 @@
 package stevebot.rendering;
 
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3f;
 import java.util.Random;
+import stevebot.math.vectors.vec3.Vector3f;
 
 public class Color extends Vector3f {
 

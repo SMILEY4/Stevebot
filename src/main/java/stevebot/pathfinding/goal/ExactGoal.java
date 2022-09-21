@@ -1,7 +1,7 @@
 package stevebot.pathfinding.goal;
 
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;

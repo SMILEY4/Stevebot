@@ -1,9 +1,9 @@
 package stevebot.rendering;
 
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import stevebot.events.EventListener;
+import stevebot.math.vectors.vec3.Vector3d;
 
 public interface Renderer {
 

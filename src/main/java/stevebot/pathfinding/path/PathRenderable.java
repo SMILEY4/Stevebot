@@ -1,9 +1,9 @@
 package stevebot.pathfinding.path;
 
-import com.ruegnerlukas.simplemath.vectors.vec3.Vector3d;
 import stevebot.data.modification.BlockBreakModification;
 import stevebot.data.modification.BlockPlaceModification;
 import stevebot.data.modification.Modification;
+import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.misc.Config;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.pathfinding.nodes.Node;
