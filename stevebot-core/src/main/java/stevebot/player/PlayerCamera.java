@@ -29,10 +29,11 @@ public class PlayerCamera {
     private boolean isFreelook = false;
     private CameraState preForcedState = state;
     private final Vector2f lastFreeView = new Vector2f();
+    private final MinecraftAdapter minecraftAdapter;
 
-
-    public PlayerCamera() {
-        MinecraftAdapter.get().setMouseHelper(new MouseHelper() {
+    public PlayerCamera(MinecraftAdapter minecraftAdapter) {
+        this.minecraftAdapter = minecraftAdapter;
+        minecraftAdapter.setMouseHelper(new MouseHelper() {
             @Override
             public void mouseXYChange() {
                 if (getState() != CameraState.LOCKED) {
@@ -107,11 +108,11 @@ public class PlayerCamera {
      */
     private void updateFreelook(boolean isTickStart) {
 
-        final Entity player = MinecraftAdapter.get().getRenderViewEntity();
+        final Entity player = minecraftAdapter.getRenderViewEntity();
         final EntityPlayerSP playerSP = PlayerUtils.getPlayer();
 
 
-        final float f = MinecraftAdapter.get().getGameSettings().mouseSensitivity * 0.6f + 0.2f;
+        final float f = minecraftAdapter.getGameSettings().mouseSensitivity * 0.6f + 0.2f;
         final float f1 = f * f * f * 8f;
 
         final double dx = Mouse.getDX() * f1 * 0.15;
@@ -350,7 +351,7 @@ public class PlayerCamera {
     public void disableForceCamera(boolean restoreFreelookView) {
         setState(preForcedState);
         if (restoreFreelookView) {
-            final Entity player = MinecraftAdapter.get().getRenderViewEntity();
+            final Entity player = minecraftAdapter.getRenderViewEntity();
             player.rotationYaw = lastFreeView.x;
             player.prevRotationYaw = lastFreeView.x;
             player.rotationPitch = lastFreeView.y;

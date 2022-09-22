@@ -13,7 +13,7 @@ import net.minecraft.util.MouseHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class MinecraftAdapterImpl extends MinecraftAdapter {
+public class MinecraftAdapterImpl implements MinecraftAdapter {
 
 
     /**

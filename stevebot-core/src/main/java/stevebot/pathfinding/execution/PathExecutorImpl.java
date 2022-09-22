@@ -1,6 +1,7 @@
 package stevebot.pathfinding.execution;
 
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.StevebotLog;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventListener;
@@ -47,7 +48,6 @@ public class PathExecutorImpl implements TransitionListener<ExecutionState, Exec
 
     private PathExecutionListener pathListener;
 
-
     private final EventListener<TickEvent.ClientTickEvent> clientTickListener = new EventListener<TickEvent.ClientTickEvent>() {
         @Override
         public Class<TickEvent.ClientTickEvent> getEventClass() {
@@ -63,8 +63,8 @@ public class PathExecutorImpl implements TransitionListener<ExecutionState, Exec
     };
 
 
-    public PathExecutorImpl(BaseBlockPos posStart, Goal goal, Renderer renderer) {
-        this.pathFactory = new PathFactory(posStart, goal);
+    public PathExecutorImpl(MinecraftAdapter minecraftAdapter, BaseBlockPos posStart, Goal goal, Renderer renderer) {
+        this.pathFactory = new PathFactory(minecraftAdapter, posStart, goal);
         this.stateMachine.addListener(this);
         this.goalRenderable = goal.createRenderable();
         this.startRenderable = new BoxRenderObject(posStart.copyAsMCBlockPos(), 3, Color.YELLOW);

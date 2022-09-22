@@ -21,8 +21,12 @@ public class ItemLibrary {
     public static final ItemHandWrapper ITEM_HAND = new ItemHandWrapper();
     public static final int ID_INVALID_ITEM = -2;
 
+    private final MinecraftAdapter minecraftAdapter;
     private ItemWrapper[] items;
 
+    public ItemLibrary(final MinecraftAdapter minecraftAdapter) {
+        this.minecraftAdapter = minecraftAdapter;
+    }
 
     /**
      * Initializes this library. Fetches all items from the {@link Item#REGISTRY} and stores them.
@@ -31,7 +35,7 @@ public class ItemLibrary {
 
         List<ItemWrapper> itemList = new ArrayList<>();
         int maxId = 0;
-        for (Item item : MinecraftAdapter.get().getRegisteredItems()) {
+        for (Item item : minecraftAdapter.getRegisteredItems()) {
 
             final int id = getId(item);
             final String name = getName(item);
@@ -65,7 +69,7 @@ public class ItemLibrary {
             if (itemWrapper.getId() != ItemLibrary.ID_INVALID_ITEM && itemWrapper instanceof ItemBlockWrapper) {
                 final ItemBlockWrapper item = (ItemBlockWrapper) itemWrapper;
                 final ItemBlock itemBlock = (ItemBlock) item.getItem();
-                final int blockIdFromItem = MinecraftAdapter.get().getBlockId(itemBlock.getBlock());
+                final int blockIdFromItem = minecraftAdapter.getBlockId(itemBlock.getBlock());
                 for (BlockWrapper block : blocks) {
                     if (block.getId() == blockIdFromItem) {
                         item.setBlockWrapper(block);
@@ -118,7 +122,7 @@ public class ItemLibrary {
      * @return the name of the given item.
      */
     private int getId(Item item) {
-        return MinecraftAdapter.get().getItemId(item);
+        return minecraftAdapter.getItemId(item);
     }
 
 
@@ -127,7 +131,7 @@ public class ItemLibrary {
      * @return the id of the given item
      */
     private String getName(Item item) {
-        return MinecraftAdapter.get().getItemName(item);
+        return minecraftAdapter.getItemName(item);
     }
 
 

@@ -170,7 +170,7 @@ public class Stevebot {
     private void setup() {
 
         // minecraft
-        MinecraftAdapter.initialize(new MinecraftAdapterImpl());
+        MinecraftAdapter minecraftAdapter = new MinecraftAdapterImpl();
 
         // events
         eventManager = new EventManagerImpl();
@@ -185,28 +185,28 @@ public class Stevebot {
         eventManager.addListener(listenerConfigChanged);
 
         // block library
-        blockLibrary = new BlockLibrary();
+        blockLibrary = new BlockLibrary(minecraftAdapter);
 
         // block provider
-        blockProvider = new BlockProvider(blockLibrary);
+        blockProvider = new BlockProvider(minecraftAdapter, blockLibrary);
 
         // block utils
-        BlockUtils.initialize(blockProvider, blockLibrary);
+        BlockUtils.initialize(minecraftAdapter, blockProvider, blockLibrary);
 
         // item library
-        itemLibrary = new ItemLibrary();
+        itemLibrary = new ItemLibrary(minecraftAdapter);
 
         // item utils
         ItemUtils.initialize(itemLibrary);
 
         // renderer
-        renderer = new Renderer(blockProvider);
+        renderer = new Renderer(minecraftAdapter, blockProvider);
 
         // player camera
-        playerCamera = new PlayerCamera();
+        playerCamera = new PlayerCamera(minecraftAdapter);
 
         // player input
-        playerInput = new PlayerInput();
+        playerInput = new PlayerInput(minecraftAdapter);
 
         // player movement
         playerMovement = new PlayerMovementImpl(playerInput, playerCamera);
@@ -215,10 +215,10 @@ public class Stevebot {
         playerInventory = new PlayerInventoryImpl();
 
         // player utils
-        PlayerUtils.initialize(playerInput, playerCamera, playerMovement, playerInventory);
+        PlayerUtils.initialize(minecraftAdapter, playerInput, playerCamera, playerMovement, playerInventory);
 
         // path handler
-        pathHandler = new PathHandler(eventManager, renderer);
+        pathHandler = new PathHandler(minecraftAdapter, eventManager, renderer);
 
         // commands
         StevebotCommands.initialize(new StevebotApi(pathHandler));

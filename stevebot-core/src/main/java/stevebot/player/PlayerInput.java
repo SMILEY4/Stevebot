@@ -1,14 +1,19 @@
 package stevebot.player;
 
 import net.minecraft.client.settings.KeyBinding;
+import stevebot.minecraft.MinecraftAdapter;
 
 public class PlayerInput {
 
+    private final MinecraftAdapter minecraftAdapter;
     private PlayerInputConfig inputConfig = null;
     private boolean muteUserInput = false;
     private boolean isHoldingJump = false;
     private boolean isHoldingSneak = false;
 
+    public PlayerInput(final MinecraftAdapter minecraftAdapter) {
+        this.minecraftAdapter = minecraftAdapter;
+    }
 
     public void onEventPlayerTick() {
         if (muteUserInput) {
@@ -17,7 +22,7 @@ public class PlayerInput {
     }
 
     public void onEventConfigChanged() {
-        inputConfig = new PlayerInputConfig();
+        inputConfig = new PlayerInputConfig(minecraftAdapter);
     }
 
     /**

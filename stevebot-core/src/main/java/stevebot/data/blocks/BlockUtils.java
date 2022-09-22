@@ -48,11 +48,13 @@ public class BlockUtils {
     static final int CONCRETE_POWDER = 252;
 
 
+    private static MinecraftAdapter minecraftAdapter;
     private static BlockProvider blockProvider;
     private static BlockLibrary blockLibrary;
 
 
-    public static void initialize(BlockProvider blockProvider, BlockLibrary blockLibrary) {
+    public static void initialize(MinecraftAdapter minecraftAdapter, BlockProvider blockProvider, BlockLibrary blockLibrary) {
+        BlockUtils.minecraftAdapter = minecraftAdapter;
         BlockUtils.blockProvider = blockProvider;
         BlockUtils.blockLibrary = blockLibrary;
     }
@@ -206,7 +208,7 @@ public class BlockUtils {
                 || isDoorLike(block)) {
             return false;
         } else {
-            return block.getBlock().isPassable(MinecraftAdapter.get().getWorld(), pos);
+            return block.getBlock().isPassable(minecraftAdapter.getWorld(), pos);
         }
     }
 
@@ -366,7 +368,7 @@ public class BlockUtils {
             return false;
         }
 
-        final IBlockState blockState = MinecraftAdapter.get().getWorld().getBlockState(position.copyAsMCBlockPos());
+        final IBlockState blockState = minecraftAdapter.getWorld().getBlockState(position.copyAsMCBlockPos());
 
         final EnumFacing.Axis facing = blockState.getValue(BlockHorizontal.FACING).getAxis();
 

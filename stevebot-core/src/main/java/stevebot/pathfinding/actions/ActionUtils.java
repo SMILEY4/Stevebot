@@ -18,6 +18,12 @@ public class ActionUtils {
 
     private static final FastBlockPos fastPos1 = new FastBlockPos();
     private static final FastBlockPos fastPos2 = new FastBlockPos();
+    private static MinecraftAdapter minecraftAdapter;
+
+
+    public static void initMinecraftAdapter(MinecraftAdapter minecraftAdapter) {
+        ActionUtils.minecraftAdapter = minecraftAdapter;
+    }
 
 
     /**
@@ -249,7 +255,7 @@ public class ActionUtils {
 
 
     public static boolean breakBlock(BaseBlockPos pos) {
-        final Block mcBlock = MinecraftAdapter.get().getBlock(pos.copyAsMCBlockPos());
+        final Block mcBlock = minecraftAdapter.getBlock(pos.copyAsMCBlockPos());
         if (BlockUtils.isAir(BlockUtils.getBlockLibrary().getBlockByMCBlock(mcBlock))) {
             return true;
         } else {

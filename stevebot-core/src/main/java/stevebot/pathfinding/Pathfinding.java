@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
+import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.StevebotLog;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockProvider;
@@ -36,6 +37,11 @@ public class Pathfinding {
     private static final ActionFactoryProvider actionFactoryProvider = new ActionFactoryProvider();
     public static PathfindingResult lastResults = null;
 
+    private final MinecraftAdapter minecraftAdapter;
+
+    public Pathfinding(final MinecraftAdapter minecraftAdapter) {
+        this.minecraftAdapter = minecraftAdapter;
+    }
 
     /**
      * Calculates a new path from the given starting position to the given goal
@@ -309,7 +315,7 @@ public class Pathfinding {
                 Modification[] modifications = action.getModifications();
                 for (int i = 0; i < modifications.length; i++) {
                     blockProvider.addModification(modifications[i], false);
-                    snapshot.applyModification(modifications[i]);
+                    snapshot.applyModification(minecraftAdapter, modifications[i]);
                 }
             }
             current = current.getPrev();

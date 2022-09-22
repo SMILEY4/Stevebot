@@ -24,8 +24,10 @@ public class Renderer {
     private final BufferBuilder BUFFER = TESSELLATOR.getBuffer();
     private final List<Renderable> renderables = new ArrayList<>();
 
+    private final MinecraftAdapter minecraftAdapter;
 
-    public Renderer(BlockProvider blockProvider) {
+    public Renderer(MinecraftAdapter minecraftAdapter, BlockProvider blockProvider) {
+        this.minecraftAdapter = minecraftAdapter;
         addRenderable(blockProvider.getBlockCache().getChunkCache().getChunkCacheRenderable());
         addRenderable(new NodeRenderable(NodeCache.getNodes()));
     }
@@ -34,7 +36,7 @@ public class Renderer {
      * Renders all {@link Renderable}s.
      */
     public void onEventRender() {
-        EntityPlayerSP player = MinecraftAdapter.get().getPlayer();
+        EntityPlayerSP player = minecraftAdapter.getPlayer();
         if (player != null) {
 
             // setup

@@ -16,8 +16,12 @@ public class BlockLibrary {
     public static final int ID_UNLOADED_BOCK = -1;
     public static final int ID_INVALID_BLOCK = -2;
 
+    private final MinecraftAdapter minecraftAdapter;
     private BlockWrapper[] blocks;
 
+    public BlockLibrary(final MinecraftAdapter minecraftAdapter) {
+        this.minecraftAdapter = minecraftAdapter;
+    }
 
     /**
      * Initializes this library. Collects all blocks and stores them.
@@ -26,7 +30,7 @@ public class BlockLibrary {
 
         List<BlockWrapper> blockList = new ArrayList<>();
         int maxID = 0;
-        for (Block block : MinecraftAdapter.get().getRegisteredBlocks()) {
+        for (Block block : minecraftAdapter.getRegisteredBlocks()) {
             final int id = getId(block);
             final String name = getName(block);
             blockList.add(new BlockWrapper(id, name, block));
@@ -52,7 +56,7 @@ public class BlockLibrary {
             block.setItem(ItemLibrary.INVALID_ITEM);
             if (block.getId() != BlockLibrary.ID_INVALID_BLOCK) {
                 final Item itemFromBlock = Item.getItemFromBlock(block.getBlock());
-                final int itemIdFromBlock = MinecraftAdapter.get().getItemId(itemFromBlock);
+                final int itemIdFromBlock = minecraftAdapter.getItemId(itemFromBlock);
                 for (ItemWrapper item : items) {
                     if (item.getId() == itemIdFromBlock) {
                         block.setItem(item);
@@ -114,7 +118,7 @@ public class BlockLibrary {
      * @return the name of the given block.
      */
     private String getName(Block block) {
-        return MinecraftAdapter.get().getBlockName(block);
+        return minecraftAdapter.getBlockName(block);
     }
 
 
@@ -123,7 +127,7 @@ public class BlockLibrary {
      * @return the id of the given block
      */
     private int getId(Block block) {
-        return MinecraftAdapter.get().getBlockId(block);
+        return minecraftAdapter.getBlockId(block);
     }
 
 

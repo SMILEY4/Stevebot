@@ -28,8 +28,16 @@ public class PlayerUtils {
 
     private static PlayerSnapshot activeSnapshot;
 
+    private static MinecraftAdapter minecraftAdapter;
 
-    public static void initialize(PlayerInput playerInput, PlayerCamera playerCamera, PlayerMovement playerMovement, PlayerInventory playerInventory) {
+    public static void initialize(
+            MinecraftAdapter minecraftAdapter,
+            PlayerInput playerInput,
+            PlayerCamera playerCamera,
+            PlayerMovement playerMovement,
+            PlayerInventory playerInventory
+    ) {
+        PlayerUtils.minecraftAdapter = minecraftAdapter;
         PlayerUtils.playerInput = playerInput;
         PlayerUtils.playerCamera = playerCamera;
         PlayerUtils.playerMovement = playerMovement;
@@ -107,7 +115,7 @@ public class PlayerUtils {
      * @return the {@link EntityPlayerSP}
      */
     public static EntityPlayerSP getPlayer() {
-        return MinecraftAdapter.get().getPlayer();
+        return minecraftAdapter.getPlayer();
     }
 
 

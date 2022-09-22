@@ -42,20 +42,20 @@ public class InventorySnapshotTest {
     @Test
     void testApplyModificationPlace() {
 
-        MinecraftAdapter.initialize(new UnsupportedMinecraftAdapter() {
+        final MinecraftAdapter minecraftAdapter = new UnsupportedMinecraftAdapter() {
             @Override
             public boolean isPlayerCreativeMode() {
                 return false;
             }
-        });
+        };
 
         final PlayerSnapshot snapshot = new PlayerSnapshot();
         snapshot.setHotbarItemStack(3, ITEM_DIRT, 2);
         snapshot.setHotbarItemStack(6, ITEM_DIA_PICKAXE, 1);
         snapshot.setHotbarItemStack(7, ITEM_STONE, 10);
 
-        snapshot.applyModification(Modification.placeBlock(new BaseBlockPos(), BLOCK_STONE));
-        snapshot.applyModification(Modification.placeBlock(new BaseBlockPos(), BLOCK_DIRT));
+        snapshot.applyModification(minecraftAdapter, Modification.placeBlock(new BaseBlockPos(), BLOCK_STONE));
+        snapshot.applyModification(minecraftAdapter, Modification.placeBlock(new BaseBlockPos(), BLOCK_DIRT));
 
         assertThat(snapshot.getStackSize(3)).isEqualTo(1);
         assertThat(snapshot.getItem(3).getId()).isEqualTo(ITEM_DIRT.getId());
@@ -63,7 +63,7 @@ public class InventorySnapshotTest {
         assertThat(snapshot.getStackSize(7)).isEqualTo(9);
         assertThat(snapshot.getItem(7).getId()).isEqualTo(ITEM_STONE.getId());
 
-        snapshot.applyModification(Modification.placeBlock(new BaseBlockPos(), BLOCK_DIRT));
+        snapshot.applyModification(minecraftAdapter, Modification.placeBlock(new BaseBlockPos(), BLOCK_DIRT));
 
         assertThat(snapshot.getStackSize(3)).isEqualTo(-1);
         assertThat(snapshot.getItem(3)).isNull();
@@ -73,20 +73,20 @@ public class InventorySnapshotTest {
     @Test
     void testApplyModificationPlaceCreative() {
 
-        MinecraftAdapter.initialize(new UnsupportedMinecraftAdapter() {
+        final MinecraftAdapter minecraftAdapter = new UnsupportedMinecraftAdapter() {
             @Override
             public boolean isPlayerCreativeMode() {
                 return true;
             }
-        });
+        };
 
         final PlayerSnapshot snapshot = new PlayerSnapshot();
         snapshot.setHotbarItemStack(3, ITEM_DIRT, 2);
         snapshot.setHotbarItemStack(6, ITEM_DIA_PICKAXE, 1);
         snapshot.setHotbarItemStack(7, ITEM_STONE, 10);
 
-        snapshot.applyModification(Modification.placeBlock(new BaseBlockPos(), BLOCK_STONE));
-        snapshot.applyModification(Modification.placeBlock(new BaseBlockPos(), BLOCK_DIRT));
+        snapshot.applyModification(minecraftAdapter, Modification.placeBlock(new BaseBlockPos(), BLOCK_STONE));
+        snapshot.applyModification(minecraftAdapter, Modification.placeBlock(new BaseBlockPos(), BLOCK_DIRT));
 
         assertThat(snapshot.getStackSize(3)).isEqualTo(2);
         assertThat(snapshot.getItem(3).getId()).isEqualTo(ITEM_DIRT.getId());

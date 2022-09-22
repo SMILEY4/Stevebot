@@ -48,14 +48,14 @@ public class PlayerSnapshot {
 
 
     /**
-     * Applies the givne {@link Modification} to this snapshot
+     * Applies the given {@link Modification} to this snapshot
      *
      * @param modification the modification to apply
      */
-    public void applyModification(Modification modification) {
+    public void applyModification(MinecraftAdapter minecraftAdapter, Modification modification) {
 
         if (modification instanceof BlockPlaceModification) {
-            if (MinecraftAdapter.get().isPlayerCreativeMode()) {
+            if (minecraftAdapter.isPlayerCreativeMode()) {
                 return;
             }
 

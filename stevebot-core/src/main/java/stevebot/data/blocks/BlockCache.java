@@ -7,16 +7,19 @@ import stevebot.minecraft.MinecraftAdapter;
 
 public class BlockCache {
 
+    private final MinecraftAdapter minecraftAdapter;
     private final ChunkCache chunkCache = new ChunkCache();
     private final BlockLibrary library;
     private final BlockProvider blockProvider;
 
 
     /**
-     * @param library       the {@link BlockLibrary} used by this cache
-     * @param blockProvider the {@link BlockProvider} used by this cache
+     * @param minecraftAdapter the adapter for accessing minecraft
+     * @param library          the {@link BlockLibrary} used by this cache
+     * @param blockProvider    the {@link BlockProvider} used by this cache
      */
-    public BlockCache(BlockLibrary library, BlockProvider blockProvider) {
+    public BlockCache(MinecraftAdapter minecraftAdapter, BlockLibrary library, BlockProvider blockProvider) {
+        this.minecraftAdapter = minecraftAdapter;
         this.library = library;
         this.blockProvider = blockProvider;
     }
@@ -108,7 +111,7 @@ public class BlockCache {
      * @return the block at the given position from the minecraft world (never from the cache).
      */
     private BlockWrapper getBlockFromMinecraft(BaseBlockPos pos) {
-        final Block block = MinecraftAdapter.get().getBlock(pos.copyAsMCBlockPos());
+        final Block block = minecraftAdapter.getBlock(pos.copyAsMCBlockPos());
         if (block == null) {
             return BlockLibrary.INVALID_BLOCK;
         } else {

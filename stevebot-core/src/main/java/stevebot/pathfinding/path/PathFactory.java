@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.StevebotLog;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.misc.Config;
@@ -16,7 +17,7 @@ public class PathFactory {
     private static final boolean MULTITHREAD = true;
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private final Pathfinding pathfinding = new Pathfinding();
+    private final Pathfinding pathfinding;
 
     private final List<Path> pathQueue = new ArrayList<>();
     private volatile boolean preparingPath = false;
@@ -29,7 +30,8 @@ public class PathFactory {
      * @param posStart the start position of the path
      * @param goal     the goal of the path
      */
-    public PathFactory(BaseBlockPos posStart, Goal goal) {
+    public PathFactory(MinecraftAdapter minecraftAdapter, BaseBlockPos posStart, Goal goal) {
+        this.pathfinding = new Pathfinding(minecraftAdapter);
         this.posStart = posStart;
         this.goal = goal;
     }

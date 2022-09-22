@@ -1,5 +1,6 @@
 package stevebot.pathfinding;
 
+import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.StevebotLog;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventManager;
@@ -13,11 +14,13 @@ public class PathHandler {
 
     private PathExecutor excecutor = null;
 
+    private final MinecraftAdapter minecraftAdapter;
     private final EventManager eventManager;
     private final Renderer renderer;
 
 
-    public PathHandler(EventManager eventManager, Renderer renderer) {
+    public PathHandler(MinecraftAdapter minecraftAdapter, EventManager eventManager, Renderer renderer) {
+        this.minecraftAdapter = minecraftAdapter;
         this.renderer = renderer;
         this.eventManager = eventManager;
     }
@@ -33,7 +36,7 @@ public class PathHandler {
      */
     public void createPath(BaseBlockPos from, Goal goal, boolean startFollowing, boolean enableFreelook) {
         if (excecutor == null) {
-            excecutor = new PathExecutorImpl(from, goal, renderer);
+            excecutor = new PathExecutorImpl(minecraftAdapter, from, goal, renderer);
             eventManager.addListener(excecutor.getTickListener());
             excecutor.setPathListener(() -> {
                 eventManager.removeListener(excecutor.getTickListener());

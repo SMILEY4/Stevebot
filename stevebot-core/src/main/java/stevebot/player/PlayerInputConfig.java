@@ -28,9 +28,9 @@ class PlayerInputConfig {
     private final Map<InputType, KeyBinding> bindingMap = new HashMap<>();
 
 
-    PlayerInputConfig() {
+    PlayerInputConfig(MinecraftAdapter minecraftAdapter) {
 
-        GameSettings settings = MinecraftAdapter.get().getGameSettings();
+        GameSettings settings = minecraftAdapter.getGameSettings();
 
         bindingMap.put(InputType.WALK_FORWARD, settings.keyBindForward);
         bindingMap.put(InputType.WALK_BACKWARD, settings.keyBindBack);

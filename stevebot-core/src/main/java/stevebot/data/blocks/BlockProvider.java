@@ -11,7 +11,7 @@ import stevebot.minecraft.MinecraftAdapter;
 
 public class BlockProvider {
 
-
+    private final MinecraftAdapter minecraftAdapter;
     private final BlockCache cache;
     private final BlockLibrary library;
 
@@ -21,9 +21,10 @@ public class BlockProvider {
     /**
      * @param library the {@link BlockLibrary} to be used by this provider.
      */
-    public BlockProvider(BlockLibrary library) {
+    public BlockProvider(MinecraftAdapter minecraftAdapter, BlockLibrary library) {
+        this.minecraftAdapter = minecraftAdapter;
         this.library = library;
-        this.cache = new BlockCache(library, this);
+        this.cache = new BlockCache(minecraftAdapter, library, this);
     }
 
 
@@ -32,7 +33,7 @@ public class BlockProvider {
      * @return true, if the given position is in a loaded chunk.
      */
     public boolean isLoaded(BaseBlockPos pos) {
-        return MinecraftAdapter.get().isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4);
+        return minecraftAdapter.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4);
     }
 
 

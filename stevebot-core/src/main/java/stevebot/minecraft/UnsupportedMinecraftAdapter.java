@@ -11,7 +11,7 @@ import net.minecraft.util.MouseHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class UnsupportedMinecraftAdapter extends MinecraftAdapter {
+public class UnsupportedMinecraftAdapter implements MinecraftAdapter {
 
 
     @Override
