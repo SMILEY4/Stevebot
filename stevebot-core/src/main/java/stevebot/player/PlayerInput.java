@@ -272,7 +272,11 @@ public class PlayerInput {
      * @param down whether the corresponding button is pressed down or not.
      */
     public void setInput(PlayerInputConfig.InputType type, boolean down) {
-        minecraftAdapter.setInput(inputConfig, type, down);
+        if (inputConfig.getBinding(type).isDown() == down) {
+            return;
+        }
+        final int keyCode = inputConfig.getBinding(type).getKeyCode();
+        minecraftAdapter.setInput(keyCode, down);
     }
 
 

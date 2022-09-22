@@ -2,11 +2,19 @@ package stevebot.player;
 
 import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.settings.KeyBinding;
 import stevebot.minecraft.NewMinecraftAdapter;
 
 public class PlayerInputConfig {
+
+    public interface InputBinding {
+
+        int getKeyCode();
+
+        boolean isDown();
+
+    }
+
+
 
 
     public enum InputType {
@@ -25,35 +33,31 @@ public class PlayerInputConfig {
 
 
 
-    private final Map<InputType, KeyBinding> bindingMap = new HashMap<>();
+    private final Map<InputType, InputBinding> bindingMap = new HashMap<>();
 
 
     PlayerInputConfig(NewMinecraftAdapter minecraftAdapter) {
+        bindingMap.put(InputType.WALK_FORWARD, minecraftAdapter.getKeyBinding(InputType.WALK_FORWARD));
+        bindingMap.put(InputType.WALK_BACKWARD, minecraftAdapter.getKeyBinding(InputType.WALK_BACKWARD));
+        bindingMap.put(InputType.WALK_LEFT, minecraftAdapter.getKeyBinding(InputType.WALK_LEFT));
+        bindingMap.put(InputType.WALK_RIGHT, minecraftAdapter.getKeyBinding(InputType.WALK_RIGHT));
 
-        GameSettings settings = minecraftAdapter.getGameSettings();
+        bindingMap.put(InputType.SPRINT, minecraftAdapter.getKeyBinding(InputType.SPRINT));
+        bindingMap.put(InputType.SNEAK, minecraftAdapter.getKeyBinding(InputType.SNEAK));
+        bindingMap.put(InputType.JUMP, minecraftAdapter.getKeyBinding(InputType.JUMP));
 
-        bindingMap.put(InputType.WALK_FORWARD, settings.keyBindForward);
-        bindingMap.put(InputType.WALK_BACKWARD, settings.keyBindBack);
-        bindingMap.put(InputType.WALK_LEFT, settings.keyBindLeft);
-        bindingMap.put(InputType.WALK_RIGHT, settings.keyBindRight);
-
-        bindingMap.put(InputType.SPRINT, settings.keyBindSprint);
-        bindingMap.put(InputType.SNEAK, settings.keyBindSneak);
-        bindingMap.put(InputType.JUMP, settings.keyBindJump);
-
-        bindingMap.put(InputType.PLACE_BLOCK, settings.keyBindUseItem);
-        bindingMap.put(InputType.BREAK_BLOCK, settings.keyBindAttack);
-        bindingMap.put(InputType.INTERACT, settings.keyBindUseItem);
+        bindingMap.put(InputType.PLACE_BLOCK, minecraftAdapter.getKeyBinding(InputType.PLACE_BLOCK));
+        bindingMap.put(InputType.BREAK_BLOCK, minecraftAdapter.getKeyBinding(InputType.BREAK_BLOCK));
+        bindingMap.put(InputType.INTERACT, minecraftAdapter.getKeyBinding(InputType.INTERACT));
     }
 
 
     /**
      * @param type the {@link InputType}
-     * @return the {@link KeyBinding} of the given {@link InputType}
+     * @return the key-code of the given {@link InputType}
      */
-    public KeyBinding getBinding(InputType type) {
+    public InputBinding getBinding(InputType type) {
         return bindingMap.get(type);
     }
-
 
 }

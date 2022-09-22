@@ -38,10 +38,30 @@ import stevebot.player.PlayerInputConfig;
 
 public class NewMinecraftAdapterImpl implements NewMinecraftAdapter {
 
+    class McInputBinding implements PlayerInputConfig.InputBinding {
+
+        private final KeyBinding binding;
+
+        public McInputBinding(final KeyBinding binding) {
+            this.binding = binding;
+        }
+
+        @Override
+        public int getKeyCode() {
+            return binding.getKeyCode();
+        }
+
+        @Override
+        public boolean isDown() {
+            return binding.isKeyDown();
+        }
+
+    }
+
     private MouseChangeInterceptor mouseChangeInterceptor = null;
 
-    private Map<String, Item> items = new HashMap<>();
-    private Map<String, Block> blocks = new HashMap<>();
+    private final Map<String, Item> items = new HashMap<>();
+    private final Map<String, Block> blocks = new HashMap<>();
 
     public NewMinecraftAdapterImpl() {
         getMinecraft().mouseHelper = new MouseHelper() {
@@ -202,14 +222,10 @@ public class NewMinecraftAdapterImpl implements NewMinecraftAdapter {
     }
 
     @Override
-    public void setInput(final PlayerInputConfig inputConfig, final PlayerInputConfig.InputType type, final boolean down) {
-        KeyBinding binding = inputConfig.getBinding(type);
-        if (binding.isKeyDown() == down) {
-            return;
-        }
-        KeyBinding.setKeyBindState(binding.getKeyCode(), down);
+    public void setInput(final int keyCode, final boolean down) {
+        KeyBinding.setKeyBindState(keyCode, down);
         if (down) {
-            KeyBinding.onTick(binding.getKeyCode());
+            KeyBinding.onTick(keyCode);
         }
     }
 
@@ -326,6 +342,34 @@ public class NewMinecraftAdapterImpl implements NewMinecraftAdapter {
     public int getBlockIdFromItem(final ItemBlockWrapper item) {
         final ItemBlock itemBlock = (ItemBlock) items.get(item.getName());
         return Block.REGISTRY.getIDForObject(itemBlock.getBlock());
+    }
+
+    @Override
+    public PlayerInputConfig.InputBinding getKeyBinding(final PlayerInputConfig.InputType inputType) {
+        GameSettings settings = getGameSettings();
+        switch (inputType) {
+            case WALK_FORWARD:
+                return new McInputBinding(settings.keyBindForward);
+            case WALK_BACKWARD:
+                return new McInputBinding(settings.keyBindBack);
+            case WALK_LEFT:
+                return new McInputBinding(settings.keyBindLeft);
+            case WALK_RIGHT:
+                return new McInputBinding(settings.keyBindRight);
+            case SPRINT:
+                return new McInputBinding(settings.keyBindSprint);
+            case SNEAK:
+                return new McInputBinding(settings.keyBindSneak);
+            case JUMP:
+                return new McInputBinding(settings.keyBindJump);
+            case PLACE_BLOCK:
+                return new McInputBinding(settings.keyBindUseItem);
+            case BREAK_BLOCK:
+                return new McInputBinding(settings.keyBindAttack);
+            case INTERACT:
+                return new McInputBinding(settings.keyBindUseItem);
+        }
+        return null;
     }
 
     /**

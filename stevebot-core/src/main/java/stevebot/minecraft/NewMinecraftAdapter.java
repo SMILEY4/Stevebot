@@ -63,7 +63,7 @@ public interface NewMinecraftAdapter {
 
     GameSettings getGameSettings();
 
-    void setInput(PlayerInputConfig inputConfig, PlayerInputConfig.InputType type, boolean down);
+    void setInput(final int keyCode, boolean down);
 
     /**
      * Sends the player the given message. The message will be printed in the chat.
@@ -100,5 +100,7 @@ public interface NewMinecraftAdapter {
     int getItemIdFromBlock(BlockWrapper block);
 
     int getBlockIdFromItem(ItemBlockWrapper item);
+
+    PlayerInputConfig.InputBinding getKeyBinding(PlayerInputConfig.InputType inputType);
 
 }
