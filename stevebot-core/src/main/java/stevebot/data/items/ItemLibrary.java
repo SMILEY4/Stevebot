@@ -8,7 +8,7 @@ import stevebot.data.items.wrapper.ItemBlockWrapper;
 import stevebot.data.items.wrapper.ItemHandWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.math.MathUtils;
-import stevebot.minecraft.NewMinecraftAdapter;
+import stevebot.minecraft.MinecraftAdapter;
 
 public class ItemLibrary {
 
@@ -16,10 +16,10 @@ public class ItemLibrary {
     public static final ItemHandWrapper ITEM_HAND = new ItemHandWrapper();
     public static final int ID_INVALID_ITEM = -2;
 
-    private final NewMinecraftAdapter minecraftAdapter;
+    private final MinecraftAdapter minecraftAdapter;
     private ItemWrapper[] items;
 
-    public ItemLibrary(final NewMinecraftAdapter minecraftAdapter) {
+    public ItemLibrary(final MinecraftAdapter minecraftAdapter) {
         this.minecraftAdapter = minecraftAdapter;
     }
 

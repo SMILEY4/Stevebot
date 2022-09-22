@@ -4,15 +4,15 @@ import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockUtils;
 import stevebot.data.blocks.BlockWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
-import stevebot.minecraft.NewMinecraftAdapter;
+import stevebot.minecraft.MinecraftAdapter;
 
 public class ItemUtils {
 
 
     private static ItemLibrary itemLibrary;
-    private static NewMinecraftAdapter minecraftAdapter;
+    private static MinecraftAdapter minecraftAdapter;
 
-    public static void initialize(NewMinecraftAdapter minecraftAdapter, ItemLibrary itemLibrary) {
+    public static void initialize(MinecraftAdapter minecraftAdapter, ItemLibrary itemLibrary) {
         ItemUtils.itemLibrary = itemLibrary;
         ItemUtils.minecraftAdapter = minecraftAdapter;
     }

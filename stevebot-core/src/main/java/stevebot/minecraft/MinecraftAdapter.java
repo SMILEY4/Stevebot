@@ -11,7 +11,7 @@ import stevebot.math.vectors.vec2.Vector2d;
 import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.player.PlayerInputConfig;
 
-public interface NewMinecraftAdapter {
+public interface MinecraftAdapter {
 
     /**
      * @param pos the position of the block
@@ -101,6 +101,8 @@ public interface NewMinecraftAdapter {
 
     int getBlockIdFromItem(ItemBlockWrapper item);
 
-    PlayerInputConfig.InputBinding getKeyBinding(PlayerInputConfig.InputType inputType);
+    InputBinding getKeyBinding(PlayerInputConfig.InputType inputType);
+
+    boolean isPlayerCreativeMode();
 
 }

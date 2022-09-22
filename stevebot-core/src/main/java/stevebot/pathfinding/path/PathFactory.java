@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import stevebot.minecraft.MinecraftAdapter;
-import stevebot.misc.StevebotLog;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Config;
+import stevebot.misc.StevebotLog;
 import stevebot.pathfinding.Pathfinding;
 import stevebot.pathfinding.goal.Goal;
 

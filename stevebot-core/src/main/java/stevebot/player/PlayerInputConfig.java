@@ -2,19 +2,10 @@ package stevebot.player;
 
 import java.util.HashMap;
 import java.util.Map;
-import stevebot.minecraft.NewMinecraftAdapter;
+import stevebot.minecraft.InputBinding;
+import stevebot.minecraft.MinecraftAdapter;
 
 public class PlayerInputConfig {
-
-    public interface InputBinding {
-
-        int getKeyCode();
-
-        boolean isDown();
-
-    }
-
-
 
 
     public enum InputType {
@@ -36,7 +27,7 @@ public class PlayerInputConfig {
     private final Map<InputType, InputBinding> bindingMap = new HashMap<>();
 
 
-    PlayerInputConfig(NewMinecraftAdapter minecraftAdapter) {
+    PlayerInputConfig(MinecraftAdapter minecraftAdapter) {
         bindingMap.put(InputType.WALK_FORWARD, minecraftAdapter.getKeyBinding(InputType.WALK_FORWARD));
         bindingMap.put(InputType.WALK_BACKWARD, minecraftAdapter.getKeyBinding(InputType.WALK_BACKWARD));
         bindingMap.put(InputType.WALK_LEFT, minecraftAdapter.getKeyBinding(InputType.WALK_LEFT));

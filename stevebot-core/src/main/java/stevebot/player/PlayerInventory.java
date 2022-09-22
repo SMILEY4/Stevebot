@@ -6,13 +6,13 @@ import stevebot.data.blocks.BlockWrapper;
 import stevebot.data.items.wrapper.ItemBlockWrapper;
 import stevebot.data.items.wrapper.ItemStackWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
-import stevebot.minecraft.NewMinecraftAdapter;
+import stevebot.minecraft.MinecraftAdapter;
 
 public class PlayerInventory {
 
-    private final NewMinecraftAdapter minecraftAdapter;
+    private final MinecraftAdapter minecraftAdapter;
 
-    public PlayerInventory(final NewMinecraftAdapter minecraftAdapter) {
+    public PlayerInventory(final MinecraftAdapter minecraftAdapter) {
         this.minecraftAdapter = minecraftAdapter;
     }
 

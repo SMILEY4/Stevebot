@@ -4,7 +4,7 @@ import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.items.wrapper.ItemStackWrapper;
 import stevebot.data.player.PlayerSnapshot;
 import stevebot.math.vectors.vec3.Vector3d;
-import stevebot.minecraft.NewMinecraftAdapter;
+import stevebot.minecraft.MinecraftAdapter;
 
 public class PlayerUtils {
 
@@ -23,10 +23,10 @@ public class PlayerUtils {
 
     private static PlayerSnapshot activeSnapshot;
 
-    private static NewMinecraftAdapter minecraftAdapter;
+    private static MinecraftAdapter minecraftAdapter;
 
     public static void initialize(
-            NewMinecraftAdapter minecraftAdapter,
+            MinecraftAdapter minecraftAdapter,
             PlayerInput playerInput,
             PlayerCamera playerCamera,
             PlayerMovement playerMovement,

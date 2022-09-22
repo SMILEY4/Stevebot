@@ -1,4 +1,4 @@
-package stevebot.minecraft;
+package stevebot.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,37 +33,21 @@ import stevebot.data.items.wrapper.ItemStackWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.math.vectors.vec2.Vector2d;
 import stevebot.math.vectors.vec3.Vector3d;
+import stevebot.minecraft.InputBinding;
+import stevebot.minecraft.MinecraftAdapter;
+import stevebot.minecraft.MouseChangeInterceptor;
 import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.player.PlayerInputConfig;
 
-public class NewMinecraftAdapterImpl implements NewMinecraftAdapter {
+public class MinecraftAdapterImpl implements MinecraftAdapter {
 
-    class McInputBinding implements PlayerInputConfig.InputBinding {
-
-        private final KeyBinding binding;
-
-        public McInputBinding(final KeyBinding binding) {
-            this.binding = binding;
-        }
-
-        @Override
-        public int getKeyCode() {
-            return binding.getKeyCode();
-        }
-
-        @Override
-        public boolean isDown() {
-            return binding.isKeyDown();
-        }
-
-    }
 
     private MouseChangeInterceptor mouseChangeInterceptor = null;
 
     private final Map<String, Item> items = new HashMap<>();
     private final Map<String, Block> blocks = new HashMap<>();
 
-    public NewMinecraftAdapterImpl() {
+    public MinecraftAdapterImpl() {
         getMinecraft().mouseHelper = new MouseHelper() {
             @Override
             public void mouseXYChange() {
@@ -345,7 +329,7 @@ public class NewMinecraftAdapterImpl implements NewMinecraftAdapter {
     }
 
     @Override
-    public PlayerInputConfig.InputBinding getKeyBinding(final PlayerInputConfig.InputType inputType) {
+    public InputBinding getKeyBinding(final PlayerInputConfig.InputType inputType) {
         GameSettings settings = getGameSettings();
         switch (inputType) {
             case WALK_FORWARD:
@@ -370,6 +354,11 @@ public class NewMinecraftAdapterImpl implements NewMinecraftAdapter {
                 return new McInputBinding(settings.keyBindUseItem);
         }
         return null;
+    }
+
+    @Override
+    public boolean isPlayerCreativeMode() {
+        return getMinecraft().player.isCreative();
     }
 
     /**

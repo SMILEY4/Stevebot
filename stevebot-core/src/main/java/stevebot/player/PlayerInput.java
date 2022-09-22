@@ -1,16 +1,16 @@
 package stevebot.player;
 
-import stevebot.minecraft.NewMinecraftAdapter;
+import stevebot.minecraft.MinecraftAdapter;
 
 public class PlayerInput {
 
-    private final NewMinecraftAdapter minecraftAdapter;
+    private final MinecraftAdapter minecraftAdapter;
     private PlayerInputConfig inputConfig = null;
     private boolean muteUserInput = false;
     private boolean isHoldingJump = false;
     private boolean isHoldingSneak = false;
 
-    public PlayerInput(final NewMinecraftAdapter minecraftAdapter) {
+    public PlayerInput(final MinecraftAdapter minecraftAdapter) {
         this.minecraftAdapter = minecraftAdapter;
         reloadConfig();
     }
@@ -299,6 +299,5 @@ public class PlayerInput {
         setBreakBlock(false);
         setInteract(false);
     }
-
 
 }

@@ -1,12 +1,12 @@
 package stevebot.data.blocks;
 
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.minecraft.NewMinecraftAdapter;
+import stevebot.minecraft.MinecraftAdapter;
 
 
 public class BlockCache {
 
-    private final NewMinecraftAdapter minecraftAdapter;
+    private final MinecraftAdapter minecraftAdapter;
     private final ChunkCache chunkCache = new ChunkCache();
     private final BlockProvider blockProvider;
 
@@ -15,7 +15,7 @@ public class BlockCache {
      * @param minecraftAdapter the adapter for accessing minecraft
      * @param blockProvider    the {@link BlockProvider} used by this cache
      */
-    public BlockCache(NewMinecraftAdapter minecraftAdapter, BlockProvider blockProvider) {
+    public BlockCache(MinecraftAdapter minecraftAdapter, BlockProvider blockProvider) {
         this.minecraftAdapter = minecraftAdapter;
         this.blockProvider = blockProvider;
     }

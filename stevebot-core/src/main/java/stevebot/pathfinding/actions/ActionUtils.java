@@ -7,7 +7,7 @@ import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.ItemUtils;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.math.vectors.vec3.Vector3d;
-import stevebot.minecraft.NewMinecraftAdapter;
+import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Direction;
 import stevebot.player.PlayerUtils;
 
@@ -16,10 +16,10 @@ public class ActionUtils {
 
     private static final FastBlockPos fastPos1 = new FastBlockPos();
     private static final FastBlockPos fastPos2 = new FastBlockPos();
-    private static NewMinecraftAdapter minecraftAdapter;
+    private static MinecraftAdapter minecraftAdapter;
 
 
-    public static void initMinecraftAdapter(NewMinecraftAdapter minecraftAdapter) {
+    public static void initMinecraftAdapter(MinecraftAdapter minecraftAdapter) {
         ActionUtils.minecraftAdapter = minecraftAdapter;
     }
 

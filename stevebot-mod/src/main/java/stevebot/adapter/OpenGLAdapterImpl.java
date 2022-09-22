@@ -1,4 +1,4 @@
-package stevebot.minecraft;
+package stevebot.adapter;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 import stevebot.math.vectors.vec3.Vector3d;
+import stevebot.minecraft.OpenGLAdapter;
 
 public class OpenGLAdapterImpl implements OpenGLAdapter {
 

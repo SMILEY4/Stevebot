@@ -5,7 +5,7 @@ import stevebot.math.MathUtils;
 import stevebot.math.vectors.vec2.Vector2d;
 import stevebot.math.vectors.vec2.Vector2f;
 import stevebot.math.vectors.vec3.Vector3d;
-import stevebot.minecraft.NewMinecraftAdapter;
+import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Direction;
 
 public class PlayerCamera {
@@ -24,10 +24,10 @@ public class PlayerCamera {
     private boolean isFreelook = false;
     private CameraState preForcedState = state;
     private final Vector2f lastFreeView = new Vector2f();
-    private final NewMinecraftAdapter minecraftAdapter;
+    private final MinecraftAdapter minecraftAdapter;
 
 
-    public PlayerCamera(NewMinecraftAdapter minecraftAdapter) {
+    public PlayerCamera(MinecraftAdapter minecraftAdapter) {
         this.minecraftAdapter = minecraftAdapter;
         this.minecraftAdapter.setMouseChangeInterceptor(() -> getState() != CameraState.LOCKED);
     }

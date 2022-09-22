@@ -9,6 +9,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import stevebot.adapter.MinecraftAdapterImpl;
+import stevebot.adapter.OpenGLAdapterImpl;
 import stevebot.commands.CommandSystem;
 import stevebot.commands.StevebotCommands;
 import stevebot.data.blocks.BlockLibrary;
@@ -22,11 +24,7 @@ import stevebot.events.EventManagerImpl;
 import stevebot.events.ModEventProducer;
 import stevebot.events.PostInitEvent;
 import stevebot.minecraft.MinecraftAdapter;
-import stevebot.minecraft.MinecraftAdapterImpl;
-import stevebot.minecraft.NewMinecraftAdapter;
-import stevebot.minecraft.NewMinecraftAdapterImpl;
 import stevebot.minecraft.OpenGLAdapter;
-import stevebot.minecraft.OpenGLAdapterImpl;
 import stevebot.misc.Config;
 import stevebot.pathfinding.PathHandler;
 import stevebot.pathfinding.actions.ActionUtils;
@@ -188,10 +186,9 @@ public class Stevebot {
 
         // minecraft
         MinecraftAdapter minecraftAdapter = new MinecraftAdapterImpl();
-        NewMinecraftAdapter newMinecraftAdapter = new NewMinecraftAdapterImpl();
         OpenGLAdapter openGLAdapter = new OpenGLAdapterImpl();
 
-        ActionUtils.initMinecraftAdapter(newMinecraftAdapter);
+        ActionUtils.initMinecraftAdapter(minecraftAdapter);
 
         // events
         eventManager = new EventManagerImpl();
@@ -208,37 +205,37 @@ public class Stevebot {
 
 
         // block library
-        blockLibrary = new BlockLibrary(newMinecraftAdapter);
+        blockLibrary = new BlockLibrary(minecraftAdapter);
 
         // block provider
-        blockProvider = new BlockProvider(newMinecraftAdapter, blockLibrary);
+        blockProvider = new BlockProvider(minecraftAdapter, blockLibrary);
 
         // block utils
-        BlockUtils.initialize(newMinecraftAdapter, minecraftAdapter, blockProvider, blockLibrary);
+        BlockUtils.initialize(minecraftAdapter, blockProvider, blockLibrary);
 
         // item library
-        itemLibrary = new ItemLibrary(newMinecraftAdapter);
+        itemLibrary = new ItemLibrary(minecraftAdapter);
 
         // item utils
-        ItemUtils.initialize(newMinecraftAdapter, itemLibrary);
+        ItemUtils.initialize(minecraftAdapter, itemLibrary);
 
         // renderer
         renderer = new Renderer(openGLAdapter, blockProvider);
 
         // player camera
-        playerCamera = new PlayerCamera(newMinecraftAdapter);
+        playerCamera = new PlayerCamera(minecraftAdapter);
 
         // player input
-        playerInput = new PlayerInput(newMinecraftAdapter);
+        playerInput = new PlayerInput(minecraftAdapter);
 
         // player movement
         playerMovement = new PlayerMovement(playerInput, playerCamera);
 
         // player inventory
-        playerInventory = new PlayerInventory(newMinecraftAdapter);
+        playerInventory = new PlayerInventory(minecraftAdapter);
 
         // player utils
-        PlayerUtils.initialize(newMinecraftAdapter, playerInput, playerCamera, playerMovement, playerInventory);
+        PlayerUtils.initialize(minecraftAdapter, playerInput, playerCamera, playerMovement, playerInventory);
 
         // path handler
         pathHandler = new PathHandler(minecraftAdapter, renderer);

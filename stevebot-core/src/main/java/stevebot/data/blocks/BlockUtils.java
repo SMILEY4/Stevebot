@@ -4,7 +4,6 @@ import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.minecraft.MinecraftAdapter;
-import stevebot.minecraft.NewMinecraftAdapter;
 import stevebot.misc.Direction;
 
 public class BlockUtils {
@@ -44,16 +43,14 @@ public class BlockUtils {
 
 
     private static MinecraftAdapter minecraftAdapter;
-    private static NewMinecraftAdapter newMinecraftAdapter;
     private static BlockProvider blockProvider;
     private static BlockLibrary blockLibrary;
 
 
-    public static void initialize(NewMinecraftAdapter newMinecraftAdapter, MinecraftAdapter minecraftAdapter, BlockProvider blockProvider, BlockLibrary blockLibrary) {
-        BlockUtils.minecraftAdapter = minecraftAdapter;
+    public static void initialize(MinecraftAdapter minecraftAdapter, BlockProvider blockProvider, BlockLibrary blockLibrary) {
         BlockUtils.blockProvider = blockProvider;
         BlockUtils.blockLibrary = blockLibrary;
-        BlockUtils.newMinecraftAdapter = newMinecraftAdapter;
+        BlockUtils.minecraftAdapter = minecraftAdapter;
     }
 
 
@@ -210,7 +207,7 @@ public class BlockUtils {
                 || isDoorLike(block)) {
             return false;
         } else {
-            return newMinecraftAdapter.isBlockPassable(block, pos);
+            return minecraftAdapter.isBlockPassable(block, pos);
         }
     }
 
@@ -370,7 +367,7 @@ public class BlockUtils {
             return false;
         }
 
-        final String facing = newMinecraftAdapter.getBlockFacing(position);
+        final String facing = minecraftAdapter.getBlockFacing(position);
 
         boolean facingDoor = false;
         if ("x".equalsIgnoreCase(facing)) {
@@ -384,7 +381,7 @@ public class BlockUtils {
         }
 
         if (isFenceGate(position)) {
-            return facingDoor && newMinecraftAdapter.isDoorOpen(position);
+            return facingDoor && minecraftAdapter.isDoorOpen(position);
         } else {
             return !facingDoor;
         }

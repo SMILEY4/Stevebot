@@ -6,7 +6,7 @@ import java.util.List;
 import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.math.MathUtils;
-import stevebot.minecraft.NewMinecraftAdapter;
+import stevebot.minecraft.MinecraftAdapter;
 
 public class BlockLibrary {
 
@@ -14,10 +14,10 @@ public class BlockLibrary {
     public static final int ID_UNLOADED_BOCK = -1;
     public static final int ID_INVALID_BLOCK = -2;
 
-    private final NewMinecraftAdapter minecraftAdapter;
+    private final MinecraftAdapter minecraftAdapter;
     private BlockWrapper[] blocks;
 
-    public BlockLibrary(final NewMinecraftAdapter minecraftAdapter) {
+    public BlockLibrary(final MinecraftAdapter minecraftAdapter) {
         this.minecraftAdapter = minecraftAdapter;
     }
 
