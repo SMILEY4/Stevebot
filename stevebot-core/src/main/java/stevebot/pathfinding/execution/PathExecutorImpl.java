@@ -12,7 +12,7 @@ import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.path.EmptyPath;
 import stevebot.pathfinding.path.Path;
 import stevebot.pathfinding.path.PathFactory;
-import stevebot.player.PlayerCameraImpl;
+import stevebot.player.PlayerCamera;
 import stevebot.player.PlayerUtils;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
@@ -111,7 +111,7 @@ public class PathExecutorImpl implements TransitionListener<ExecutionState, Exec
     @Override
     public void startFollowing(boolean enableFreelook) {
         if (enableFreelook) {
-            PlayerUtils.getCamera().setState(PlayerCameraImpl.CameraState.FREELOOK);
+            PlayerUtils.getCamera().setState(PlayerCamera.CameraState.FREELOOK);
         }
         follow = true;
     }

@@ -14,7 +14,7 @@ import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.goal.XZGoal;
 import stevebot.pathfinding.goal.YGoal;
 import stevebot.pathfinding.path.PathRenderable;
-import stevebot.player.PlayerCameraImpl;
+import stevebot.player.PlayerCamera;
 import stevebot.player.PlayerUtils;
 
 public class StevebotCommands {
@@ -161,11 +161,11 @@ public class StevebotCommands {
                 "freelook",
                 "/freelook\n    Toggles freelook-mode.",
                 (templateId, parameters) -> {
-                    if (PlayerUtils.getCamera().getState() == PlayerCameraImpl.CameraState.FREELOOK) {
-                        PlayerUtils.getCamera().setState(PlayerCameraImpl.CameraState.DEFAULT);
+                    if (PlayerUtils.getCamera().getState() == PlayerCamera.CameraState.FREELOOK) {
+                        PlayerUtils.getCamera().setState(PlayerCamera.CameraState.DEFAULT);
                         PlayerUtils.sendMessage("Disable Freelook.");
                     } else {
-                        PlayerUtils.getCamera().setState(PlayerCameraImpl.CameraState.FREELOOK);
+                        PlayerUtils.getCamera().setState(PlayerCamera.CameraState.FREELOOK);
                         PlayerUtils.sendMessage("Enable Freelook.");
                     }
                 });

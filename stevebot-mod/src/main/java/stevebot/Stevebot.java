@@ -1,38 +1,38 @@
 package stevebot;
 
 
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import stevebot.commands.CommandSystem;
 import stevebot.commands.StevebotCommands;
 import stevebot.data.blocks.BlockLibrary;
-import stevebot.data.blocks.BlockLibraryImpl;
 import stevebot.data.blocks.BlockProvider;
-import stevebot.data.blocks.BlockProviderImpl;
 import stevebot.data.blocks.BlockUtils;
 import stevebot.data.items.ItemLibrary;
-import stevebot.data.items.ItemLibraryImpl;
 import stevebot.data.items.ItemUtils;
+import stevebot.events.EventListener;
 import stevebot.events.EventManager;
 import stevebot.events.EventManagerImpl;
 import stevebot.events.ModEventProducer;
+import stevebot.events.PostInitEvent;
 import stevebot.minecraft.MinecraftAdapter;
 import stevebot.minecraft.MinecraftAdapterImpl;
 import stevebot.misc.Config;
 import stevebot.pathfinding.PathHandler;
 import stevebot.player.PlayerCamera;
-import stevebot.player.PlayerCameraImpl;
 import stevebot.player.PlayerInput;
-import stevebot.player.PlayerInputImpl;
 import stevebot.player.PlayerInventory;
 import stevebot.player.PlayerInventoryImpl;
 import stevebot.player.PlayerMovement;
 import stevebot.player.PlayerMovementImpl;
 import stevebot.player.PlayerUtils;
 import stevebot.rendering.Renderer;
-import stevebot.rendering.RendererImpl;
 
 @Mod(
         modid = Config.MODID,
@@ -54,11 +54,117 @@ public class Stevebot {
     private static Renderer renderer;
     private static PathHandler pathHandler;
 
+    private final EventListener<PostInitEvent> listenerPostInit = new EventListener<PostInitEvent>() {
+        @Override
+        public Class<PostInitEvent> getEventClass() {
+            return PostInitEvent.class;
+        }
+
+        @Override
+        public void onEvent(PostInitEvent event) {
+            blockLibrary.onEventInitialize();
+            itemLibrary.onEventInitialize();
+        }
+    };
+
+    private final EventListener<BlockEvent.BreakEvent> listenerBreakBlock = new EventListener<BlockEvent.BreakEvent>() {
+        @Override
+        public Class<BlockEvent.BreakEvent> getEventClass() {
+            return BlockEvent.BreakEvent.class;
+        }
+
+
+        @Override
+        public void onEvent(BlockEvent.BreakEvent event) {
+            blockProvider.getBlockCache().onEventBlockBreak(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
+        }
+    };
+
+    private final EventListener<BlockEvent.PlaceEvent> listenerPlaceBlock = new EventListener<BlockEvent.PlaceEvent>() {
+        @Override
+        public Class<BlockEvent.PlaceEvent> getEventClass() {
+            return BlockEvent.PlaceEvent.class;
+        }
+
+
+        @Override
+        public void onEvent(BlockEvent.PlaceEvent event) {
+            blockProvider.getBlockCache().onEventBlockPlace(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
+        }
+    };
+
+    private final EventListener<TickEvent.RenderTickEvent> listenerRenderTick = new EventListener<TickEvent.RenderTickEvent>() {
+        @Override
+        public Class<TickEvent.RenderTickEvent> getEventClass() {
+            return TickEvent.RenderTickEvent.class;
+        }
+
+        @Override
+        public void onEvent(TickEvent.RenderTickEvent event) {
+            playerCamera.onRenderTickEvent(event.phase == TickEvent.Phase.START);
+        }
+    };
+
+    private final EventListener<RenderWorldLastEvent> listenerRenderWorld = new EventListener<RenderWorldLastEvent>() {
+        @Override
+        public Class<RenderWorldLastEvent> getEventClass() {
+            return RenderWorldLastEvent.class;
+        }
+
+        @Override
+        public void onEvent(RenderWorldLastEvent event) {
+            renderer.onEventRender();
+        }
+    };
+
+    private final EventListener<TickEvent.PlayerTickEvent> listenerPlayerTick = new EventListener<TickEvent.PlayerTickEvent>() {
+        @Override
+        public Class<TickEvent.PlayerTickEvent> getEventClass() {
+            return TickEvent.PlayerTickEvent.class;
+        }
+
+
+        @Override
+        public void onEvent(TickEvent.PlayerTickEvent event) {
+            if (event.phase == TickEvent.Phase.START) {
+               playerInput.onEventPlayerTick();
+            }
+        }
+    };
+
+    private final EventListener<ConfigChangedEvent.PostConfigChangedEvent> listenerConfigChanged = new EventListener<ConfigChangedEvent.PostConfigChangedEvent>() {
+        @Override
+        public Class<ConfigChangedEvent.PostConfigChangedEvent> getEventClass() {
+            return ConfigChangedEvent.PostConfigChangedEvent.class;
+        }
+
+
+        @Override
+        public void onEvent(ConfigChangedEvent.PostConfigChangedEvent event) {
+            playerInput.onEventConfigChanged();
+        }
+    };
+
+
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         setup();
         Stevebot.eventProducer.onPreInit();
+    }
+
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        eventProducer.onInit();
+    }
+
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        eventProducer.onPostInit();
+        itemLibrary.insertBlocks(blockLibrary.getAllBlocks());
+        blockLibrary.insertItems(itemLibrary.getAllItems());
     }
 
 
@@ -68,70 +174,56 @@ public class Stevebot {
         MinecraftAdapter.initialize(new MinecraftAdapterImpl());
 
         // events
-        Stevebot.eventManager = new EventManagerImpl();
-        Stevebot.eventProducer = new ModEventProducer(Stevebot.eventManager);
+        eventManager = new EventManagerImpl();
+        eventProducer = new ModEventProducer(eventManager);
+
+        eventManager.addListener(listenerPostInit);
+        eventManager.addListener(listenerBreakBlock);
+        eventManager.addListener(listenerPlaceBlock);
+        eventManager.addListener(listenerRenderTick);
+        eventManager.addListener(listenerRenderWorld);
+        eventManager.addListener(listenerPlayerTick);
+        eventManager.addListener(listenerConfigChanged);
 
         // block library
-        Stevebot.blockLibrary = new BlockLibraryImpl();
-        eventManager.addListener(Stevebot.blockLibrary.getListener());
+        blockLibrary = new BlockLibrary();
 
         // block provider
-        Stevebot.blockProvider = new BlockProviderImpl(Stevebot.blockLibrary);
-        eventManager.addListener(Stevebot.blockProvider.getBlockCache().getListenerBreakBlock());
-        eventManager.addListener(Stevebot.blockProvider.getBlockCache().getListenerPlaceBlock());
+        blockProvider = new BlockProvider(blockLibrary);
 
         // block utils
         BlockUtils.initialize(blockProvider, blockLibrary);
 
         // item library
-        Stevebot.itemLibrary = new ItemLibraryImpl();
-        eventManager.addListener(Stevebot.itemLibrary.getListener());
+        itemLibrary = new ItemLibrary();
 
         // item utils
-        ItemUtils.initialize(Stevebot.itemLibrary);
+        ItemUtils.initialize(itemLibrary);
 
         // renderer
-        Stevebot.renderer = new RendererImpl(blockProvider);
-        eventManager.addListener(Stevebot.renderer.getListener());
+        renderer = new Renderer(blockProvider);
 
         // player camera
-        Stevebot.playerCamera = new PlayerCameraImpl();
-        eventManager.addListener(Stevebot.playerCamera.getListener());
+        playerCamera = new PlayerCamera();
 
         // player input
-        Stevebot.playerInput = new PlayerInputImpl();
-        eventManager.addListener(Stevebot.playerInput.getPlayerTickListener());
-        eventManager.addListener(Stevebot.playerInput.getConfigChangedListener());
+        playerInput = new PlayerInput();
 
         // player movement
-        Stevebot.playerMovement = new PlayerMovementImpl(Stevebot.playerInput, Stevebot.playerCamera);
+        playerMovement = new PlayerMovementImpl(playerInput, playerCamera);
 
         // player inventory
-        Stevebot.playerInventory = new PlayerInventoryImpl();
+        playerInventory = new PlayerInventoryImpl();
 
         // player utils
         PlayerUtils.initialize(playerInput, playerCamera, playerMovement, playerInventory);
 
         // path handler
-        Stevebot.pathHandler = new PathHandler(Stevebot.eventManager, Stevebot.renderer);
+        pathHandler = new PathHandler(eventManager, renderer);
 
         // commands
-        StevebotCommands.initialize(Stevebot.pathHandler);
+        StevebotCommands.initialize(pathHandler);
         CommandSystem.registerCommands();
-    }
-
-
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
-        Stevebot.eventProducer.onInit();
-    }
-
-
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        Stevebot.eventProducer.onPostInit();
-        Stevebot.itemLibrary.insertBlocks(Stevebot.blockLibrary.getAllBlocks());
-        Stevebot.blockLibrary.insertItems(Stevebot.itemLibrary.getAllItems());
     }
 
 }

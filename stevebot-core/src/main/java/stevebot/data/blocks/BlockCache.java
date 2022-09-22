@@ -1,44 +1,15 @@
 package stevebot.data.blocks;
 
 import net.minecraft.block.Block;
-import net.minecraftforge.event.world.BlockEvent;
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.events.EventListener;
 import stevebot.minecraft.MinecraftAdapter;
 
 
 public class BlockCache {
 
-
     private final ChunkCache chunkCache = new ChunkCache();
     private final BlockLibrary library;
     private final BlockProvider blockProvider;
-
-    private final EventListener<BlockEvent.BreakEvent> listenerBreakBlock = new EventListener<BlockEvent.BreakEvent>() {
-        @Override
-        public Class<BlockEvent.BreakEvent> getEventClass() {
-            return BlockEvent.BreakEvent.class;
-        }
-
-
-        @Override
-        public void onEvent(BlockEvent.BreakEvent event) {
-            invalidateBlock(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
-        }
-    };
-
-    private final EventListener<BlockEvent.PlaceEvent> listenerPlaceBlock = new EventListener<BlockEvent.PlaceEvent>() {
-        @Override
-        public Class<BlockEvent.PlaceEvent> getEventClass() {
-            return BlockEvent.PlaceEvent.class;
-        }
-
-
-        @Override
-        public void onEvent(BlockEvent.PlaceEvent event) {
-            invalidateBlock(event.getPos().getX(), event.getPos().getY(), event.getPos().getZ());
-        }
-    };
 
 
     /**
@@ -52,18 +23,26 @@ public class BlockCache {
 
 
     /**
-     * @return the listener of this cache that listens to {@link BlockEvent.BreakEvent}-events
+     * Handles a broken block
+     *
+     * @param posX the x-position of the broken block
+     * @param posY the y-position of the broken block
+     * @param posZ the z-position of the broken block
      */
-    public EventListener<BlockEvent.BreakEvent> getListenerBreakBlock() {
-        return listenerBreakBlock;
+    public void onEventBlockBreak(int posX, int posY, int posZ) {
+        invalidateBlock(posX, posY, posZ);
     }
 
 
     /**
-     * @return the listener of this cache that listens to {@link BlockEvent.PlaceEvent}-events
+     * Handles a blaced block
+     *
+     * @param posX the x-position of the broken block
+     * @param posY the y-position of the broken block
+     * @param posZ the z-position of the broken block
      */
-    public EventListener<BlockEvent.PlaceEvent> getListenerPlaceBlock() {
-        return listenerPlaceBlock;
+    public void onEventBlockPlace(int posX, int posY, int posZ) {
+        invalidateBlock(posX, posY, posZ);
     }
 
 
@@ -178,6 +157,5 @@ public class BlockCache {
     public ChunkCache getChunkCache() {
         return this.chunkCache;
     }
-
 
 }

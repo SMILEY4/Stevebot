@@ -1,163 +1,262 @@
 package stevebot.player;
 
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
-import stevebot.events.EventListener;
+import net.minecraft.client.settings.KeyBinding;
 
-public interface PlayerInput {
+public class PlayerInput {
+
+    private PlayerInputConfig inputConfig = null;
+    private boolean muteUserInput = false;
+    private boolean isHoldingJump = false;
+    private boolean isHoldingSneak = false;
+
+
+    public void onEventPlayerTick() {
+        if (muteUserInput) {
+            stopAll();
+        }
+    }
+
+    public void onEventConfigChanged() {
+        inputConfig = new PlayerInputConfig();
+    }
+
+    /**
+     * @param mute set to true to ignore any input not coming from this {@link PlayerInput}.
+     */
+    public void setMuteUserInput(boolean mute) {
+        this.muteUserInput = mute;
+    }
 
 
     /**
-     * The given listener listens for a {@link TickEvent.PlayerTickEvent}.
-     *
-     * @return the {@link EventListener} of this {@link PlayerInput} for the {@link TickEvent.PlayerTickEvent}.
+     * @return true, if any input not coming from this {@link PlayerInput} is ignored.
      */
-    EventListener<TickEvent.PlayerTickEvent> getPlayerTickListener();
+    public boolean isUserMuted() {
+        return this.muteUserInput;
+    }
 
-    /**
-     * The given listener listens for a {@link ConfigChangedEvent.PostConfigChangedEvent}.
-     *
-     * @return the {@link EventListener} of this {@link PlayerInput} for the {@link ConfigChangedEvent.PostConfigChangedEvent}.
-     */
-    EventListener<ConfigChangedEvent.PostConfigChangedEvent> getConfigChangedListener();
-
-    /**
-     * @param mute set to true to ignore any input not coming from this {@link PlayerInputImpl}.
-     */
-    void setMuteUserInput(boolean mute);
-
-    /**
-     * @return true, if any input not coming from this {@link PlayerInputImpl} is ignored.
-     */
-    boolean isUserMuted();
 
     /**
      * Move forward until stopped (same as pressing 'w')
      */
-    void setMoveForward();
+    public void setMoveForward() {
+        setMoveForward(true);
+    }
+
 
     /**
      * @param move true to move forward (same as pressing 'w'), false to stop moving forward.
      */
-    void setMoveForward(boolean move);
+    public void setMoveForward(boolean move) {
+        setInput(PlayerInputConfig.InputType.WALK_FORWARD, move);
+    }
+
 
     /**
      * Move backward until stopped (same as pressing 's').
      */
-    void setMoveBackward();
+    public void setMoveBackward() {
+        setMoveBackward(true);
+    }
+
 
     /**
      * @param move true to move backward (same as pressing 's'), false to stop moving backward.
      */
-    void setMoveBackward(boolean move);
+    public void setMoveBackward(boolean move) {
+        setInput(PlayerInputConfig.InputType.WALK_BACKWARD, move);
+    }
+
 
     /**
      * Move left until stopped (same as pressing 'a').
      */
-    void setMoveLeft();
+    public void setMoveLeft() {
+        setMoveLeft(true);
+    }
+
 
     /**
-     * @param move true to move left same as pressing 'a'), false to stop moving backward.
+     * @param move true to move left same as pressing 'a', false to stop moving backward.
      */
-    void setMoveLeft(boolean move);
+    public void setMoveLeft(boolean move) {
+        setInput(PlayerInputConfig.InputType.WALK_LEFT, move);
+    }
+
 
     /**
      * Move right until stopped (same as pressing 'd').
      */
-    void setMoveRight();
+    public void setMoveRight() {
+        setMoveRight(true);
+    }
+
 
     /**
      * @param move true to move right same as pressing 'd'), false to stop moving backward.
      */
-    void setMoveRight(boolean move);
+    public void setMoveRight(boolean move) {
+        setInput(PlayerInputConfig.InputType.WALK_RIGHT, move);
+    }
+
 
     /**
      * Jump until stopped (same as pressing 'space').
      */
-    void setJump();
+    public void setJump() {
+        setJump(true, false);
+    }
+
 
     /**
      * @param jump       true to jump same as pressing 'space'), false to stop jumping.
      * @param allowInAir whether or not to jump when the player is already in the air.
      */
-    void setJump(boolean jump, boolean allowInAir);
+    public void setJump(boolean jump, boolean allowInAir) {
+        if (jump) {
+            if (PlayerUtils.getPlayer() == null) {
+                return;
+            }
+            if (PlayerUtils.getPlayer().onGround) {
+                setInput(PlayerInputConfig.InputType.JUMP, true);
+            } else {
+                if (allowInAir) {
+                    setInput(PlayerInputConfig.InputType.JUMP, true);
+                }
+            }
+        } else {
+            setInput(PlayerInputConfig.InputType.JUMP, false);
+        }
+    }
+
 
     /**
-     * Start to hold down jump. Until {@link PlayerInputImpl#releaseJump()} is called, the jump button will be held down.
-     * {@link PlayerInputImpl#stopAll()} will not reset affect the jump-button anymore
+     * Start to hold down jump. Until {@link PlayerInput#releaseJump()} is called, the jump button will be held down.
+     * {@link PlayerInput#stopAll()} will not reset affect the jump-button anymore
      */
-    void holdJump();
+    public void holdJump() {
+        isHoldingJump = true;
+        setJump(true, true);
+    }
+
 
     /**
-     * Stop holding down the jump button. The "jump" will end and {@link PlayerInputImpl#stopAll()} has an effect again.
+     * Stop holding down the jump button. The "jump" will end and {@link PlayerInput#stopAll()} has an effect again.
      */
-    void releaseJump();
+    public void releaseJump() {
+        isHoldingJump = false;
+        setJump(false, false);
+    }
+
 
     /**
      * @return whether the jump button is continuously held down.
      */
-    boolean isHoldingJump();
+    public boolean isHoldingJump() {
+        return isHoldingJump;
+    }
+
 
     /**
      * Sprint until stopped.
      */
-    void setSprint();
+    public void setSprint() {
+        setSprint(true);
+    }
+
 
     /**
      * @param sprint true to sprint, false to stop sprinting.
      */
-    void setSprint(boolean sprint);
+    public void setSprint(boolean sprint) {
+        if (PlayerUtils.getPlayer() != null) {
+            PlayerUtils.getPlayer().setSprinting(sprint);
+        }
+    }
+
 
     /**
-     * Start to hold down sneak. Until {@link PlayerInputImpl#releaseSneak()} is called, the sneak button will be held down.
-     * {@link PlayerInputImpl#stopAll()} will not reset affect the sneak-button anymore
+     * Start to hold down sneak. Until {@link PlayerInput#releaseSneak()} is called, the sneak button will be held down.
+     * {@link PlayerInput#stopAll()} will not reset affect the sneak-button anymore
      */
-    void holdSneak();
+    public void holdSneak() {
+        isHoldingSneak = true;
+        setSneak(true);
+    }
+
 
     /**
-     * Stop holding down the sneak button. The player will stop sneaking {@link PlayerInputImpl#stopAll()} has an effect again.
+     * Stop holding down the sneak button. The player will stop sneaking {@link PlayerInput#stopAll()} has an effect again.
      */
-    void releaseSneak();
+    public void releaseSneak() {
+        isHoldingSneak = false;
+        setSneak(false);
+    }
+
 
     /**
      * Sneak until stopped.
      */
-    void setSneak();
+    public void setSneak() {
+        setSneak(true);
+    }
+
 
     /**
      * @param sneak true to sneak, false to stop sneaking.
      */
-    void setSneak(boolean sneak);
+    public void setSneak(boolean sneak) {
+        setInput(PlayerInputConfig.InputType.SNEAK, sneak);
+    }
+
 
     /**
      * Place blocks until stopped (same as pressing 'right mouse').
      */
-    void setPlaceBlock();
+    public void setPlaceBlock() {
+        setPlaceBlock(true);
+    }
+
 
     /**
      * @param placeBlock true to place blocks (same as pressing 'right mouse'), false to stop placing blocks.
      */
-    void setPlaceBlock(boolean placeBlock);
+    public void setPlaceBlock(boolean placeBlock) {
+        setInput(PlayerInputConfig.InputType.PLACE_BLOCK, placeBlock);
+    }
+
 
     /**
      * Break blocks until stopped (same as pressing 'left mouse').
      */
-    void setBreakBlock();
+    public void setBreakBlock() {
+        setBreakBlock(true);
+    }
+
 
     /**
      * @param breakBlock true to break blocks (same as pressing 'left mouse'), false to stop break blocks.
      */
-    void setBreakBlock(boolean breakBlock);
+    public void setBreakBlock(boolean breakBlock) {
+        setInput(PlayerInputConfig.InputType.BREAK_BLOCK, breakBlock);
+    }
+
 
     /**
      * Interact with blocks/entities/... until stopped (same as pressing 'right mouse').
      */
-    void setInteract();
+    public void setInteract() {
+        setInteract(true);
+    }
+
 
     /**
      * @param interact true to interact with blocks/entities/... (same as pressing 'left mouse'), false to stop interacting.
      */
-    void setInteract(boolean interact);
+    public void setInteract(boolean interact) {
+        setInput(PlayerInputConfig.InputType.INTERACT, interact);
+    }
+
 
     /**
      * Set given input down to the given state.
@@ -165,12 +264,37 @@ public interface PlayerInput {
      * @param type the {@link PlayerInputConfig.InputType}
      * @param down whether or not the corresponding button is pressed down or not.
      */
-    void setInput(PlayerInputConfig.InputType type, boolean down);
+    public void setInput(PlayerInputConfig.InputType type, boolean down) {
+        KeyBinding binding = inputConfig.getBinding(type);
+        if (binding.isKeyDown() == down) {
+            return;
+        }
+        KeyBinding.setKeyBindState(binding.getKeyCode(), down);
+        if (down) {
+            KeyBinding.onTick(binding.getKeyCode());
+        }
+    }
+
 
     /**
      * Stops all inputs.
      */
-    void stopAll();
+    public void stopAll() {
+        setMoveForward(false);
+        setMoveBackward(false);
+        setMoveLeft(false);
+        setMoveRight(false);
+        if (!isHoldingJump()) {
+            setJump(false, true);
+        }
+        setSprint(false);
+        if (!isHoldingJump()) {
+            setSneak(false);
+        }
+        setPlaceBlock(false);
+        setBreakBlock(false);
+        setInteract(false);
+    }
 
 
 }

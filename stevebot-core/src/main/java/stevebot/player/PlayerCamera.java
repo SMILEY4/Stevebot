@@ -1,38 +1,161 @@
 package stevebot.player;
 
-import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.MouseHelper;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import org.lwjgl.input.Mouse;
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.events.EventListener;
+import stevebot.math.vectors.vec2.Vector2d;
+import stevebot.math.vectors.vec2.Vector2f;
 import stevebot.math.vectors.vec3.Vector3d;
+import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.Direction;
 
-public interface PlayerCamera {
+public class PlayerCamera {
 
 
-    enum CameraState {
+    public enum CameraState {
         LOCKED,
         FREELOOK,
         DEFAULT
     }
 
+
+
+
+    private CameraState state = CameraState.DEFAULT;
+    private boolean isFreelook = false;
+    private CameraState preForcedState = state;
+    private final Vector2f lastFreeView = new Vector2f();
+
+
+    public PlayerCamera() {
+        MinecraftAdapter.get().setMouseHelper(new MouseHelper() {
+            @Override
+            public void mouseXYChange() {
+                if (getState() != CameraState.LOCKED) {
+                    super.mouseXYChange();
+                }
+            }
+        });
+    }
+
     /**
-     * The given listener listens for a {@link TickEvent.RenderTickEvent}.
+     * Updates this camera
      *
-     * @return the {@link EventListener} of this {@link PlayerCamera}.
+     * @param isTickStart whether this update is at the start or end of the tick event
      */
-    EventListener<TickEvent.RenderTickEvent> getListener();
+    public void onRenderTickEvent(boolean isTickStart) {
+
+        EntityPlayerSP player = PlayerUtils.getPlayer();
+        if (player == null) {
+            return;
+        }
+
+        if (getState() == CameraState.FREELOOK && !isFreelook) {
+            startFreelook();
+        }
+        if (getState() == CameraState.FREELOOK && isFreelook) {
+            updateFreelook(isTickStart);
+        }
+        if (getState() != CameraState.FREELOOK && isFreelook) {
+            stopFreelook();
+        }
+
+    }
+
+
+    private float cameraYaw = 0;
+    private float cameraPitch = 0;
+    private float playerYaw = 0;
+    private float playerPitch = 0;
+    private float originalYaw = 0;
+    private float originalPitch = 0;
+
+
+    /**
+     * Starts the {@code CameraState.FREELOOK}-mode
+     */
+    private void startFreelook() {
+        final EntityPlayerSP player = PlayerUtils.getPlayer();
+        playerYaw = player.rotationYaw;
+        playerPitch = player.rotationPitch;
+        originalYaw = playerYaw;
+        originalPitch = playerPitch;
+        cameraYaw = playerYaw;
+        cameraPitch = playerPitch;
+        isFreelook = true;
+    }
+
+
+    /**
+     * Stops the {@code CameraState.FREELOOK}-mode
+     */
+    private void stopFreelook() {
+        cameraYaw = originalYaw;
+        cameraPitch = originalPitch;
+        playerYaw = originalYaw;
+        playerPitch = originalPitch;
+        isFreelook = false;
+    }
+
+
+    /**
+     * Update the camera in the {@code CameraState.FREELOOK}-mode
+     */
+    private void updateFreelook(boolean isTickStart) {
+
+        final Entity player = MinecraftAdapter.get().getRenderViewEntity();
+        final EntityPlayerSP playerSP = PlayerUtils.getPlayer();
+
+
+        final float f = MinecraftAdapter.get().getGameSettings().mouseSensitivity * 0.6f + 0.2f;
+        final float f1 = f * f * f * 8f;
+
+        final double dx = Mouse.getDX() * f1 * 0.15;
+        final double dy = -Mouse.getDY() * f1 * 0.15;
+
+        cameraYaw += dx;
+        cameraPitch += dy;
+        cameraPitch = MathHelper.clamp(cameraPitch, -90f, 90f);
+
+        if (isTickStart) {
+            player.rotationYaw = cameraYaw;
+            player.rotationPitch = cameraPitch;
+            player.prevRotationYaw = cameraYaw;
+            player.prevRotationPitch = cameraPitch;
+            lastFreeView.set(player.rotationYaw, playerPitch);
+
+        } else {
+            player.rotationYaw = playerSP.rotationYaw - cameraYaw + playerYaw;
+            player.prevRotationYaw = playerSP.prevRotationYaw - cameraYaw + playerYaw;
+            player.rotationPitch = playerSP.rotationPitch - cameraPitch + playerPitch;
+            player.prevRotationPitch = playerSP.prevRotationPitch - cameraPitch + playerPitch;
+            lastFreeView.set(player.rotationYaw, playerPitch);
+        }
+
+    }
+
 
     /**
      * Sets the state of the player-camera
      *
      * @param state the new state of the camera
      */
-    void setState(PlayerCameraImpl.CameraState state);
+    public void setState(CameraState state) {
+        this.state = state;
+    }
+
 
     /**
      * @return the {@link CameraState} of the player-camera
      */
-    PlayerCameraImpl.CameraState getState();
+    public CameraState getState() {
+        return state;
+    }
+
 
     /**
      * Checks if the player is looking at the given {@link BaseBlockPos}
@@ -42,7 +165,10 @@ public interface PlayerCamera {
      * @param rangeAngleDeg the threshold of the angle in degrees
      * @return whether the player is looking at the given position
      */
-    boolean isLookingAt(BaseBlockPos pos, boolean ignorePitch, double rangeAngleDeg);
+    public boolean isLookingAt(BaseBlockPos pos, boolean ignorePitch, double rangeAngleDeg) {
+        return isLookingAt(pos.getX(), pos.getY(), pos.getZ(), ignorePitch, rangeAngleDeg);
+    }
+
 
     /**
      * Checks if the player is looking at the block at the given position
@@ -54,19 +180,66 @@ public interface PlayerCamera {
      * @param rangeAngleDeg the threshold of the angle in degrees
      * @return whether the player is looking at the given position
      */
-    boolean isLookingAt(int x, int y, int z, boolean ignorePitch, double rangeAngleDeg);
+    public boolean isLookingAt(int x, int y, int z, boolean ignorePitch, double rangeAngleDeg) {
+
+        EntityPlayerSP player = PlayerUtils.getPlayer();
+        if (player != null) {
+
+            if (ignorePitch) {
+                final Vector2d posHead = new Vector2d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).z);
+                final Vector2d posBlock = new Vector2d(x + 0.5, z + 0.5);
+                final Vector2d dirBlock = posBlock.copy().sub(posHead).normalize();
+                final Vector2d lookDir = new Vector2d(getLookDir().x, getLookDir().z).normalize();
+                final double angle = lookDir.angleDeg(dirBlock);
+                return Math.abs(angle) <= rangeAngleDeg;
+
+            } else {
+                final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
+                final Vector3d posBlock = new Vector3d(x + 0.5, y + 0.5, z + 0.5);
+                final Vector3d dirBlock = posBlock.copy().sub(posHead).normalize();
+                final Vector3d lookDir = getLookDir().normalize();
+                final double angle = lookDir.angleDeg(dirBlock);
+                return Math.abs(angle) <= rangeAngleDeg;
+            }
+
+        } else {
+            return false;
+        }
+    }
+
 
     /**
      * @return the direction the player is looking as a {@link Vector3d}
      */
-    Vector3d getLookDir();
+    public Vector3d getLookDir() {
+        Vec3d v = getLookDirMC();
+        if (v != null) {
+            return new Vector3d(v.x, v.y, v.z);
+        } else {
+            return null;
+        }
+    }
+
+
+    private Vec3d getLookDirMC() {
+        EntityPlayerSP player = PlayerUtils.getPlayer();
+        if (player != null) {
+            return player.getLook(0f);
+        } else {
+            return null;
+        }
+    }
+
 
     /**
      * Sets the view-direction of the player to look at the given {@link BaseBlockPos}.
      *
      * @param pos the position to look at
      */
-    void setLookAt(BaseBlockPos pos);
+    public void setLookAt(BaseBlockPos pos) {
+        setLookAt(pos, false);
+    }
+
 
     /**
      * Sets the view-direction of the player to look at the given {@link BaseBlockPos}.
@@ -74,7 +247,10 @@ public interface PlayerCamera {
      * @param pos       the {@link BaseBlockPos} to look at
      * @param keepPitch set to true to keep the pitch of the current view-direction
      */
-    void setLookAt(BaseBlockPos pos, boolean keepPitch);
+    public void setLookAt(BaseBlockPos pos, boolean keepPitch) {
+        setLookAt(pos.getX(), pos.getY(), pos.getZ(), keepPitch);
+    }
+
 
     /**
      * Sets the view-direction of the player to look at a block at the given position.
@@ -84,14 +260,34 @@ public interface PlayerCamera {
      * @param z         the z position of the block to look at
      * @param keepPitch set to true to keep the pitch of the current view-direction
      */
-    void setLookAt(int x, int y, int z, boolean keepPitch);
+    public void setLookAt(int x, int y, int z, boolean keepPitch) {
+        EntityPlayerSP player = PlayerUtils.getPlayer();
+        if (player != null) {
+            final Vector3d posBlock = new Vector3d(x + 0.5, y + 0.5, z + 0.5);
+            final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
+            final Vector3d dir = posBlock.copy().sub(posHead).normalize().scale(-1);
+            if (keepPitch) {
+                dir.y = 0;
+            }
+            setLook(dir);
+        }
+    }
+
 
     /**
      * Sets the view-direction of the player to look at the given point
      *
      * @param point the position of the point
      */
-    void setLookAtPoint(Vector3d point);
+    public void setLookAtPoint(Vector3d point) {
+        EntityPlayerSP player = PlayerUtils.getPlayer();
+        if (player != null) {
+            final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
+            final Vector3d dir = point.copy().sub(posHead).normalize().scale(-1);
+            setLook(dir);
+        }
+    }
+
 
     /**
      * Makes the player look at the given side of the block at the given {@link BaseBlockPos}.
@@ -99,14 +295,28 @@ public interface PlayerCamera {
      * @param pos       the position
      * @param direction the direction of the side
      */
-    void setLookAtBlockSide(BaseBlockPos pos, Direction direction);
+    public void setLookAtBlockSide(BaseBlockPos pos, Direction direction) {
+        final PlayerCamera camera = PlayerUtils.getCamera();
+        final Vector3d posLookAt = new Vector3d(pos.getCenterX(), pos.getCenterY(), pos.getCenterZ())
+                .add(direction.dx * 0.5, direction.dy * 0.5, direction.dz * 0.5);
+        camera.setLookAtPoint(posLookAt);
+    }
+
 
     /**
      * Sets the view-direction of the player.
      *
      * @param dir the new view-direction
      */
-    void setLook(Vector3d dir);
+    public void setLook(Vector3d dir) {
+        double pitch = Math.asin(dir.y);
+        double yaw = Math.atan2(dir.z, dir.x);
+        pitch = pitch * 180.0 / Math.PI;
+        yaw = yaw * 180.0 / Math.PI;
+        yaw += 90f;
+        setLook(pitch, yaw);
+    }
+
 
     /**
      * Sets the view-direction of the player.
@@ -114,24 +324,46 @@ public interface PlayerCamera {
      * @param pitch the new pitch
      * @param yaw   the new yaw
      */
-    void setLook(double pitch, double yaw);
+    public void setLook(double pitch, double yaw) {
+        final EntityPlayerSP player = PlayerUtils.getPlayer();
+        if (player != null) {
+            player.rotationPitch = (float) pitch;
+            player.rotationYaw = (float) yaw;
+        }
+    }
+
 
     /**
      * Forces the camera to look in specific directions, event when freelook is enabled.
      */
-    void enableForceCamera();
+    public void enableForceCamera() {
+        preForcedState = getState();
+        setState(CameraState.LOCKED);
+    }
+
 
     /**
      * Stops forcing the camera to look in specific directions, event when freelook is enabled.
      *
      * @param restoreFreelookView restores the view direction to the state before forceCamera was enabled
      */
-    void disableForceCamera(boolean restoreFreelookView);
+    public void disableForceCamera(boolean restoreFreelookView) {
+        setState(preForcedState);
+        if (restoreFreelookView) {
+            final Entity player = MinecraftAdapter.get().getRenderViewEntity();
+            player.rotationYaw = lastFreeView.x;
+            player.prevRotationYaw = lastFreeView.x;
+            player.rotationPitch = lastFreeView.y;
+            player.prevRotationPitch = lastFreeView.y;
+        }
+    }
 
 
     /**
      * @return whether the camera is forced to look in a specific direction.
      */
-    boolean isForceEnabled();
+    public boolean isForceEnabled() {
+        return getState() == CameraState.LOCKED;
+    }
 
 }
