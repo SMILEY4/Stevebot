@@ -1,55 +1,23 @@
 package stevebot.minecraft;
 
 import java.util.List;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.util.MouseHelper;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blocks.BlockWrapper;
+import stevebot.data.items.wrapper.ItemBlockWrapper;
+import stevebot.data.items.wrapper.ItemStackWrapper;
+import stevebot.data.items.wrapper.ItemWrapper;
+import stevebot.math.vectors.vec2.Vector2d;
+import stevebot.math.vectors.vec3.Vector3d;
+import stevebot.player.PlayerInputConfig;
 
-public interface MinecraftAdapter {
-
-
-    /**
-     * @return the minecraft world
-     */
-    World getWorld();
-
-    /**
-     * @return the entity representing the player in singleplayer
-     */
-    EntityPlayerSP getPlayer();
-
-
-    /**
-     * @return the inventory of the player
-     */
-    InventoryPlayer getPlayerInventory();
-
-
-    /**
-     * @return true, if the player is in creative mode
-     */
-    boolean isPlayerCreativeMode();
+public interface NewMinecraftAdapter {
 
     /**
      * @param pos the position of the block
      * @return the block at the given position
      */
-    Block getBlock(BlockPos pos);
-
-    /**
-     * Sets the block at the given position to the given blocks default {@link IBlockState}
-     *
-     * @param pos   the position
-     * @param block the block
-     */
-    void setBlock(BlockPos pos, Block block);
+    int getBlockId(BaseBlockPos pos);
 
     /**
      * @param chunkX the x position of the chunk
@@ -59,56 +27,80 @@ public interface MinecraftAdapter {
     boolean isChunkLoaded(int chunkX, int chunkZ);
 
     /**
-     * @return the render view entity
+     * @return the current position of the player head
      */
-    Entity getRenderViewEntity();
+    Vector3d getPlayerHeadPosition();
 
-    /**
-     * @return the games settings
-     */
+    Vector2d getPlayerHeadPositionXZ();
+
+    BaseBlockPos getPlayerBlockPosition();
+
+    Vector3d getPlayerPosition();
+
+    Vector3d getPlayerMotion();
+
+    void setPlayerRotation(float yaw, float pitch);
+
+    void setCameraRotation(float yaw, float pitch);
+
+    void addCameraRotation(float yaw, float pitch);
+
+    Vector3d getLookDir();
+
+    void setMouseChangeInterceptor(MouseChangeInterceptor interceptor);
+
+    float getMouseSensitivity();
+
+    boolean hasPlayer();
+
+    float getPlayerRotationYaw();
+
+    float getPlayerRotationPitch();
+
+    double getMouseDX();
+
+    double getMouseDY();
+
     GameSettings getGameSettings();
 
+    void setInput(final int keyCode, boolean down);
+
     /**
-     * Sets the games mouse-helper to the given helper
+     * Sends the player the given message. The message will be printed in the chat.
      *
-     * @param mouseHelper the {@link MouseHelper}
+     * @param msg the message.
      */
-    void setMouseHelper(MouseHelper mouseHelper);
+    void sendMessage(String msg);
 
+    List<ItemStackWrapper> getHotbarItems();
+
+    void selectHotbarSlot(int slot);
+
+    boolean isPlayerOnGround();
+
+    float getPlayerHealth();
+
+    void setPlayerSprinting(boolean sprint);
+
+    List<BlockWrapper> getBlocks();
+
+    List<ItemWrapper> getItems();
+
+    float getBreakDuration(ItemWrapper item, BlockWrapper block);
 
     /**
-     * @return a list of all registered items
+     * @return either "x", "y", or "z"
      */
-    List<Item> getRegisteredItems();
+    String getBlockFacing(BaseBlockPos position);
 
-    /**
-     * @param item the item
-     * @return the id of the item
-     */
-    int getItemId(Item item);
+    boolean isDoorOpen(final BaseBlockPos position);
 
-    /**
-     * @param item the item
-     * @return the name of the item
-     */
-    String getItemName(Item item);
+    boolean isBlockPassable(BlockWrapper block, BaseBlockPos pos);
 
-    /**
-     * @return a list of all registered blocks
-     */
-    List<Block> getRegisteredBlocks();
+    int getItemIdFromBlock(BlockWrapper block);
 
+    int getBlockIdFromItem(ItemBlockWrapper item);
 
-    /**
-     * @param block the block
-     * @return the id of the block
-     */
-    int getBlockId(Block block);
-
-    /**
-     * @param block the block
-     * @return the name of the block
-     */
-    String getBlockName(Block block);
+    PlayerInputConfig.InputBinding getKeyBinding(PlayerInputConfig.InputType inputType);
 
 }
