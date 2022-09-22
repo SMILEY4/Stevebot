@@ -15,6 +15,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MouseHelper;
@@ -27,6 +28,7 @@ import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockUtils;
 import stevebot.data.blocks.BlockWrapper;
 import stevebot.data.items.ItemUtils;
+import stevebot.data.items.wrapper.ItemBlockWrapper;
 import stevebot.data.items.wrapper.ItemStackWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.math.vectors.vec2.Vector2d;
@@ -50,26 +52,6 @@ public class NewMinecraftAdapterImpl implements NewMinecraftAdapter {
                 }
             }
         };
-        for (Item item : getRegisteredItems()) {
-            String name = Item.REGISTRY.getNameForObject(item).toString();
-            items.put(name, item);
-        }
-        for (Block block : getRegisteredBlocks()) {
-            String name = Block.REGISTRY.getNameForObject(block).toString();
-            blocks.put(name, block);
-        }
-    }
-
-    private List<Item> getRegisteredItems() {
-        List<Item> items = new ArrayList<>();
-        Item.REGISTRY.forEach(items::add);
-        return items;
-    }
-
-    private List<Block> getRegisteredBlocks() {
-        List<Block> blocks = new ArrayList<>();
-        Block.REGISTRY.forEach(blocks::add);
-        return blocks;
     }
 
 
@@ -280,12 +262,29 @@ public class NewMinecraftAdapterImpl implements NewMinecraftAdapter {
 
     @Override
     public List<BlockWrapper> getBlocks() {
-        return null; // TODO
+        this.blocks.clear();
+        final List<BlockWrapper> blocks = new ArrayList<>();
+        for (Block block : Block.REGISTRY) {
+            final String name = Block.REGISTRY.getNameForObject(block).toString();
+            final int id = Block.REGISTRY.getIDForObject(block);
+            final boolean isNormalCube = block.getDefaultState().isNormalCube();
+            blocks.add(new BlockWrapper(id, name, isNormalCube));
+            this.blocks.put(name, block);
+        }
+        return blocks;
     }
 
     @Override
     public List<ItemWrapper> getItems() {
-        return null; // TODO
+        this.items.clear();
+        final List<ItemWrapper> items = new ArrayList<>();
+        for (Item item : Item.REGISTRY) {
+            String name = Item.REGISTRY.getNameForObject(item).toString();
+            int id = Item.REGISTRY.getIDForObject(item);
+            items.add(new ItemWrapper(id, name));
+            this.items.put(name, item);
+        }
+        return items;
     }
 
     @Override
@@ -310,6 +309,23 @@ public class NewMinecraftAdapterImpl implements NewMinecraftAdapter {
     public boolean isDoorOpen(final BaseBlockPos position) {
         final IBlockState blockState = getWorld().getBlockState(new BlockPos(position.getX(), position.getY(), position.getZ()));
         return blockState.getValue(BlockDoor.OPEN);
+    }
+
+    @Override
+    public boolean isBlockPassable(final BlockWrapper block, final BaseBlockPos pos) {
+        return blocks.get(block.getName()).isPassable(getWorld(), new BlockPos(pos.getX(), pos.getY(), pos.getZ()));
+    }
+
+    @Override
+    public int getItemIdFromBlock(final BlockWrapper block) {
+        final Item itemFromBlock = Item.getItemFromBlock(blocks.get(block.getName()));
+        return Item.REGISTRY.getIDForObject(itemFromBlock);
+    }
+
+    @Override
+    public int getBlockIdFromItem(final ItemBlockWrapper item) {
+        final ItemBlock itemBlock = (ItemBlock) items.get(item.getName());
+        return Block.REGISTRY.getIDForObject(itemBlock.getBlock());
     }
 
     /**

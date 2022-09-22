@@ -3,6 +3,8 @@ package stevebot.data.items;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import stevebot.data.blocks.BlockWrapper;
+import stevebot.data.items.wrapper.ItemBlockWrapper;
 import stevebot.data.items.wrapper.ItemHandWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.math.MathUtils;
@@ -38,6 +40,21 @@ public class ItemLibrary {
             items[item.getId()] = item;
         }
 
+    }
+
+    public void insertBlocks(List<BlockWrapper> blocks) {
+        for (ItemWrapper itemWrapper : items) {
+            if (itemWrapper.getId() != ItemLibrary.ID_INVALID_ITEM && itemWrapper instanceof ItemBlockWrapper) {
+                final ItemBlockWrapper item = (ItemBlockWrapper) itemWrapper;
+                final int blockIdFromItem = minecraftAdapter.getBlockIdFromItem(item);
+                for (BlockWrapper block : blocks) {
+                    if (block.getId() == blockIdFromItem) {
+                        item.setBlockWrapper(block);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
 

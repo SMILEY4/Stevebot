@@ -4,6 +4,7 @@ import java.util.List;
 import net.minecraft.client.settings.GameSettings;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockWrapper;
+import stevebot.data.items.wrapper.ItemBlockWrapper;
 import stevebot.data.items.wrapper.ItemStackWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.math.vectors.vec2.Vector2d;
@@ -93,5 +94,11 @@ public interface NewMinecraftAdapter {
     String getBlockFacing(BaseBlockPos position);
 
     boolean isDoorOpen(final BaseBlockPos position);
+
+    boolean isBlockPassable(BlockWrapper block, BaseBlockPos pos);
+
+    int getItemIdFromBlock(BlockWrapper block);
+
+    int getBlockIdFromItem(ItemBlockWrapper item);
 
 }

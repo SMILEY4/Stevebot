@@ -196,7 +196,7 @@ public class BlockUtils {
      * @return whether the player can walk through the block at the given position. This does not check the surrounding blocks.
      */
     public static boolean canWalkThrough(BaseBlockPos pos) {
-        return canWalkThrough(blockProvider.getBlockAt(pos));
+        return canWalkThrough(blockProvider.getBlockAt(pos), pos);
     }
 
 
@@ -204,13 +204,13 @@ public class BlockUtils {
      * @param block the block
      * @return whether the player can walk through the given block. This does not check the surrounding blocks.
      */
-    public static boolean canWalkThrough(BlockWrapper block) {
+    public static boolean canWalkThrough(BlockWrapper block, BaseBlockPos pos) {
         if (isLiquid(block) || WATERLILY == block.getId() || isDangerous(block)
                 || ICE == block.getId() || FROSTED_ICE == block.getId() || PACKED_ICE == block.getId()
                 || isDoorLike(block)) {
             return false;
         } else {
-            return block.isPassable();
+            return newMinecraftAdapter.isBlockPassable(block, pos);
         }
     }
 

@@ -208,19 +208,19 @@ public class Stevebot {
 
 
         // block library
-        blockLibrary = new BlockLibrary(minecraftAdapter);
+        blockLibrary = new BlockLibrary(newMinecraftAdapter);
 
         // block provider
         blockProvider = new BlockProvider(newMinecraftAdapter, blockLibrary);
 
         // block utils
-        BlockUtils.initialize(minecraftAdapter, blockProvider, blockLibrary);
+        BlockUtils.initialize(newMinecraftAdapter, minecraftAdapter, blockProvider, blockLibrary);
 
         // item library
-        itemLibrary = new ItemLibrary(minecraftAdapter);
+        itemLibrary = new ItemLibrary(newMinecraftAdapter);
 
         // item utils
-        ItemUtils.initialize(itemLibrary);
+        ItemUtils.initialize(newMinecraftAdapter, itemLibrary);
 
         // renderer
         renderer = new Renderer(openGLAdapter, blockProvider);

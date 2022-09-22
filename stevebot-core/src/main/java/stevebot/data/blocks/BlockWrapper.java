@@ -8,16 +8,17 @@ public class BlockWrapper {
 
     private final int id;
     private final String name;
+    private final boolean isNormalCube;
     private ItemWrapper item;
-
 
     /**
      * @param id   the id of the block
      * @param name the name of the block
      */
-    public BlockWrapper(int id, String name) {
+    public BlockWrapper(int id, String name, boolean isNormalCube) {
         this.id = id;
         this.name = name;
+        this.isNormalCube = isNormalCube;
     }
 
 
@@ -36,13 +37,9 @@ public class BlockWrapper {
         return name;
     }
 
-    public boolean isPassable() {
-        return false; // TODO  getBlock().isPassable(minecraftAdapter.getWorld(), pos);
-    }
-
 
     public boolean isNormalCube() {
-        return false; // TODO getBlock().getDefaultState().isNormalCube()
+        return isNormalCube;
     }
 
     /**

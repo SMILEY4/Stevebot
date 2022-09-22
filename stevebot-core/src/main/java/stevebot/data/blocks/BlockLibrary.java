@@ -3,12 +3,14 @@ package stevebot.data.blocks;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import stevebot.data.items.ItemLibrary;
+import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.math.MathUtils;
 import stevebot.minecraft.NewMinecraftAdapter;
 
 public class BlockLibrary {
 
-    public static final BlockWrapper INVALID_BLOCK = new BlockWrapper(BlockLibrary.ID_INVALID_BLOCK, "null");
+    public static final BlockWrapper INVALID_BLOCK = new BlockWrapper(BlockLibrary.ID_INVALID_BLOCK, "null", false);
     public static final int ID_UNLOADED_BOCK = -1;
     public static final int ID_INVALID_BLOCK = -2;
 
@@ -38,6 +40,25 @@ public class BlockLibrary {
 
     }
 
+    /**
+     * Adds the given {@link ItemWrapper}s to the corresponding blocks
+     *
+     * @param items the items to add
+     */
+    public void insertItems(List<ItemWrapper> items) {
+        for (BlockWrapper block : blocks) {
+            block.setItem(ItemLibrary.INVALID_ITEM);
+            if (block.getId() != BlockLibrary.ID_INVALID_BLOCK) {
+                final int itemIdFromBlock = minecraftAdapter.getItemIdFromBlock(block);
+                for (ItemWrapper item : items) {
+                    if (item.getId() == itemIdFromBlock) {
+                        block.setItem(item);
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * @return a list of all blocks
