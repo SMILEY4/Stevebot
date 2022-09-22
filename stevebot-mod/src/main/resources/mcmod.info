@@ -1,0 +1,15 @@
+[
+{
+  "modid": "stevebot",
+  "name": "Stevebot",
+  "description": "",
+  "version": "dev",
+  "url": "https://github.com/SMILEY4/Stevebot",
+  "updateUrl": "",
+  "authorList": ["SMILEY4"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
