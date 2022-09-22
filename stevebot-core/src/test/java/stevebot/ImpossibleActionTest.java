@@ -1,12 +1,12 @@
 package stevebot;
 
 import org.junit.jupiter.api.Test;
-import stevebot.misc.Direction;
-import stevebot.pathfinding.actions.ImpossibleActionHandler;
-import stevebot.pathfinding.actions.playeractions.ActionStepDown;
-import stevebot.pathfinding.actions.playeractions.ActionStepUp;
-import stevebot.pathfinding.actions.playeractions.ActionSwim;
-import stevebot.pathfinding.actions.playeractions.ActionWalk;
+import stevebot.core.misc.Direction;
+import stevebot.core.pathfinding.actions.ImpossibleActionHandler;
+import stevebot.core.pathfinding.actions.playeractions.ActionStepDown;
+import stevebot.core.pathfinding.actions.playeractions.ActionStepUp;
+import stevebot.core.pathfinding.actions.playeractions.ActionSwim;
+import stevebot.core.pathfinding.actions.playeractions.ActionWalk;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

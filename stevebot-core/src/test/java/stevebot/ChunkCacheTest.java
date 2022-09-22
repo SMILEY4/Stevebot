@@ -1,8 +1,8 @@
 package stevebot;
 
 import org.junit.jupiter.api.Test;
-import stevebot.data.blocks.BlockLibrary;
-import stevebot.data.blocks.ChunkCache;
+import stevebot.core.data.blocks.BlockLibrary;
+import stevebot.core.data.blocks.ChunkCache;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -3,12 +3,12 @@ package stevebot;
 import java.util.List;
 import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.Test;
-import stevebot.pathfinding.actions.ActionCosts;
-import stevebot.pathfinding.nodes.Node;
-import stevebot.pathfinding.path.CompletedPath;
-import stevebot.pathfinding.path.EmptyPath;
-import stevebot.pathfinding.path.PartialPath;
-import stevebot.pathfinding.path.Path;
+import stevebot.core.pathfinding.actions.ActionCosts;
+import stevebot.core.pathfinding.nodes.Node;
+import stevebot.core.pathfinding.path.CompletedPath;
+import stevebot.core.pathfinding.path.EmptyPath;
+import stevebot.core.pathfinding.path.PartialPath;
+import stevebot.core.pathfinding.path.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

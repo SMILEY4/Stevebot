@@ -1,10 +1,10 @@
 package stevebot;
 
 import org.junit.jupiter.api.Test;
-import stevebot.pathfinding.execution.PathCrawler;
-import stevebot.pathfinding.nodes.Node;
-import stevebot.pathfinding.path.CompletedPath;
-import stevebot.pathfinding.path.PartialPath;
+import stevebot.core.pathfinding.execution.PathCrawler;
+import stevebot.core.pathfinding.nodes.Node;
+import stevebot.core.pathfinding.path.CompletedPath;
+import stevebot.core.pathfinding.path.PartialPath;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

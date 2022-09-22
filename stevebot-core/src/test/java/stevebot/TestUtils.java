@@ -3,15 +3,15 @@ package stevebot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.misc.Direction;
-import stevebot.misc.ProcState;
-import stevebot.pathfinding.actions.ActionCosts;
-import stevebot.pathfinding.actions.playeractions.Action;
-import stevebot.pathfinding.nodes.Node;
-import stevebot.pathfinding.path.CompletedPath;
-import stevebot.pathfinding.path.EmptyPath;
-import stevebot.pathfinding.path.PartialPath;
+import stevebot.core.data.blockpos.BaseBlockPos;
+import stevebot.core.misc.Direction;
+import stevebot.core.misc.ProcState;
+import stevebot.core.pathfinding.actions.ActionCosts;
+import stevebot.core.pathfinding.actions.playeractions.Action;
+import stevebot.core.pathfinding.nodes.Node;
+import stevebot.core.pathfinding.path.CompletedPath;
+import stevebot.core.pathfinding.path.EmptyPath;
+import stevebot.core.pathfinding.path.PartialPath;
 
 public class TestUtils {
 

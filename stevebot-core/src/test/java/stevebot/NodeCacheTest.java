@@ -1,9 +1,9 @@
 package stevebot;
 
 import org.junit.jupiter.api.Test;
-import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.pathfinding.nodes.Node;
-import stevebot.pathfinding.nodes.NodeCache;
+import stevebot.core.data.blockpos.BaseBlockPos;
+import stevebot.core.pathfinding.nodes.Node;
+import stevebot.core.pathfinding.nodes.NodeCache;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

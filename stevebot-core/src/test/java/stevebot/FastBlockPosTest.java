@@ -3,9 +3,9 @@ package stevebot;
 import java.util.Random;
 import net.minecraft.util.math.BlockPos;
 import org.junit.jupiter.api.Test;
-import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.data.blockpos.FastBlockPos;
-import stevebot.misc.Direction;
+import stevebot.core.data.blockpos.BaseBlockPos;
+import stevebot.core.data.blockpos.FastBlockPos;
+import stevebot.core.misc.Direction;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;

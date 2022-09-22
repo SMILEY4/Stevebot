@@ -6,7 +6,7 @@ import stevebot.events.EventManager;
 import stevebot.events.EventManagerImpl;
 import stevebot.events.InitEvent;
 import stevebot.events.PostInitEvent;
-import stevebot.math.vectors.vec3.Vector3i;
+import stevebot.core.math.vectors.vec3.Vector3i;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

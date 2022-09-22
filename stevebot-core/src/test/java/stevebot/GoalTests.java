@@ -2,10 +2,10 @@ package stevebot;
 
 import java.util.Random;
 import org.junit.jupiter.api.Test;
-import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.pathfinding.goal.ExactGoal;
-import stevebot.pathfinding.goal.XZGoal;
-import stevebot.pathfinding.goal.YGoal;
+import stevebot.core.data.blockpos.BaseBlockPos;
+import stevebot.core.pathfinding.goal.ExactGoal;
+import stevebot.core.pathfinding.goal.XZGoal;
+import stevebot.core.pathfinding.goal.YGoal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

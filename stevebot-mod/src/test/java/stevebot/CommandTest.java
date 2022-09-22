@@ -5,8 +5,8 @@ import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import stevebot.commands.CommandListener;
-import stevebot.commands.CommandSystem;
+import stevebot.mod.commands.CommandListener;
+import stevebot.mod.commands.CommandSystem;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

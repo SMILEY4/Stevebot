@@ -1,12 +1,12 @@
 package stevebot;
 
 import org.junit.jupiter.api.Test;
-import stevebot.data.blocks.BlockLibrary;
-import stevebot.data.blocks.BlockWrapper;
-import stevebot.data.items.wrapper.ItemBlockWrapper;
-import stevebot.data.items.wrapper.ItemToolWrapper;
-import stevebot.data.items.wrapper.ItemWrapper;
-import stevebot.data.player.PlayerSnapshot;
+import stevebot.core.data.blocks.BlockLibrary;
+import stevebot.core.data.blocks.BlockWrapper;
+import stevebot.core.data.items.wrapper.ItemBlockWrapper;
+import stevebot.core.data.items.wrapper.ItemToolWrapper;
+import stevebot.core.data.items.wrapper.ItemWrapper;
+import stevebot.core.data.player.PlayerSnapshot;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

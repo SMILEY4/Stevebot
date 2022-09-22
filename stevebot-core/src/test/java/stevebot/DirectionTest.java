@@ -1,7 +1,7 @@
 package stevebot;
 
 import org.junit.jupiter.api.Test;
-import stevebot.misc.Direction;
+import stevebot.core.misc.Direction;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -3,8 +3,8 @@ package stevebot;
 import java.util.PriorityQueue;
 import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.Test;
-import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.pathfinding.nodes.Node;
+import stevebot.core.data.blockpos.BaseBlockPos;
+import stevebot.core.pathfinding.nodes.Node;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
