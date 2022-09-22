@@ -8,4 +8,4 @@ The core pathfinding and path-following logic of stevebot. As independent of any
 ./gradlew publishToMavenLocal
 ```
 
-Creates a new local maven artifact `io.github.smiley4:stevebot:<version>`.
+Creates a new local maven artifact `io.github.smiley4:stevebot-core:<version>`.

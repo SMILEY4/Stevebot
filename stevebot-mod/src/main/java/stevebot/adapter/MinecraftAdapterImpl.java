@@ -201,11 +201,6 @@ public class MinecraftAdapterImpl implements MinecraftAdapter {
     }
 
     @Override
-    public GameSettings getGameSettings() {
-        return getMinecraft().gameSettings;
-    }
-
-    @Override
     public void setInput(final int keyCode, final boolean down) {
         KeyBinding.setKeyBindState(keyCode, down);
         if (down) {
@@ -330,7 +325,7 @@ public class MinecraftAdapterImpl implements MinecraftAdapter {
 
     @Override
     public InputBinding getKeyBinding(final PlayerInputConfig.InputType inputType) {
-        GameSettings settings = getGameSettings();
+        GameSettings settings = getMinecraft().gameSettings;
         switch (inputType) {
             case WALK_FORWARD:
                 return new McInputBinding(settings.keyBindForward);

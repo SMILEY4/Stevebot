@@ -1,58 +1,14 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
-}
-
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'java'
 apply plugin: 'maven-publish'
 
-group = "stevebot"
-version = "dev"
+group = "stevebot-core"
+version = "1.0"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-minecraft {
-	version = "1.12.2-14.23.5.2768"
-	mappings = "snapshot_20171003"
-}
-
 task wrapper(type: Wrapper) {
   gradleVersion = '4.9'
-}
-
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    classifier = 'deobf'
-}
-
-sourceJar {
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
-
-tasks.build.dependsOn('sourceJar', 'deobfJar')
-
-processResources {
-    from (sourceSets.main.resources.srcDirs)
-}
-
-artifacts {
-	archives deobfJar
-	archives sourceJar
-	archives jar
-}
-
-configurations {
-    deployerJars
 }
 
 repositories {
@@ -60,6 +16,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.apache.logging.log4j:log4j-core:2.8.1'
     testImplementation "org.assertj:assertj-core:3.11.1"
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.5.2"
     testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
@@ -69,7 +26,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = 'io.github.smiley4'
-            artifactId = 'stevebot'
+            artifactId = 'stevebot-core'
             version = "1.0"
             from components.java
         }

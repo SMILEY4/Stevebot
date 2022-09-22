@@ -1,7 +1,6 @@
 package stevebot.minecraft;
 
 import java.util.List;
-import net.minecraft.client.settings.GameSettings;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockWrapper;
 import stevebot.data.items.wrapper.ItemBlockWrapper;
@@ -60,8 +59,6 @@ public interface MinecraftAdapter {
     double getMouseDX();
 
     double getMouseDY();
-
-    GameSettings getGameSettings();
 
     void setInput(final int keyCode, boolean down);
 
