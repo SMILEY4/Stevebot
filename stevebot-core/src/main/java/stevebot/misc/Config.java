@@ -1,6 +1,5 @@
 package stevebot.misc;
 
-import stevebot.StevebotLog;
 import stevebot.pathfinding.path.PathRenderable;
 
 public class Config {

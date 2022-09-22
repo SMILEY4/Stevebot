@@ -127,7 +127,7 @@ public class Stevebot {
         @Override
         public void onEvent(TickEvent.PlayerTickEvent event) {
             if (event.phase == TickEvent.Phase.START) {
-               playerInput.onEventPlayerTick();
+                playerInput.onEventPlayerTick();
             }
         }
     };
@@ -144,7 +144,6 @@ public class Stevebot {
             playerInput.onEventConfigChanged();
         }
     };
-
 
 
     @Mod.EventHandler
@@ -222,7 +221,7 @@ public class Stevebot {
         pathHandler = new PathHandler(eventManager, renderer);
 
         // commands
-        StevebotCommands.initialize(pathHandler);
+        StevebotCommands.initialize(new StevebotApi(pathHandler));
         CommandSystem.registerCommands();
     }
 

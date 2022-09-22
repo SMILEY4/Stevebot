@@ -2,7 +2,7 @@ package stevebot.pathfinding.actions;
 
 import java.util.HashMap;
 import java.util.Map;
-import stevebot.StevebotLog;
+import stevebot.misc.StevebotLog;
 
 public class ActionObserver {
 

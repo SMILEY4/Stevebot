@@ -49,18 +49,6 @@ public class BaseBlockPosTest {
 
 
     @Test
-    void testFromMCBlockPos() {
-        final int x = random.nextInt();
-        final int y = random.nextInt();
-        final int z = random.nextInt();
-        BaseBlockPos blockPos = new BaseBlockPos(new BlockPos(x, y, z));
-        assertThat(blockPos.getX()).isEqualTo(x);
-        assertThat(blockPos.getY()).isEqualTo(y);
-        assertThat(blockPos.getZ()).isEqualTo(z);
-    }
-
-
-    @Test
     void testGetCenter() {
         final int x = random.nextInt();
         final int y = random.nextInt();

@@ -1,26 +1,14 @@
 package stevebot.commands;
 
-import stevebot.StevebotLog;
+import stevebot.StevebotApi;
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.data.blocks.BlockUtils;
-import stevebot.math.vectors.vec3.Vector3d;
-import stevebot.misc.Config;
-import stevebot.pathfinding.PathHandler;
-import stevebot.pathfinding.Pathfinding;
-import stevebot.pathfinding.PathfindingResult;
-import stevebot.pathfinding.actions.ActionObserver;
-import stevebot.pathfinding.goal.ExactGoal;
-import stevebot.pathfinding.goal.Goal;
-import stevebot.pathfinding.goal.XZGoal;
-import stevebot.pathfinding.goal.YGoal;
 import stevebot.pathfinding.path.PathRenderable;
-import stevebot.player.PlayerCamera;
 import stevebot.player.PlayerUtils;
 
 public class StevebotCommands {
 
 
-    public static void initialize(PathHandler pathHandler) {
+    public static void initialize(StevebotApi api) {
 
         // path <from> <to>
         CommandSystem.addCommand(
@@ -31,7 +19,7 @@ public class StevebotCommands {
                     if (PlayerUtils.getPlayer() != null) {
                         final BaseBlockPos from = CommandListener.getAsBaseBlockPos("xs", "ys", "zs", parameters);
                         final BaseBlockPos to = CommandListener.getAsBaseBlockPos("xs", "ys", "zs", parameters);
-                        pathHandler.createPath(new BaseBlockPos(from), new ExactGoal(new BaseBlockPos(to)), false, false);
+                        api.path(new BaseBlockPos(from), new BaseBlockPos(to), false, false);
                     }
                 });
 
@@ -44,7 +32,7 @@ public class StevebotCommands {
                     if (PlayerUtils.getPlayer() != null) {
                         final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
                         final BaseBlockPos to = CommandListener.getAsBaseBlockPos("xs", "ys", "zs", parameters);
-                        pathHandler.createPath(new BaseBlockPos(from), new ExactGoal(new BaseBlockPos(to)), true, false);
+                        api.path(new BaseBlockPos(from), new BaseBlockPos(to), true, false);
                     }
                 });
 
@@ -57,7 +45,7 @@ public class StevebotCommands {
                     if (PlayerUtils.getPlayer() != null) {
                         final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
                         final BaseBlockPos to = CommandListener.getAsBaseBlockPos("xs", "ys", "zs", parameters);
-                        pathHandler.createPath(new BaseBlockPos(from), new ExactGoal(new BaseBlockPos(to)), true, true);
+                        api.path(new BaseBlockPos(from), new BaseBlockPos(to), true, true);
                     }
                 });
 
@@ -68,10 +56,7 @@ public class StevebotCommands {
                 "/path <dist>\n    Finds a path 'dist' blocks in the direction the player is looking.",
                 (templateId, parameters) -> {
                     if (PlayerUtils.getPlayer() != null) {
-                        final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
-                        final Vector3d dir = PlayerUtils.getCamera().getLookDir().setLength(CommandListener.getAsInt("dist", parameters));
-                        Goal goal = new XZGoal(from.getX() + dir.getIntX(), from.getZ() + dir.getIntZ());
-                        pathHandler.createPath(new BaseBlockPos(from), goal, true, false);
+                        api.pathDirection(CommandListener.getAsInt("dist", parameters), true, false);
                     }
                 });
 
@@ -82,10 +67,7 @@ public class StevebotCommands {
                 "/path <dist>\n    Finds a path 'dist' blocks in the direction the player is looking and enables freelook.",
                 (templateId, parameters) -> {
                     if (PlayerUtils.getPlayer() != null) {
-                        final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
-                        final Vector3d dir = PlayerUtils.getCamera().getLookDir().setLength(CommandListener.getAsInt("dist", parameters));
-                        Goal goal = new XZGoal(from.getX() + dir.getIntX(), from.getZ() + dir.getIntZ());
-                        pathHandler.createPath(new BaseBlockPos(from), goal, true, true);
+                        api.pathDirection(CommandListener.getAsInt("dist", parameters), true, true);
                     }
                 });
 
@@ -96,10 +78,7 @@ public class StevebotCommands {
                 "/path level <level>\n    Finds a path to the given y-level.",
                 (templateId, parameters) -> {
                     if (PlayerUtils.getPlayer() != null) {
-                        final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
-                        final int level = CommandListener.getAsInt("level", parameters);
-                        Goal goal = new YGoal(level);
-                        pathHandler.createPath(new BaseBlockPos(from), goal, true, false);
+                        api.pathLevel(CommandListener.getAsInt("level", parameters), true, false);
                     }
                 });
 
@@ -110,10 +89,7 @@ public class StevebotCommands {
                 "/path level <level>\n    Finds a path to the given y-level and enables freelook.\",.",
                 (templateId, parameters) -> {
                     if (PlayerUtils.getPlayer() != null) {
-                        final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
-                        final int level = CommandListener.getAsInt("level", parameters);
-                        Goal goal = new YGoal(level);
-                        pathHandler.createPath(new BaseBlockPos(from), goal, true, true);
+                        api.pathLevel(CommandListener.getAsInt("level", parameters), true, true);
                     }
                 });
 
@@ -124,15 +100,7 @@ public class StevebotCommands {
                 "/path level <level>\n    Finds a path to the nearest with of the given type.",
                 (templateId, parameters) -> {
                     if (PlayerUtils.getPlayer() != null) {
-                        final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
-                        final String blockName = CommandListener.getAsString("block", parameters);
-                        final BaseBlockPos posBlock = BlockUtils.findNearest(BlockUtils.getBlockLibrary().getBlockByName(blockName), from, 219, 219);
-                        if (posBlock != null) {
-                            Goal goal = new ExactGoal(posBlock);
-                            pathHandler.createPath(new BaseBlockPos(from), goal, true, false);
-                        } else {
-                            StevebotLog.log("No block of the given type found.");
-                        }
+                        api.pathBlock(CommandListener.getAsString("block", parameters), true, false);
                     }
                 });
 
@@ -143,15 +111,7 @@ public class StevebotCommands {
                 "/path level <level>\n    Finds a path to the nearest with of the given type and enables freelook.\",.",
                 (templateId, parameters) -> {
                     if (PlayerUtils.getPlayer() != null) {
-                        final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
-                        final String blockName = CommandListener.getAsString("block", parameters);
-                        final BaseBlockPos posBlock = BlockUtils.findNearest(BlockUtils.getBlockLibrary().getBlockByName(blockName), from, 219, 219);
-                        if (posBlock != null) {
-                            Goal goal = new ExactGoal(posBlock);
-                            pathHandler.createPath(new BaseBlockPos(from), goal, true, true);
-                        } else {
-                            StevebotLog.log("No block of the given type found.");
-                        }
+                        api.pathBlock(CommandListener.getAsString("block", parameters), true, true);
                     }
                 });
 
@@ -161,13 +121,7 @@ public class StevebotCommands {
                 "freelook",
                 "/freelook\n    Toggles freelook-mode.",
                 (templateId, parameters) -> {
-                    if (PlayerUtils.getCamera().getState() == PlayerCamera.CameraState.FREELOOK) {
-                        PlayerUtils.getCamera().setState(PlayerCamera.CameraState.DEFAULT);
-                        PlayerUtils.sendMessage("Disable Freelook.");
-                    } else {
-                        PlayerUtils.getCamera().setState(PlayerCamera.CameraState.FREELOOK);
-                        PlayerUtils.sendMessage("Enable Freelook.");
-                    }
+                    api.toggleFreelook();
                 });
 
         // follow stop
@@ -176,9 +130,7 @@ public class StevebotCommands {
                 "follow stop",
                 "follow stop\n    Stop following the current path.",
                 (templateId, parameters) -> {
-                    if (PlayerUtils.getPlayer() != null) {
-                        pathHandler.cancelPath();
-                    }
+                    api.stopFollowing();
                 });
 
         // set timeout <seconds>
@@ -187,7 +139,7 @@ public class StevebotCommands {
                 "set timeout <seconds:FLOAT>",
                 "/set timeout <seconds>\n    Sets the timeout for pathfinding.",
                 (templateId, parameters) -> {
-                    Config.setPathfindingTimeout(CommandListener.getAsFloat("seconds", parameters));
+                    api.setTimeout(CommandListener.getAsFloat("seconds", parameters));
                 });
 
         // set verbose <enable>
@@ -196,7 +148,7 @@ public class StevebotCommands {
                 "set verbose <enable:BOOLEAN>",
                 "/set verbose <enable>\n    Enable/Disable verbose log-mode.",
                 (templateId, parameters) -> {
-                    Config.setVerboseMode(CommandListener.getAsBoolean("enable", parameters));
+                    api.setVerbose(CommandListener.getAsBoolean("enable", parameters));
                 });
 
         // set keepPathRenderable <keep>
@@ -205,7 +157,7 @@ public class StevebotCommands {
                 "set keepPathRenderable <keep:BOOLEAN>",
                 "/set keepPathRenderable <keep>\n    Keep/Discard the path-overlay after completion.",
                 (templateId, parameters) -> {
-                    Config.setKeepPathRenderable(CommandListener.getAsBoolean("keep", parameters));
+                    api.setKeepPath(CommandListener.getAsBoolean("keep", parameters));
                 });
 
         // set slowdown
@@ -214,7 +166,7 @@ public class StevebotCommands {
                 "set slowdown <milliseconds:INTEGER>",
                 "/set slowdown <ms>\n    Slows down the pathfinding algorithm by the given duration each step.",
                 (templateId, parameters) -> {
-                    Config.setPathfindingSlowdown(CommandListener.getAsInt("milliseconds", parameters));
+                    api.setPathfindingSlowdown(CommandListener.getAsInt("milliseconds", parameters));
                 });
 
         // show chunkcache
@@ -223,7 +175,7 @@ public class StevebotCommands {
                 "show chunkcache <show:BOOLEAN>",
                 "/show chunkcache <show>\n    Show/Hide the overlay for the chunk cache.",
                 (templateId, parameters) -> {
-                    Config.setShowChunkCache(CommandListener.getAsBoolean("show", parameters));
+                    api.setShowChunkCache(CommandListener.getAsBoolean("show", parameters));
                 });
 
         // show nodecache
@@ -232,7 +184,7 @@ public class StevebotCommands {
                 "show nodecache <show:BOOLEAN>",
                 "/show nodecache <show>\n    Show/Hide the overlay for the node cache.",
                 (templateId, parameters) -> {
-                    Config.setShowNodeCache(CommandListener.getAsBoolean("show", parameters));
+                    api.setShowNodeCache(CommandListener.getAsBoolean("show", parameters));
                 });
 
         // pathstyle <style>
@@ -243,23 +195,23 @@ public class StevebotCommands {
                 (templateId, parameters) -> {
                     switch (CommandListener.getAsString("style", parameters)) {
                         case "solid": {
-                            Config.setPathStyle(PathRenderable.PathStyle.SOLID);
+                            api.setPathDisplayStyle(PathRenderable.PathStyle.SOLID);
                             break;
                         }
                         case "pathid": {
-                            Config.setPathStyle(PathRenderable.PathStyle.PATH_ID);
+                            api.setPathDisplayStyle(PathRenderable.PathStyle.PATH_ID);
                             break;
                         }
                         case "actionid": {
-                            Config.setPathStyle(PathRenderable.PathStyle.ACTION_ID);
+                            api.setPathDisplayStyle(PathRenderable.PathStyle.ACTION_ID);
                             break;
                         }
                         case "actioncost": {
-                            Config.setPathStyle(PathRenderable.PathStyle.ACTION_COST);
+                            api.setPathDisplayStyle(PathRenderable.PathStyle.ACTION_COST);
                             break;
                         }
                         case "actiontype": {
-                            Config.setPathStyle(PathRenderable.PathStyle.ACTION_TYPE);
+                            api.setPathDisplayStyle(PathRenderable.PathStyle.ACTION_TYPE);
                             break;
                         }
                     }
@@ -270,12 +222,7 @@ public class StevebotCommands {
                 "statistics",
                 "/statistics\n    Displays statistics about the last pathfinding process.",
                 (templateId, parameters) -> {
-                    final PathfindingResult result = Pathfinding.lastResults;
-                    if (result == null) {
-                        StevebotLog.log("No statistics available.");
-                    } else {
-                        result.log();
-                    }
+                    api.printStatistics(false);
                 });
 
         // statistics console
@@ -284,12 +231,7 @@ public class StevebotCommands {
                 "statistics console",
                 "/statistics console\n    Displays statistics about the last pathfinding process (formatted for console output).",
                 (templateId, parameters) -> {
-                    final PathfindingResult result = Pathfinding.lastResults;
-                    if (result == null) {
-                        StevebotLog.log("No statistics available.");
-                    } else {
-                        result.logConsole();
-                    }
+                    api.printStatistics(true);
                 });
 
         // clear node cache
@@ -298,8 +240,7 @@ public class StevebotCommands {
                 "clear blockcache",
                 "/clear blockcache\n    Clears the block-cache.",
                 (templateId, parameters) -> {
-                    BlockUtils.getBlockProvider().getBlockCache().clear();
-                    StevebotLog.log("Cache cleared.");
+                    api.clearNodeCache();
                 });
 
         // display action cost recording stats
@@ -308,7 +249,7 @@ public class StevebotCommands {
                 "actioncosts",
                 "/actioncosts\n    Logs the costs of the recorded actions.",
                 (templateId, parameters) -> {
-                    ActionObserver.log();
+                    api.displayActionCostStats();
                 });
 
         // clear action cost recording stats
@@ -317,7 +258,7 @@ public class StevebotCommands {
                 "actioncosts clear",
                 "/actioncosts clear\n    Clears costs of the recorded actions.",
                 (templateId, parameters) -> {
-                    ActionObserver.clear();
+                    api.clearActionCostStats();
                 });
 
     }

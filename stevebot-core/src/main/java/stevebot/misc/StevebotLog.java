@@ -1,8 +1,7 @@
-package stevebot;
+package stevebot.misc;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import stevebot.misc.Config;
 import stevebot.player.PlayerUtils;
 
 public class StevebotLog {

@@ -2,7 +2,7 @@ package stevebot.pathfinding;
 
 import java.util.ArrayList;
 import java.util.List;
-import stevebot.StevebotLog;
+import stevebot.misc.StevebotLog;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.pathfinding.path.EmptyPath;

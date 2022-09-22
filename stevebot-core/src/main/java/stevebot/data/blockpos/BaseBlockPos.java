@@ -1,5 +1,6 @@
 package stevebot.data.blockpos;
 
+
 import net.minecraft.util.math.BlockPos;
 
 public class BaseBlockPos {
@@ -20,14 +21,6 @@ public class BaseBlockPos {
      * Creates a position with the same coordinates as the given position
      */
     public BaseBlockPos(BaseBlockPos pos) {
-        this(pos.getX(), pos.getY(), pos.getZ());
-    }
-
-
-    /**
-     * Creates a position with the same coordinates as the given position
-     */
-    public BaseBlockPos(BlockPos pos) {
         this(pos.getX(), pos.getY(), pos.getZ());
     }
 

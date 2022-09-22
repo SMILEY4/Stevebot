@@ -1,6 +1,6 @@
 package stevebot.pathfinding;
 
-import stevebot.StevebotLog;
+import stevebot.misc.StevebotLog;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventManager;
 import stevebot.pathfinding.execution.PathExecutor;

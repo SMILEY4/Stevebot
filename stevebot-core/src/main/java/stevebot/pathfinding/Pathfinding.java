@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
-import stevebot.StevebotLog;
+import stevebot.misc.StevebotLog;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockProvider;
 import stevebot.data.blocks.BlockUtils;

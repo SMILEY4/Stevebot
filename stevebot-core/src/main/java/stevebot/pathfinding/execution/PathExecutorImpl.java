@@ -1,7 +1,7 @@
 package stevebot.pathfinding.execution;
 
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import stevebot.StevebotLog;
+import stevebot.misc.StevebotLog;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.events.EventListener;
 import stevebot.misc.Config;
