@@ -3,50 +3,33 @@ package stevebot.data.items;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemTool;
-import stevebot.data.items.wrapper.ItemBlockWrapper;
 import stevebot.data.items.wrapper.ItemHandWrapper;
-import stevebot.data.items.wrapper.ItemToolWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.math.MathUtils;
-import stevebot.minecraft.MinecraftAdapter;
+import stevebot.minecraft.NewMinecraftAdapter;
 
 public class ItemLibrary {
 
-
-    public static final ItemWrapper INVALID_ITEM = new ItemWrapper(ItemLibrary.ID_INVALID_ITEM, "null", null);
+    public static final ItemWrapper INVALID_ITEM = new ItemWrapper(ItemLibrary.ID_INVALID_ITEM, "null");
     public static final ItemHandWrapper ITEM_HAND = new ItemHandWrapper();
     public static final int ID_INVALID_ITEM = -2;
 
-    private final MinecraftAdapter minecraftAdapter;
+    private final NewMinecraftAdapter minecraftAdapter;
     private ItemWrapper[] items;
 
-    public ItemLibrary(final MinecraftAdapter minecraftAdapter) {
+    public ItemLibrary(final NewMinecraftAdapter minecraftAdapter) {
         this.minecraftAdapter = minecraftAdapter;
     }
 
     /**
-     * Initializes this library. Fetches all items from the {@link Item#REGISTRY} and stores them.
+     * Initializes this library.
      */
     public void onEventInitialize() {
 
-        List<ItemWrapper> itemList = new ArrayList<>();
+        List<ItemWrapper> itemList = minecraftAdapter.getItems();
         int maxId = 0;
-        for (Item item : minecraftAdapter.getRegisteredItems()) {
-
-            final int id = getId(item);
-            final String name = getName(item);
-            maxId = Math.max(maxId, id);
-
-            if (item instanceof ItemBlock) {
-                itemList.add(new ItemBlockWrapper(id, name, (ItemBlock) item));
-            } else if (item instanceof ItemTool) {
-                itemList.add(new ItemToolWrapper(id, name, (ItemTool) item));
-            } else {
-                itemList.add(new ItemWrapper(id, name, item));
-            }
+        for (ItemWrapper item : itemList) {
+            maxId = Math.max(maxId, item.getId());
         }
 
         items = new ItemWrapper[maxId + 1];
@@ -67,15 +50,6 @@ public class ItemLibrary {
 
 
     /**
-     * @param item the minecraft-{@link Item}
-     * @return the {@link ItemWrapper} representing the given {@link Item}
-     */
-    public ItemWrapper getItemByMCItem(Item item) {
-        return getItemByIndex(getId(item));
-    }
-
-
-    /**
      * @param id the id of the item
      * @return the item with the given id or null.
      */
@@ -90,24 +64,6 @@ public class ItemLibrary {
      */
     public ItemWrapper getItemByName(String name) {
         return getItemByIndex(getIdFromName(name));
-    }
-
-
-    /**
-     * @param item the {@link Item}
-     * @return the name of the given item.
-     */
-    private int getId(Item item) {
-        return minecraftAdapter.getItemId(item);
-    }
-
-
-    /**
-     * @param item the {@link Item}
-     * @return the id of the given item
-     */
-    private String getName(Item item) {
-        return minecraftAdapter.getItemName(item);
     }
 
 

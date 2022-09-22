@@ -1,29 +1,19 @@
 package stevebot.data.items.wrapper;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTool;
-
 public class ItemWrapper {
 
 
     private final int id;
     private final String name;
-    private final Item item;
-    private final ItemStack stack;
 
 
     /**
      * @param id   the id of the item
      * @param name the name of the item
-     * @param item the minecraft item
      */
-    public ItemWrapper(int id, String name, Item item) {
+    public ItemWrapper(int id, String name) {
         this.id = id;
         this.name = name;
-        this.item = item;
-        this.stack = new ItemStack(item, 1);
     }
 
 
@@ -34,7 +24,6 @@ public class ItemWrapper {
         return id;
     }
 
-
     /**
      * @return the name of the item ("minecraft:item_name")
      */
@@ -44,21 +33,12 @@ public class ItemWrapper {
 
 
     public boolean isBlock() {
-        return item instanceof ItemBlock;
+        return false; // TODO: item instanceof ItemBlock;
     }
+
 
     public boolean isTool() {
-        return item instanceof ItemTool;
+        return false; // TODO item instanceof ItemTool;
     }
-
-    /**
-     * @param stackSize the size of the stack
-     * @return a {@link ItemStack} with the item of this wrapper and the given size
-     */
-    public ItemStack getStack(int stackSize) {
-        stack.setCount(stackSize);
-        return stack;
-    }
-
 
 }

@@ -34,7 +34,7 @@ public class BlockCache {
 
 
     /**
-     * Handles a blaced block
+     * Handles a placed block
      *
      * @param posX the x-position of the broken block
      * @param posY the y-position of the broken block

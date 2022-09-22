@@ -1,8 +1,12 @@
 package stevebot.minecraft;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -10,7 +14,9 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MouseHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -19,15 +25,21 @@ import net.minecraft.world.World;
 import org.lwjgl.input.Mouse;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockUtils;
+import stevebot.data.blocks.BlockWrapper;
 import stevebot.data.items.ItemUtils;
 import stevebot.data.items.wrapper.ItemStackWrapper;
+import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.math.vectors.vec2.Vector2d;
 import stevebot.math.vectors.vec3.Vector3d;
+import stevebot.pathfinding.actions.ActionCosts;
 import stevebot.player.PlayerInputConfig;
 
 public class NewMinecraftAdapterImpl implements NewMinecraftAdapter {
 
     private MouseChangeInterceptor mouseChangeInterceptor = null;
+
+    private Map<String, Item> items = new HashMap<>();
+    private Map<String, Block> blocks = new HashMap<>();
 
     public NewMinecraftAdapterImpl() {
         getMinecraft().mouseHelper = new MouseHelper() {
@@ -38,6 +50,26 @@ public class NewMinecraftAdapterImpl implements NewMinecraftAdapter {
                 }
             }
         };
+        for (Item item : getRegisteredItems()) {
+            String name = Item.REGISTRY.getNameForObject(item).toString();
+            items.put(name, item);
+        }
+        for (Block block : getRegisteredBlocks()) {
+            String name = Block.REGISTRY.getNameForObject(block).toString();
+            blocks.put(name, block);
+        }
+    }
+
+    private List<Item> getRegisteredItems() {
+        List<Item> items = new ArrayList<>();
+        Item.REGISTRY.forEach(items::add);
+        return items;
+    }
+
+    private List<Block> getRegisteredBlocks() {
+        List<Block> blocks = new ArrayList<>();
+        Block.REGISTRY.forEach(blocks::add);
+        return blocks;
     }
 
 
@@ -212,9 +244,10 @@ public class NewMinecraftAdapterImpl implements NewMinecraftAdapter {
         final List<ItemStackWrapper> items = new ArrayList<>();
         final InventoryPlayer inventory = getMinecraft().player.inventory;
         for (int i = 0; i < 9; i++) {
-            final ItemStack item = inventory.getStackInSlot(i);
-            if (item != ItemStack.EMPTY && !item.isEmpty()) {
-                items.add(new ItemStackWrapper(ItemUtils.getItemLibrary().getItemByMCItem(item.getItem()), item.getCount(), i));
+            final ItemStack itemStack = inventory.getStackInSlot(i);
+            if (itemStack != ItemStack.EMPTY && !itemStack.isEmpty()) {
+                final int itemId = Item.REGISTRY.getIDForObject(itemStack.getItem());
+                items.add(new ItemStackWrapper(ItemUtils.getItemLibrary().getItemById(itemId), itemStack.getCount(), i));
             }
         }
         return items;
@@ -240,10 +273,145 @@ public class NewMinecraftAdapterImpl implements NewMinecraftAdapter {
     @Override
     public void setPlayerSprinting(final boolean sprint) {
         final EntityPlayerSP player = getMinecraft().player;
-        if(player != null) {
+        if (player != null) {
             player.setSprinting(sprint);
         }
+    }
 
+    @Override
+    public List<BlockWrapper> getBlocks() {
+        return null; // TODO
+    }
+
+    @Override
+    public List<ItemWrapper> getItems() {
+        return null; // TODO
+    }
+
+    @Override
+    public float getBreakDuration(ItemWrapper item, BlockWrapper block) {
+        final Block mcBlock = blocks.get(block.getName());
+        if (item == null) {
+            return getBreakDuration(ItemStack.EMPTY, mcBlock.getDefaultState());
+        } else {
+            final Item mcItem = items.get(item.getName());
+            return getBreakDuration(new ItemStack(mcItem), mcBlock.getDefaultState());
+        }
+    }
+
+    @Override
+    public String getBlockFacing(final BaseBlockPos position) {
+        final IBlockState blockState = getWorld().getBlockState(new BlockPos(position.getX(), position.getY(), position.getZ()));
+        final EnumFacing.Axis facing = blockState.getValue(BlockHorizontal.FACING).getAxis();
+        return facing.getName();
+    }
+
+    @Override
+    public boolean isDoorOpen(final BaseBlockPos position) {
+        final IBlockState blockState = getWorld().getBlockState(new BlockPos(position.getX(), position.getY(), position.getZ()));
+        return blockState.getValue(BlockDoor.OPEN);
+    }
+
+    /**
+     * @param itemStack the used item
+     * @param state     the block to break
+     * @return the time (in ticks) it takes to break the given block with the given item
+     */
+    private static float getBreakDuration(ItemStack itemStack, IBlockState state) {
+        // sources:
+        // https://greyminecraftcoder.blogspot.com/2015/01/calculating-rate-of-damage-when-mining.html
+        // https://minecraft.gamepedia.com/Breaking
+        final float blockHardness = state.getBlockHardness(null, null);
+        if (blockHardness < 0) {
+            return (float) ActionCosts.get().COST_INFINITE;
+        }
+        final float playerBreakSpeed = getDigSpeed(itemStack, state);
+        final int canHarvestMod = (itemStack != null && itemStack.canHarvestBlock(state)) ? 30 : 100;
+        final float dmgPerTick = ((playerBreakSpeed / blockHardness) * (1f / canHarvestMod));
+        return 1f / dmgPerTick;
+    }
+
+
+    private static float getDigSpeed(ItemStack itemStack, IBlockState state) {
+        return getDigSpeed(itemStack, state, false, 0, false, 0, 0, false, false, true);
+    }
+
+
+    /**
+     * @param itemStack the used tool or null for hand
+     *                  see {@link net.minecraft.entity.player.EntityPlayer#getDigSpeed(IBlockState, BlockPos)}
+     */
+    private static float getDigSpeed(
+            ItemStack itemStack,
+            IBlockState state,
+            boolean hasEffectHaste,
+            int effectHasteAmplifier,
+            boolean hasEffectMiningFatigue,
+            int effectMiningFatigueAmplifier,
+            int efficiencyModifier,
+            boolean aquaAffinityModifier,
+            boolean isInsideWater,
+            boolean isOnGround
+    ) {
+
+        float f = getDestroySpeed(itemStack, state);
+
+        if (f > 1.0F) {
+            int i = efficiencyModifier;
+            if (i > 0 && (itemStack != null && !itemStack.isEmpty())) {
+                f += (float) (i * i + 1);
+            }
+        }
+
+        if (hasEffectHaste) {
+            f *= 1.0F + (float) (effectHasteAmplifier + 1) * 0.2F;
+        }
+
+        if (hasEffectMiningFatigue) {
+            float f1;
+            switch (effectMiningFatigueAmplifier) {
+                case 0: {
+                    f1 = 0.3F;
+                    break;
+                }
+                case 1: {
+                    f1 = 0.09F;
+                    break;
+                }
+                case 2: {
+                    f1 = 0.0027F;
+                    break;
+                }
+                case 3:
+                default: {
+                    f1 = 8.1E-4F;
+                }
+            }
+            f *= f1;
+        }
+
+        if (isInsideWater && !aquaAffinityModifier) {
+            f /= 5.0F;
+        }
+
+        if (!isOnGround) {
+            f /= 5.0F;
+        }
+
+        return (f < 0 ? 0 : f);
+    }
+
+
+    /**
+     * @param itemStack the used tool or null for hand
+     * @param state     the block
+     */
+    private static float getDestroySpeed(ItemStack itemStack, IBlockState state) {
+        float f = 1.0F;
+        if (itemStack != null && !itemStack.isEmpty()) {
+            f *= itemStack.getDestroySpeed(state);
+        }
+        return f;
     }
 
 }

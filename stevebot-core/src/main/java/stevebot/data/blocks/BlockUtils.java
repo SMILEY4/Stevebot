@@ -1,18 +1,13 @@
 package stevebot.data.blocks;
 
-import net.minecraft.block.BlockDoor;
-import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.minecraft.MinecraftAdapter;
+import stevebot.minecraft.NewMinecraftAdapter;
 import stevebot.misc.Direction;
 
 public class BlockUtils {
-
 
     static final int WATER_FLOWING = 8;
     static final int WATER_STILL = 9;
@@ -49,14 +44,16 @@ public class BlockUtils {
 
 
     private static MinecraftAdapter minecraftAdapter;
+    private static NewMinecraftAdapter newMinecraftAdapter;
     private static BlockProvider blockProvider;
     private static BlockLibrary blockLibrary;
 
 
-    public static void initialize(MinecraftAdapter minecraftAdapter, BlockProvider blockProvider, BlockLibrary blockLibrary) {
+    public static void initialize(NewMinecraftAdapter newMinecraftAdapter, MinecraftAdapter minecraftAdapter, BlockProvider blockProvider, BlockLibrary blockLibrary) {
         BlockUtils.minecraftAdapter = minecraftAdapter;
         BlockUtils.blockProvider = blockProvider;
         BlockUtils.blockLibrary = blockLibrary;
+        BlockUtils.newMinecraftAdapter = newMinecraftAdapter;
     }
 
 
@@ -199,23 +196,21 @@ public class BlockUtils {
      * @return whether the player can walk through the block at the given position. This does not check the surrounding blocks.
      */
     public static boolean canWalkThrough(BaseBlockPos pos) {
-        final BlockWrapper block = blockProvider.getBlockAt(pos);
-        return canWalkThrough(block, new BlockPos(pos.getX(), pos.getY(), pos.getZ()));
+        return canWalkThrough(blockProvider.getBlockAt(pos));
     }
 
 
     /**
      * @param block the block
-     * @param pos   the position
      * @return whether the player can walk through the given block. This does not check the surrounding blocks.
      */
-    public static boolean canWalkThrough(BlockWrapper block, BlockPos pos) {
+    public static boolean canWalkThrough(BlockWrapper block) {
         if (isLiquid(block) || WATERLILY == block.getId() || isDangerous(block)
                 || ICE == block.getId() || FROSTED_ICE == block.getId() || PACKED_ICE == block.getId()
                 || isDoorLike(block)) {
             return false;
         } else {
-            return block.getBlock().isPassable(minecraftAdapter.getWorld(), pos);
+            return block.isPassable();
         }
     }
 
@@ -238,7 +233,7 @@ public class BlockUtils {
         if (isLiquid(block) || isDangerous(block)) {
             return false;
         } else {
-            return block.getBlock().getDefaultState().isNormalCube() || ICE == block.getId() || FROSTED_ICE == block.getId() || PACKED_ICE == block.getId();
+            return block.isNormalCube() || ICE == block.getId() || FROSTED_ICE == block.getId() || PACKED_ICE == block.getId();
         }
     }
 
@@ -375,23 +370,21 @@ public class BlockUtils {
             return false;
         }
 
-        final IBlockState blockState = minecraftAdapter.getWorld().getBlockState(new BlockPos(position.getX(), position.getY(), position.getZ()));
-
-        final EnumFacing.Axis facing = blockState.getValue(BlockHorizontal.FACING).getAxis();
+        final String facing = newMinecraftAdapter.getBlockFacing(position);
 
         boolean facingDoor = false;
-        if (facing == EnumFacing.Axis.X) {
+        if ("x".equalsIgnoreCase(facing)) {
             if (direction == Direction.EAST || direction == Direction.WEST) {
                 facingDoor = true;
             }
-        } else if (facing == EnumFacing.Axis.Z) {
+        } else if ("z".equalsIgnoreCase(facing)) {
             if (direction == Direction.NORTH || direction == Direction.SOUTH) {
                 facingDoor = true;
             }
         }
 
         if (isFenceGate(position)) {
-            return facingDoor && blockState.getValue(BlockDoor.OPEN);
+            return facingDoor && newMinecraftAdapter.isDoorOpen(position);
         } else {
             return !facingDoor;
         }
@@ -521,26 +514,6 @@ public class BlockUtils {
      */
     public static BaseBlockPos toBaseBlockPos(double x, double y, double z) {
         return new BaseBlockPos(toBlockPos(x), toBlockPos(y), toBlockPos(z));
-    }
-
-
-    /**
-     * @param pos the position as a {@link Vector3d}
-     * @return the position as a {@link BlockPos}
-     */
-    public static BlockPos toMCBlockPos(Vector3d pos) {
-        return toMCBlockPos(pos.x, pos.y, pos.z);
-    }
-
-
-    /**
-     * @param x the x-position
-     * @param y the x-position
-     * @param z the x-position
-     * @return the position as a {@link BlockPos}
-     */
-    public static BlockPos toMCBlockPos(double x, double y, double z) {
-        return new BlockPos(toBlockPos(x), toBlockPos(y), toBlockPos(z));
     }
 
 

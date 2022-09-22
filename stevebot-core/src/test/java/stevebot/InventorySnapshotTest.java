@@ -17,15 +17,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class InventorySnapshotTest {
 
 
-    private static final BlockWrapper BLOCK_STONE = new BlockWrapper(1, "minecraft:stone", null);
-    private static final BlockWrapper BLOCK_DIRT = new BlockWrapper(3, "minecraft:dirt", null);
-    private static final BlockWrapper BLOCK_SAND = new BlockWrapper(12, "minecraft:sand", null);
+    private static final BlockWrapper BLOCK_STONE = new BlockWrapper(1, "minecraft:stone");
+    private static final BlockWrapper BLOCK_DIRT = new BlockWrapper(3, "minecraft:dirt");
+    private static final BlockWrapper BLOCK_SAND = new BlockWrapper(12, "minecraft:sand");
 
-    private static final ItemWrapper ITEM_STONE = new ItemBlockWrapper(1, "minecraft:stone", null);
-    private static final ItemWrapper ITEM_DIRT = new ItemBlockWrapper(3, "minecraft:dirt", null);
-    private static final ItemWrapper ITEM_SAND = new ItemBlockWrapper(12, "minecraft:sand", null);
-    private static final ItemWrapper ITEM_IRON_AXE = new ItemToolWrapper(258, "minecraft:iron_axe", null);
-    private static final ItemWrapper ITEM_DIA_PICKAXE = new ItemToolWrapper(278, "minecraft:diamond_pickaxe", null);
+    private static final ItemWrapper ITEM_STONE = new ItemBlockWrapper(1, "minecraft:stone");
+    private static final ItemWrapper ITEM_DIRT = new ItemBlockWrapper(3, "minecraft:dirt");
+    private static final ItemWrapper ITEM_SAND = new ItemBlockWrapper(12, "minecraft:sand");
+    private static final ItemWrapper ITEM_IRON_AXE = new ItemToolWrapper(258, "minecraft:iron_axe");
+    private static final ItemWrapper ITEM_DIA_PICKAXE = new ItemToolWrapper(278, "minecraft:diamond_pickaxe");
 
 
     static {

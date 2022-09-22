@@ -244,7 +244,7 @@ public class ActionUtils {
         if (bestTool == ItemLibrary.INVALID_ITEM) {
             return BreakBlockCheckResult.invalid(blockPos);
         } else {
-            final float ticksToBreak = ItemUtils.getBreakDuration(bestTool.getStack(1), blockPos);
+            final float ticksToBreak = ItemUtils.getBreakDuration(bestTool, blockPos);
             return BreakBlockCheckResult.valid(blockPos, bestTool, ticksToBreak);
         }
     }

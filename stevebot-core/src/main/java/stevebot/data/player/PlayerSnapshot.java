@@ -1,6 +1,5 @@
 package stevebot.data.player;
 
-import net.minecraft.item.Item;
 import stevebot.data.blocks.BlockLibrary;
 import stevebot.data.blocks.BlockUtils;
 import stevebot.data.blocks.BlockWrapper;
@@ -172,16 +171,6 @@ public class PlayerSnapshot {
 
 
     /**
-     * @param item the item to search for
-     * @return the slot with a same item as the given item or -1
-     */
-    public int findSlotByMCItem(Item item) {
-        final int searchId = ItemUtils.getItemLibrary().getItemByMCItem(item).getId();
-        return findSlotById(searchId);
-    }
-
-
-    /**
      * @param id the item-id to search for
      * @return the slot with an item with the id as the given id, or -1
      */
@@ -293,7 +282,7 @@ public class PlayerSnapshot {
         float bestSpeed = (float) ActionCosts.get().COST_INFINITE;
         for (int i = 0; i < 9; i++) {
             final ItemToolWrapper tool = getAsTool(i);
-            final float breakTime = ItemUtils.getBreakDuration(tool.getStack(1), block.getBlock().getDefaultState());
+            final float breakTime = ItemUtils.getBreakDuration(tool, block);
             if (bestSpeed > breakTime) {
                 bestSpeed = breakTime;
                 slotBest = i;

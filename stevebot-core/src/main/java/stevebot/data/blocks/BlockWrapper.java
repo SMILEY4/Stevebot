@@ -1,6 +1,5 @@
 package stevebot.data.blocks;
 
-import net.minecraft.block.Block;
 import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.wrapper.ItemWrapper;
 
@@ -9,7 +8,6 @@ public class BlockWrapper {
 
     private final int id;
     private final String name;
-    private final Block block;
     private ItemWrapper item;
 
 
@@ -18,19 +16,8 @@ public class BlockWrapper {
      * @param name the name of the block
      */
     public BlockWrapper(int id, String name) {
-        this(id, name, null);
-    }
-
-
-    /**
-     * @param id    the id of the block
-     * @param name  the name of the block
-     * @param block the minecraft block
-     */
-    public BlockWrapper(int id, String name, Block block) {
         this.id = id;
         this.name = name;
-        this.block = block;
     }
 
 
@@ -49,14 +36,14 @@ public class BlockWrapper {
         return name;
     }
 
-
-    /**
-     * @return {@link Block} of this wrapper or null
-     */
-    public Block getBlock() {
-        return block;
+    public boolean isPassable() {
+        return false; // TODO  getBlock().isPassable(minecraftAdapter.getWorld(), pos);
     }
 
+
+    public boolean isNormalCube() {
+        return false; // TODO getBlock().getDefaultState().isNormalCube()
+    }
 
     /**
      * @param item sets the item corresponding to this block

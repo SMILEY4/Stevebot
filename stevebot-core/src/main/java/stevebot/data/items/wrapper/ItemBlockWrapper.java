@@ -1,6 +1,5 @@
 package stevebot.data.items.wrapper;
 
-import net.minecraft.item.ItemBlock;
 import stevebot.data.blocks.BlockLibrary;
 import stevebot.data.blocks.BlockWrapper;
 
@@ -13,10 +12,9 @@ public class ItemBlockWrapper extends ItemWrapper {
     /**
      * @param id   the id of the item
      * @param name the name of the item
-     * @param item the minecraft item
      */
-    public ItemBlockWrapper(int id, String name, ItemBlock item) {
-        super(id, name, item);
+    public ItemBlockWrapper(int id, String name) {
+        super(id, name);
     }
 
 

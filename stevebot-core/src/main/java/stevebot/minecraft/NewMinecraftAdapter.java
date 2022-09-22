@@ -3,7 +3,9 @@ package stevebot.minecraft;
 import java.util.List;
 import net.minecraft.client.settings.GameSettings;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.data.blocks.BlockWrapper;
 import stevebot.data.items.wrapper.ItemStackWrapper;
+import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.math.vectors.vec2.Vector2d;
 import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.player.PlayerInputConfig;
@@ -78,5 +80,18 @@ public interface NewMinecraftAdapter {
     float getPlayerHealth();
 
     void setPlayerSprinting(boolean sprint);
+
+    List<BlockWrapper> getBlocks();
+
+    List<ItemWrapper> getItems();
+
+    float getBreakDuration(ItemWrapper item, BlockWrapper block);
+
+    /**
+     * @return either "x", "y", or "z"
+     */
+    String getBlockFacing(BaseBlockPos position);
+
+    boolean isDoorOpen(final BaseBlockPos position);
 
 }
