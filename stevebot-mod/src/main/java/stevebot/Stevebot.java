@@ -23,6 +23,8 @@ import stevebot.events.ModEventProducer;
 import stevebot.events.PostInitEvent;
 import stevebot.minecraft.MinecraftAdapter;
 import stevebot.minecraft.MinecraftAdapterImpl;
+import stevebot.minecraft.OpenGLAdapter;
+import stevebot.minecraft.OpenGLAdapterImpl;
 import stevebot.misc.Config;
 import stevebot.pathfinding.PathHandler;
 import stevebot.player.PlayerCamera;
@@ -113,7 +115,7 @@ public class Stevebot {
 
         @Override
         public void onEvent(RenderWorldLastEvent event) {
-            renderer.onEventRender();
+            renderer.onEventRender(PlayerUtils.getPlayerPosition());
         }
     };
 
@@ -171,6 +173,7 @@ public class Stevebot {
 
         // minecraft
         MinecraftAdapter minecraftAdapter = new MinecraftAdapterImpl();
+        OpenGLAdapter openGLAdapter = new OpenGLAdapterImpl();
 
         // events
         eventManager = new EventManagerImpl();
@@ -200,7 +203,7 @@ public class Stevebot {
         ItemUtils.initialize(itemLibrary);
 
         // renderer
-        renderer = new Renderer(minecraftAdapter, blockProvider);
+        renderer = new Renderer(openGLAdapter, blockProvider);
 
         // player camera
         playerCamera = new PlayerCamera(minecraftAdapter);

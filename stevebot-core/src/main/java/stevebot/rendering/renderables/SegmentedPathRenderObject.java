@@ -1,6 +1,5 @@
 package stevebot.rendering.renderables;
 
-import net.minecraft.util.math.BlockPos;
 import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
@@ -12,25 +11,6 @@ public class SegmentedPathRenderObject implements Renderable {
     private final Vector3d[] positions;
     private final Color[] colors;
     private float width;
-
-
-    /**
-     * @param positions the position of the vertices of this path.
-     * @param colors    the colors of the vertices of this path.
-     */
-    public SegmentedPathRenderObject(BlockPos[] positions, Color[] colors) {
-        this(positions, DEFAULT_LINE_WIDTH, colors);
-    }
-
-
-    /**
-     * @param positions the position of the vertices of this path.
-     * @param width     the with of the path in pixels
-     * @param colors    the colors of the vertices of this path.
-     */
-    public SegmentedPathRenderObject(BlockPos[] positions, float width, Color[] colors) {
-        this(Renderable.toVecArray(positions), width, colors);
-    }
 
 
     /**

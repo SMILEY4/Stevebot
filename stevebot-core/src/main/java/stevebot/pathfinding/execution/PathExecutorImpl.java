@@ -67,7 +67,7 @@ public class PathExecutorImpl implements TransitionListener<ExecutionState, Exec
         this.pathFactory = new PathFactory(minecraftAdapter, posStart, goal);
         this.stateMachine.addListener(this);
         this.goalRenderable = goal.createRenderable();
-        this.startRenderable = new BoxRenderObject(posStart.copyAsMCBlockPos(), 3, Color.YELLOW);
+        this.startRenderable = new BoxRenderObject(posStart, 3, Color.YELLOW);
         this.renderer = renderer;
         renderer.addRenderable(goalRenderable);
         renderer.addRenderable(startRenderable);

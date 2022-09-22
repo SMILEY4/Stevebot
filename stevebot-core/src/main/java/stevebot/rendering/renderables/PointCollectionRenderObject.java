@@ -1,6 +1,5 @@
 package stevebot.rendering.renderables;
 
-import net.minecraft.util.math.BlockPos;
 import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
@@ -12,44 +11,6 @@ public class PointCollectionRenderObject implements Renderable {
     private final Vector3d[] positions;
     private float size;
     private final Color[] colors;
-
-
-    /**
-     * @param positions the positions of the points
-     * @param color     the colors of the points
-     */
-    public PointCollectionRenderObject(BlockPos[] positions, Color color) {
-        this(positions, DEFAULT_POINT_SIZE, Renderable.fillColorArray(color, positions.length));
-    }
-
-
-    /**
-     * @param positions the positions of the points
-     * @param colors    the colors of the points
-     */
-    public PointCollectionRenderObject(BlockPos[] positions, Color[] colors) {
-        this(positions, DEFAULT_POINT_SIZE, colors);
-    }
-
-
-    /**
-     * @param positions the positions of the points
-     * @param size      the size of the points in pixels
-     * @param color     the color of all points
-     */
-    public PointCollectionRenderObject(BlockPos[] positions, float size, Color color) {
-        this(Renderable.toVecArray(positions), size, Renderable.fillColorArray(color, positions.length));
-    }
-
-
-    /**
-     * @param positions the positions of the points
-     * @param size      the size of the points in pixels
-     * @param colors    the colors of the points
-     */
-    public PointCollectionRenderObject(BlockPos[] positions, float size, Color[] colors) {
-        this(Renderable.toVecArray(positions), size, colors);
-    }
 
 
     /**

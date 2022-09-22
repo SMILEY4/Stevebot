@@ -1,6 +1,5 @@
 package stevebot.rendering.renderables;
 
-import net.minecraft.util.math.BlockPos;
 import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
@@ -12,44 +11,6 @@ public class BoxCollectionRenderObject implements Renderable {
     private final Vector3d[] positions;
     private final Color[] colors;
     private float width;
-
-
-    /**
-     * @param positions the positions of the boxes
-     * @param color     the color of all boxes
-     */
-    public BoxCollectionRenderObject(BlockPos[] positions, Color color) {
-        this(positions, DEFAULT_LINE_WIDTH, Renderable.fillColorArray(color, positions.length));
-    }
-
-
-    /**
-     * @param positions the positions of the boxes
-     * @param colors    the colors of the boxes
-     */
-    public BoxCollectionRenderObject(BlockPos[] positions, Color[] colors) {
-        this(positions, DEFAULT_LINE_WIDTH, colors);
-    }
-
-
-    /**
-     * @param positions the positions of the boxes
-     * @param width     the with in pixels of the outline of the boxes
-     * @param color     the color of all boxes
-     */
-    public BoxCollectionRenderObject(BlockPos[] positions, float width, Color color) {
-        this(Renderable.toVecArray(positions, 0, 0, 0), width, Renderable.fillColorArray(color, positions.length));
-    }
-
-
-    /**
-     * @param positions the positions of the boxes
-     * @param width     the with in pixels of the outline of the boxes
-     * @param colors    the colors of the boxes
-     */
-    public BoxCollectionRenderObject(BlockPos[] positions, float width, Color[] colors) {
-        this(Renderable.toVecArray(positions, 0, 0, 0), width, colors);
-    }
 
 
     /**

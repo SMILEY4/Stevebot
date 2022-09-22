@@ -1,6 +1,6 @@
 package stevebot.rendering.renderables;
 
-import net.minecraft.util.math.BlockPos;
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
@@ -13,25 +13,16 @@ public class BoxRenderObject implements Renderable {
     private float width;
     private final Color color;
 
-
-    /**
-     * @param pos   the position of the box
-     * @param color the color of the box
-     */
-    public BoxRenderObject(BlockPos pos, Color color) {
-        this(pos, DEFAULT_LINE_WIDTH, color);
-    }
-
-
     /**
      * @param pos   the position of the box
      * @param width the with in pixels of the outline
      * @param color the color of the box
      */
-    public BoxRenderObject(BlockPos pos, float width, Color color) {
-        this(new Vector3d(pos.getX(), pos.getY(), pos.getZ()), width, color);
+    public BoxRenderObject(BaseBlockPos pos, float width, Color color) {
+        this.pos = new Vector3d(pos.getX(), pos.getY(), pos.getZ());
+        this.width = width;
+        this.color = color;
     }
-
 
     /**
      * @param pos   the position of the box

@@ -1,6 +1,5 @@
 package stevebot.rendering.renderables;
 
-import net.minecraft.util.math.BlockPos;
 import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
@@ -12,25 +11,6 @@ public class PointRenderObject implements Renderable {
     private final Vector3d pos;
     private float size;
     private final Color color;
-
-
-    /**
-     * @param pos   the position of the point
-     * @param color the color of the point
-     */
-    public PointRenderObject(BlockPos pos, Color color) {
-        this(pos, DEFAULT_POINT_SIZE, color);
-    }
-
-
-    /**
-     * @param pos   the position of the point
-     * @param size  the size of this point in pixels
-     * @param color the color of the point
-     */
-    public PointRenderObject(BlockPos pos, float size, Color color) {
-        this(new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), size, color);
-    }
 
 
     /**

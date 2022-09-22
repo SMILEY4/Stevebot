@@ -2,7 +2,6 @@ package stevebot.rendering.renderables;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.util.math.BlockPos;
 import stevebot.math.vectors.vec3.Vector3d;
 import stevebot.rendering.Color;
 import stevebot.rendering.Renderable;
@@ -31,17 +30,6 @@ public class DynPointCollectionRenderObject implements Renderable {
      */
     public DynPointCollectionRenderObject(float size) {
         this.size = size;
-    }
-
-
-    /**
-     * Adds a new point to this renderable
-     *
-     * @param pos   the position of the point. The point will be in the center of the block.
-     * @param color the color of the point
-     */
-    public void addPoint(BlockPos pos, Color color) {
-        this.addPoint(new Vector3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), color);
     }
 
 
