@@ -1,8 +1,6 @@
 package stevebot.data.blockpos;
 
 
-import net.minecraft.util.math.BlockPos;
-
 public class BaseBlockPos {
 
 
@@ -80,14 +78,6 @@ public class BaseBlockPos {
      */
     public double getCenterZ() {
         return z + 0.5;
-    }
-
-
-    /**
-     * @return a {@link BlockPos} with the same coordinates
-     */
-    public BlockPos copyAsMCBlockPos() {
-        return new BlockPos(x, y, z);
     }
 
 

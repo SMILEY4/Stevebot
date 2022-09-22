@@ -1,16 +1,11 @@
 package stevebot.player;
 
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.MouseHelper;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import org.lwjgl.input.Mouse;
 import stevebot.data.blockpos.BaseBlockPos;
+import stevebot.math.MathUtils;
 import stevebot.math.vectors.vec2.Vector2d;
 import stevebot.math.vectors.vec2.Vector2f;
 import stevebot.math.vectors.vec3.Vector3d;
-import stevebot.minecraft.MinecraftAdapter;
+import stevebot.minecraft.NewMinecraftAdapter;
 import stevebot.misc.Direction;
 
 public class PlayerCamera {
@@ -29,18 +24,12 @@ public class PlayerCamera {
     private boolean isFreelook = false;
     private CameraState preForcedState = state;
     private final Vector2f lastFreeView = new Vector2f();
-    private final MinecraftAdapter minecraftAdapter;
+    private final NewMinecraftAdapter minecraftAdapter;
 
-    public PlayerCamera(MinecraftAdapter minecraftAdapter) {
+
+    public PlayerCamera(NewMinecraftAdapter minecraftAdapter) {
         this.minecraftAdapter = minecraftAdapter;
-        minecraftAdapter.setMouseHelper(new MouseHelper() {
-            @Override
-            public void mouseXYChange() {
-                if (getState() != CameraState.LOCKED) {
-                    super.mouseXYChange();
-                }
-            }
-        });
+        this.minecraftAdapter.setMouseChangeInterceptor(() -> getState() != CameraState.LOCKED);
     }
 
     /**
@@ -49,9 +38,7 @@ public class PlayerCamera {
      * @param isTickStart whether this update is at the start or end of the tick event
      */
     public void onRenderTickEvent(boolean isTickStart) {
-
-        EntityPlayerSP player = PlayerUtils.getPlayer();
-        if (player == null) {
+        if (!minecraftAdapter.hasPlayer()) {
             return;
         }
 
@@ -80,9 +67,8 @@ public class PlayerCamera {
      * Starts the {@code CameraState.FREELOOK}-mode
      */
     private void startFreelook() {
-        final EntityPlayerSP player = PlayerUtils.getPlayer();
-        playerYaw = player.rotationYaw;
-        playerPitch = player.rotationPitch;
+        playerYaw = minecraftAdapter.getPlayerRotationYaw();
+        playerPitch = minecraftAdapter.getPlayerRotationPitch();
         originalYaw = playerYaw;
         originalPitch = playerPitch;
         cameraYaw = playerYaw;
@@ -108,33 +94,23 @@ public class PlayerCamera {
      */
     private void updateFreelook(boolean isTickStart) {
 
-        final Entity player = minecraftAdapter.getRenderViewEntity();
-        final EntityPlayerSP playerSP = PlayerUtils.getPlayer();
-
-
-        final float f = minecraftAdapter.getGameSettings().mouseSensitivity * 0.6f + 0.2f;
+        final float f = minecraftAdapter.getMouseSensitivity() * 0.6f + 0.2f;
         final float f1 = f * f * f * 8f;
 
-        final double dx = Mouse.getDX() * f1 * 0.15;
-        final double dy = -Mouse.getDY() * f1 * 0.15;
+        final double dx = minecraftAdapter.getMouseDX() * f1 * 0.15;
+        final double dy = -minecraftAdapter.getMouseDY() * f1 * 0.15;
 
         cameraYaw += dx;
         cameraPitch += dy;
-        cameraPitch = MathHelper.clamp(cameraPitch, -90f, 90f);
+        cameraPitch = MathUtils.clamp(cameraPitch, -90f, 90f);
 
         if (isTickStart) {
-            player.rotationYaw = cameraYaw;
-            player.rotationPitch = cameraPitch;
-            player.prevRotationYaw = cameraYaw;
-            player.prevRotationPitch = cameraPitch;
-            lastFreeView.set(player.rotationYaw, playerPitch);
+            minecraftAdapter.setCameraRotation(cameraYaw, cameraPitch);
+            lastFreeView.set(playerYaw, playerPitch);
 
         } else {
-            player.rotationYaw = playerSP.rotationYaw - cameraYaw + playerYaw;
-            player.prevRotationYaw = playerSP.prevRotationYaw - cameraYaw + playerYaw;
-            player.rotationPitch = playerSP.rotationPitch - cameraPitch + playerPitch;
-            player.prevRotationPitch = playerSP.prevRotationPitch - cameraPitch + playerPitch;
-            lastFreeView.set(player.rotationYaw, playerPitch);
+            minecraftAdapter.setCameraRotation(-(cameraYaw + playerYaw), -(cameraPitch + playerPitch));
+            lastFreeView.set(playerYaw, playerPitch);
         }
 
     }
@@ -182,27 +158,22 @@ public class PlayerCamera {
      * @return whether the player is looking at the given position
      */
     public boolean isLookingAt(int x, int y, int z, boolean ignorePitch, double rangeAngleDeg) {
-
-        EntityPlayerSP player = PlayerUtils.getPlayer();
-        if (player != null) {
-
+        if (minecraftAdapter.hasPlayer()) {
             if (ignorePitch) {
-                final Vector2d posHead = new Vector2d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).z);
+                final Vector2d posHead = minecraftAdapter.getPlayerHeadPositionXZ();
                 final Vector2d posBlock = new Vector2d(x + 0.5, z + 0.5);
                 final Vector2d dirBlock = posBlock.copy().sub(posHead).normalize();
                 final Vector2d lookDir = new Vector2d(getLookDir().x, getLookDir().z).normalize();
                 final double angle = lookDir.angleDeg(dirBlock);
                 return Math.abs(angle) <= rangeAngleDeg;
-
             } else {
-                final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
+                final Vector3d posHead = minecraftAdapter.getPlayerHeadPosition();
                 final Vector3d posBlock = new Vector3d(x + 0.5, y + 0.5, z + 0.5);
                 final Vector3d dirBlock = posBlock.copy().sub(posHead).normalize();
                 final Vector3d lookDir = getLookDir().normalize();
                 final double angle = lookDir.angleDeg(dirBlock);
                 return Math.abs(angle) <= rangeAngleDeg;
             }
-
         } else {
             return false;
         }
@@ -213,22 +184,7 @@ public class PlayerCamera {
      * @return the direction the player is looking as a {@link Vector3d}
      */
     public Vector3d getLookDir() {
-        Vec3d v = getLookDirMC();
-        if (v != null) {
-            return new Vector3d(v.x, v.y, v.z);
-        } else {
-            return null;
-        }
-    }
-
-
-    private Vec3d getLookDirMC() {
-        EntityPlayerSP player = PlayerUtils.getPlayer();
-        if (player != null) {
-            return player.getLook(0f);
-        } else {
-            return null;
-        }
+        return minecraftAdapter.getLookDir();
     }
 
 
@@ -262,10 +218,9 @@ public class PlayerCamera {
      * @param keepPitch set to true to keep the pitch of the current view-direction
      */
     public void setLookAt(int x, int y, int z, boolean keepPitch) {
-        EntityPlayerSP player = PlayerUtils.getPlayer();
-        if (player != null) {
+        if (minecraftAdapter.hasPlayer()) {
             final Vector3d posBlock = new Vector3d(x + 0.5, y + 0.5, z + 0.5);
-            final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
+            final Vector3d posHead = minecraftAdapter.getPlayerHeadPosition();
             final Vector3d dir = posBlock.copy().sub(posHead).normalize().scale(-1);
             if (keepPitch) {
                 dir.y = 0;
@@ -281,9 +236,8 @@ public class PlayerCamera {
      * @param point the position of the point
      */
     public void setLookAtPoint(Vector3d point) {
-        EntityPlayerSP player = PlayerUtils.getPlayer();
-        if (player != null) {
-            final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
+        if (minecraftAdapter.hasPlayer()) {
+            final Vector3d posHead = minecraftAdapter.getPlayerHeadPosition();
             final Vector3d dir = point.copy().sub(posHead).normalize().scale(-1);
             setLook(dir);
         }
@@ -326,11 +280,7 @@ public class PlayerCamera {
      * @param yaw   the new yaw
      */
     public void setLook(double pitch, double yaw) {
-        final EntityPlayerSP player = PlayerUtils.getPlayer();
-        if (player != null) {
-            player.rotationPitch = (float) pitch;
-            player.rotationYaw = (float) yaw;
-        }
+        minecraftAdapter.setPlayerRotation((float) yaw, (float) pitch);
     }
 
 
@@ -351,11 +301,7 @@ public class PlayerCamera {
     public void disableForceCamera(boolean restoreFreelookView) {
         setState(preForcedState);
         if (restoreFreelookView) {
-            final Entity player = minecraftAdapter.getRenderViewEntity();
-            player.rotationYaw = lastFreeView.x;
-            player.prevRotationYaw = lastFreeView.x;
-            player.rotationPitch = lastFreeView.y;
-            player.prevRotationPitch = lastFreeView.y;
+            minecraftAdapter.setCameraRotation(lastFreeView.x, lastFreeView.y);
         }
     }
 

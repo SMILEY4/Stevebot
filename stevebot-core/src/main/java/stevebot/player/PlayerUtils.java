@@ -1,15 +1,10 @@
 package stevebot.player;
 
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextComponentString;
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.data.blocks.BlockUtils;
-import stevebot.data.items.ItemUtils;
+import stevebot.data.items.wrapper.ItemStackWrapper;
 import stevebot.data.player.PlayerSnapshot;
 import stevebot.math.vectors.vec3.Vector3d;
-import stevebot.minecraft.MinecraftAdapter;
+import stevebot.minecraft.NewMinecraftAdapter;
 
 public class PlayerUtils {
 
@@ -28,10 +23,10 @@ public class PlayerUtils {
 
     private static PlayerSnapshot activeSnapshot;
 
-    private static MinecraftAdapter minecraftAdapter;
+    private static NewMinecraftAdapter minecraftAdapter;
 
     public static void initialize(
-            MinecraftAdapter minecraftAdapter,
+            NewMinecraftAdapter minecraftAdapter,
             PlayerInput playerInput,
             PlayerCamera playerCamera,
             PlayerMovement playerMovement,
@@ -44,6 +39,9 @@ public class PlayerUtils {
         PlayerUtils.playerInventory = playerInventory;
     }
 
+    public static boolean hasPlayer() {
+        return minecraftAdapter.hasPlayer();
+    }
 
     /**
      * @return the {@link PlayerInput}-singleton
@@ -81,13 +79,9 @@ public class PlayerUtils {
      * @return a new {@link PlayerSnapshot} of the current state of the player
      */
     public static PlayerSnapshot createSnapshot() {
-        final InventoryPlayer inventory = PlayerUtils.getPlayer().inventory;
         final PlayerSnapshot snapshot = new PlayerSnapshot();
-        for (int i = 0; i < 9; i++) {
-            final ItemStack item = inventory.getStackInSlot(i);
-            if (item != ItemStack.EMPTY) {
-                snapshot.setHotbarItemStack(i, ItemUtils.getItemLibrary().getItemByMCItem(item.getItem()), item.getCount());
-            }
+        for (ItemStackWrapper itemStackWrapper : minecraftAdapter.getHotbarItems()) {
+            snapshot.setHotbarItemStack(itemStackWrapper);
         }
         return snapshot;
     }
@@ -110,13 +104,12 @@ public class PlayerUtils {
         return PlayerUtils.activeSnapshot;
     }
 
-
-    /**
-     * @return the {@link EntityPlayerSP}
-     */
-    public static EntityPlayerSP getPlayer() {
-        return minecraftAdapter.getPlayer();
-    }
+//    /**
+//     * @return the {@link EntityPlayerSP}
+//     */
+//    public static EntityPlayerSP getPlayer() {
+//        return minecraftAdapter.getPlayer();
+//    }
 
 
     /**
@@ -125,22 +118,27 @@ public class PlayerUtils {
      * @param msg the message.
      */
     public static void sendMessage(String msg) {
-        if (getPlayer() != null) {
-            getPlayer().sendMessage(new TextComponentString(msg));
-        }
+        minecraftAdapter.sendMessage(msg);
     }
 
+    public static float getHealth() {
+        return minecraftAdapter.getPlayerHealth();
+    }
+
+    /**
+     * Check if the player is standing on solid ground
+     *
+     * @return whether the player is on solid ground
+     */
+    public static boolean isOnGround() {
+        return minecraftAdapter.isPlayerOnGround();
+    }
 
     /**
      * @return the current position of the player as a {@link BaseBlockPos}
      */
     public static BaseBlockPos getPlayerBlockPos() {
-        EntityPlayerSP player = getPlayer();
-        if (player != null) {
-            return BlockUtils.toBaseBlockPos(player.posX, player.posY, player.posZ);
-        } else {
-            return null;
-        }
+        return minecraftAdapter.getPlayerBlockPosition();
     }
 
 
@@ -148,12 +146,7 @@ public class PlayerUtils {
      * @return the exact current position of the player as a {@link Vector3d}
      */
     public static Vector3d getPlayerPosition() {
-        EntityPlayerSP player = getPlayer();
-        if (player != null) {
-            return new Vector3d(player.posX, player.posY, player.posZ);
-        } else {
-            return null;
-        }
+        return minecraftAdapter.getPlayerPosition();
     }
 
 
@@ -161,9 +154,8 @@ public class PlayerUtils {
      * @return the exact current position of the player in the block as a {@link Vector3d}
      */
     public static Vector3d getPlayerPositionInBlock() {
-        EntityPlayerSP player = getPlayer();
-        if (player != null) {
-            final Vector3d playerPos = getPlayerPosition();
+        final Vector3d playerPos = getPlayerPosition();
+        if (playerPos != null) {
             playerPos.x = playerPos.x - Math.floor(playerPos.x);
             playerPos.y = playerPos.y - Math.floor(playerPos.y);
             playerPos.z = playerPos.z - Math.floor(playerPos.z);
@@ -178,12 +170,7 @@ public class PlayerUtils {
      * @return the current movement of the player.
      */
     public static Vector3d getMotionVector() {
-        EntityPlayerSP player = getPlayer();
-        if (player != null) {
-            return new Vector3d(player.motionX, player.motionY, player.motionZ);
-        } else {
-            return null;
-        }
+        return minecraftAdapter.getPlayerMotion();
     }
 
 
@@ -219,12 +206,12 @@ public class PlayerUtils {
      * @return true, if the player is moving on any axis.
      */
     public static boolean isPlayerMoving(double threshold, boolean includeY) {
-        EntityPlayerSP player = getPlayer();
-        if (player != null) {
+        final Vector3d motion = getMotionVector();
+        if (motion != null) {
             if (includeY) {
-                return player.motionX > threshold || player.motionY > threshold || player.motionZ > threshold;
+                return motion.x > threshold || motion.y > threshold || motion.z > threshold;
             } else {
-                return player.motionX > threshold || player.motionZ > threshold;
+                return motion.x > threshold || motion.z > threshold;
             }
         } else {
             return false;
@@ -267,11 +254,7 @@ public class PlayerUtils {
      */
     public static boolean isAtLocationThreshold(double x, double z, double threshold) {
         final Vector3d current = getPlayerPosition();
-        if (current.dist2(x, current.y, z) > threshold) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(current.dist2(x, current.y, z) > threshold);
     }
 
 
@@ -283,11 +266,7 @@ public class PlayerUtils {
      */
     public static boolean isAtLocation(double x, double y, double z) {
         final Vector3d current = getPlayerPosition();
-        if (current.dist2(x, y, z) > AT_LOC_DIST_ERROR) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(current.dist2(x, y, z) > AT_LOC_DIST_ERROR);
     }
 
 

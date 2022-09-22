@@ -6,16 +6,18 @@ import net.minecraft.util.math.BlockPos;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blocks.BlockUtils;
 import stevebot.data.blocks.BlockWrapper;
+import stevebot.minecraft.NewMinecraftAdapter;
 import stevebot.pathfinding.actions.ActionCosts;
 
 public class ItemUtils {
 
 
     private static ItemLibrary itemLibrary;
+    private static NewMinecraftAdapter minecraftAdapter;
 
-
-    public static void initialize(ItemLibrary itemLibrary) {
+    public static void initialize(NewMinecraftAdapter minecraftAdapter, ItemLibrary itemLibrary) {
         ItemUtils.itemLibrary = itemLibrary;
+        ItemUtils.minecraftAdapter = minecraftAdapter;
     }
 
 

@@ -78,13 +78,20 @@ public class BlockUtils {
         return blockProvider.isLoaded(pos);
     }
 
+    /**
+     * @param blockId the id of the block
+     * @return whether the given block is air
+     */
+    public static boolean isAir(int blockId) {
+        return AIR == blockId;
+    }
 
     /**
      * @param block the block
      * @return whether the given block is air
      */
     public static boolean isAir(BlockWrapper block) {
-        return AIR == block.getId();
+        return isAir(block.getId());
     }
 
 
@@ -193,7 +200,7 @@ public class BlockUtils {
      */
     public static boolean canWalkThrough(BaseBlockPos pos) {
         final BlockWrapper block = blockProvider.getBlockAt(pos);
-        return canWalkThrough(block, pos.copyAsMCBlockPos());
+        return canWalkThrough(block, new BlockPos(pos.getX(), pos.getY(), pos.getZ()));
     }
 
 
@@ -368,7 +375,7 @@ public class BlockUtils {
             return false;
         }
 
-        final IBlockState blockState = minecraftAdapter.getWorld().getBlockState(position.copyAsMCBlockPos());
+        final IBlockState blockState = minecraftAdapter.getWorld().getBlockState(new BlockPos(position.getX(), position.getY(), position.getZ()));
 
         final EnumFacing.Axis facing = blockState.getValue(BlockHorizontal.FACING).getAxis();
 

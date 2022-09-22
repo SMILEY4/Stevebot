@@ -1,9 +1,20 @@
 package stevebot.player;
 
+import java.util.List;
+import stevebot.data.blocks.BlockUtils;
+import stevebot.data.blocks.BlockWrapper;
+import stevebot.data.items.wrapper.ItemBlockWrapper;
+import stevebot.data.items.wrapper.ItemStackWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
+import stevebot.minecraft.NewMinecraftAdapter;
 
-public interface PlayerInventory {
+public class PlayerInventory {
 
+    private final NewMinecraftAdapter minecraftAdapter;
+
+    public PlayerInventory(final NewMinecraftAdapter minecraftAdapter) {
+        this.minecraftAdapter = minecraftAdapter;
+    }
 
     /**
      * Selects a throwaway-block in the hotbar.
@@ -11,7 +22,26 @@ public interface PlayerInventory {
      * @param allowGravityBlock true, to include blocks that have gravity, like sand or gravel
      * @return whether a throwaway-block was selected
      */
-    boolean selectThrowawayBlock(boolean allowGravityBlock);
+    public boolean selectThrowawayBlock(boolean allowGravityBlock) {
+        for (ItemStackWrapper stack : minecraftAdapter.getHotbarItems()) {
+            if (stack.getItem().isBlock()) {
+                if (allowGravityBlock) {
+                    minecraftAdapter.selectHotbarSlot(stack.getSlot());
+                    return true;
+                } else {
+                    final ItemWrapper itemWrapper = stack.getItem();
+                    if (itemWrapper instanceof ItemBlockWrapper) {
+                        final BlockWrapper block = ((ItemBlockWrapper) itemWrapper).getBlockWrapper();
+                        if (block != null && !BlockUtils.hasGravity(block)) {
+                            minecraftAdapter.selectHotbarSlot(stack.getSlot());
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
 
     /**
@@ -20,7 +50,15 @@ public interface PlayerInventory {
      * @param item the item to find
      * @return the slot with the given item or -1
      */
-    int findItem(ItemWrapper item);
+    public int findItem(ItemWrapper item) {
+        List<ItemStackWrapper> items = minecraftAdapter.getHotbarItems();
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).getItem().getId() == item.getId()) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     /**
      * Selects the slot containing the given item
@@ -28,7 +66,15 @@ public interface PlayerInventory {
      * @param item the item to select
      * @return true, if the item was selected
      */
-    boolean selectItem(ItemWrapper item);
+    public boolean selectItem(ItemWrapper item) {
+        final int slot = findItem(item);
+        if (slot != -1) {
+            minecraftAdapter.selectHotbarSlot(slot);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
     /**
@@ -37,6 +83,8 @@ public interface PlayerInventory {
      * @param item the item to check
      * @return true, if the item is in the hotbar
      */
-    boolean hasItem(ItemWrapper item);
+    public boolean hasItem(ItemWrapper item) {
+        return findItem(item) != -1;
+    }
 
 }

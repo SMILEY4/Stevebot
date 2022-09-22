@@ -38,10 +38,10 @@ public class StevebotLog {
         if (!Config.isVerboseMode() && !critical) {
             return;
         }
-        if (PlayerUtils.getPlayer() == null) {
-            getLogger().info(message);
-        } else {
+        if (PlayerUtils.hasPlayer()) {
             PlayerUtils.sendMessage(message);
+        } else {
+            getLogger().info(message);
         }
     }
 

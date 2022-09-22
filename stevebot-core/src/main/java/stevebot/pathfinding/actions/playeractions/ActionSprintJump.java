@@ -93,7 +93,7 @@ public class ActionSprintJump extends Action {
         if (distToCenter > 0.4) {
             PlayerUtils.getInput().setJump();
         }
-        if (PlayerUtils.getPlayer().onGround && PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
+        if (PlayerUtils.isOnGround() && PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
             stateMachine.fireTransition(Transition.TOUCHED_GROUND);
         }
         return ProcState.EXECUTING;

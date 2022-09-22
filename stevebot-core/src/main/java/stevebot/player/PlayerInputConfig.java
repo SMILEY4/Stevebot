@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
-import stevebot.minecraft.MinecraftAdapter;
+import stevebot.minecraft.NewMinecraftAdapter;
 
-class PlayerInputConfig {
+public class PlayerInputConfig {
 
 
     public enum InputType {
@@ -28,7 +28,7 @@ class PlayerInputConfig {
     private final Map<InputType, KeyBinding> bindingMap = new HashMap<>();
 
 
-    PlayerInputConfig(MinecraftAdapter minecraftAdapter) {
+    PlayerInputConfig(NewMinecraftAdapter minecraftAdapter) {
 
         GameSettings settings = minecraftAdapter.getGameSettings();
 
@@ -51,7 +51,7 @@ class PlayerInputConfig {
      * @param type the {@link InputType}
      * @return the {@link KeyBinding} of the given {@link InputType}
      */
-    KeyBinding getBinding(InputType type) {
+    public KeyBinding getBinding(InputType type) {
         return bindingMap.get(type);
     }
 

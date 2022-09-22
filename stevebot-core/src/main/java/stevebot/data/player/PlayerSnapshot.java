@@ -1,7 +1,6 @@
 package stevebot.data.player;
 
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemTool;
 import stevebot.data.blocks.BlockLibrary;
 import stevebot.data.blocks.BlockUtils;
 import stevebot.data.blocks.BlockWrapper;
@@ -9,6 +8,7 @@ import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.ItemUtils;
 import stevebot.data.items.wrapper.ItemBlockWrapper;
 import stevebot.data.items.wrapper.ItemHandWrapper;
+import stevebot.data.items.wrapper.ItemStackWrapper;
 import stevebot.data.items.wrapper.ItemToolWrapper;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.data.modification.BlockBreakModification;
@@ -19,7 +19,6 @@ import stevebot.minecraft.MinecraftAdapter;
 import stevebot.pathfinding.actions.ActionCosts;
 
 public class PlayerSnapshot {
-
 
     // health
     private int health;
@@ -112,6 +111,15 @@ public class PlayerSnapshot {
     //    INVENTORY     //
     //==================//
 
+
+    /**
+     * Sets the item in the given slot
+     *
+     * @param stack the item-stack
+     */
+    public void setHotbarItemStack(ItemStackWrapper stack) {
+        setHotbarItemStack(stack.getSlot(), stack.getItem(), stack.getSize());
+    }
 
     /**
      * Sets the item in the given slot
@@ -301,7 +309,7 @@ public class PlayerSnapshot {
      */
     public ItemToolWrapper getAsTool(int slot) {
         final ItemWrapper stack = hotbarItems[slot];
-        if (stack != null && hotbarStackSizes[slot] != 0 && stack.getItem() instanceof ItemTool) {
+        if (stack != null && hotbarStackSizes[slot] != 0 && stack.isTool()) {
             return (ItemToolWrapper) stack;
         } else {
             return ItemLibrary.ITEM_HAND;

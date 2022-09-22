@@ -16,7 +16,7 @@ public class StevebotCommands {
                 "path <xs:COORDINATE> <ys:COORDINATE> <zs:COORDINATE> <xd:COORDINATE> <yd:COORDINATE> <zd:COORDINATE>",
                 "/path <x> <y> <z> <x> <y> <z>\n    Finds a path from the first position to the second position.",
                 (templateId, parameters) -> {
-                    if (PlayerUtils.getPlayer() != null) {
+                    if (PlayerUtils.hasPlayer()) {
                         final BaseBlockPos from = CommandListener.getAsBaseBlockPos("xs", "ys", "zs", parameters);
                         final BaseBlockPos to = CommandListener.getAsBaseBlockPos("xs", "ys", "zs", parameters);
                         api.path(new BaseBlockPos(from), new BaseBlockPos(to), false, false);
@@ -29,7 +29,7 @@ public class StevebotCommands {
                 "path <xs:COORDINATE> <ys:COORDINATE> <zs:COORDINATE>",
                 "/path <x> <y> <z>\n    Finds a path from the current position to the given position.",
                 (templateId, parameters) -> {
-                    if (PlayerUtils.getPlayer() != null) {
+                    if (PlayerUtils.hasPlayer()) {
                         final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
                         final BaseBlockPos to = CommandListener.getAsBaseBlockPos("xs", "ys", "zs", parameters);
                         api.path(new BaseBlockPos(from), new BaseBlockPos(to), true, false);
@@ -42,7 +42,7 @@ public class StevebotCommands {
                 "path <xs:COORDINATE> <ys:COORDINATE> <zs:COORDINATE> freelook",
                 "/path <x> <y> <z>\n    Finds a path from the current position to the given position and enables freelook.",
                 (templateId, parameters) -> {
-                    if (PlayerUtils.getPlayer() != null) {
+                    if (PlayerUtils.hasPlayer()) {
                         final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
                         final BaseBlockPos to = CommandListener.getAsBaseBlockPos("xs", "ys", "zs", parameters);
                         api.path(new BaseBlockPos(from), new BaseBlockPos(to), true, true);
@@ -55,7 +55,7 @@ public class StevebotCommands {
                 "path <dist:INTEGER>",
                 "/path <dist>\n    Finds a path 'dist' blocks in the direction the player is looking.",
                 (templateId, parameters) -> {
-                    if (PlayerUtils.getPlayer() != null) {
+                    if (PlayerUtils.hasPlayer()) {
                         api.pathDirection(CommandListener.getAsInt("dist", parameters), true, false);
                     }
                 });
@@ -66,7 +66,7 @@ public class StevebotCommands {
                 "path <dist:INTEGER> freelook",
                 "/path <dist>\n    Finds a path 'dist' blocks in the direction the player is looking and enables freelook.",
                 (templateId, parameters) -> {
-                    if (PlayerUtils.getPlayer() != null) {
+                    if (PlayerUtils.hasPlayer()) {
                         api.pathDirection(CommandListener.getAsInt("dist", parameters), true, true);
                     }
                 });
@@ -77,7 +77,7 @@ public class StevebotCommands {
                 "path level <level:INTEGER>",
                 "/path level <level>\n    Finds a path to the given y-level.",
                 (templateId, parameters) -> {
-                    if (PlayerUtils.getPlayer() != null) {
+                    if (PlayerUtils.hasPlayer()) {
                         api.pathLevel(CommandListener.getAsInt("level", parameters), true, false);
                     }
                 });
@@ -88,7 +88,7 @@ public class StevebotCommands {
                 "path level <level:INTEGER> freelook",
                 "/path level <level>\n    Finds a path to the given y-level and enables freelook.\",.",
                 (templateId, parameters) -> {
-                    if (PlayerUtils.getPlayer() != null) {
+                    if (PlayerUtils.hasPlayer()) {
                         api.pathLevel(CommandListener.getAsInt("level", parameters), true, true);
                     }
                 });
@@ -99,7 +99,7 @@ public class StevebotCommands {
                 "path <block:STRING>",
                 "/path level <level>\n    Finds a path to the nearest with of the given type.",
                 (templateId, parameters) -> {
-                    if (PlayerUtils.getPlayer() != null) {
+                    if (PlayerUtils.hasPlayer()) {
                         api.pathBlock(CommandListener.getAsString("block", parameters), true, false);
                     }
                 });
@@ -110,7 +110,7 @@ public class StevebotCommands {
                 "path <block:STRING> freelook",
                 "/path level <level>\n    Finds a path to the nearest with of the given type and enables freelook.\",.",
                 (templateId, parameters) -> {
-                    if (PlayerUtils.getPlayer() != null) {
+                    if (PlayerUtils.hasPlayer()) {
                         api.pathBlock(CommandListener.getAsString("block", parameters), true, true);
                     }
                 });

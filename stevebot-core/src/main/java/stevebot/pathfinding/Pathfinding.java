@@ -78,7 +78,7 @@ public class Pathfinding {
         int nBetterPathFound = 0;
         long timeLast = System.currentTimeMillis();
         final PlayerSnapshot baseSnapshot = PlayerUtils.createSnapshot();
-        baseSnapshot.setPlayerHealth((int) PlayerUtils.getPlayer().getHealth());
+        baseSnapshot.setPlayerHealth((int) PlayerUtils.getHealth());
 
         final PathfindingResult pathfindingResult = new PathfindingResult();
         pathfindingResult.timeStart = System.currentTimeMillis();

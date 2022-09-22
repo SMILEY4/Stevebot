@@ -119,10 +119,10 @@ public class ActionDropDown extends Action {
      * Walk the last few units and fall off the edge of the block.
      */
     private ProcState tickSlideOffEdge() {
-        if (PlayerUtils.getPlayer().onGround && !PlayerUtils.isPlayerMoving(0.0001, false)) {
+        if (PlayerUtils.isOnGround() && !PlayerUtils.isPlayerMoving(0.0001, false)) {
             PlayerUtils.getMovement().moveTowards(getTo().getPos(), true);
         }
-        if (!PlayerUtils.getPlayer().onGround) {
+        if (!PlayerUtils.isOnGround()) {
             stateMachine.fireTransition(Transition.DROPPED_OFF_EDGE);
         }
         return ProcState.EXECUTING;

@@ -41,7 +41,7 @@ public class StevebotApi {
      * Finds a path from the current position to the given position
      */
     public void path(BaseBlockPos to, boolean startFollowing, boolean enableFreelook) {
-        if (PlayerUtils.getPlayer() != null) {
+        if (PlayerUtils.hasPlayer()) {
             path(PlayerUtils.getPlayerBlockPos(), to, startFollowing, enableFreelook);
         }
     }
@@ -51,7 +51,7 @@ public class StevebotApi {
      * Finds a path 'distance' blocks in the direction the player is looking
      */
     public void pathDirection(double distance, boolean startFollowing, boolean enableFreelook) {
-        if (PlayerUtils.getPlayer() != null) {
+        if (PlayerUtils.hasPlayer()) {
             final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
             final Vector3d dir = PlayerUtils.getCamera().getLookDir().setLength(distance);
             final Goal goal = new XZGoal(from.getX() + dir.getIntX(), from.getZ() + dir.getIntZ());
@@ -64,7 +64,7 @@ public class StevebotApi {
      * Finds a path to the given y-level
      */
     public void pathLevel(int yLevel, boolean startFollowing, boolean enableFreelook) {
-        if (PlayerUtils.getPlayer() != null) {
+        if (PlayerUtils.hasPlayer()) {
             final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
             Goal goal = new YGoal(yLevel);
             pathHandler.createPath(new BaseBlockPos(from), goal, startFollowing, enableFreelook);
@@ -76,7 +76,7 @@ public class StevebotApi {
      * Finds a path to the nearest block of the given type
      */
     public void pathBlock(String blockName, boolean startFollowing, boolean enableFreelook) {
-        if (PlayerUtils.getPlayer() != null) {
+        if (PlayerUtils.hasPlayer()) {
             final BaseBlockPos from = PlayerUtils.getPlayerBlockPos();
             final BaseBlockPos posBlock = BlockUtils.findNearest(BlockUtils.getBlockLibrary().getBlockByName(blockName), from, 219, 219);
             if (posBlock != null) {
@@ -93,7 +93,7 @@ public class StevebotApi {
      * Toggles freelook-mode.
      */
     public void toggleFreelook() {
-        if (PlayerUtils.getPlayer() != null) {
+        if (PlayerUtils.hasPlayer()) {
             if (PlayerUtils.getCamera().getState() == PlayerCamera.CameraState.FREELOOK) {
                 PlayerUtils.getCamera().setState(PlayerCamera.CameraState.DEFAULT);
                 PlayerUtils.sendMessage("Disable Freelook.");

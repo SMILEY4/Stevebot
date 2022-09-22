@@ -1,26 +1,22 @@
 package stevebot.data.blocks;
 
-import net.minecraft.block.Block;
 import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.minecraft.MinecraftAdapter;
+import stevebot.minecraft.NewMinecraftAdapter;
 
 
 public class BlockCache {
 
-    private final MinecraftAdapter minecraftAdapter;
+    private final NewMinecraftAdapter minecraftAdapter;
     private final ChunkCache chunkCache = new ChunkCache();
-    private final BlockLibrary library;
     private final BlockProvider blockProvider;
 
 
     /**
      * @param minecraftAdapter the adapter for accessing minecraft
-     * @param library          the {@link BlockLibrary} used by this cache
      * @param blockProvider    the {@link BlockProvider} used by this cache
      */
-    public BlockCache(MinecraftAdapter minecraftAdapter, BlockLibrary library, BlockProvider blockProvider) {
+    public BlockCache(NewMinecraftAdapter minecraftAdapter, BlockProvider blockProvider) {
         this.minecraftAdapter = minecraftAdapter;
-        this.library = library;
         this.blockProvider = blockProvider;
     }
 
@@ -96,27 +92,13 @@ public class BlockCache {
         int blockId;
 
         if (blockProvider.isLoaded(blockPos)) {
-            blockId = getBlockFromMinecraft(blockPos).getId();
+            blockId = minecraftAdapter.getBlockId(blockPos);
         } else {
             blockId = BlockLibrary.ID_UNLOADED_BOCK;
         }
 
         chunk.setId(chunkX, chunkY, chunkZ, blockId);
         return blockId;
-    }
-
-
-    /**
-     * @param pos the position of the block
-     * @return the block at the given position from the minecraft world (never from the cache).
-     */
-    private BlockWrapper getBlockFromMinecraft(BaseBlockPos pos) {
-        final Block block = minecraftAdapter.getBlock(pos.copyAsMCBlockPos());
-        if (block == null) {
-            return BlockLibrary.INVALID_BLOCK;
-        } else {
-            return library.getBlockByMCBlock(block);
-        }
     }
 
 

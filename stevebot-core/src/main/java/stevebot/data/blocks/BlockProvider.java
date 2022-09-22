@@ -7,11 +7,11 @@ import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.modification.BlockBreakModification;
 import stevebot.data.modification.BlockPlaceModification;
 import stevebot.data.modification.Modification;
-import stevebot.minecraft.MinecraftAdapter;
+import stevebot.minecraft.NewMinecraftAdapter;
 
 public class BlockProvider {
 
-    private final MinecraftAdapter minecraftAdapter;
+    private final NewMinecraftAdapter minecraftAdapter;
     private final BlockCache cache;
     private final BlockLibrary library;
 
@@ -21,10 +21,10 @@ public class BlockProvider {
     /**
      * @param library the {@link BlockLibrary} to be used by this provider.
      */
-    public BlockProvider(MinecraftAdapter minecraftAdapter, BlockLibrary library) {
+    public BlockProvider(NewMinecraftAdapter minecraftAdapter, BlockLibrary library) {
         this.minecraftAdapter = minecraftAdapter;
         this.library = library;
-        this.cache = new BlockCache(minecraftAdapter, library, this);
+        this.cache = new BlockCache(minecraftAdapter, this);
     }
 
 

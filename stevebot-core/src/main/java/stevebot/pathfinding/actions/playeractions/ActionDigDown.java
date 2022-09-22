@@ -118,7 +118,7 @@ public class ActionDigDown extends Action {
      * Fall after breaking the block below.
      */
     private ProcState tickFall() {
-        if (PlayerUtils.getPlayer().onGround) {
+        if (PlayerUtils.isOnGround()) {
             stateMachine.fireTransition(Transition.TOUCHED_GROUND);
         }
         return ProcState.EXECUTING;

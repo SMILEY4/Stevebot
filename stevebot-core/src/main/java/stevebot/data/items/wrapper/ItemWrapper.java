@@ -1,7 +1,9 @@
 package stevebot.data.items.wrapper;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 
 public class ItemWrapper {
 
@@ -41,13 +43,13 @@ public class ItemWrapper {
     }
 
 
-    /**
-     * @return the {@link Item} or null
-     */
-    public Item getItem() {
-        return item;
+    public boolean isBlock() {
+        return item instanceof ItemBlock;
     }
 
+    public boolean isTool() {
+        return item instanceof ItemTool;
+    }
 
     /**
      * @param stackSize the size of the stack

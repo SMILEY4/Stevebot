@@ -98,7 +98,7 @@ public class ActionFall extends Action {
      */
     private ProcState tickFalling() {
         PlayerUtils.getMovement().moveTowards(getTo().getPos(), false);
-        if (PlayerUtils.getPlayer().onGround || BlockUtils.isWater(PlayerUtils.getPlayerBlockPos())) {
+        if (PlayerUtils.isOnGround() || BlockUtils.isWater(PlayerUtils.getPlayerBlockPos())) {
             stateMachine.fireTransition(Transition.LANDED);
         }
         return ProcState.EXECUTING;

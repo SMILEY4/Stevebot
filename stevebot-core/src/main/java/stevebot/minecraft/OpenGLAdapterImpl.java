@@ -14,12 +14,23 @@ public class OpenGLAdapterImpl implements OpenGLAdapter {
 
     @Override
     public void prepare(final Vector3d position) {
-
+        GlStateManager.pushMatrix();
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.depthMask(false);
+        GlStateManager.disableDepth();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GlStateManager.translate(-position.x, -position.y, -position.z);
     }
 
     @Override
     public void reset() {
-
+        GlStateManager.glLineWidth(1.0f);
+        GlStateManager.disableBlend();
+        GlStateManager.depthMask(true);
+        GlStateManager.enableDepth();
+        GlStateManager.enableTexture2D();
+        GlStateManager.popMatrix();
     }
 
     @Override

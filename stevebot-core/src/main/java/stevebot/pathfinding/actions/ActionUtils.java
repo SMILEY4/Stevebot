@@ -1,7 +1,5 @@
 package stevebot.pathfinding.actions;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.entity.EntityPlayerSP;
 import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.data.blockpos.FastBlockPos;
 import stevebot.data.blocks.BlockUtils;
@@ -9,7 +7,7 @@ import stevebot.data.items.ItemLibrary;
 import stevebot.data.items.ItemUtils;
 import stevebot.data.items.wrapper.ItemWrapper;
 import stevebot.math.vectors.vec3.Vector3d;
-import stevebot.minecraft.MinecraftAdapter;
+import stevebot.minecraft.NewMinecraftAdapter;
 import stevebot.misc.Direction;
 import stevebot.player.PlayerUtils;
 
@@ -18,10 +16,10 @@ public class ActionUtils {
 
     private static final FastBlockPos fastPos1 = new FastBlockPos();
     private static final FastBlockPos fastPos2 = new FastBlockPos();
-    private static MinecraftAdapter minecraftAdapter;
+    private static NewMinecraftAdapter minecraftAdapter;
 
 
-    public static void initMinecraftAdapter(MinecraftAdapter minecraftAdapter) {
+    public static void initMinecraftAdapter(NewMinecraftAdapter minecraftAdapter) {
         ActionUtils.minecraftAdapter = minecraftAdapter;
     }
 
@@ -227,12 +225,10 @@ public class ActionUtils {
      * @return whether the given side of the block faces the player
      */
     private static boolean facesPlayer(BaseBlockPos pos, Direction direction) {
-        final EntityPlayerSP player = PlayerUtils.getPlayer();
         final Vector3d nFace = new Vector3d(direction.dx, direction.dy, direction.dz);
         final Vector3d posLookAt = new Vector3d(pos.getCenterX(), pos.getCenterY(), pos.getCenterZ())
                 .add(direction.dx * 0.5, direction.dy * 0.5, direction.dz * 0.5);
-        final Vector3d posHead = new Vector3d(player.getPositionEyes(1.0F).x, player.getPositionEyes(1.0F).y, player.getPositionEyes(1.0F).z);
-        final Vector3d dirPlayer = posLookAt.sub(posHead).normalize();
+        final Vector3d dirPlayer = posLookAt.sub(minecraftAdapter.getPlayerHeadPosition()).normalize();
         return dirPlayer.dot(nFace) <= 0;
     }
 
@@ -255,8 +251,8 @@ public class ActionUtils {
 
 
     public static boolean breakBlock(BaseBlockPos pos) {
-        final Block mcBlock = minecraftAdapter.getBlock(pos.copyAsMCBlockPos());
-        if (BlockUtils.isAir(BlockUtils.getBlockLibrary().getBlockByMCBlock(mcBlock))) {
+        final int blockId = minecraftAdapter.getBlockId(pos);
+        if (BlockUtils.isAir(blockId)) {
             return true;
         } else {
             PlayerUtils.getCamera().setLookAt(pos);

@@ -1,11 +1,9 @@
 package stevebot.pathfinding;
 
+import stevebot.data.blockpos.BaseBlockPos;
 import stevebot.minecraft.MinecraftAdapter;
 import stevebot.misc.StevebotLog;
-import stevebot.data.blockpos.BaseBlockPos;
-import stevebot.events.EventManager;
 import stevebot.pathfinding.execution.PathExecutor;
-import stevebot.pathfinding.execution.PathExecutorImpl;
 import stevebot.pathfinding.goal.Goal;
 import stevebot.rendering.Renderer;
 
@@ -15,16 +13,20 @@ public class PathHandler {
     private PathExecutor excecutor = null;
 
     private final MinecraftAdapter minecraftAdapter;
-    private final EventManager eventManager;
     private final Renderer renderer;
 
 
-    public PathHandler(MinecraftAdapter minecraftAdapter, EventManager eventManager, Renderer renderer) {
+    public PathHandler(MinecraftAdapter minecraftAdapter, Renderer renderer) {
         this.minecraftAdapter = minecraftAdapter;
         this.renderer = renderer;
-        this.eventManager = eventManager;
     }
 
+
+    public void onEventClientTick() {
+        if (excecutor != null) {
+            excecutor.onClientTick();
+        }
+    }
 
     /**
      * Creates a new path and executor from the given start position to the given goal.
@@ -36,12 +38,8 @@ public class PathHandler {
      */
     public void createPath(BaseBlockPos from, Goal goal, boolean startFollowing, boolean enableFreelook) {
         if (excecutor == null) {
-            excecutor = new PathExecutorImpl(minecraftAdapter, from, goal, renderer);
-            eventManager.addListener(excecutor.getTickListener());
-            excecutor.setPathListener(() -> {
-                eventManager.removeListener(excecutor.getTickListener());
-                excecutor = null;
-            });
+            excecutor = new PathExecutor(minecraftAdapter, from, goal, renderer);
+            excecutor.setPathListener(() -> excecutor = null);
             excecutor.start();
             if (startFollowing) {
                 excecutor.startFollowing(enableFreelook);
@@ -70,6 +68,5 @@ public class PathHandler {
             excecutor.stop();
         }
     }
-
 
 }

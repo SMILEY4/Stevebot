@@ -1,18 +1,18 @@
 package stevebot.player;
 
-import net.minecraft.client.settings.KeyBinding;
-import stevebot.minecraft.MinecraftAdapter;
+import stevebot.minecraft.NewMinecraftAdapter;
 
 public class PlayerInput {
 
-    private final MinecraftAdapter minecraftAdapter;
+    private final NewMinecraftAdapter minecraftAdapter;
     private PlayerInputConfig inputConfig = null;
     private boolean muteUserInput = false;
     private boolean isHoldingJump = false;
     private boolean isHoldingSneak = false;
 
-    public PlayerInput(final MinecraftAdapter minecraftAdapter) {
+    public PlayerInput(final NewMinecraftAdapter minecraftAdapter) {
         this.minecraftAdapter = minecraftAdapter;
+        reloadConfig();
     }
 
     public void onEventPlayerTick() {
@@ -22,6 +22,10 @@ public class PlayerInput {
     }
 
     public void onEventConfigChanged() {
+        reloadConfig();
+    }
+
+    private void reloadConfig() {
         inputConfig = new PlayerInputConfig(minecraftAdapter);
     }
 
@@ -119,10 +123,10 @@ public class PlayerInput {
      */
     public void setJump(boolean jump, boolean allowInAir) {
         if (jump) {
-            if (PlayerUtils.getPlayer() == null) {
+            if (!PlayerUtils.hasPlayer()) {
                 return;
             }
-            if (PlayerUtils.getPlayer().onGround) {
+            if (PlayerUtils.isOnGround()) {
                 setInput(PlayerInputConfig.InputType.JUMP, true);
             } else {
                 if (allowInAir) {
@@ -174,9 +178,7 @@ public class PlayerInput {
      * @param sprint true to sprint, false to stop sprinting.
      */
     public void setSprint(boolean sprint) {
-        if (PlayerUtils.getPlayer() != null) {
-            PlayerUtils.getPlayer().setSprinting(sprint);
-        }
+        minecraftAdapter.setPlayerSprinting(sprint);
     }
 
 
@@ -267,17 +269,10 @@ public class PlayerInput {
      * Set given input down to the given state.
      *
      * @param type the {@link PlayerInputConfig.InputType}
-     * @param down whether or not the corresponding button is pressed down or not.
+     * @param down whether the corresponding button is pressed down or not.
      */
     public void setInput(PlayerInputConfig.InputType type, boolean down) {
-        KeyBinding binding = inputConfig.getBinding(type);
-        if (binding.isKeyDown() == down) {
-            return;
-        }
-        KeyBinding.setKeyBindState(binding.getKeyCode(), down);
-        if (down) {
-            KeyBinding.onTick(binding.getKeyCode());
-        }
+        minecraftAdapter.setInput(inputConfig, type, down);
     }
 
 

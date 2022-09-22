@@ -18,14 +18,14 @@ public class ActionStepUp extends Action {
 
 
     private enum State {
-        SLOWING_DOWN, JUMPING;
+        SLOWING_DOWN, JUMPING
     }
 
 
 
 
     private enum Transition {
-        SLOW_ENOUGH;
+        SLOW_ENOUGH
     }
 
 

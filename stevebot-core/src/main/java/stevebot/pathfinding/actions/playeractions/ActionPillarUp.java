@@ -112,7 +112,7 @@ public class ActionPillarUp extends Action {
      * Land on the new block.
      */
     private ProcState tickLand() {
-        if (PlayerUtils.getPlayer().onGround && PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
+        if (PlayerUtils.isOnGround() && PlayerUtils.getPlayerBlockPos().equals(getTo().getPos())) {
             PlayerUtils.getCamera().disableForceCamera(true);
             return ProcState.DONE;
         } else {

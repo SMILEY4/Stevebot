@@ -6,7 +6,6 @@ import java.util.List;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemTool;
-import stevebot.data.blocks.BlockWrapper;
 import stevebot.data.items.wrapper.ItemBlockWrapper;
 import stevebot.data.items.wrapper.ItemHandWrapper;
 import stevebot.data.items.wrapper.ItemToolWrapper;
@@ -56,29 +55,6 @@ public class ItemLibrary {
             items[item.getId()] = item;
         }
 
-    }
-
-
-    /**
-     * Adds the given {@link BlockWrapper}s to the corresponding items
-     *
-     * @param blocks the blocks to add
-     */
-    public void insertBlocks(List<BlockWrapper> blocks) {
-        for (ItemWrapper itemWrapper : items) {
-            if (itemWrapper.getId() != ItemLibrary.ID_INVALID_ITEM && itemWrapper instanceof ItemBlockWrapper) {
-                final ItemBlockWrapper item = (ItemBlockWrapper) itemWrapper;
-                final ItemBlock itemBlock = (ItemBlock) item.getItem();
-                final int blockIdFromItem = minecraftAdapter.getBlockId(itemBlock.getBlock());
-                for (BlockWrapper block : blocks) {
-                    if (block.getId() == blockIdFromItem) {
-                        item.setBlockWrapper(block);
-                        break;
-                    }
-                }
-            }
-
-        }
     }
 
 

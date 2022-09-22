@@ -23,16 +23,17 @@ import stevebot.events.ModEventProducer;
 import stevebot.events.PostInitEvent;
 import stevebot.minecraft.MinecraftAdapter;
 import stevebot.minecraft.MinecraftAdapterImpl;
+import stevebot.minecraft.NewMinecraftAdapter;
+import stevebot.minecraft.NewMinecraftAdapterImpl;
 import stevebot.minecraft.OpenGLAdapter;
 import stevebot.minecraft.OpenGLAdapterImpl;
 import stevebot.misc.Config;
 import stevebot.pathfinding.PathHandler;
+import stevebot.pathfinding.actions.ActionUtils;
 import stevebot.player.PlayerCamera;
 import stevebot.player.PlayerInput;
 import stevebot.player.PlayerInventory;
-import stevebot.player.PlayerInventoryImpl;
 import stevebot.player.PlayerMovement;
-import stevebot.player.PlayerMovementImpl;
 import stevebot.player.PlayerUtils;
 import stevebot.rendering.Renderer;
 
@@ -107,6 +108,20 @@ public class Stevebot {
         }
     };
 
+    private final EventListener<TickEvent.ClientTickEvent> listenerClientTick = new EventListener<TickEvent.ClientTickEvent>() {
+        @Override
+        public Class<TickEvent.ClientTickEvent> getEventClass() {
+            return TickEvent.ClientTickEvent.class;
+        }
+
+
+        @Override
+        public void onEvent(TickEvent.ClientTickEvent event) {
+            pathHandler.onEventClientTick();
+        }
+
+    };
+
     private final EventListener<RenderWorldLastEvent> listenerRenderWorld = new EventListener<RenderWorldLastEvent>() {
         @Override
         public Class<RenderWorldLastEvent> getEventClass() {
@@ -173,7 +188,10 @@ public class Stevebot {
 
         // minecraft
         MinecraftAdapter minecraftAdapter = new MinecraftAdapterImpl();
+        NewMinecraftAdapter newMinecraftAdapter = new NewMinecraftAdapterImpl();
         OpenGLAdapter openGLAdapter = new OpenGLAdapterImpl();
+
+        ActionUtils.initMinecraftAdapter(newMinecraftAdapter);
 
         // events
         eventManager = new EventManagerImpl();
@@ -185,13 +203,15 @@ public class Stevebot {
         eventManager.addListener(listenerRenderTick);
         eventManager.addListener(listenerRenderWorld);
         eventManager.addListener(listenerPlayerTick);
+        eventManager.addListener(listenerClientTick);
         eventManager.addListener(listenerConfigChanged);
+
 
         // block library
         blockLibrary = new BlockLibrary(minecraftAdapter);
 
         // block provider
-        blockProvider = new BlockProvider(minecraftAdapter, blockLibrary);
+        blockProvider = new BlockProvider(newMinecraftAdapter, blockLibrary);
 
         // block utils
         BlockUtils.initialize(minecraftAdapter, blockProvider, blockLibrary);
@@ -206,22 +226,22 @@ public class Stevebot {
         renderer = new Renderer(openGLAdapter, blockProvider);
 
         // player camera
-        playerCamera = new PlayerCamera(minecraftAdapter);
+        playerCamera = new PlayerCamera(newMinecraftAdapter);
 
         // player input
-        playerInput = new PlayerInput(minecraftAdapter);
+        playerInput = new PlayerInput(newMinecraftAdapter);
 
         // player movement
-        playerMovement = new PlayerMovementImpl(playerInput, playerCamera);
+        playerMovement = new PlayerMovement(playerInput, playerCamera);
 
         // player inventory
-        playerInventory = new PlayerInventoryImpl();
+        playerInventory = new PlayerInventory(newMinecraftAdapter);
 
         // player utils
-        PlayerUtils.initialize(minecraftAdapter, playerInput, playerCamera, playerMovement, playerInventory);
+        PlayerUtils.initialize(newMinecraftAdapter, playerInput, playerCamera, playerMovement, playerInventory);
 
         // path handler
-        pathHandler = new PathHandler(minecraftAdapter, eventManager, renderer);
+        pathHandler = new PathHandler(minecraftAdapter, renderer);
 
         // commands
         StevebotCommands.initialize(new StevebotApi(pathHandler));
