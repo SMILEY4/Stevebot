@@ -1,11 +1,21 @@
 # Stevebot Core
 
-The core pathfinding and path-following logic of stevebot. As independent of any minecraft version or modding tool as possible (not yet archived). Can be added as a (gradle) dependency (see "Stevebot-mod").
+The core pathfinding and path-following logic of stevebot. As independent of any minecraft version or modding tool as possible. Can be added as a (gradle) dependency (see "stevebot-mod").
 
-## Building locally
+## How to use
 
-```
-./gradlew publishToMavenLocal
-```
+1. Build a local maven artifact.
 
-Creates a new local maven artifact `io.github.smiley4:stevebot-core:<version>`.
+    ```
+    ./gradlew publishToMavenLocal
+    ```
+
+2. Include artifact in our mod project as a gradle dependency (see "stevebot-mod")
+ 
+    ```
+   dependencies {
+       compile "io.github.smiley4:stevebot-core:<version>"
+   }
+    ```
+
+

@@ -2,6 +2,12 @@
 A pathfinding bot for Minecraft.
 Requires Forge for Minecraft 1.12
 
+Stevebot consists of two sub-projects:
+- **stevebot-core** - the core pathfinding and following logic, independent of minecraft or forge
+- **stevebot-mod** - the minecraft 1.12 forge mod, using stevebot-core
+
+
+## Showcase
 
 [![IMAGE ALT TEXT](http://img.youtube.com/vi/Q6micHhYB54/0.jpg)](https://www.youtube.com/watch?v=Q6micHhYB54 "Stevebot 1.0.0")
 
