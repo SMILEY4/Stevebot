@@ -204,7 +204,6 @@ public class Stevebot {
         eventManager.addListener(listenerClientTick);
         eventManager.addListener(listenerConfigChanged);
 
-
         // block library
         blockLibrary = new BlockLibrary(minecraftAdapter);
 

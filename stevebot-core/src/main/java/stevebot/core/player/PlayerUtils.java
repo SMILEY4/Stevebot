@@ -104,13 +104,6 @@ public class PlayerUtils {
         return PlayerUtils.activeSnapshot;
     }
 
-//    /**
-//     * @return the {@link EntityPlayerSP}
-//     */
-//    public static EntityPlayerSP getPlayer() {
-//        return minecraftAdapter.getPlayer();
-//    }
-
 
     /**
      * Sends the player the given message. The message will be printed in the chat.
@@ -121,9 +114,15 @@ public class PlayerUtils {
         minecraftAdapter.sendMessage(msg);
     }
 
+
+    /**
+     * get the current amount of player-health
+     * @return the current health
+     */
     public static float getHealth() {
         return minecraftAdapter.getPlayerHealth();
     }
+
 
     /**
      * Check if the player is standing on solid ground
@@ -133,6 +132,7 @@ public class PlayerUtils {
     public static boolean isOnGround() {
         return minecraftAdapter.isPlayerOnGround();
     }
+
 
     /**
      * @return the current position of the player as a {@link BaseBlockPos}
@@ -268,6 +268,5 @@ public class PlayerUtils {
         final Vector3d current = getPlayerPosition();
         return !(current.dist2(x, y, z) > AT_LOC_DIST_ERROR);
     }
-
 
 }

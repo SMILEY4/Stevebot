@@ -39,6 +39,7 @@ public class Pathfinding {
 
     private final MinecraftAdapter minecraftAdapter;
 
+
     public Pathfinding(final MinecraftAdapter minecraftAdapter) {
         this.minecraftAdapter = minecraftAdapter;
     }

@@ -17,9 +17,11 @@ public class BlockLibrary {
     private final MinecraftAdapter minecraftAdapter;
     private BlockWrapper[] blocks;
 
+
     public BlockLibrary(final MinecraftAdapter minecraftAdapter) {
         this.minecraftAdapter = minecraftAdapter;
     }
+
 
     /**
      * Initializes this library. Collects all blocks and stores them.
@@ -40,6 +42,7 @@ public class BlockLibrary {
 
     }
 
+
     /**
      * Adds the given {@link ItemWrapper}s to the corresponding blocks
      *
@@ -59,6 +62,7 @@ public class BlockLibrary {
             }
         }
     }
+
 
     /**
      * @return a list of all blocks
