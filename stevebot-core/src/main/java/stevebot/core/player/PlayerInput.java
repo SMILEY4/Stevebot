@@ -10,16 +10,19 @@ public class PlayerInput {
     private boolean isHoldingJump = false;
     private boolean isHoldingSneak = false;
 
+
     public PlayerInput(final MinecraftAdapter minecraftAdapter) {
         this.minecraftAdapter = minecraftAdapter;
         reloadConfig();
     }
+
 
     public void onEventPlayerTick() {
         if (muteUserInput) {
             stopAll();
         }
     }
+
 
     public void onEventConfigChanged() {
         reloadConfig();

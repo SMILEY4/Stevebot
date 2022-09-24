@@ -10,7 +10,7 @@ The core pathfinding and path-following logic of stevebot. As independent of any
     ./gradlew publishToMavenLocal
     ```
 
-2. Include artifact in our mod project as a gradle dependency (see "stevebot-mod")
+2. Include artifact in your mod project as a gradle dependency (see "stevebot-mod" for an example)
  
     ```
    dependencies {

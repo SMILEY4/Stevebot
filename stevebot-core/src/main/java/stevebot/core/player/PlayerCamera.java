@@ -26,6 +26,13 @@ public class PlayerCamera {
     private final Vector2f lastFreeView = new Vector2f();
     private final MinecraftAdapter minecraftAdapter;
 
+    private float cameraYaw = 0;
+    private float cameraPitch = 0;
+    private float playerYaw = 0;
+    private float playerPitch = 0;
+    private float originalYaw = 0;
+    private float originalPitch = 0;
+
 
     public PlayerCamera(MinecraftAdapter minecraftAdapter) {
         this.minecraftAdapter = minecraftAdapter;
@@ -41,7 +48,6 @@ public class PlayerCamera {
         if (!minecraftAdapter.hasPlayer()) {
             return;
         }
-
         if (getState() == CameraState.FREELOOK && !isFreelook) {
             startFreelook();
         }
@@ -51,16 +57,7 @@ public class PlayerCamera {
         if (getState() != CameraState.FREELOOK && isFreelook) {
             stopFreelook();
         }
-
     }
-
-
-    private float cameraYaw = 0;
-    private float cameraPitch = 0;
-    private float playerYaw = 0;
-    private float playerPitch = 0;
-    private float originalYaw = 0;
-    private float originalPitch = 0;
 
 
     /**

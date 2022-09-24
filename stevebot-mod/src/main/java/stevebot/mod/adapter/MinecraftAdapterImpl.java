@@ -41,11 +41,10 @@ import stevebot.core.player.PlayerInputConfig;
 
 public class MinecraftAdapterImpl implements MinecraftAdapter {
 
-
     private MouseChangeInterceptor mouseChangeInterceptor = null;
-
     private final Map<String, Item> items = new HashMap<>();
     private final Map<String, Block> blocks = new HashMap<>();
+
 
     public MinecraftAdapterImpl() {
         getMinecraft().mouseHelper = new MouseHelper() {
@@ -68,33 +67,38 @@ public class MinecraftAdapterImpl implements MinecraftAdapter {
         return getMinecraft().world;
     }
 
-
-    @Override
-    public int getBlockId(final BaseBlockPos pos) {
-        final Block block = getWorld().getBlockState(new BlockPos(pos.getX(), pos.getY(), pos.getZ())).getBlock();
-        return Block.REGISTRY.getIDForObject(block);
+    private EntityPlayerSP getPlayer() {
+        return getMinecraft().player;
     }
 
     @Override
-    public boolean isChunkLoaded(int chunkX, int chunkZ) {
-        return getWorld().getChunkFromChunkCoords(chunkX, chunkZ).isLoaded();
+    public boolean hasPlayer() {
+        return getPlayer() != null;
     }
+
+
+    @Override
+    public boolean isPlayerCreativeMode() {
+        return getPlayer().isCreative();
+    }
+
 
     @Override
     public Vector3d getPlayerHeadPosition() {
-        final Vec3d posEyes = getMinecraft().player.getPositionEyes(1.0F);
+        final Vec3d posEyes = getPlayer().getPositionEyes(1.0F);
         return new Vector3d(posEyes.x, posEyes.y, posEyes.z);
     }
 
     @Override
     public Vector2d getPlayerHeadPositionXZ() {
-        final Vec3d posEyes = getMinecraft().player.getPositionEyes(1.0F);
+        final Vec3d posEyes = getPlayer().getPositionEyes(1.0F);
         return new Vector2d(posEyes.x, posEyes.z);
     }
 
+
     @Override
     public BaseBlockPos getPlayerBlockPosition() {
-        final EntityPlayerSP player = getMinecraft().player;
+        final EntityPlayerSP player = getPlayer();
         if (player != null) {
             return BlockUtils.toBaseBlockPos(player.posX, player.posY, player.posZ);
         } else {
@@ -104,7 +108,7 @@ public class MinecraftAdapterImpl implements MinecraftAdapter {
 
     @Override
     public Vector3d getPlayerPosition() {
-        final EntityPlayerSP player = getMinecraft().player;
+        final EntityPlayerSP player = getPlayer();
         if (player != null) {
             return new Vector3d(player.posX, player.posY, player.posZ);
         } else {
@@ -112,9 +116,10 @@ public class MinecraftAdapterImpl implements MinecraftAdapter {
         }
     }
 
+
     @Override
     public Vector3d getPlayerMotion() {
-        final EntityPlayerSP player = getMinecraft().player;
+        final EntityPlayerSP player = getPlayer();
         if (player != null) {
             return new Vector3d(player.motionX, player.motionY, player.motionZ);
         } else {
@@ -122,14 +127,28 @@ public class MinecraftAdapterImpl implements MinecraftAdapter {
         }
     }
 
+
+    @Override
+    public float getPlayerRotationYaw() {
+        return getPlayer().rotationYaw;
+    }
+
+
+    @Override
+    public float getPlayerRotationPitch() {
+        return getPlayer().rotationPitch;
+    }
+
+
     @Override
     public void setPlayerRotation(float yaw, float pitch) {
-        final EntityPlayerSP player = getMinecraft().player;
+        final EntityPlayerSP player = getPlayer();
         if (player != null) {
             player.rotationPitch = pitch;
             player.rotationYaw = yaw;
         }
     }
+
 
     @Override
     public void setCameraRotation(float yaw, float pitch) {
@@ -142,21 +161,11 @@ public class MinecraftAdapterImpl implements MinecraftAdapter {
         }
     }
 
-    @Override
-    public void addCameraRotation(float yaw, float pitch) {
-        EntityPlayerSP player = getMinecraft().player;
-        Entity camera = getMinecraft().getRenderViewEntity();
-        if (camera != null && player != null) {
-            camera.rotationYaw = player.rotationYaw + yaw;
-            camera.rotationPitch = player.rotationPitch + pitch;
-            camera.prevRotationYaw = player.prevRotationYaw + yaw;
-            camera.prevRotationPitch = player.prevRotationPitch + pitch;
-        }
-    }
+
 
     @Override
     public Vector3d getLookDir() {
-        final EntityPlayerSP player = getMinecraft().player;
+        final EntityPlayerSP player = getPlayer();
         if (player != null) {
             Vec3d lookDir = player.getLook(0f);
             return new Vector3d(lookDir.x, lookDir.y, lookDir.z);
@@ -165,40 +174,31 @@ public class MinecraftAdapterImpl implements MinecraftAdapter {
         }
     }
 
+
     @Override
     public void setMouseChangeInterceptor(MouseChangeInterceptor interceptor) {
         this.mouseChangeInterceptor = interceptor;
     }
+
 
     @Override
     public float getMouseSensitivity() {
         return getMinecraft().gameSettings.mouseSensitivity;
     }
 
-    @Override
-    public boolean hasPlayer() {
-        return getMinecraft().player != null;
-    }
-
-    @Override
-    public float getPlayerRotationYaw() {
-        return getMinecraft().player.rotationYaw;
-    }
-
-    @Override
-    public float getPlayerRotationPitch() {
-        return getMinecraft().player.rotationPitch;
-    }
 
     @Override
     public double getMouseDX() {
         return Mouse.getDX();
     }
 
+
     @Override
     public double getMouseDY() {
         return Mouse.getDY();
     }
+
+
 
     @Override
     public void setInput(final int keyCode, final boolean down) {
@@ -208,120 +208,15 @@ public class MinecraftAdapterImpl implements MinecraftAdapter {
         }
     }
 
-    @Override
-    public void sendMessage(final String msg) {
-        final EntityPlayerSP player = getMinecraft().player;
-        if (player != null) {
-            player.sendMessage(new TextComponentString(msg));
-        }
-    }
-
-    @Override
-    public List<ItemStackWrapper> getHotbarItems() {
-        final List<ItemStackWrapper> items = new ArrayList<>();
-        final InventoryPlayer inventory = getMinecraft().player.inventory;
-        for (int i = 0; i < 9; i++) {
-            final ItemStack itemStack = inventory.getStackInSlot(i);
-            if (itemStack != ItemStack.EMPTY && !itemStack.isEmpty()) {
-                final int itemId = Item.REGISTRY.getIDForObject(itemStack.getItem());
-                items.add(new ItemStackWrapper(ItemUtils.getItemLibrary().getItemById(itemId), itemStack.getCount(), i));
-            }
-        }
-        return items;
-    }
-
-    public void selectHotbarSlot(int slot) {
-        final InventoryPlayer inventory = getMinecraft().player.inventory;
-        inventory.currentItem = slot;
-    }
-
-    @Override
-    public boolean isPlayerOnGround() {
-        final EntityPlayerSP player = getMinecraft().player;
-        return player.onGround;
-    }
-
-    @Override
-    public float getPlayerHealth() {
-        final EntityPlayerSP player = getMinecraft().player;
-        return player.getHealth();
-    }
 
     @Override
     public void setPlayerSprinting(final boolean sprint) {
-        final EntityPlayerSP player = getMinecraft().player;
+        final EntityPlayerSP player = getPlayer();
         if (player != null) {
             player.setSprinting(sprint);
         }
     }
 
-    @Override
-    public List<BlockWrapper> getBlocks() {
-        this.blocks.clear();
-        final List<BlockWrapper> blocks = new ArrayList<>();
-        for (Block block : Block.REGISTRY) {
-            final String name = Block.REGISTRY.getNameForObject(block).toString();
-            final int id = Block.REGISTRY.getIDForObject(block);
-            final boolean isNormalCube = block.getDefaultState().isNormalCube();
-            blocks.add(new BlockWrapper(id, name, isNormalCube));
-            this.blocks.put(name, block);
-        }
-        return blocks;
-    }
-
-    @Override
-    public List<ItemWrapper> getItems() {
-        this.items.clear();
-        final List<ItemWrapper> items = new ArrayList<>();
-        for (Item item : Item.REGISTRY) {
-            String name = Item.REGISTRY.getNameForObject(item).toString();
-            int id = Item.REGISTRY.getIDForObject(item);
-            items.add(new ItemWrapper(id, name));
-            this.items.put(name, item);
-        }
-        return items;
-    }
-
-    @Override
-    public float getBreakDuration(ItemWrapper item, BlockWrapper block) {
-        final Block mcBlock = blocks.get(block.getName());
-        if (item == null) {
-            return getBreakDuration(ItemStack.EMPTY, mcBlock.getDefaultState());
-        } else {
-            final Item mcItem = items.get(item.getName());
-            return getBreakDuration(new ItemStack(mcItem), mcBlock.getDefaultState());
-        }
-    }
-
-    @Override
-    public String getBlockFacing(final BaseBlockPos position) {
-        final IBlockState blockState = getWorld().getBlockState(new BlockPos(position.getX(), position.getY(), position.getZ()));
-        final EnumFacing.Axis facing = blockState.getValue(BlockHorizontal.FACING).getAxis();
-        return facing.getName();
-    }
-
-    @Override
-    public boolean isDoorOpen(final BaseBlockPos position) {
-        final IBlockState blockState = getWorld().getBlockState(new BlockPos(position.getX(), position.getY(), position.getZ()));
-        return blockState.getValue(BlockDoor.OPEN);
-    }
-
-    @Override
-    public boolean isBlockPassable(final BlockWrapper block, final BaseBlockPos pos) {
-        return blocks.get(block.getName()).isPassable(getWorld(), new BlockPos(pos.getX(), pos.getY(), pos.getZ()));
-    }
-
-    @Override
-    public int getItemIdFromBlock(final BlockWrapper block) {
-        final Item itemFromBlock = Item.getItemFromBlock(blocks.get(block.getName()));
-        return Item.REGISTRY.getIDForObject(itemFromBlock);
-    }
-
-    @Override
-    public int getBlockIdFromItem(final ItemBlockWrapper item) {
-        final ItemBlock itemBlock = (ItemBlock) items.get(item.getName());
-        return Block.REGISTRY.getIDForObject(itemBlock.getBlock());
-    }
 
     @Override
     public InputBinding getKeyBinding(final PlayerInputConfig.InputType inputType) {
@@ -351,10 +246,140 @@ public class MinecraftAdapterImpl implements MinecraftAdapter {
         return null;
     }
 
+
     @Override
-    public boolean isPlayerCreativeMode() {
-        return getMinecraft().player.isCreative();
+    public boolean isPlayerOnGround() {
+        final EntityPlayerSP player = getPlayer();
+        return player.onGround;
     }
+
+
+    @Override
+    public float getPlayerHealth() {
+        final EntityPlayerSP player = getPlayer();
+        return player.getHealth();
+    }
+
+
+    @Override
+    public void sendMessage(final String msg) {
+        final EntityPlayerSP player = getPlayer();
+        if (player != null) {
+            player.sendMessage(new TextComponentString(msg));
+        }
+    }
+
+
+    @Override
+    public List<ItemStackWrapper> getHotbarItems() {
+        final List<ItemStackWrapper> items = new ArrayList<>();
+        final InventoryPlayer inventory = getPlayer().inventory;
+        for (int i = 0; i < 9; i++) {
+            final ItemStack itemStack = inventory.getStackInSlot(i);
+            if (itemStack != ItemStack.EMPTY && !itemStack.isEmpty()) {
+                final int itemId = Item.REGISTRY.getIDForObject(itemStack.getItem());
+                items.add(new ItemStackWrapper(ItemUtils.getItemLibrary().getItemById(itemId), itemStack.getCount(), i));
+            }
+        }
+        return items;
+    }
+
+
+    @Override
+    public void selectHotbarSlot(int slot) {
+        final InventoryPlayer inventory = getPlayer().inventory;
+        inventory.currentItem = slot;
+    }
+
+
+    @Override
+    public List<BlockWrapper> getBlocks() {
+        this.blocks.clear();
+        final List<BlockWrapper> blocks = new ArrayList<>();
+        for (Block block : Block.REGISTRY) {
+            final String name = Block.REGISTRY.getNameForObject(block).toString();
+            final int id = Block.REGISTRY.getIDForObject(block);
+            final boolean isNormalCube = block.getDefaultState().isNormalCube();
+            blocks.add(new BlockWrapper(id, name, isNormalCube));
+            this.blocks.put(name, block);
+        }
+        return blocks;
+    }
+
+
+    @Override
+    public List<ItemWrapper> getItems() {
+        this.items.clear();
+        final List<ItemWrapper> items = new ArrayList<>();
+        for (Item item : Item.REGISTRY) {
+            String name = Item.REGISTRY.getNameForObject(item).toString();
+            int id = Item.REGISTRY.getIDForObject(item);
+            items.add(new ItemWrapper(id, name));
+            this.items.put(name, item);
+        }
+        return items;
+    }
+
+
+    @Override
+    public int getBlockId(final BaseBlockPos pos) {
+        final Block block = getWorld().getBlockState(new BlockPos(pos.getX(), pos.getY(), pos.getZ())).getBlock();
+        return Block.REGISTRY.getIDForObject(block);
+    }
+
+
+    @Override
+    public boolean isChunkLoaded(int chunkX, int chunkZ) {
+        return getWorld().getChunkFromChunkCoords(chunkX, chunkZ).isLoaded();
+    }
+
+
+    @Override
+    public int getItemIdFromBlock(final BlockWrapper block) {
+        final Item itemFromBlock = Item.getItemFromBlock(blocks.get(block.getName()));
+        return Item.REGISTRY.getIDForObject(itemFromBlock);
+    }
+
+
+    @Override
+    public int getBlockIdFromItem(final ItemBlockWrapper item) {
+        final ItemBlock itemBlock = (ItemBlock) items.get(item.getName());
+        return Block.REGISTRY.getIDForObject(itemBlock.getBlock());
+    }
+
+
+    @Override
+    public String getBlockFacing(final BaseBlockPos position) {
+        final IBlockState blockState = getWorld().getBlockState(new BlockPos(position.getX(), position.getY(), position.getZ()));
+        final EnumFacing.Axis facing = blockState.getValue(BlockHorizontal.FACING).getAxis();
+        return facing.getName();
+    }
+
+
+    @Override
+    public boolean isDoorOpen(final BaseBlockPos position) {
+        final IBlockState blockState = getWorld().getBlockState(new BlockPos(position.getX(), position.getY(), position.getZ()));
+        return blockState.getValue(BlockDoor.OPEN);
+    }
+
+
+    @Override
+    public boolean isBlockPassable(final BlockWrapper block, final BaseBlockPos pos) {
+        return blocks.get(block.getName()).isPassable(getWorld(), new BlockPos(pos.getX(), pos.getY(), pos.getZ()));
+    }
+
+
+    @Override
+    public float getBreakDuration(ItemWrapper item, BlockWrapper block) {
+        final Block mcBlock = blocks.get(block.getName());
+        if (item == null) {
+            return getBreakDuration(ItemStack.EMPTY, mcBlock.getDefaultState());
+        } else {
+            final Item mcItem = items.get(item.getName());
+            return getBreakDuration(new ItemStack(mcItem), mcBlock.getDefaultState());
+        }
+    }
+
 
     /**
      * @param itemStack the used item
